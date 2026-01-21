@@ -18,11 +18,10 @@ interface MenuCardProps {
   icon: keyof typeof Ionicons.glyphMap;
   color: string;
   onPress: () => void;
-  width: number;
 }
 
-const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPress, width }) => (
-  <TouchableOpacity style={[styles.card, { width }]} onPress={onPress} activeOpacity={0.8}>
+const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPress }) => (
+  <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
     <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
       <Ionicons name={icon} size={28} color={color} />
     </View>
@@ -33,39 +32,6 @@ const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPre
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const cardWidth = (width - 48) / 2;
-
-  const menuItems = [
-    {
-      title: 'Уроки',
-      subtitle: 'Интерактивные уроки',
-      icon: 'book' as keyof typeof Ionicons.glyphMap,
-      color: '#4A90D9',
-      onPress: () => router.push('/lessons'),
-    },
-    {
-      title: 'Задачи',
-      subtitle: 'Практические задания',
-      icon: 'calculator' as keyof typeof Ionicons.glyphMap,
-      color: '#E74C3C',
-      onPress: () => router.push('/tasks'),
-    },
-    {
-      title: 'Тесты',
-      subtitle: 'Проверка знаний',
-      icon: 'checkbox' as keyof typeof Ionicons.glyphMap,
-      color: '#1ABC9C',
-      onPress: () => router.push('/tests'),
-    },
-    {
-      title: 'Формулы',
-      subtitle: 'Справочник',
-      icon: 'flask' as keyof typeof Ionicons.glyphMap,
-      color: '#9B59B6',
-      onPress: () => router.push('/formulas'),
-    },
-  ];
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -93,10 +59,39 @@ export default function HomeScreen() {
           </LinearGradient>
         </View>
 
-        <View style={styles.menuGrid}>
-          {menuItems.map((item, index) => (
-            <MenuCard key={index} {...item} width={cardWidth} />
-          ))}
+        <View style={styles.menuContainer}>
+          <View style={styles.menuRow}>
+            <MenuCard
+              title="Уроки"
+              subtitle="Интерактивные уроки"
+              icon="book"
+              color="#4A90D9"
+              onPress={() => router.push('/lessons')}
+            />
+            <MenuCard
+              title="Задачи"
+              subtitle="Практические задания"
+              icon="calculator"
+              color="#E74C3C"
+              onPress={() => router.push('/tasks')}
+            />
+          </View>
+          <View style={styles.menuRow}>
+            <MenuCard
+              title="Тесты"
+              subtitle="Проверка знаний"
+              icon="checkbox"
+              color="#1ABC9C"
+              onPress={() => router.push('/tests')}
+            />
+            <MenuCard
+              title="Формулы"
+              subtitle="Справочник"
+              icon="flask"
+              color="#9B59B6"
+              onPress={() => router.push('/formulas')}
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -149,17 +144,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  menuGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  menuContainer: {
     paddingHorizontal: 16,
+  },
+  menuRow: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 16,
   },
   card: {
+    flex: 1,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
-    marginBottom: 16,
+    marginHorizontal: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
