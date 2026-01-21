@@ -795,6 +795,180 @@ async def submit_task_answer(task_id: str, answer: Dict[str, int], current_user:
         "explanation": task["explanation"]
     }
 
+@api_router.post("/tasks/generate")
+async def generate_task(request: GenerateTaskRequest, current_user: dict = Depends(get_current_user)):
+    """Generate a new task using AI"""
+    section_names = {
+        "mechanics": "Механика",
+        "thermodynamics": "Термодинамика", 
+        "electromagnetism": "Электричество и магнетизм",
+        "optics": "Оптика",
+        "atomic": "Атомная физика"
+    }
+    
+    difficulty_ru = {
+        "easy": "лёгкая",
+        "medium": "средняя",
+        "hard": "сложная"
+    }
+    
+    section_name = section_names.get(request.section, request.section)
+    diff_name = difficulty_ru.get(request.difficulty, "средняя")
+    
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=f"task-gen-{current_user['id']}-{datetime.utcnow().timestamp()}",
+            system_message="""Ты - генератор задач по физике. Создавай задачи в формате JSON.
+            
+ВАЖНО: Отвечай ТОЛЬКО валидным JSON без markdown разметки, без ```json```, просто чистый JSON."""
+        ).with_model("openai", "gpt-5.2")
+        
+        prompt = f"""Создай задачу по физике на тему "{section_name}" сложности "{diff_name}".
+
+Верни JSON в ТОЧНОМ формате (без markdown):
+{{
+    "title": "Название задачи",
+    "question": "Текст задачи с конкретными числами",
+    "options": ["вариант A", "вариант B", "вариант C", "вариант D"],
+    "correct_answer": 0,
+    "solution": {{
+        "given": [
+            {{"symbol": "m", "value": "5", "unit": "кг", "name": "масса тела"}},
+            {{"symbol": "a", "value": "2", "unit": "м/с²", "name": "ускорение"}}
+        ],
+        "si_conversion": "Все величины уже в СИ",
+        "formulas": ["F = ma"],
+        "steps": [
+            "Запишем второй закон Ньютона: F = ma",
+            "Подставим значения: F = 5 кг × 2 м/с²",
+            "Вычислим: F = 10 Н"
+        ],
+        "answer": "10 Н"
+    }}
+}}
+
+correct_answer - это индекс правильного ответа (0, 1, 2 или 3)."""
+
+        user_message = UserMessage(text=prompt)
+        response = await chat.send_message(user_message)
+        
+        # Parse JSON response
+        import json
+        # Clean response from potential markdown
+        cleaned = response.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("```")[1]
+            if cleaned.startswith("json"):
+                cleaned = cleaned[4:]
+        cleaned = cleaned.strip()
+        
+        task_data = json.loads(cleaned)
+        
+        # Create task with unique ID
+        task_id = f"gen-task-{uuid.uuid4().hex[:8]}"
+        task = {
+            "id": task_id,
+            "section": request.section,
+            "title": task_data.get("title", "Сгенерированная задача"),
+            "question": task_data.get("question", ""),
+            "options": task_data.get("options", []),
+            "correct_answer": task_data.get("correct_answer", 0),
+            "difficulty": request.difficulty,
+            "solution": task_data.get("solution", {}),
+            "generated": True,
+            "created_at": datetime.utcnow()
+        }
+        
+        # Save to database
+        await db.generated_tasks.insert_one(task)
+        
+        return task
+        
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON parse error: {e}, response: {response[:500]}")
+        raise HTTPException(status_code=500, detail="Ошибка парсинга ответа AI")
+    except Exception as e:
+        logger.error(f"Error generating task: {e}")
+        raise HTTPException(status_code=500, detail="Ошибка генерации задачи")
+
+@api_router.post("/tests/generate")
+async def generate_test(request: GenerateTestRequest, current_user: dict = Depends(get_current_user)):
+    """Generate a new test using AI"""
+    section_names = {
+        "mechanics": "Механика",
+        "thermodynamics": "Термодинамика",
+        "electromagnetism": "Электричество и магнетизм",
+        "optics": "Оптика",
+        "atomic": "Атомная физика"
+    }
+    
+    section_name = section_names.get(request.section, request.section)
+    
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY,
+            session_id=f"test-gen-{current_user['id']}-{datetime.utcnow().timestamp()}",
+            system_message="""Ты - генератор тестов по физике. Создавай тесты в формате JSON.
+            
+ВАЖНО: Отвечай ТОЛЬКО валидным JSON без markdown разметки, без ```json```, просто чистый JSON."""
+        ).with_model("openai", "gpt-5.2")
+        
+        prompt = f"""Создай тест из {request.num_questions} вопросов по теме "{section_name}".
+
+Верни JSON в ТОЧНОМ формате (без markdown):
+{{
+    "title": "Тест по {section_name}",
+    "questions": [
+        {{
+            "question": "Текст вопроса?",
+            "options": ["вариант A", "вариант B", "вариант C", "вариант D"],
+            "correct": 0
+        }}
+    ]
+}}
+
+correct - это индекс правильного ответа (0, 1, 2 или 3).
+Создай ровно {request.num_questions} вопросов."""
+
+        user_message = UserMessage(text=prompt)
+        response = await chat.send_message(user_message)
+        
+        # Parse JSON response
+        import json
+        cleaned = response.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.split("```")[1]
+            if cleaned.startswith("json"):
+                cleaned = cleaned[4:]
+        cleaned = cleaned.strip()
+        
+        test_data = json.loads(cleaned)
+        
+        # Create test with unique ID
+        test_id = f"gen-test-{uuid.uuid4().hex[:8]}"
+        test = {
+            "id": test_id,
+            "section": request.section,
+            "title": test_data.get("title", f"Тест по {section_name}"),
+            "questions": test_data.get("questions", []),
+            "time_limit": request.num_questions * 60,  # 1 minute per question
+            "generated": True,
+            "created_at": datetime.utcnow()
+        }
+        
+        # Save to database
+        await db.generated_tests.insert_one(test)
+        
+        return test
+        
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON parse error: {e}")
+        raise HTTPException(status_code=500, detail="Ошибка парсинга ответа AI")
+    except Exception as e:
+        logger.error(f"Error generating test: {e}")
+        raise HTTPException(status_code=500, detail="Ошибка генерации теста")
+
 # ==================== Tests Routes ====================
 
 @api_router.get("/tests")
