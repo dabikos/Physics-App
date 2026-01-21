@@ -1,112 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../../src/services/api';
-import { useAuthStore } from '../../../src/store/authStore';
-import { SuccessModal } from '../../../src/components/SuccessModal';
-
-interface Topic {
-  id: string;
-  section: string;
-  subsection: string;
-  title: string;
-  brief_info: string;
-  example_problem: string;
-  formulas: string[];
-  full_content?: string;
-}
+import { getTopicById, PHYSICS_SECTIONS } from '../../../src/data/physicsData';
 
 export default function TopicDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { token } = useAuthStore();
-  const [topic, setTopic] = useState<Topic | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [generatingContent, setGeneratingContent] = useState(false);
-  const [generatedContent, setGeneratedContent] = useState<string | null>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  useEffect(() => {
-    fetchTopic();
-  }, [id]);
-
-  const fetchTopic = async () => {
-    try {
-      const response = await api.get(`/topics/${id}`);
-      setTopic(response.data);
-    } catch (error) {
-      console.error('Error fetching topic:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const generateDetailedContent = async () => {
-    if (!token) {
-      Alert.alert('Требуется авторизация', 'Войдите для использования AI', [
-        { text: 'Войти', onPress: () => router.push('/auth/login') },
-        { text: 'Отмена', style: 'cancel' },
-      ]);
-      return;
-    }
-
-    setGeneratingContent(true);
-    try {
-      const response = await api.post(`/topics/${id}/generate`, {
-        topic_id: id,
-        content_type: 'detailed',
-      });
-      setGeneratedContent(response.data.content);
-    } catch (error) {
-      Alert.alert('Ошибка', 'Не удалось сгенерировать контент');
-    } finally {
-      setGeneratingContent(false);
-    }
-  };
-
-  const markAsComplete = async () => {
-    if (!token) {
-      Alert.alert('Требуется авторизация', 'Войдите для сохранения прогресса');
-      return;
-    }
-
-    try {
-      await api.post(`/progress/lesson/${id}`);
-      setShowSuccessModal(true);
-    } catch (error) {
-      console.error('Error marking lesson:', error);
-    }
-  };
-
-  const handleCloseSuccessModal = () => {
-    setShowSuccessModal(false);
-    router.back();
-  };
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
-      </View>
-    );
-  }
+  
+  const topic = id ? getTopicById(id) : null;
+  const sectionColor = topic ? PHYSICS_SECTIONS[topic.section]?.color || '#6C63FF' : '#6C63FF';
 
   if (!topic) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Тема не найдена</Text>
-      </View>
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color="#1F2937" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Тема</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={styles.loadingContainer}>
+          <Ionicons name="document-text-outline" size={64} color="#D1D5DB" />
+          <Text style={styles.notFoundTitle}>Тема не найдена</Text>
+          <Text style={styles.notFoundSubtitle}>Контент в разработке</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -122,15 +49,14 @@ export default function TopicDetailScreen() {
         <Text style={styles.headerTitle} numberOfLines={1}>
           {topic.title}
         </Text>
-        <TouchableOpacity onPress={markAsComplete} style={styles.checkButton}>
-          <Ionicons name="checkmark-circle" size={28} color="#10B981" />
-        </TouchableOpacity>
+        <View style={styles.headerPlaceholder} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+        {/* Краткая информация */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="information-circle" size={22} color="#6C63FF" />
+            <Ionicons name="information-circle" size={22} color={sectionColor} />
             <Text style={styles.sectionTitle}>Краткая информация</Text>
           </View>
           <View style={styles.sectionContent}>
@@ -138,73 +64,49 @@ export default function TopicDetailScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="calculator" size={22} color="#E74C3C" />
-            <Text style={styles.sectionTitle}>Пример задачи</Text>
-          </View>
-          <View style={styles.sectionContent}>
-            <Text style={styles.exampleText}>{topic.example_problem}</Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="flask" size={22} color="#9B59B6" />
-            <Text style={styles.sectionTitle}>Формулы</Text>
-          </View>
-          <View style={styles.formulasGrid}>
-            {topic.formulas.map((formula, index) => (
-              <View key={index} style={styles.formulaCard}>
-                <Text style={styles.formulaText}>{formula}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {generatedContent && (
+        {/* Пример задачи */}
+        {topic.example_problem && topic.example_problem.length > 0 && (
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Ionicons name="sparkles" size={22} color="#F39C12" />
-              <Text style={styles.sectionTitle}>Подробнее (AI)</Text>
+              <Ionicons name="calculator" size={22} color="#E74C3C" />
+              <Text style={styles.sectionTitle}>Пример задачи</Text>
             </View>
             <View style={styles.sectionContent}>
-              <Text style={styles.generatedText}>{generatedContent}</Text>
+              <Text style={styles.exampleText}>{topic.example_problem}</Text>
             </View>
           </View>
         )}
 
-        <TouchableOpacity
-          style={[
-            styles.generateButton,
-            generatingContent && styles.generateButtonDisabled,
-          ]}
-          onPress={generateDetailedContent}
-          disabled={generatingContent}
-        >
-          {generatingContent ? (
-            <>
-              <ActivityIndicator color="#FFFFFF" size="small" />
-              <Text style={styles.generateButtonText}>Генерация...</Text>
-            </>
-          ) : (
-            <>
-              <Ionicons name="sparkles" size={20} color="#FFFFFF" />
-              <Text style={styles.generateButtonText}>Изучить больше</Text>
-            </>
-          )}
-        </TouchableOpacity>
+        {/* Формулы */}
+        {topic.formulas && topic.formulas.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="flask" size={22} color="#9B59B6" />
+              <Text style={styles.sectionTitle}>Формулы</Text>
+            </View>
+            <View style={styles.formulasGrid}>
+              {topic.formulas.map((formula, index) => (
+                <View key={index} style={styles.formulaCard}>
+                  <Text style={styles.formulaText}>{formula}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        {/* Если контент в разработке */}
+        {topic.brief_info === "Раздел в разработке" && (
+          <View style={styles.devNotice}>
+            <Ionicons name="construct" size={32} color="#F59E0B" />
+            <Text style={styles.devNoticeText}>
+              Полный контент этой темы находится в разработке.
+              Скоро здесь появится подробная информация!
+            </Text>
+          </View>
+        )}
 
         <View style={styles.bottomPadding} />
       </ScrollView>
-
-      <SuccessModal
-        visible={showSuccessModal}
-        onClose={handleCloseSuccessModal}
-        title="Урок пройден!"
-        subtitle={topic?.title}
-        type="lesson"
-      />
     </SafeAreaView>
   );
 }
@@ -219,6 +121,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5F7FA',
+    padding: 24,
+  },
+  notFoundTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginTop: 16,
+  },
+  notFoundSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 8,
   },
   header: {
     flexDirection: 'row',
@@ -244,11 +158,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: 8,
   },
-  checkButton: {
+  headerPlaceholder: {
     width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   content: {
     flex: 1,
@@ -307,28 +218,20 @@ const styles = StyleSheet.create({
     color: '#4338CA',
     fontWeight: '500',
   },
-  generatedText: {
-    fontSize: 15,
-    color: '#374151',
-    lineHeight: 24,
-  },
-  generateButton: {
-    flexDirection: 'row',
+  devNotice: {
+    backgroundColor: '#FEF3C7',
+    borderRadius: 16,
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#6C63FF',
-    borderRadius: 14,
-    padding: 16,
-    gap: 8,
-    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#FCD34D',
   },
-  generateButtonDisabled: {
-    backgroundColor: '#A5B4FC',
-  },
-  generateButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  devNoticeText: {
+    fontSize: 14,
+    color: '#92400E',
+    textAlign: 'center',
+    marginTop: 12,
+    lineHeight: 20,
   },
   bottomPadding: {
     height: 40,

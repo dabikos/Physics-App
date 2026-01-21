@@ -1,74 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../src/services/api';
-
-interface Subsection {
-  id: string;
-  name: string;
-}
-
-interface Section {
-  name: string;
-  color: string;
-  subsections: Subsection[];
-}
-
-interface Topic {
-  id: string;
-  title: string;
-  brief_info: string;
-}
+import { PHYSICS_SECTIONS, getTopicsBySubsection } from '../../src/data/physicsData';
 
 export default function SectionScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
-  const [sectionData, setSectionData] = useState<Section | null>(null);
-  const [topics, setTopics] = useState<Record<string, Topic[]>>({});
-  const [loading, setLoading] = useState(true);
   const [selectedSubsection, setSelectedSubsection] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchData();
-  }, [section]);
+  const sectionData = section ? PHYSICS_SECTIONS[section] : null;
 
-  const fetchData = async () => {
-    try {
-      const [sectionRes, topicsRes] = await Promise.all([
-        api.get(`/sections/${section}`),
-        api.get(`/topics?section=${section}`),
-      ]);
-      setSectionData(sectionRes.data);
-      
-      // Group topics by subsection
-      const grouped: Record<string, Topic[]> = {};
-      topicsRes.data.forEach((topic: Topic & { subsection: string }) => {
-        if (!grouped[topic.subsection]) {
-          grouped[topic.subsection] = [];
-        }
-        grouped[topic.subsection].push(topic);
-      });
-      setTopics(grouped);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (!sectionData) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
+        <Text>Раздел не найден</Text>
       </View>
     );
   }
@@ -82,65 +35,70 @@ export default function SectionScreen() {
         >
           <Ionicons name="arrow-back" size={24} color="#1F2937" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{sectionData?.name}</Text>
+        <Text style={styles.headerTitle}>{sectionData.name}</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
         <Text style={styles.sectionTitle}>Подразделы</Text>
 
-        {sectionData?.subsections.map((subsection) => (
-          <View key={subsection.id}>
-            <TouchableOpacity
-              style={[
-                styles.subsectionCard,
-                selectedSubsection === subsection.id && styles.subsectionCardActive,
-              ]}
-              onPress={() =>
-                setSelectedSubsection(
-                  selectedSubsection === subsection.id ? null : subsection.id
-                )
-              }
-              activeOpacity={0.8}
-            >
-              <View
+        {sectionData.subsections.map((subsection) => {
+          const topics = getTopicsBySubsection(section!, subsection.id);
+          
+          return (
+            <View key={subsection.id}>
+              <TouchableOpacity
                 style={[
-                  styles.subsectionDot,
-                  { backgroundColor: sectionData.color },
+                  styles.subsectionCard,
+                  selectedSubsection === subsection.id && styles.subsectionCardActive,
                 ]}
-              />
-              <Text style={styles.subsectionName}>{subsection.name}</Text>
-              <Ionicons
-                name={selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
-                size={20}
-                color="#6B7280"
-              />
-            </TouchableOpacity>
+                onPress={() =>
+                  setSelectedSubsection(
+                    selectedSubsection === subsection.id ? null : subsection.id
+                  )
+                }
+                activeOpacity={0.8}
+              >
+                <View
+                  style={[
+                    styles.subsectionDot,
+                    { backgroundColor: sectionData.color },
+                  ]}
+                />
+                <View style={styles.subsectionInfo}>
+                  <Text style={styles.subsectionName}>{subsection.name}</Text>
+                  <Text style={styles.topicsCount}>{subsection.topics.length} тем</Text>
+                </View>
+                <Ionicons
+                  name={selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
+                  size={20}
+                  color="#6B7280"
+                />
+              </TouchableOpacity>
 
-            {selectedSubsection === subsection.id && (
-              <View style={styles.topicsList}>
-                {topics[subsection.id]?.map((topic) => (
-                  <TouchableOpacity
-                    key={topic.id}
-                    style={styles.topicCard}
-                    onPress={() => router.push(`/lessons/topic/${topic.id}`)}
-                    activeOpacity={0.8}
-                  >
-                    <View style={styles.topicContent}>
-                      <Text style={styles.topicTitle}>{topic.title}</Text>
-                      <Text style={styles.topicBrief} numberOfLines={2}>
-                        {topic.brief_info}
-                      </Text>
-                    </View>
-                    <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-                  </TouchableOpacity>
-                )) || (
-                  <Text style={styles.noTopics}>Темы в разработке</Text>
-                )}
-              </View>
-            )}
-          </View>
-        ))}
+              {selectedSubsection === subsection.id && (
+                <View style={styles.topicsList}>
+                  {topics.map((topic) => (
+                    <TouchableOpacity
+                      key={topic.id}
+                      style={[styles.topicCard, { borderLeftColor: sectionData.color }]}
+                      onPress={() => router.push(`/lessons/topic/${topic.id}`)}
+                      activeOpacity={0.8}
+                    >
+                      <View style={styles.topicContent}>
+                        <Text style={styles.topicTitle}>{topic.title}</Text>
+                        <Text style={styles.topicBrief} numberOfLines={2}>
+                          {topic.brief_info}
+                        </Text>
+                      </View>
+                      <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -213,11 +171,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 12,
   },
-  subsectionName: {
+  subsectionInfo: {
     flex: 1,
+  },
+  subsectionName: {
     fontSize: 16,
     fontWeight: '500',
     color: '#1F2937',
+  },
+  topicsCount: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 2,
   },
   topicsList: {
     paddingLeft: 22,
@@ -231,7 +196,6 @@ const styles = StyleSheet.create({
     padding: 14,
     marginTop: 8,
     borderLeftWidth: 3,
-    borderLeftColor: '#6C63FF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
@@ -251,11 +215,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#6B7280',
     lineHeight: 18,
-  },
-  noTopics: {
-    fontSize: 14,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    paddingVertical: 16,
   },
 });

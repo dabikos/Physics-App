@@ -1,43 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../src/services/api';
-
-interface Section {
-  name: string;
-  icon: string;
-  color: string;
-  subsections: { id: string; name: string }[];
-}
+import { PHYSICS_SECTIONS } from '../../src/data/physicsData';
 
 export default function LessonsScreen() {
   const router = useRouter();
-  const [sections, setSections] = useState<Record<string, Section>>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchSections();
-  }, []);
-
-  const fetchSections = async () => {
-    try {
-      const response = await api.get('/sections');
-      setSections(response.data);
-    } catch (error) {
-      console.error('Error fetching sections:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
     const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -50,13 +25,11 @@ export default function LessonsScreen() {
     return iconMap[icon] || 'book';
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
-      </View>
-    );
-  }
+  // Подсчёт общего количества тем
+  const countTopics = (sectionKey: string): number => {
+    const section = PHYSICS_SECTIONS[sectionKey];
+    return section.subsections.reduce((acc, sub) => acc + sub.topics.length, 0);
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -74,7 +47,7 @@ export default function LessonsScreen() {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
         <Text style={styles.sectionTitle}>Выберите раздел</Text>
         
-        {Object.entries(sections).map(([key, section]) => (
+        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
           <TouchableOpacity
             key={key}
             style={styles.sectionCard}
@@ -87,7 +60,7 @@ export default function LessonsScreen() {
             <View style={styles.sectionInfo}>
               <Text style={styles.sectionName}>{section.name}</Text>
               <Text style={styles.subsectionCount}>
-                {section.subsections.length} подразделов
+                {section.subsections.length} подразделов • {countTopics(key)} тем
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={24} color="#9CA3AF" />
@@ -101,12 +74,6 @@ export default function LessonsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5F7FA',
   },
   header: {
