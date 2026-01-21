@@ -93,6 +93,36 @@ export default function TestsSectionScreen() {
     }
   };
 
+  const generateTest = async () => {
+    if (!token) {
+      Alert.alert('Требуется авторизация', 'Войдите для генерации тестов', [
+        { text: 'Войти', onPress: () => router.push('/auth/login') },
+        { text: 'Отмена', style: 'cancel' },
+      ]);
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const response = await api.post('/tests/generate', {
+        section: section,
+        num_questions: 5,
+        difficulty: 'medium',
+      });
+      
+      const newTest = response.data;
+      setTests(prev => [...prev, newTest]);
+      Alert.alert('Успех', 'Новый тест сгенерирован!', [
+        { text: 'Начать', onPress: () => startTest(newTest) },
+        { text: 'Позже', style: 'cancel' },
+      ]);
+    } catch (error: any) {
+      Alert.alert('Ошибка', 'Не удалось сгенерировать тест');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const startTest = (test: Test) => {
     setSelectedTest(test);
     setCurrentQuestionIndex(0);
