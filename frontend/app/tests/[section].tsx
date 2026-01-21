@@ -350,6 +350,15 @@ export default function TestsSectionScreen() {
 
           <View style={styles.bottomPadding} />
         </ScrollView>
+
+        <SuccessModal
+          visible={showSuccessModal}
+          onClose={handleCloseSuccessModal}
+          title="Тест завершён!"
+          subtitle={selectedTest?.title}
+          score={results?.score}
+          type="test"
+        />
       </SafeAreaView>
     );
   }
