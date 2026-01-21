@@ -197,6 +197,14 @@ export default function TopicDetailScreen() {
 
         <View style={styles.bottomPadding} />
       </ScrollView>
+
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={handleCloseSuccessModal}
+        title="Урок пройден!"
+        subtitle={topic?.title}
+        type="lesson"
+      />
     </SafeAreaView>
   );
 }
