@@ -130,12 +130,15 @@ export default function TestsSectionScreen() {
           answers: answers,
         });
         setResults(response.data);
+        setShowSuccessModal(true);
       } catch (error) {
         console.error('Error submitting test:', error);
         calculateLocalResults();
+        setShowSuccessModal(true);
       }
     } else {
       calculateLocalResults();
+      setShowSuccessModal(true);
     }
   };
 
