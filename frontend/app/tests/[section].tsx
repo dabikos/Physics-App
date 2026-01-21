@@ -507,6 +507,23 @@ const styles = StyleSheet.create({
   headerPlaceholder: {
     width: 44,
   },
+  generateTestButton: {
+    marginBottom: 16,
+  },
+  generateGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 8,
+  },
+  generateText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   timerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
