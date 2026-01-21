@@ -78,14 +78,25 @@ export default function TasksSectionScreen() {
         });
         setIsCorrect(response.data.correct);
         setExplanation(response.data.explanation);
+        if (response.data.correct) {
+          setCorrectCount(prev => prev + 1);
+        }
       } catch (error) {
         console.error('Error submitting answer:', error);
-        setIsCorrect(selectedAnswer === currentTask.correct_answer);
+        const correct = selectedAnswer === currentTask.correct_answer;
+        setIsCorrect(correct);
         setExplanation(currentTask.explanation);
+        if (correct) {
+          setCorrectCount(prev => prev + 1);
+        }
       }
     } else {
-      setIsCorrect(selectedAnswer === currentTask.correct_answer);
+      const correct = selectedAnswer === currentTask.correct_answer;
+      setIsCorrect(correct);
       setExplanation(currentTask.explanation);
+      if (correct) {
+        setCorrectCount(prev => prev + 1);
+      }
     }
     
     setShowResult(true);
@@ -97,10 +108,14 @@ export default function TasksSectionScreen() {
       setSelectedAnswer(null);
       setShowResult(false);
     } else {
-      Alert.alert('Поздравляем!', 'Вы выполнили все задачи этого раздела!', [
-        { text: 'ОК', onPress: () => router.back() },
-      ]);
+      // Show success modal instead of alert
+      setShowSuccessModal(true);
     }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    router.back();
   };
 
   const getDifficultyColor = (difficulty: string) => {
