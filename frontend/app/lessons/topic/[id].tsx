@@ -83,10 +83,15 @@ export default function TopicDetailScreen() {
 
     try {
       await api.post(`/progress/lesson/${id}`);
-      Alert.alert('Успех', 'Урок отмечен как пройденный!');
+      setShowSuccessModal(true);
     } catch (error) {
       console.error('Error marking lesson:', error);
     }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    router.back();
   };
 
   if (loading) {
