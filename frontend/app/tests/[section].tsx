@@ -176,6 +176,11 @@ export default function TestsSectionScreen() {
     setResults(null);
     setAnswers([]);
     setCurrentQuestionIndex(0);
+    setShowSuccessModal(false);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
   };
 
   if (loading) {
