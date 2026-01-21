@@ -123,6 +123,26 @@ class GenerateContentRequest(BaseModel):
     topic_id: str
     content_type: str = "detailed"  # detailed, examples, practice
 
+class GenerateTaskRequest(BaseModel):
+    section: str
+    difficulty: str = "medium"  # easy, medium, hard
+    topic: Optional[str] = None
+
+class GenerateTestRequest(BaseModel):
+    section: str
+    num_questions: int = 5
+    difficulty: str = "medium"
+
+class TaskWithSolution(BaseModel):
+    id: str
+    section: str
+    title: str
+    question: str
+    options: List[str]
+    correct_answer: int
+    difficulty: str
+    solution: Dict[str, Any]  # given, si_units, solution_steps, answer
+
 # ==================== Auth Helpers ====================
 
 def hash_password(password: str) -> str:
