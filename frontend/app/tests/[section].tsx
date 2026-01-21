@@ -407,6 +407,29 @@ export default function TestsSectionScreen() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Generate test button */}
+        <TouchableOpacity
+          style={styles.generateTestButton}
+          onPress={generateTest}
+          disabled={generating}
+        >
+          <LinearGradient
+            colors={['#1ABC9C', '#16A085']}
+            style={styles.generateGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            {generating ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Ionicons name="sparkles" size={18} color="#FFFFFF" />
+            )}
+            <Text style={styles.generateText}>
+              {generating ? 'Генерация...' : 'Сгенерировать тест'}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
         <Text style={styles.sectionTitle}>Доступные тесты</Text>
 
         {tests.length === 0 ? (
