@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Animated,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AnimatedIcon } from '../../src/components/AnimatedIcon';
 
 interface MenuCardProps {
   title: string;
@@ -18,20 +20,109 @@ interface MenuCardProps {
   icon: keyof typeof Ionicons.glyphMap;
   color: string;
   onPress: () => void;
+  index: number;
+  animation: 'bounce' | 'pulse' | 'rotate' | 'shake';
 }
 
-const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPress }) => (
-  <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-    <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
-      <Ionicons name={icon} size={28} color={color} />
-    </View>
-    <Text style={styles.cardTitle}>{title}</Text>
-    <Text style={styles.cardSubtitle}>{subtitle}</Text>
-  </TouchableOpacity>
-);
+const MenuCard: React.FC<MenuCardProps> = ({ 
+  title, 
+  subtitle, 
+  icon, 
+  color, 
+  onPress, 
+  index,
+  animation 
+}) => {
+  const translateY = useRef(new Animated.Value(50)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(translateY, {
+        toValue: 0,
+        friction: 8,
+        tension: 40,
+        useNativeDriver: true,
+        delay: index * 100,
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 400,
+        delay: index * 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const handlePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.95,
+      friction: 5,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      friction: 5,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <Animated.View
+      style={[
+        styles.cardWrapper,
+        {
+          transform: [{ translateY }, { scale }],
+          opacity,
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={styles.card}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={1}
+      >
+        <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
+          <AnimatedIcon 
+            name={icon} 
+            size={28} 
+            color={color} 
+            animation={animation}
+            delay={index * 200 + 500}
+          />
+        </View>
+        <Text style={styles.cardTitle}>{title}</Text>
+        <Text style={styles.cardSubtitle}>{subtitle}</Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 export default function HomeScreen() {
   const router = useRouter();
+  const bannerScale = useRef(new Animated.Value(0.9)).current;
+  const bannerOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(bannerScale, {
+        toValue: 1,
+        friction: 6,
+        useNativeDriver: true,
+      }),
+      Animated.timing(bannerOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -40,7 +131,15 @@ export default function HomeScreen() {
           <Text style={styles.appTitle}>Физика AI</Text>
         </View>
 
-        <View style={styles.bannerContainer}>
+        <Animated.View 
+          style={[
+            styles.bannerContainer,
+            { 
+              transform: [{ scale: bannerScale }],
+              opacity: bannerOpacity,
+            }
+          ]}
+        >
           <LinearGradient
             colors={['#6C63FF', '#4A90D9']}
             start={{ x: 0, y: 0 }}
@@ -54,10 +153,15 @@ export default function HomeScreen() {
               </Text>
             </View>
             <View style={styles.bannerImageContainer}>
-              <Ionicons name="planet" size={80} color="rgba(255,255,255,0.3)" />
+              <AnimatedIcon 
+                name="planet" 
+                size={80} 
+                color="rgba(255,255,255,0.4)" 
+                animation="rotate"
+              />
             </View>
           </LinearGradient>
-        </View>
+        </Animated.View>
 
         <View style={styles.menuContainer}>
           <View style={styles.menuRow}>
@@ -67,6 +171,8 @@ export default function HomeScreen() {
               icon="book"
               color="#4A90D9"
               onPress={() => router.push('/lessons')}
+              index={0}
+              animation="bounce"
             />
             <MenuCard
               title="Задачи"
@@ -74,6 +180,8 @@ export default function HomeScreen() {
               icon="calculator"
               color="#E74C3C"
               onPress={() => router.push('/tasks')}
+              index={1}
+              animation="shake"
             />
           </View>
           <View style={styles.menuRow}>
@@ -83,6 +191,8 @@ export default function HomeScreen() {
               icon="checkbox"
               color="#1ABC9C"
               onPress={() => router.push('/tests')}
+              index={2}
+              animation="pulse"
             />
             <MenuCard
               title="Формулы"
@@ -90,6 +200,8 @@ export default function HomeScreen() {
               icon="flask"
               color="#9B59B6"
               onPress={() => router.push('/formulas')}
+              index={3}
+              animation="bounce"
             />
           </View>
         </View>
@@ -152,17 +264,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  card: {
+  cardWrapper: {
     flex: 1,
+    marginHorizontal: 6,
+  },
+  card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
-    marginHorizontal: 6,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
   },
   iconContainer: {
     width: 56,
