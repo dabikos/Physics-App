@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,9 +12,19 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import api from '../../src/services/api';
 import { useAuthStore } from '../../src/store/authStore';
 import { SuccessModal } from '../../src/components/SuccessModal';
+import { SolutionDisplay } from '../../src/components/SolutionDisplay';
+
+interface Solution {
+  given?: Array<{ symbol: string; value: string; unit: string; name: string }>;
+  si_conversion?: string;
+  formulas?: string[];
+  steps?: string[];
+  answer?: string;
+}
 
 interface Task {
   id: string;
@@ -25,6 +35,7 @@ interface Task {
   correct_answer: number;
   explanation: string;
   difficulty: string;
+  solution?: Solution;
 }
 
 interface Section {
@@ -43,9 +54,10 @@ export default function TasksSectionScreen() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [explanation, setExplanation] = useState('');
+  const [currentSolution, setCurrentSolution] = useState<Solution | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -66,10 +78,53 @@ export default function TasksSectionScreen() {
     }
   };
 
+  const generateTask = async () => {
+    if (!token) {
+      Alert.alert('Требуется авторизация', 'Войдите для генерации задач', [
+        { text: 'Войти', onPress: () => router.push('/auth/login') },
+        { text: 'Отмена', style: 'cancel' },
+      ]);
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const response = await api.post('/tasks/generate', {
+        section: section,
+        difficulty: 'medium',
+      });
+      
+      // Add generated task to the list
+      const newTask = response.data;
+      setTasks(prev => [...prev, newTask]);
+      setCurrentTaskIndex(tasks.length); // Go to new task
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setCurrentSolution(null);
+      
+      Alert.alert('Успех', 'Новая задача сгенерирована!');
+    } catch (error: any) {
+      Alert.alert('Ошибка', 'Не удалось сгенерировать задачу');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const submitAnswer = async () => {
     if (selectedAnswer === null) return;
     
     const currentTask = tasks[currentTaskIndex];
+    const correct = selectedAnswer === currentTask.correct_answer;
+    
+    // Create solution if not present
+    let solution = currentTask.solution;
+    if (!solution) {
+      // Generate basic solution from explanation
+      solution = {
+        steps: [currentTask.explanation],
+        answer: currentTask.options[currentTask.correct_answer],
+      };
+    }
     
     if (token) {
       try {
@@ -77,28 +132,19 @@ export default function TasksSectionScreen() {
           answer: selectedAnswer,
         });
         setIsCorrect(response.data.correct);
-        setExplanation(response.data.explanation);
         if (response.data.correct) {
           setCorrectCount(prev => prev + 1);
         }
       } catch (error) {
-        console.error('Error submitting answer:', error);
-        const correct = selectedAnswer === currentTask.correct_answer;
         setIsCorrect(correct);
-        setExplanation(currentTask.explanation);
-        if (correct) {
-          setCorrectCount(prev => prev + 1);
-        }
+        if (correct) setCorrectCount(prev => prev + 1);
       }
     } else {
-      const correct = selectedAnswer === currentTask.correct_answer;
       setIsCorrect(correct);
-      setExplanation(currentTask.explanation);
-      if (correct) {
-        setCorrectCount(prev => prev + 1);
-      }
+      if (correct) setCorrectCount(prev => prev + 1);
     }
     
+    setCurrentSolution(solution);
     setShowResult(true);
   };
 
@@ -107,8 +153,8 @@ export default function TasksSectionScreen() {
       setCurrentTaskIndex(currentTaskIndex + 1);
       setSelectedAnswer(null);
       setShowResult(false);
+      setCurrentSolution(null);
     } else {
-      // Show success modal instead of alert
       setShowSuccessModal(true);
     }
   };
@@ -157,6 +203,10 @@ export default function TasksSectionScreen() {
         <View style={styles.emptyState}>
           <Ionicons name="document-text" size={64} color="#D1D5DB" />
           <Text style={styles.emptyText}>Задачи в разработке</Text>
+          <TouchableOpacity style={styles.generateButton} onPress={generateTask}>
+            <Ionicons name="sparkles" size={20} color="#FFFFFF" />
+            <Text style={styles.generateButtonText}>Сгенерировать задачу</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -177,6 +227,29 @@ export default function TasksSectionScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+        {/* Generate button */}
+        <TouchableOpacity
+          style={styles.generateTaskButton}
+          onPress={generateTask}
+          disabled={generating}
+        >
+          <LinearGradient
+            colors={['#6C63FF', '#8B5CF6']}
+            style={styles.generateGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            {generating ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Ionicons name="sparkles" size={18} color="#FFFFFF" />
+            )}
+            <Text style={styles.generateText}>
+              {generating ? 'Генерация...' : 'Сгенерировать задачу'}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
         <View style={styles.taskCard}>
           <View style={styles.taskHeader}>
             <Text style={styles.taskTitle}>{currentTask.title}</Text>
@@ -219,23 +292,12 @@ export default function TasksSectionScreen() {
               </TouchableOpacity>
             ))}
           </View>
-
-          {showResult && (
-            <View style={[styles.resultCard, isCorrect ? styles.resultCorrect : styles.resultWrong]}>
-              <View style={styles.resultHeader}>
-                <Ionicons
-                  name={isCorrect ? 'checkmark-circle' : 'close-circle'}
-                  size={24}
-                  color={isCorrect ? '#10B981' : '#EF4444'}
-                />
-                <Text style={[styles.resultTitle, { color: isCorrect ? '#10B981' : '#EF4444' }]}>
-                  {isCorrect ? 'Правильно!' : 'Неправильно'}
-                </Text>
-              </View>
-              <Text style={styles.explanationText}>{explanation}</Text>
-            </View>
-          )}
         </View>
+
+        {/* Solution display */}
+        {showResult && currentSolution && (
+          <SolutionDisplay solution={currentSolution} isCorrect={isCorrect} />
+        )}
 
         <TouchableOpacity
           style={[
@@ -287,6 +349,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6B7280',
     marginTop: 16,
+    marginBottom: 24,
   },
   header: {
     flexDirection: 'row',
@@ -324,6 +387,37 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
+  },
+  generateTaskButton: {
+    marginBottom: 16,
+  },
+  generateGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 8,
+  },
+  generateText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  generateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#6C63FF',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    gap: 8,
+  },
+  generateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
   taskCard: {
     backgroundColor: '#FFFFFF',
@@ -417,32 +511,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     color: '#374151',
-  },
-  resultCard: {
-    marginTop: 20,
-    padding: 16,
-    borderRadius: 12,
-  },
-  resultCorrect: {
-    backgroundColor: '#D1FAE5',
-  },
-  resultWrong: {
-    backgroundColor: '#FEE2E2',
-  },
-  resultHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 8,
-  },
-  resultTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  explanationText: {
-    fontSize: 14,
-    color: '#374151',
-    lineHeight: 20,
   },
   actionButton: {
     backgroundColor: '#6C63FF',
