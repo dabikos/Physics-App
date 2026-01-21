@@ -179,9 +179,58 @@ PHYSICS_SECTIONS = {
         "icon": "speedometer",
         "color": "#4A90D9",
         "subsections": [
-            {"id": "kinematics", "name": "Кинематика"},
-            {"id": "dynamics", "name": "Динамика"},
-            {"id": "statics", "name": "Статика"}
+            {
+                "id": "kinematics", 
+                "name": "Кинематика",
+                "topics": [
+                    {"id": "linear-motion", "name": "Прямолинейное движение"},
+                    {"id": "uniform-accelerated", "name": "Равномерное и равноускоренное движение"},
+                    {"id": "circular-motion", "name": "Движение по окружности"},
+                    {"id": "relative-motion", "name": "Относительность движения"},
+                    {"id": "motion-graphs", "name": "Графики движения"}
+                ]
+            },
+            {
+                "id": "dynamics", 
+                "name": "Динамика",
+                "topics": [
+                    {"id": "newton-laws", "name": "Законы Ньютона"},
+                    {"id": "forces", "name": "Силы в механике"},
+                    {"id": "multiple-forces", "name": "Движение под действием нескольких сил"},
+                    {"id": "inclined-plane", "name": "Наклонная плоскость"},
+                    {"id": "momentum", "name": "Импульс и закон сохранения импульса"}
+                ]
+            },
+            {
+                "id": "statics", 
+                "name": "Статика",
+                "topics": [
+                    {"id": "equilibrium", "name": "Условия равновесия"},
+                    {"id": "torque", "name": "Момент силы"},
+                    {"id": "center-mass", "name": "Центр масс"},
+                    {"id": "simple-machines", "name": "Простые механизмы"}
+                ]
+            },
+            {
+                "id": "conservation-laws", 
+                "name": "Законы сохранения",
+                "topics": [
+                    {"id": "work", "name": "Работа"},
+                    {"id": "kinetic-energy", "name": "Кинетическая энергия"},
+                    {"id": "potential-energy", "name": "Потенциальная энергия"},
+                    {"id": "energy-conservation", "name": "Закон сохранения энергии"}
+                ]
+            },
+            {
+                "id": "oscillations-waves", 
+                "name": "Механические колебания и волны",
+                "topics": [
+                    {"id": "harmonic-oscillations", "name": "Гармонические колебания"},
+                    {"id": "pendulums", "name": "Маятники"},
+                    {"id": "mechanical-waves", "name": "Механические волны"},
+                    {"id": "resonance", "name": "Резонанс"}
+                ]
+            }
         ]
     },
     "thermodynamics": {
@@ -189,9 +238,54 @@ PHYSICS_SECTIONS = {
         "icon": "thermometer",
         "color": "#E74C3C",
         "subsections": [
-            {"id": "heat", "name": "Теплота и температура"},
-            {"id": "laws", "name": "Законы термодинамики"},
-            {"id": "gases", "name": "Идеальный газ"}
+            {
+                "id": "molecular-kinetic", 
+                "name": "Молекулярно-кинетическая теория",
+                "topics": [
+                    {"id": "matter-structure", "name": "Строение вещества"},
+                    {"id": "temperature", "name": "Температура"},
+                    {"id": "gas-pressure", "name": "Давление газа"}
+                ]
+            },
+            {
+                "id": "heat-processes", 
+                "name": "Тепловые процессы",
+                "topics": [
+                    {"id": "thermal-conductivity", "name": "Теплопроводность"},
+                    {"id": "convection", "name": "Конвекция"},
+                    {"id": "radiation", "name": "Излучение"},
+                    {"id": "heat-quantity", "name": "Количество теплоты"}
+                ]
+            },
+            {
+                "id": "ideal-gas", 
+                "name": "Идеальный газ",
+                "topics": [
+                    {"id": "state-equation", "name": "Уравнение состояния"},
+                    {"id": "isoprocesses", "name": "Изопроцессы"},
+                    {"id": "gas-laws", "name": "Газовые законы"}
+                ]
+            },
+            {
+                "id": "thermodynamics-laws", 
+                "name": "Законы термодинамики",
+                "topics": [
+                    {"id": "first-law", "name": "Первый закон"},
+                    {"id": "second-law", "name": "Второй закон"},
+                    {"id": "heat-engines", "name": "Тепловые машины"},
+                    {"id": "efficiency", "name": "КПД"}
+                ]
+            },
+            {
+                "id": "phase-transitions", 
+                "name": "Фазовые переходы",
+                "topics": [
+                    {"id": "melting", "name": "Плавление"},
+                    {"id": "evaporation", "name": "Испарение"},
+                    {"id": "boiling", "name": "Кипение"},
+                    {"id": "phase-diagrams", "name": "Диаграммы состояния"}
+                ]
+            }
         ]
     },
     "electromagnetism": {
@@ -199,9 +293,56 @@ PHYSICS_SECTIONS = {
         "icon": "flash",
         "color": "#F39C12",
         "subsections": [
-            {"id": "electrostatics", "name": "Электростатика"},
-            {"id": "current", "name": "Постоянный ток"},
-            {"id": "magnetism", "name": "Магнетизм"}
+            {
+                "id": "electrostatics", 
+                "name": "Электростатика",
+                "topics": [
+                    {"id": "electric-charge", "name": "Электрический заряд"},
+                    {"id": "coulomb-law", "name": "Закон Кулона"},
+                    {"id": "electric-field", "name": "Электрическое поле"},
+                    {"id": "potential-voltage", "name": "Потенциал и напряжение"},
+                    {"id": "capacitors", "name": "Конденсаторы"}
+                ]
+            },
+            {
+                "id": "direct-current", 
+                "name": "Постоянный ток",
+                "topics": [
+                    {"id": "current-strength", "name": "Сила тока"},
+                    {"id": "ohm-law", "name": "Закон Ома"},
+                    {"id": "work-power", "name": "Работа и мощность тока"},
+                    {"id": "conductor-connections", "name": "Соединение проводников"}
+                ]
+            },
+            {
+                "id": "magnetism", 
+                "name": "Магнетизм",
+                "topics": [
+                    {"id": "magnetic-field", "name": "Магнитное поле"},
+                    {"id": "ampere-force", "name": "Сила Ампера"},
+                    {"id": "lorentz-force", "name": "Сила Лоренца"}
+                ]
+            },
+            {
+                "id": "electromagnetic-induction", 
+                "name": "Электромагнитная индукция",
+                "topics": [
+                    {"id": "faraday-law", "name": "Закон Фарадея"},
+                    {"id": "lenz-rule", "name": "Правило Ленца"},
+                    {"id": "inductance", "name": "Индуктивность"},
+                    {"id": "eddy-currents", "name": "Вихревые токи"}
+                ]
+            },
+            {
+                "id": "alternating-current", 
+                "name": "Переменный ток",
+                "topics": [
+                    {"id": "sinusoidal-current", "name": "Синусоидальный ток"},
+                    {"id": "reactive-resistance", "name": "Реактивное сопротивление"},
+                    {"id": "transformers", "name": "Трансформаторы"},
+                    {"id": "power-transmission", "name": "Передача электроэнергии"}
+                ]
+            }
         ]
     },
     "optics": {
@@ -209,97 +350,315 @@ PHYSICS_SECTIONS = {
         "icon": "eye",
         "color": "#9B59B6",
         "subsections": [
-            {"id": "geometric", "name": "Геометрическая оптика"},
-            {"id": "wave", "name": "Волновая оптика"},
-            {"id": "quantum", "name": "Квантовая оптика"}
+            {
+                "id": "geometric-optics", 
+                "name": "Геометрическая оптика",
+                "topics": [
+                    {"id": "light-propagation", "name": "Распространение света"},
+                    {"id": "reflection", "name": "Отражение"},
+                    {"id": "refraction", "name": "Преломление"},
+                    {"id": "lenses-mirrors", "name": "Линзы и зеркала"},
+                    {"id": "optical-devices", "name": "Оптические приборы"}
+                ]
+            },
+            {
+                "id": "wave-optics", 
+                "name": "Волновая оптика",
+                "topics": [
+                    {"id": "interference", "name": "Интерференция"},
+                    {"id": "diffraction", "name": "Дифракция"},
+                    {"id": "polarization", "name": "Поляризация"}
+                ]
+            },
+            {
+                "id": "quantum-optics", 
+                "name": "Квантовая оптика",
+                "topics": [
+                    {"id": "photoelectric-effect", "name": "Фотоэффект"},
+                    {"id": "light-dualism", "name": "Дуализм света"},
+                    {"id": "emission-spectra", "name": "Спектры излучения"},
+                    {"id": "lasers", "name": "Лазеры"}
+                ]
+            }
         ]
     },
     "atomic": {
-        "name": "Атомная физика",
+        "name": "Атомная и ядерная физика",
         "icon": "planet",
         "color": "#1ABC9C",
         "subsections": [
-            {"id": "structure", "name": "Строение атома"},
-            {"id": "nuclear", "name": "Ядерная физика"},
-            {"id": "radioactivity", "name": "Радиоактивность"}
+            {
+                "id": "atom-structure", 
+                "name": "Строение атома",
+                "topics": [
+                    {"id": "atom-models", "name": "Модели атома"},
+                    {"id": "energy-levels", "name": "Энергетические уровни"},
+                    {"id": "electron-shells", "name": "Электронные оболочки"}
+                ]
+            },
+            {
+                "id": "quantum-physics", 
+                "name": "Квантовая физика",
+                "topics": [
+                    {"id": "de-broglie-waves", "name": "Волны де Бройля"},
+                    {"id": "heisenberg-uncertainty", "name": "Неопределённость Гейзенберга"}
+                ]
+            },
+            {
+                "id": "nuclear-physics", 
+                "name": "Ядерная физика",
+                "topics": [
+                    {"id": "nucleus-structure", "name": "Строение ядра"},
+                    {"id": "nuclear-forces", "name": "Ядерные силы"},
+                    {"id": "binding-energy", "name": "Энергия связи"}
+                ]
+            },
+            {
+                "id": "radioactivity", 
+                "name": "Радиоактивность",
+                "topics": [
+                    {"id": "decay-types", "name": "Виды распада"},
+                    {"id": "decay-law", "name": "Закон радиоактивного распада"},
+                    {"id": "radiation-doses", "name": "Дозы излучения"}
+                ]
+            },
+            {
+                "id": "nuclear-reactions", 
+                "name": "Ядерные реакции",
+                "topics": [
+                    {"id": "fission", "name": "Деление ядер"},
+                    {"id": "fusion", "name": "Термоядерный синтез"},
+                    {"id": "nuclear-energy-use", "name": "Применение ядерной энергии"}
+                ]
+            }
         ]
     }
 }
 
 # Initial topics data
 INITIAL_TOPICS = [
-    {
-        "id": "kinematics-1",
-        "section": "mechanics",
-        "subsection": "kinematics",
-        "title": "Прямолинейное равномерное движение",
-        "brief_info": "Прямолинейное равномерное движение — это движение тела по прямой линии с постоянной скоростью. При таком движении тело проходит равные расстояния за равные промежутки времени.",
-        "example_problem": "Автомобиль движется со скоростью 72 км/ч. Какое расстояние он пройдёт за 2,5 часа?\n\nРешение:\nv = 72 км/ч\nt = 2,5 ч\nS = v × t = 72 × 2,5 = 180 км\n\nОтвет: 180 км",
-        "formulas": ["S = v × t", "v = S / t", "t = S / v"]
-    },
-    {
-        "id": "kinematics-2",
-        "section": "mechanics",
-        "subsection": "kinematics",
-        "title": "Равноускоренное движение",
-        "brief_info": "Равноускоренное движение — это движение с постоянным ускорением. Скорость тела изменяется равномерно со временем.",
-        "example_problem": "Тело начинает движение из состояния покоя с ускорением 2 м/с². Какую скорость оно приобретёт через 5 секунд?\n\nРешение:\nv₀ = 0 м/с\na = 2 м/с²\nt = 5 с\nv = v₀ + at = 0 + 2×5 = 10 м/с\n\nОтвет: 10 м/с",
-        "formulas": ["v = v₀ + at", "S = v₀t + at²/2", "v² = v₀² + 2aS"]
-    },
-    {
-        "id": "dynamics-1",
-        "section": "mechanics",
-        "subsection": "dynamics",
-        "title": "Первый закон Ньютона",
-        "brief_info": "Первый закон Ньютона (закон инерции): тело сохраняет состояние покоя или равномерного прямолинейного движения, пока на него не действуют внешние силы или их равнодействующая равна нулю.",
-        "example_problem": "Шайба скользит по льду с постоянной скоростью. Какие силы действуют на шайбу? Почему она не останавливается мгновенно?\n\nРешение:\nНа шайбу действуют: сила тяжести (вниз), сила реакции опоры (вверх) и сила трения (против движения). Вертикальные силы компенсируют друг друга. Сила трения о лёд очень мала, поэтому шайба долго сохраняет движение по инерции.",
-        "formulas": ["∑F = 0 → v = const"]
-    },
-    {
-        "id": "dynamics-2",
-        "section": "mechanics",
-        "subsection": "dynamics",
-        "title": "Второй закон Ньютона",
-        "brief_info": "Второй закон Ньютона: ускорение тела прямо пропорционально равнодействующей всех сил и обратно пропорционально массе тела.",
-        "example_problem": "На тело массой 5 кг действует сила 20 Н. Найти ускорение тела.\n\nРешение:\nm = 5 кг\nF = 20 Н\na = F/m = 20/5 = 4 м/с²\n\nОтвет: 4 м/с²",
-        "formulas": ["F = ma", "a = F/m", "m = F/a"]
-    },
-    {
-        "id": "thermo-1",
-        "section": "thermodynamics",
-        "subsection": "heat",
-        "title": "Количество теплоты",
-        "brief_info": "Количество теплоты — это энергия, которую тело получает или отдаёт при теплообмене. Измеряется в джоулях (Дж).",
-        "example_problem": "Какое количество теплоты необходимо для нагревания 2 кг воды от 20°C до 80°C? Удельная теплоёмкость воды 4200 Дж/(кг·°C).\n\nРешение:\nm = 2 кг\nc = 4200 Дж/(кг·°C)\nΔt = 80 - 20 = 60°C\nQ = cmΔt = 4200 × 2 × 60 = 504000 Дж = 504 кДж\n\nОтвет: 504 кДж",
-        "formulas": ["Q = cmΔt", "Q = λm", "Q = rm"]
-    },
-    {
-        "id": "electro-1",
-        "section": "electromagnetism",
-        "subsection": "current",
-        "title": "Закон Ома",
-        "brief_info": "Закон Ома для участка цепи: сила тока прямо пропорциональна напряжению и обратно пропорциональна сопротивлению.",
-        "example_problem": "Найти силу тока в проводнике сопротивлением 10 Ом при напряжении 220 В.\n\nРешение:\nU = 220 В\nR = 10 Ом\nI = U/R = 220/10 = 22 А\n\nОтвет: 22 А",
-        "formulas": ["I = U/R", "U = IR", "R = U/I"]
-    },
-    {
-        "id": "optics-1",
-        "section": "optics",
-        "subsection": "geometric",
-        "title": "Закон отражения света",
-        "brief_info": "Закон отражения: угол падения равен углу отражения. Падающий луч, отражённый луч и перпендикуляр к поверхности лежат в одной плоскости.",
-        "example_problem": "Луч света падает на плоское зеркало под углом 30° к поверхности. Определить угол между падающим и отражённым лучами.\n\nРешение:\nУгол падения к нормали: α = 90° - 30° = 60°\nУгол отражения: β = α = 60°\nУгол между лучами = α + β = 60° + 60° = 120°\n\nОтвет: 120°",
-        "formulas": ["α = β", "n = sin(α)/sin(β)"]
-    },
-    {
-        "id": "atomic-1",
-        "section": "atomic",
-        "subsection": "structure",
-        "title": "Модель атома Бора",
-        "brief_info": "Модель Бора: электроны движутся по стационарным орбитам, не излучая энергию. Излучение происходит при переходе между орбитами.",
-        "example_problem": "Электрон в атоме водорода переходит с третьего на второй энергетический уровень. Определить длину волны излучённого фотона.\n\nРешение:\nИспользуем формулу Ридберга:\n1/λ = R(1/n₁² - 1/n₂²)\n1/λ = 1.097×10⁷(1/4 - 1/9)\n1/λ = 1.097×10⁷ × 5/36\nλ ≈ 656 нм (красная линия водорода)\n\nОтвет: 656 нм",
-        "formulas": ["E = hν", "λ = h/p", "En = -13.6/n² эВ"]
-    }
+    # ==================== МЕХАНИКА ====================
+    # Кинематика
+    {"id": "linear-motion", "section": "mechanics", "subsection": "kinematics", "topic": "linear-motion",
+     "title": "Прямолинейное движение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "uniform-accelerated", "section": "mechanics", "subsection": "kinematics", "topic": "uniform-accelerated",
+     "title": "Равномерное и равноускоренное движение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "circular-motion", "section": "mechanics", "subsection": "kinematics", "topic": "circular-motion",
+     "title": "Движение по окружности", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "relative-motion", "section": "mechanics", "subsection": "kinematics", "topic": "relative-motion",
+     "title": "Относительность движения", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "motion-graphs", "section": "mechanics", "subsection": "kinematics", "topic": "motion-graphs",
+     "title": "Графики движения", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Динамика
+    {"id": "newton-laws", "section": "mechanics", "subsection": "dynamics", "topic": "newton-laws",
+     "title": "Законы Ньютона", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "forces", "section": "mechanics", "subsection": "dynamics", "topic": "forces",
+     "title": "Силы в механике", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "multiple-forces", "section": "mechanics", "subsection": "dynamics", "topic": "multiple-forces",
+     "title": "Движение под действием нескольких сил", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "inclined-plane", "section": "mechanics", "subsection": "dynamics", "topic": "inclined-plane",
+     "title": "Наклонная плоскость", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "momentum", "section": "mechanics", "subsection": "dynamics", "topic": "momentum",
+     "title": "Импульс и закон сохранения импульса", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Статика
+    {"id": "equilibrium", "section": "mechanics", "subsection": "statics", "topic": "equilibrium",
+     "title": "Условия равновесия", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "torque", "section": "mechanics", "subsection": "statics", "topic": "torque",
+     "title": "Момент силы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "center-mass", "section": "mechanics", "subsection": "statics", "topic": "center-mass",
+     "title": "Центр масс", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "simple-machines", "section": "mechanics", "subsection": "statics", "topic": "simple-machines",
+     "title": "Простые механизмы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Законы сохранения
+    {"id": "work", "section": "mechanics", "subsection": "conservation-laws", "topic": "work",
+     "title": "Работа", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "kinetic-energy", "section": "mechanics", "subsection": "conservation-laws", "topic": "kinetic-energy",
+     "title": "Кинетическая энергия", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "potential-energy", "section": "mechanics", "subsection": "conservation-laws", "topic": "potential-energy",
+     "title": "Потенциальная энергия", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "energy-conservation", "section": "mechanics", "subsection": "conservation-laws", "topic": "energy-conservation",
+     "title": "Закон сохранения энергии", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Механические колебания и волны
+    {"id": "harmonic-oscillations", "section": "mechanics", "subsection": "oscillations-waves", "topic": "harmonic-oscillations",
+     "title": "Гармонические колебания", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "pendulums", "section": "mechanics", "subsection": "oscillations-waves", "topic": "pendulums",
+     "title": "Маятники", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "mechanical-waves", "section": "mechanics", "subsection": "oscillations-waves", "topic": "mechanical-waves",
+     "title": "Механические волны", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "resonance", "section": "mechanics", "subsection": "oscillations-waves", "topic": "resonance",
+     "title": "Резонанс", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # ==================== ТЕРМОДИНАМИКА ====================
+    # Молекулярно-кинетическая теория
+    {"id": "matter-structure", "section": "thermodynamics", "subsection": "molecular-kinetic", "topic": "matter-structure",
+     "title": "Строение вещества", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "temperature", "section": "thermodynamics", "subsection": "molecular-kinetic", "topic": "temperature",
+     "title": "Температура", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "gas-pressure", "section": "thermodynamics", "subsection": "molecular-kinetic", "topic": "gas-pressure",
+     "title": "Давление газа", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Тепловые процессы
+    {"id": "thermal-conductivity", "section": "thermodynamics", "subsection": "heat-processes", "topic": "thermal-conductivity",
+     "title": "Теплопроводность", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "convection", "section": "thermodynamics", "subsection": "heat-processes", "topic": "convection",
+     "title": "Конвекция", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "radiation", "section": "thermodynamics", "subsection": "heat-processes", "topic": "radiation",
+     "title": "Излучение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "heat-quantity", "section": "thermodynamics", "subsection": "heat-processes", "topic": "heat-quantity",
+     "title": "Количество теплоты", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Идеальный газ
+    {"id": "state-equation", "section": "thermodynamics", "subsection": "ideal-gas", "topic": "state-equation",
+     "title": "Уравнение состояния", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "isoprocesses", "section": "thermodynamics", "subsection": "ideal-gas", "topic": "isoprocesses",
+     "title": "Изопроцессы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "gas-laws", "section": "thermodynamics", "subsection": "ideal-gas", "topic": "gas-laws",
+     "title": "Газовые законы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Законы термодинамики
+    {"id": "first-law", "section": "thermodynamics", "subsection": "thermodynamics-laws", "topic": "first-law",
+     "title": "Первый закон", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "second-law", "section": "thermodynamics", "subsection": "thermodynamics-laws", "topic": "second-law",
+     "title": "Второй закон", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "heat-engines", "section": "thermodynamics", "subsection": "thermodynamics-laws", "topic": "heat-engines",
+     "title": "Тепловые машины", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "efficiency", "section": "thermodynamics", "subsection": "thermodynamics-laws", "topic": "efficiency",
+     "title": "КПД", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Фазовые переходы
+    {"id": "melting", "section": "thermodynamics", "subsection": "phase-transitions", "topic": "melting",
+     "title": "Плавление", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "evaporation", "section": "thermodynamics", "subsection": "phase-transitions", "topic": "evaporation",
+     "title": "Испарение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "boiling", "section": "thermodynamics", "subsection": "phase-transitions", "topic": "boiling",
+     "title": "Кипение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "phase-diagrams", "section": "thermodynamics", "subsection": "phase-transitions", "topic": "phase-diagrams",
+     "title": "Диаграммы состояния", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # ==================== ЭЛЕКТРИЧЕСТВО И МАГНЕТИЗМ ====================
+    # Электростатика
+    {"id": "electric-charge", "section": "electromagnetism", "subsection": "electrostatics", "topic": "electric-charge",
+     "title": "Электрический заряд", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "coulomb-law", "section": "electromagnetism", "subsection": "electrostatics", "topic": "coulomb-law",
+     "title": "Закон Кулона", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "electric-field", "section": "electromagnetism", "subsection": "electrostatics", "topic": "electric-field",
+     "title": "Электрическое поле", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "potential-voltage", "section": "electromagnetism", "subsection": "electrostatics", "topic": "potential-voltage",
+     "title": "Потенциал и напряжение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "capacitors", "section": "electromagnetism", "subsection": "electrostatics", "topic": "capacitors",
+     "title": "Конденсаторы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Постоянный ток
+    {"id": "current-strength", "section": "electromagnetism", "subsection": "direct-current", "topic": "current-strength",
+     "title": "Сила тока", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "ohm-law", "section": "electromagnetism", "subsection": "direct-current", "topic": "ohm-law",
+     "title": "Закон Ома", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "work-power", "section": "electromagnetism", "subsection": "direct-current", "topic": "work-power",
+     "title": "Работа и мощность тока", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "conductor-connections", "section": "electromagnetism", "subsection": "direct-current", "topic": "conductor-connections",
+     "title": "Соединение проводников", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Магнетизм
+    {"id": "magnetic-field", "section": "electromagnetism", "subsection": "magnetism", "topic": "magnetic-field",
+     "title": "Магнитное поле", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "ampere-force", "section": "electromagnetism", "subsection": "magnetism", "topic": "ampere-force",
+     "title": "Сила Ампера", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "lorentz-force", "section": "electromagnetism", "subsection": "magnetism", "topic": "lorentz-force",
+     "title": "Сила Лоренца", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Электромагнитная индукция
+    {"id": "faraday-law", "section": "electromagnetism", "subsection": "electromagnetic-induction", "topic": "faraday-law",
+     "title": "Закон Фарадея", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "lenz-rule", "section": "electromagnetism", "subsection": "electromagnetic-induction", "topic": "lenz-rule",
+     "title": "Правило Ленца", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "inductance", "section": "electromagnetism", "subsection": "electromagnetic-induction", "topic": "inductance",
+     "title": "Индуктивность", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "eddy-currents", "section": "electromagnetism", "subsection": "electromagnetic-induction", "topic": "eddy-currents",
+     "title": "Вихревые токи", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Переменный ток
+    {"id": "sinusoidal-current", "section": "electromagnetism", "subsection": "alternating-current", "topic": "sinusoidal-current",
+     "title": "Синусоидальный ток", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "reactive-resistance", "section": "electromagnetism", "subsection": "alternating-current", "topic": "reactive-resistance",
+     "title": "Реактивное сопротивление", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "transformers", "section": "electromagnetism", "subsection": "alternating-current", "topic": "transformers",
+     "title": "Трансформаторы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "power-transmission", "section": "electromagnetism", "subsection": "alternating-current", "topic": "power-transmission",
+     "title": "Передача электроэнергии", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # ==================== ОПТИКА ====================
+    # Геометрическая оптика
+    {"id": "light-propagation", "section": "optics", "subsection": "geometric-optics", "topic": "light-propagation",
+     "title": "Распространение света", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "reflection", "section": "optics", "subsection": "geometric-optics", "topic": "reflection",
+     "title": "Отражение", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "refraction", "section": "optics", "subsection": "geometric-optics", "topic": "refraction",
+     "title": "Преломление", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "lenses-mirrors", "section": "optics", "subsection": "geometric-optics", "topic": "lenses-mirrors",
+     "title": "Линзы и зеркала", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "optical-devices", "section": "optics", "subsection": "geometric-optics", "topic": "optical-devices",
+     "title": "Оптические приборы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Волновая оптика
+    {"id": "interference", "section": "optics", "subsection": "wave-optics", "topic": "interference",
+     "title": "Интерференция", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "diffraction", "section": "optics", "subsection": "wave-optics", "topic": "diffraction",
+     "title": "Дифракция", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "polarization", "section": "optics", "subsection": "wave-optics", "topic": "polarization",
+     "title": "Поляризация", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Квантовая оптика
+    {"id": "photoelectric-effect", "section": "optics", "subsection": "quantum-optics", "topic": "photoelectric-effect",
+     "title": "Фотоэффект", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "light-dualism", "section": "optics", "subsection": "quantum-optics", "topic": "light-dualism",
+     "title": "Дуализм света", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "emission-spectra", "section": "optics", "subsection": "quantum-optics", "topic": "emission-spectra",
+     "title": "Спектры излучения", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "lasers", "section": "optics", "subsection": "quantum-optics", "topic": "lasers",
+     "title": "Лазеры", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # ==================== АТОМНАЯ И ЯДЕРНАЯ ФИЗИКА ====================
+    # Строение атома
+    {"id": "atom-models", "section": "atomic", "subsection": "atom-structure", "topic": "atom-models",
+     "title": "Модели атома", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "energy-levels", "section": "atomic", "subsection": "atom-structure", "topic": "energy-levels",
+     "title": "Энергетические уровни", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "electron-shells", "section": "atomic", "subsection": "atom-structure", "topic": "electron-shells",
+     "title": "Электронные оболочки", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Квантовая физика
+    {"id": "de-broglie-waves", "section": "atomic", "subsection": "quantum-physics", "topic": "de-broglie-waves",
+     "title": "Волны де Бройля", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "heisenberg-uncertainty", "section": "atomic", "subsection": "quantum-physics", "topic": "heisenberg-uncertainty",
+     "title": "Неопределённость Гейзенберга", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Ядерная физика
+    {"id": "nucleus-structure", "section": "atomic", "subsection": "nuclear-physics", "topic": "nucleus-structure",
+     "title": "Строение ядра", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "nuclear-forces", "section": "atomic", "subsection": "nuclear-physics", "topic": "nuclear-forces",
+     "title": "Ядерные силы", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "binding-energy", "section": "atomic", "subsection": "nuclear-physics", "topic": "binding-energy",
+     "title": "Энергия связи", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Радиоактивность
+    {"id": "decay-types", "section": "atomic", "subsection": "radioactivity", "topic": "decay-types",
+     "title": "Виды распада", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "decay-law", "section": "atomic", "subsection": "radioactivity", "topic": "decay-law",
+     "title": "Закон радиоактивного распада", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "radiation-doses", "section": "atomic", "subsection": "radioactivity", "topic": "radiation-doses",
+     "title": "Дозы излучения", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    
+    # Ядерные реакции
+    {"id": "fission", "section": "atomic", "subsection": "nuclear-reactions", "topic": "fission",
+     "title": "Деление ядер", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "fusion", "section": "atomic", "subsection": "nuclear-reactions", "topic": "fusion",
+     "title": "Термоядерный синтез", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []},
+    {"id": "nuclear-energy-use", "section": "atomic", "subsection": "nuclear-reactions", "topic": "nuclear-energy-use",
+     "title": "Применение ядерной энергии", "brief_info": "Раздел в разработке", "example_problem": "", "formulas": []}
 ]
 
 # Initial tasks data
