@@ -97,7 +97,8 @@ export default function HomeScreen() {
         <View style={styles.menuGrid}>
           {menuItems.map((item, index) => (
             <MenuCard key={index} {...item} />
-          ))}n        </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
