@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import api from '../../src/services/api';
 import { useAuthStore } from '../../src/store/authStore';
 import { SuccessModal } from '../../src/components/SuccessModal';
@@ -50,6 +51,7 @@ export default function TestsSectionScreen() {
   const [testFinished, setTestFinished] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
