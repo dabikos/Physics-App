@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../src/store/authStore';
 import api from '../../src/services/api';
+import { AnimatedIcon } from '../../src/components/AnimatedIcon';
 
 interface Progress {
   overall_progress: number;
@@ -20,11 +22,41 @@ interface Progress {
   tests: { completed: number; total: number; percentage: number; scores: Record<string, number> };
 }
 
-const ProgressBar: React.FC<{ progress: number; color: string }> = ({ progress, color }) => (
-  <View style={styles.progressBarContainer}>
-    <View style={[styles.progressBar, { width: `${progress}%`, backgroundColor: color }]} />
-  </View>
-);
+const AnimatedProgressBar: React.FC<{ progress: number; color: string; delay?: number }> = ({ 
+  progress, 
+  color, 
+  delay = 0 
+}) => {
+  const animatedWidth = useRef(new Animated.Value(0)).current;
+  
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      Animated.timing(animatedWidth, {
+        toValue: progress,
+        duration: 800,
+        useNativeDriver: false,
+      }).start();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [progress]);
+
+  return (
+    <View style={styles.progressBarContainer}>
+      <Animated.View 
+        style={[
+          styles.progressBar, 
+          { 
+            width: animatedWidth.interpolate({
+              inputRange: [0, 100],
+              outputRange: ['0%', '100%'],
+            }), 
+            backgroundColor: color 
+          }
+        ]} 
+      />
+    </View>
+  );
+};
 
 export default function ProfileScreen() {
   const router = useRouter();
