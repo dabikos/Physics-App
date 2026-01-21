@@ -254,6 +254,15 @@ export default function TasksSectionScreen() {
 
         <View style={styles.bottomPadding} />
       </ScrollView>
+
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={handleCloseSuccessModal}
+        title="Задачи выполнены!"
+        subtitle={`Правильных ответов: ${correctCount} из ${tasks.length}`}
+        score={Math.round((correctCount / tasks.length) * 100)}
+        type="task"
+      />
     </SafeAreaView>
   );
 }
