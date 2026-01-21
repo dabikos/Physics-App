@@ -5,16 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-
-const { width } = Dimensions.get('window');
-const cardWidth = (width - 48) / 2;
 
 interface MenuCardProps {
   title: string;
@@ -22,10 +18,11 @@ interface MenuCardProps {
   icon: keyof typeof Ionicons.glyphMap;
   color: string;
   onPress: () => void;
+  width: number;
 }
 
-const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPress }) => (
-  <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPress, width }) => (
+  <TouchableOpacity style={[styles.card, { width }]} onPress={onPress} activeOpacity={0.8}>
     <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
       <Ionicons name={icon} size={28} color={color} />
     </View>
@@ -36,33 +33,35 @@ const MenuCard: React.FC<MenuCardProps> = ({ title, subtitle, icon, color, onPre
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const cardWidth = (width - 48) / 2;
 
-  const menuItems: MenuCardProps[] = [
+  const menuItems = [
     {
       title: 'Уроки',
       subtitle: 'Интерактивные уроки',
-      icon: 'book',
+      icon: 'book' as keyof typeof Ionicons.glyphMap,
       color: '#4A90D9',
       onPress: () => router.push('/lessons'),
     },
     {
       title: 'Задачи',
       subtitle: 'Практические задания',
-      icon: 'calculator',
+      icon: 'calculator' as keyof typeof Ionicons.glyphMap,
       color: '#E74C3C',
       onPress: () => router.push('/tasks'),
     },
     {
       title: 'Тесты',
       subtitle: 'Проверка знаний',
-      icon: 'checkbox',
+      icon: 'checkbox' as keyof typeof Ionicons.glyphMap,
       color: '#1ABC9C',
       onPress: () => router.push('/tests'),
     },
     {
       title: 'Формулы',
       subtitle: 'Справочник',
-      icon: 'flask',
+      icon: 'flask' as keyof typeof Ionicons.glyphMap,
       color: '#9B59B6',
       onPress: () => router.push('/formulas'),
     },
@@ -96,7 +95,7 @@ export default function HomeScreen() {
 
         <View style={styles.menuGrid}>
           {menuItems.map((item, index) => (
-            <MenuCard key={index} {...item} />
+            <MenuCard key={index} {...item} width={cardWidth} />
           ))}
         </View>
       </ScrollView>
@@ -157,7 +156,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   card: {
-    width: cardWidth,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
