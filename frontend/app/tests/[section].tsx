@@ -49,6 +49,7 @@ export default function TestsSectionScreen() {
   const [testStarted, setTestStarted] = useState(false);
   const [testFinished, setTestFinished] = useState(false);
   const [results, setResults] = useState<any>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
