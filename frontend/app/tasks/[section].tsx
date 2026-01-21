@@ -44,6 +44,8 @@ export default function TasksSectionScreen() {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [explanation, setExplanation] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
 
   useEffect(() => {
     fetchData();
