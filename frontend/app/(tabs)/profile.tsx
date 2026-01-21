@@ -151,35 +151,35 @@ export default function ProfileScreen() {
               <Text style={styles.overallProgressText}>
                 {progress.overall_progress}%
               </Text>
-              <ProgressBar progress={progress.overall_progress} color="#6C63FF" />
+              <AnimatedProgressBar progress={progress.overall_progress} color="#6C63FF" delay={200} />
             </View>
 
             <View style={styles.progressCards}>
               <View style={styles.progressCard}>
-                <Ionicons name="book" size={24} color="#4A90D9" />
+                <AnimatedIcon name="book" size={24} color="#4A90D9" animation="bounce" delay={300} />
                 <Text style={styles.progressCardTitle}>Уроки</Text>
                 <Text style={styles.progressCardValue}>
                   {progress.lessons.completed}/{progress.lessons.total}
                 </Text>
-                <ProgressBar progress={progress.lessons.percentage} color="#4A90D9" />
+                <AnimatedProgressBar progress={progress.lessons.percentage} color="#4A90D9" delay={400} />
               </View>
 
               <View style={styles.progressCard}>
-                <Ionicons name="calculator" size={24} color="#E74C3C" />
+                <AnimatedIcon name="calculator" size={24} color="#E74C3C" animation="shake" delay={400} />
                 <Text style={styles.progressCardTitle}>Задачи</Text>
                 <Text style={styles.progressCardValue}>
                   {progress.tasks.completed}/{progress.tasks.total}
                 </Text>
-                <ProgressBar progress={progress.tasks.percentage} color="#E74C3C" />
+                <AnimatedProgressBar progress={progress.tasks.percentage} color="#E74C3C" delay={500} />
               </View>
 
               <View style={styles.progressCard}>
-                <Ionicons name="checkbox" size={24} color="#1ABC9C" />
+                <AnimatedIcon name="checkbox" size={24} color="#1ABC9C" animation="pulse" delay={500} />
                 <Text style={styles.progressCardTitle}>Тесты</Text>
                 <Text style={styles.progressCardValue}>
                   {progress.tests.completed}/{progress.tests.total}
                 </Text>
-                <ProgressBar progress={progress.tests.percentage} color="#1ABC9C" />
+                <AnimatedProgressBar progress={progress.tests.percentage} color="#1ABC9C" delay={600} />
               </View>
             </View>
           </View>
