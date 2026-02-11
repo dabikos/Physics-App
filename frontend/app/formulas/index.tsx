@@ -1,59 +1,152 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   TextInput,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../src/services/api';
+import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import { MathText } from '../../src/components/MathText';
+import { useFavorites } from '../../src/hooks/useFavorites';
+import { useTheme } from '../../src/context/ThemeContext';
 
-interface Formula {
-  id: string;
-  section: string;
-  name: string;
-  formula: string;
-  description: string;
-}
+// Компонент для красивого отображения формулы в LaTeX
+const convertToLatex = (formula: string): string => {
+    let result = formula;
+    
+    // ВАЖНО: Сначала заменяем греческие буквы
+    // Добавляем пробелы после них, если следующая буква/цифра (чтобы LaTeX правильно разделил команду и переменную)
+    result = result
+      .replace(/Δ([a-zA-Z0-9])/g, '\\Delta $1')  // Delta перед буквой/цифрой
+      .replace(/Δ/g, '\\Delta')                   // Delta в остальных случаях
+      .replace(/ν([a-zA-Z0-9])/g, '\\nu $1')      // nu перед буквой/цифрой
+      .replace(/ν/g, '\\nu')                       // nu в остальных случаях
+      .replace(/λ([a-zA-Z0-9])/g, '\\lambda $1') // lambda перед буквой/цифрой
+      .replace(/λ/g, '\\lambda')                   // lambda в остальных случаях
+      .replace(/π([a-zA-Z0-9])/g, '\\pi $1')
+      .replace(/π/g, '\\pi')
+      .replace(/α([a-zA-Z0-9])/g, '\\alpha $1')
+      .replace(/α/g, '\\alpha')
+      .replace(/β([a-zA-Z0-9])/g, '\\beta $1')
+      .replace(/β/g, '\\beta')
+      .replace(/γ([a-zA-Z0-9])/g, '\\gamma $1')
+      .replace(/γ/g, '\\gamma')
+      .replace(/δ([a-zA-Z0-9])/g, '\\delta $1')
+      .replace(/δ/g, '\\delta')
+      .replace(/θ([a-zA-Z0-9])/g, '\\theta $1')
+      .replace(/θ/g, '\\theta')
+      .replace(/μ([a-zA-Z0-9])/g, '\\mu $1')
+      .replace(/μ/g, '\\mu')
+      .replace(/ρ([a-zA-Z0-9])/g, '\\rho $1')
+      .replace(/ρ/g, '\\rho')
+      .replace(/ω([a-zA-Z0-9])/g, '\\omega $1')
+      .replace(/ω/g, '\\omega')
+      .replace(/Ω([a-zA-Z0-9])/g, '\\Omega $1')
+      .replace(/Ω/g, '\\Omega')
+      .replace(/Σ([a-zA-Z0-9])/g, '\\Sigma $1')
+      .replace(/Σ/g, '\\Sigma')
+      .replace(/∑/g, '\\sum')
+      .replace(/∫/g, '\\int')
+      .replace(/∞/g, '\\infty')
+      .replace(/→/g, '\\rightarrow');
+    
+    // Затем обрабатываем корни с выражениями в скобках: √(x) -> \sqrt{x}
+    result = result.replace(/√\(([^)]+)\)/g, (match, expr) => {
+      // Конвертируем выражение внутри корня
+      const inner = expr.replace(/\//g, ' \\div ');
+      return `\\sqrt{${inner}}`;
+    });
+    
+    // Обрабатываем простые дроби вида x / y или x/y
+    // ВАЖНО: проверяем, что в числителе/знаменателе НЕТ обратных слешей (LaTeX команд)
+    result = result.replace(/([a-zA-Z0-9_]+)\s*\/\s*([a-zA-Z0-9_]+)/g, (match, num, den) => {
+      // Пропускаем если это часть уже обработанной конструкции
+      if (match.includes('\\sqrt') || match.includes('\\frac') || match.includes('\\cdot')) {
+        return match;
+      }
+      // Пропускаем если в числителе или знаменателе есть обратный слеш (LaTeX команда)
+      if (num.includes('\\') || den.includes('\\')) {
+        return match;
+      }
+      return `\\frac{${num}}{${den}}`;
+    });
+    
+    // Обрабатываем дроби со скобками: (x) / (y)
+    result = result.replace(/\(([^)]+)\)\s*\/\s*\(([^)]+)\)/g, (match, num, den) => {
+      if (match.includes('\\sqrt') || match.includes('\\frac')) {
+        return match;
+      }
+      // Пропускаем если есть LaTeX команды
+      if (num.includes('\\') || den.includes('\\')) {
+        return match;
+      }
+      return `\\frac{${num}}{${den}}`;
+    });
+    
+    // Степени
+    result = result
+      .replace(/²/g, '^2')
+      .replace(/³/g, '^3')
+      .replace(/⁴/g, '^4');
+    
+    // Индексы
+    result = result
+      .replace(/₀/g, '_0')
+      .replace(/₁/g, '_1')
+      .replace(/₂/g, '_2')
+      .replace(/₃/g, '_3');
+    
+    // Операторы
+    result = result
+      .replace(/·/g, ' \\cdot ')
+      .replace(/×/g, ' \\times ')
+      .replace(/÷/g, ' \\div ');
+    
+    // Обрабатываем cos, sin и другие функции
+    result = result.replace(/\bcos\b/g, '\\cos');
+    result = result.replace(/\bsin\b/g, '\\sin');
+    
+    return result;
+};
 
-interface Section {
-  name: string;
-  color: string;
-}
+const FormulaDisplay: React.FC<{ formula: string; color?: string }> = ({
+  formula,
+  color = '#4338CA',
+}) => {
+  if (!formula || !formula.trim()) {
+    return (
+      <View style={{ minHeight: 40, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color, fontSize: 18, fontWeight: '600' }}>{formula || ''}</Text>
+      </View>
+    );
+  }
+
+  const latexFormula = convertToLatex(formula);
+  const content = latexFormula.includes('$') ? latexFormula : `$$${latexFormula}$$`;
+
+  return (
+    <View style={{ width: '100%' }}>
+      <MathText content={content} textColor={color} fontSize={20} backgroundColor="transparent" />
+    </View>
+  );
+};
 
 export default function FormulasScreen() {
   const router = useRouter();
-  const [formulas, setFormulas] = useState<Formula[]>([]);
-  const [sections, setSections] = useState<Record<string, Section>>({});
-  const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { colors } = useTheme();
+  const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const [formulasRes, sectionsRes] = await Promise.all([
-        api.get('/formulas'),
-        api.get('/sections'),
-      ]);
-      setFormulas(formulasRes.data);
-      setSections(sectionsRes.data);
-    } catch (error) {
-      console.error('Error fetching formulas:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredFormulas = formulas.filter((formula) => {
+  const filteredFormulas = FORMULAS_DATA.filter((formula) => {
     const matchesSearch = formula.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       formula.formula.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesSection = !selectedSection || formula.section === selectedSection;
@@ -66,41 +159,33 @@ export default function FormulasScreen() {
     }
     acc[formula.section].push(formula);
     return acc;
-  }, {} as Record<string, Formula[]>);
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
-      </View>
-    );
-  }
+  }, {} as Record<string, typeof FORMULAS_DATA>);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Формулы</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('formulas.title')}</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#9CA3AF" style={styles.searchIcon} />
+      <View style={[styles.searchContainer, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+        <Ionicons name="search" size={20} color={colors.textMuted} style={styles.searchIcon} />
         <TextInput
-          style={styles.searchInput}
-          placeholder="Поиск формулы..."
-          placeholderTextColor="#9CA3AF"
+          style={[styles.searchInput, { color: colors.text }]}
+          placeholder={t('formulas.searchPlaceholder')}
+          placeholderTextColor={colors.textMuted}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <Ionicons name="close-circle" size={20} color="#9CA3AF" />
+            <Ionicons name="close-circle" size={20} color={colors.textMuted} />
           </TouchableOpacity>
         )}
       </View>
@@ -112,18 +197,19 @@ export default function FormulasScreen() {
         contentContainerStyle={styles.filtersContent}
       >
         <TouchableOpacity
-          style={[styles.filterChip, !selectedSection && styles.filterChipActive]}
+          style={[styles.filterChip, { backgroundColor: colors.chipBg, borderColor: colors.chipBorder }, !selectedSection && { backgroundColor: colors.chipActiveBg, borderColor: colors.chipActiveBg }]}
           onPress={() => setSelectedSection(null)}
         >
-          <Text style={[styles.filterChipText, !selectedSection && styles.filterChipTextActive]}>
-            Все
+          <Text style={[styles.filterChipText, { color: colors.textTertiary }, !selectedSection && styles.filterChipTextActive]}>
+            {t('common.all')}
           </Text>
         </TouchableOpacity>
-        {Object.entries(sections).map(([key, section]) => (
+        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
           <TouchableOpacity
             key={key}
             style={[
               styles.filterChip,
+              { backgroundColor: colors.chipBg, borderColor: colors.chipBorder },
               selectedSection === key && styles.filterChipActive,
               selectedSection === key && { backgroundColor: section.color },
             ]}
@@ -131,6 +217,7 @@ export default function FormulasScreen() {
           >
             <Text style={[
               styles.filterChipText,
+              { color: colors.textTertiary },
               selectedSection === key && styles.filterChipTextActive,
             ]}>
               {section.name}
@@ -143,20 +230,43 @@ export default function FormulasScreen() {
         {Object.entries(groupedFormulas).map(([sectionKey, sectionFormulas]) => (
           <View key={sectionKey} style={styles.sectionGroup}>
             <View style={styles.sectionHeader}>
-              <View style={[styles.sectionDot, { backgroundColor: sections[sectionKey]?.color || '#6C63FF' }]} />
-              <Text style={styles.sectionName}>{sections[sectionKey]?.name || sectionKey}</Text>
+              <View style={[styles.sectionDot, { backgroundColor: PHYSICS_SECTIONS[sectionKey]?.color || '#6C63FF' }]} />
+              <Text style={[styles.sectionName, { color: colors.textTertiary }]}>{PHYSICS_SECTIONS[sectionKey]?.name || sectionKey}</Text>
             </View>
             {sectionFormulas.map((formula) => (
               <TouchableOpacity
                 key={formula.id}
-                style={styles.formulaCard}
+                style={[styles.formulaCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
                 onPress={() => router.push(`/formulas/${formula.id}`)}
                 activeOpacity={0.8}
               >
-                <Text style={styles.formulaName}>{formula.name}</Text>
-                <View style={styles.formulaBox}>
-                  <Text style={styles.formulaText}>{formula.formula}</Text>
+                <View style={styles.formulaCardHeader}>
+                  <Text style={[styles.formulaName, { color: colors.text }]}>{formula.name}</Text>
+                  <TouchableOpacity
+                    onPress={() => toggleFavorite(formula.id, 'formula')}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  >
+                    <Ionicons
+                      name={isFavorite(formula.id, 'formula') ? 'heart' : 'heart-outline'}
+                      size={20}
+                      color={isFavorite(formula.id, 'formula') ? '#EF4444' : '#D1D5DB'}
+                    />
+                  </TouchableOpacity>
                 </View>
+                <View style={[
+                  styles.formulaBox, 
+                  { borderLeftColor: PHYSICS_SECTIONS[formula.section]?.color || '#6C63FF', backgroundColor: colors.cardAlt }
+                ]}>
+                  <FormulaDisplay 
+                    formula={formula.formula} 
+                    color={PHYSICS_SECTIONS[formula.section]?.color || '#4338CA'}
+                  />
+                </View>
+                {formula.description && (
+                  <Text style={[styles.formulaDescription, { color: colors.textTertiary }]} numberOfLines={2}>
+                    {formula.description}
+                  </Text>
+                )}
               </TouchableOpacity>
             ))}
           </View>
@@ -164,8 +274,8 @@ export default function FormulasScreen() {
 
         {filteredFormulas.length === 0 && (
           <View style={styles.emptyState}>
-            <Ionicons name="search" size={48} color="#D1D5DB" />
-            <Text style={styles.emptyText}>Формулы не найдены</Text>
+            <Ionicons name="search" size={48} color={colors.border} />
+            <Text style={[styles.emptyText, { color: colors.textTertiary }]}>{t('formulas.notFound')}</Text>
           </View>
         )}
 
@@ -178,12 +288,6 @@ export default function FormulasScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5F7FA',
   },
   header: {
@@ -289,29 +393,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 16,
-    marginBottom: 10,
+    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
   },
+  formulaCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   formulaName: {
     fontSize: 16,
     fontWeight: '600',
     color: '#1F2937',
-    marginBottom: 10,
   },
   formulaBox: {
-    backgroundColor: '#EEF2FF',
-    borderRadius: 10,
-    padding: 12,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 14,
+    borderLeftWidth: 3,
     alignItems: 'center',
   },
-  formulaText: {
-    fontSize: 18,
+  formulaTextDisplay: {
+    fontSize: 20,
     fontWeight: '600',
-    color: '#4338CA',
+    textAlign: 'center',
+  },
+  formulaDescription: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 10,
+    lineHeight: 18,
   },
   emptyState: {
     alignItems: 'center',

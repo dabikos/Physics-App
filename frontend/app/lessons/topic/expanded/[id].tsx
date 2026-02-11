@@ -1,0 +1,314 @@
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { usePhysicsData } from '../../../../src/hooks/usePhysicsData';
+import { generateExpandedContent } from '../../../../src/services/aiService';
+import { MathText } from '../../../../src/components/MathText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../../src/context/ThemeContext';
+import { useLanguage } from '../../../../src/context/LanguageContext';
+
+const CACHE_PREFIX = 'expanded_topic_';
+const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 дней
+
+export default function ExpandedTopicScreen() {
+  const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { PHYSICS_SECTIONS, getTopicById } = usePhysicsData();
+  
+  const topic = id ? getTopicById(id) : null;
+  const sectionInfo = topic ? PHYSICS_SECTIONS[topic.section] : null;
+  const sectionColor = sectionInfo?.color || '#6C63FF';
+  const sectionName = sectionInfo?.title || 'Физика';
+
+  const [expandedContent, setExpandedContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { getAILanguageName } = useLanguage();
+
+  useEffect(() => {
+    if (topic) {
+      loadContent();
+    }
+  }, [topic?.id]);
+
+  const loadContent = async (forceRefresh = false) => {
+    if (!topic) return;
+    
+    setError(null);
+    
+    // Проверяем кэш
+    if (!forceRefresh) {
+      try {
+        const cached = await AsyncStorage.getItem(CACHE_PREFIX + topic.id);
+        if (cached) {
+          const { content, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setExpandedContent(content);
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch (e) {
+        // Кэш не найден, продолжаем
+      }
+    }
+
+    // Генерируем новый контент
+    setIsLoading(true);
+    
+    const result = await generateExpandedContent(
+      topic.title,
+      topic.brief_info,
+      sectionName,
+      getAILanguageName()
+    );
+
+    if (result.success) {
+      setExpandedContent(result.content);
+      // Сохраняем в кэш
+      try {
+        await AsyncStorage.setItem(
+          CACHE_PREFIX + topic.id,
+          JSON.stringify({ content: result.content, timestamp: Date.now() })
+        );
+      } catch (e) {
+        // Ошибка кэширования не критична
+      }
+    } else {
+      setError(result.error || t('lessons.errorLoading'));
+    }
+    
+    setIsLoading(false);
+    setIsRefreshing(false);
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    loadContent(true);
+  };
+
+  if (!topic) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('common.topicNotFound')}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>
+          {topic.title}
+        </Text>
+        <TouchableOpacity 
+          style={styles.refreshButton} 
+          onPress={handleRefresh}
+          disabled={isLoading}
+        >
+          <Ionicons 
+            name="refresh" 
+            size={22} 
+            color={isLoading ? colors.border : colors.textTertiary} 
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* AI Badge */}
+      <View style={[styles.aiBadge, { backgroundColor: sectionColor + '15' }]}>
+        <Ionicons name="sparkles" size={16} color={sectionColor} />
+        <Text style={[styles.aiBadgeText, { color: sectionColor }]}>
+          {t('lessons.expandedTitle')}
+        </Text>
+      </View>
+
+      <ScrollView 
+        style={styles.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            colors={[sectionColor]}
+            tintColor={sectionColor}
+          />
+        }
+      >
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={sectionColor} />
+            <Text style={[styles.loadingText, { color: colors.text }]}>{t('lessons.aiGenerating')}</Text>
+            <Text style={[styles.loadingSubtext, { color: colors.textTertiary }]}>{t('lessons.aiGeneratingSubtext')}</Text>
+          </View>
+        ) : error ? (
+          <View style={styles.errorContainer}>
+            <Ionicons name="cloud-offline" size={48} color="#EF4444" />
+            <Text style={[styles.errorTitle, { color: colors.text }]}>{t('lessons.loadError')}</Text>
+            <Text style={[styles.errorText, { color: colors.textTertiary }]}>{error}</Text>
+            <TouchableOpacity 
+              style={[styles.retryButton, { backgroundColor: sectionColor }]}
+              onPress={() => loadContent(true)}
+            >
+              <Ionicons name="refresh" size={18} color="#FFFFFF" />
+              <Text style={styles.retryButtonText}>{t('common.retry')}</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={[styles.contentContainer, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+            <MathText
+              content={expandedContent}
+              textColor={colors.text}
+              fontSize={15}
+              backgroundColor={colors.card}
+            />
+          </View>
+        )}
+
+        <View style={styles.bottomPadding} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F7FA',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1F2937',
+    textAlign: 'center',
+    marginHorizontal: 8,
+  },
+  headerPlaceholder: {
+    width: 44,
+  },
+  refreshButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aiBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    gap: 6,
+  },
+  aiBadgeText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  content: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 100,
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1F2937',
+    marginTop: 16,
+  },
+  loadingSubtext: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 4,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 80,
+    paddingHorizontal: 24,
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginTop: 16,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginTop: 8,
+    lineHeight: 20,
+  },
+  retryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginTop: 20,
+    gap: 8,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  contentContainer: {
+    margin: 12,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  bottomPadding: {
+    height: 40,
+  },
+});

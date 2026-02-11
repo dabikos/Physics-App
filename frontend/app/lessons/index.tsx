@@ -5,14 +5,31 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { PHYSICS_SECTIONS } from '../../src/data/physicsData';
+import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import { useOfflineCache } from '../../src/hooks/useOfflineCache';
+import { useTheme } from '../../src/context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export default function LessonsScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { PHYSICS_SECTIONS } = usePhysicsData();
+  const { isOnline, isCached, cacheForOffline } = useOfflineCache();
+
+  const handleCacheOffline = async () => {
+    const success = await cacheForOffline();
+    if (success) {
+      Alert.alert(t('common.done'), t('lessons.offlineSaved'));
+    } else {
+      Alert.alert(t('common.error'), t('lessons.offlineSaveError'));
+    }
+  };
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
     const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -32,25 +49,38 @@ export default function LessonsScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Уроки</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('lessons.title')}</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
-        <Text style={styles.sectionTitle}>Выберите раздел</Text>
+        {!isOnline && (
+          <View style={[styles.offlineBanner, { backgroundColor: colors.warningBg, borderColor: colors.warning }]}>
+            <Text style={[styles.offlineBannerText, { color: colors.warning }]}>{t('common.offlineMode')}</Text>
+            {isCached && <Text style={[styles.offlineBannerSub, { color: colors.warning }]}>{t('common.offlineData')}</Text>}
+          </View>
+        )}
+        
+        <View style={styles.sectionTitleRow}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('lessons.selectSection')}</Text>
+          <TouchableOpacity style={[styles.cacheButton, { backgroundColor: colors.accentLight }]} onPress={handleCacheOffline}>
+            <Ionicons name="download-outline" size={18} color={colors.accent} />
+            <Text style={[styles.cacheButtonText, { color: colors.accent }]}>{isCached ? t('common.update') : t('common.offline')}</Text>
+          </TouchableOpacity>
+        </View>
         
         {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
           <TouchableOpacity
             key={key}
-            style={styles.sectionCard}
+            style={[styles.sectionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
             onPress={() => router.push(`/lessons/${key}`)}
             activeOpacity={0.8}
           >
@@ -58,12 +88,12 @@ export default function LessonsScreen() {
               <Ionicons name={getIconName(section.icon)} size={28} color={section.color} />
             </View>
             <View style={styles.sectionInfo}>
-              <Text style={styles.sectionName}>{section.name}</Text>
-              <Text style={styles.subsectionCount}>
-                {section.subsections.length} подразделов • {countTopics(key)} тем
+              <Text style={[styles.sectionName, { color: colors.text }]}>{section.name}</Text>
+              <Text style={[styles.subsectionCount, { color: colors.textTertiary }]}>
+                {t('lessons.subsectionsCount', { subsections: section.subsections.length, topics: countTopics(key) })}
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={24} color="#9CA3AF" />
+            <Ionicons name="chevron-forward" size={24} color={colors.textMuted} />
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -108,7 +138,45 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#1F2937',
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  cacheButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 4,
+  },
+  cacheButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#6C63FF',
+  },
+  offlineBanner: {
+    backgroundColor: '#FEF3C7',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#FCD34D',
+    alignItems: 'center',
+  },
+  offlineBannerText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#92400E',
+  },
+  offlineBannerSub: {
+    fontSize: 12,
+    color: '#92400E',
+    marginTop: 2,
   },
   sectionCard: {
     flexDirection: 'row',

@@ -21,3 +21,19 @@ class LlmChat:
             return "AI функция временно недоступна. Для активации настройте EMERGENT_LLM_KEY в .env файле."
         return "AI response placeholder"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

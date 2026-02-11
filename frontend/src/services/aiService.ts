@@ -1,0 +1,552 @@
+/**
+ * Multi-Provider AI Service
+ * GitHub Models API + Groq API с автоматическим fallback
+ */
+
+// ============= API КЛЮЧИ =============
+const GITHUB_PAT = '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';
+const GROQ_API_KEY = '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';
+
+// ============= ПРОВАЙДЕРЫ =============
+const GITHUB_API_URL = 'https://models.github.ai/inference/chat/completions';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+type ProviderName = 'github' | 'groq';
+
+interface ProviderConfig {
+  name: ProviderName;
+  url: string;
+  key: string;
+  model: string;
+}
+
+// Доступные модели
+export const AI_MODELS = {
+  // GitHub Models
+  GPT4O: 'gpt-4o',
+  GPT4O_MINI: 'gpt-4o-mini',
+  DEEPSEEK_R1: 'deepseek-r1',
+  // Groq Models
+  LLAMA_70B: 'llama-3.1-70b-versatile',
+  LLAMA_8B: 'llama-3.1-8b-instant',
+  MIXTRAL: 'mixtral-8x7b-32768',
+} as const;
+
+const DEFAULT_MODEL = AI_MODELS.GPT4O_MINI;
+const FALLBACK_MODEL = AI_MODELS.LLAMA_70B;
+const MAX_TOKENS = 4096;
+
+// Определяем к какому провайдеру относится модель
+const GROQ_MODELS = new Set([AI_MODELS.LLAMA_70B, AI_MODELS.LLAMA_8B, AI_MODELS.MIXTRAL]);
+
+interface ChatMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
+interface AIResponse {
+  success: boolean;
+  content: string;
+  error?: string;
+  tokens?: {
+    prompt: number;
+    completion: number;
+    total: number;
+  };
+}
+
+/**
+ * Отправка запроса к AI с автоматическим fallback между провайдерами
+ */
+export async function sendAIRequest(
+  messages: ChatMessage[],
+  options?: {
+    model?: string;
+    maxTokens?: number;
+    temperature?: number;
+    preferProvider?: ProviderName;
+  }
+): Promise<AIResponse> {
+  const requestedModel = options?.model || DEFAULT_MODEL;
+  const maxTokens = options?.maxTokens || MAX_TOKENS;
+  const temperature = options?.temperature ?? 0.7;
+
+  // Строим список провайдеров с приоритетом
+  const providers: ProviderConfig[] = [];
+
+  if (options?.preferProvider === 'groq') {
+    providers.push({ name: 'groq', url: GROQ_API_URL, key: GROQ_API_KEY, model: GROQ_MODELS.has(requestedModel as any) ? requestedModel : FALLBACK_MODEL });
+    providers.push({ name: 'github', url: GITHUB_API_URL, key: GITHUB_PAT, model: DEFAULT_MODEL });
+  } else {
+    providers.push({ name: 'github', url: GITHUB_API_URL, key: GITHUB_PAT, model: GROQ_MODELS.has(requestedModel as any) ? DEFAULT_MODEL : requestedModel });
+    providers.push({ name: 'groq', url: GROQ_API_URL, key: GROQ_API_KEY, model: GROQ_MODELS.has(requestedModel as any) ? requestedModel : FALLBACK_MODEL });
+  }
+
+  let lastError = '';
+
+  for (const provider of providers) {
+    if (!provider.key) continue;
+
+    try {
+      const response = await fetch(provider.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${provider.key}`,
+        },
+        body: JSON.stringify({
+          model: provider.model,
+          messages,
+          max_tokens: maxTokens,
+          temperature,
+        }),
+      });
+
+      if (response.status === 429) {
+        lastError = `${provider.name}: лимит запросов`;
+        continue; // Пробуем следующий провайдер
+      }
+
+      if (response.status === 401) {
+        lastError = `${provider.name}: неверный API ключ`;
+        continue;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        lastError = `${provider.name}: ${response.status} - ${errorData.message || 'error'}`;
+        continue;
+      }
+
+      const data = await response.json();
+
+      return {
+        success: true,
+        content: data.choices[0]?.message?.content || '',
+        tokens: data.usage ? {
+          prompt: data.usage.prompt_tokens,
+          completion: data.usage.completion_tokens,
+          total: data.usage.total_tokens,
+        } : undefined,
+      };
+    } catch (error: any) {
+      lastError = `${provider.name}: ${error.message}`;
+      continue;
+    }
+  }
+
+  return {
+    success: false,
+    content: '',
+    error: lastError || 'Все AI провайдеры недоступны. Попробуйте позже.',
+  };
+}
+
+/**
+ * Генерация расширенного контента темы
+ */
+export async function generateExpandedContent(
+  topicTitle: string,
+  briefInfo: string,
+  sectionName: string,
+  language: string = 'русский'
+): Promise<AIResponse> {
+  const systemPrompt = `Ты — опытный преподаватель физики. Твоя задача — объяснять сложные концепции простым и понятным языком для школьников и студентов.
+
+ВАЖНО: Все формулы и математические выражения должны быть в формате LaTeX:
+- Блочные формулы: $$F = ma$$ (отдельной строкой)
+- Inline формулы: $v = v_0 + at$ (в тексте)
+
+Примеры правильного использования:
+- "Согласно второму закону Ньютона: $$F = ma$$"
+- "где $m$ — масса тела, $a$ — ускорение"
+- "Кинетическая энергия: $$E_k = \\frac{1}{2}mv^2$$"
+
+Правила:
+- Пиши на языке: ${language}
+- ВСЕ формулы ТОЛЬКО в LaTeX формате
+- Используй примеры из реальной жизни
+- Объясняй формулы пошагово
+- Добавляй интересные факты
+- Структурируй текст с заголовками
+- Избегай слишком сложных терминов без объяснения`;
+
+  const userPrompt = `Напиши расширенное объяснение темы "${topicTitle}" из раздела "${sectionName}".
+
+Краткая информация о теме:
+${briefInfo}
+
+Структура ответа:
+1. **Введение** — что это и зачем нужно
+2. **Основные понятия** — ключевые термины и определения  
+3. **Физический смысл** — как это работает на практике
+4. **Примеры из жизни** — где мы это встречаем
+5. **Формулы и расчёты** — основные формулы в LaTeX с пояснениями
+6. **Интересные факты** — что ещё интересного связано с этой темой
+7. **Итог** — краткое резюме
+
+ВАЖНО: Все формулы записывай в формате LaTeX ($$...$$ или $...$).
+Отвечай на языке: ${language}.
+Пиши подробно, но понятно. Объём: 800-1200 слов.`;
+
+  return sendAIRequest([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt },
+  ], {
+    model: AI_MODELS.GPT4O_MINI,
+    maxTokens: 4096,
+    temperature: 0.7,
+  });
+}
+
+/**
+ * AI Чат по физике
+ */
+export async function sendChatMessage(
+  userMessage: string,
+  conversationHistory: ChatMessage[] = [],
+  language: string = 'русский'
+): Promise<AIResponse> {
+  const systemPrompt = `Ты — AI помощник по физике. Помогаешь школьникам и студентам понимать физику.
+
+ВАЖНО: Все формулы и математические выражения записывай в формате LaTeX:
+- Блочные формулы (отдельной строкой): $$F = ma$$
+- Inline формулы (в тексте): $v = v_0 + at$
+
+Примеры:
+- "Закон Ома: $$I = \\frac{U}{R}$$"
+- "где $I$ — сила тока, $U$ — напряжение, $R$ — сопротивление"
+
+Правила:
+- Отвечай на языке: ${language}
+- ВСЕ формулы ТОЛЬКО в LaTeX формате
+- Объясняй понятно и пошагово
+- Используй примеры из жизни
+- При использовании формулы — объясни каждый символ
+- Если вопрос не по физике — вежливо переведи тему на физику
+- Будь дружелюбным и поддерживающим`;
+
+  const messages: ChatMessage[] = [
+    { role: 'system', content: systemPrompt },
+    ...conversationHistory,
+    { role: 'user', content: userMessage },
+  ];
+
+  return sendAIRequest(messages, {
+    model: AI_MODELS.GPT4O_MINI,
+    maxTokens: 2048,
+    temperature: 0.8,
+  });
+}
+
+/**
+ * Генерация подсказки для задачи
+ */
+export async function generateTaskHint(
+  taskCondition: string,
+  currentStep?: string,
+  language: string = 'русский'
+): Promise<AIResponse> {
+  const systemPrompt = `Ты — репетитор по физике. Даёшь подсказки, но НЕ решаешь задачу целиком.
+
+ВАЖНО: Все формулы записывай в формате LaTeX:
+- Блочные формулы: $$F = ma$$
+- Inline формулы: $v$, $t$, $a$
+
+Правила:
+- Отвечай на языке: ${language}
+- Подскажи направление мысли
+- Напомни нужную формулу в LaTeX формате
+- НЕ давай готовый ответ
+- Помоги ученику самому дойти до решения`;
+
+  const userPrompt = currentStep
+    ? `Задача: ${taskCondition}\n\nУченик на этапе: ${currentStep}\n\nДай небольшую подсказку для следующего шага. Формулы пиши в LaTeX.`
+    : `Задача: ${taskCondition}\n\nДай подсказку с чего начать решение. Формулы пиши в LaTeX.`;
+
+  return sendAIRequest([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt },
+  ], {
+    model: AI_MODELS.GPT4O_MINI,
+    maxTokens: 512,
+    temperature: 0.6,
+  });
+}
+
+/**
+ * Проверка доступности API
+ */
+export async function checkAPIHealth(): Promise<boolean> {
+  try {
+    const result = await sendAIRequest([
+      { role: 'user', content: 'Привет' }
+    ], { maxTokens: 10 });
+    
+    return result.success;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Получить информацию о лимитах
+ */
+export function getAPILimits() {
+  return {
+    github: {
+      'gpt-4o': { rpm: 10, rpd: 50, description: 'Самая мощная модель' },
+      'gpt-4o-mini': { rpm: 15, rpd: 150, description: 'Быстрая и лёгкая' },
+      'deepseek-r1': { rpm: 15, rpd: 150, description: 'Хороша для рассуждений' },
+    },
+    groq: {
+      'llama-3.1-70b-versatile': { rpm: 30, rpd: 14400, description: 'Мощная open source' },
+      'llama-3.1-8b-instant': { rpm: 30, rpd: 14400, description: 'Быстрая open source' },
+      'mixtral-8x7b-32768': { rpm: 30, rpd: 14400, description: 'Большой контекст' },
+    },
+  };
+}
+
+/**
+ * Интерфейс сгенерированного теста
+ */
+export interface GeneratedTestQuestion {
+  question: string;
+  options: string[];
+  correct: number;
+  explanation?: string;
+}
+
+export interface GeneratedTest {
+  title: string;
+  section: string;
+  difficulty: string;
+  questions: GeneratedTestQuestion[];
+}
+
+/**
+ * Генерация теста по физике с AI
+ */
+export async function generateTest(
+  sectionName: string,
+  sectionKey: string,
+  difficulty: 'basic' | 'standard' | 'advanced' | 'olympiad',
+  questionCount: number,
+  language: string = 'русский'
+): Promise<{ success: boolean; test?: GeneratedTest; error?: string }> {
+  const difficultyDescriptions = {
+    basic: 'базовый уровень — простые вопросы на понимание основ',
+    standard: 'стандартный уровень — вопросы средней сложности с расчётами',
+    advanced: 'продвинутый уровень — сложные вопросы с комплексными задачами',
+    olympiad: 'олимпиадный уровень — очень сложные нестандартные задачи',
+  };
+
+  const systemPrompt = `Ты — эксперт по составлению тестов по физике. Создаёшь качественные тестовые вопросы с вариантами ответов.
+
+ВАЖНО: Формулы записывай в Unicode символах для лучшего отображения:
+- Используй: ², ³, ⁴ для степеней
+- Используй: ₀, ₁, ₂ для индексов  
+- Используй: α, β, γ, δ, θ, λ, μ, π, ω для греческих букв
+- Используй: ·, ×, ÷, √, ∞, →, ≈, ≠, ≤, ≥ для операторов
+
+Примеры правильного написания:
+- "F = ma" вместо "F = m*a"
+- "E = mc²" вместо "E = mc^2"
+- "v₀" вместо "v_0"
+- "sinα" вместо "sin(alpha)"
+
+Правила:
+- Пиши на языке: ${language}
+- Каждый вопрос должен иметь 4 варианта ответа
+- Только ОДИН ответ правильный
+- Вопросы должны быть разнообразными
+- Включай как теоретические, так и расчётные вопросы
+- Для расчётных задач указывай все необходимые данные`;
+
+  const userPrompt = `Создай тест по физике:
+- Раздел: ${sectionName}
+- Сложность: ${difficultyDescriptions[difficulty]}
+- Количество вопросов: ${questionCount}
+
+КРИТИЧЕСКИ ВАЖНО:
+1. Для расчётных задач СНАЧАЛА вычисли правильный ответ
+2. В объяснении укажи РЕАЛЬНЫЙ расчёт с финальным ответом (например: "s = v·t = 36·10 = 360 м")
+3. Правильный ответ (correct) ДОЛЖЕН точно совпадать с финальным ответом в объяснении
+4. Если в объяснении написано "= 360 м", то правильный ответ должен быть вариантом "360 м"
+
+Верни ответ СТРОГО в JSON формате:
+{
+  "title": "Название теста",
+  "questions": [
+    {
+      "question": "Текст вопроса",
+      "options": ["Вариант A", "Вариант B", "Вариант C", "Вариант D"],
+      "correct": 0,
+      "explanation": "Краткое пояснение с расчётом и финальным ответом (например: 's = v·t = 36·10 = 360 м')"
+    }
+  ]
+}
+
+Где "correct" — индекс правильного ответа (0-3), который ТОЧНО совпадает с финальным ответом в explanation.
+Формулы пиши в Unicode (², α, ·, √ и т.д.), НЕ в LaTeX.
+Верни ТОЛЬКО JSON, без дополнительного текста.`;
+
+  const result = await sendAIRequest([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt },
+  ], {
+    model: AI_MODELS.GPT4O_MINI,
+    maxTokens: 4096,
+    temperature: 0.7,
+  });
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  try {
+    // Извлекаем JSON из ответа
+    let jsonStr = result.content;
+    
+    // Убираем markdown блоки если есть
+    const jsonMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) {
+      jsonStr = jsonMatch[1];
+    }
+    
+    // Пробуем найти JSON объект
+    const jsonStartIndex = jsonStr.indexOf('{');
+    const jsonEndIndex = jsonStr.lastIndexOf('}');
+    if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
+      jsonStr = jsonStr.slice(jsonStartIndex, jsonEndIndex + 1);
+    }
+
+    const parsed = JSON.parse(jsonStr);
+    
+    // Валидация
+    if (!parsed.questions || !Array.isArray(parsed.questions)) {
+      return { success: false, error: 'Неверный формат ответа AI' };
+    }
+
+    // Функция для извлечения числового значения из текста
+    const extractValueFromText = (text: string): string | null => {
+      // Ищем паттерны типа "= 360 м", "= 60 Дж", "360 м", "60 Дж" и т.д.
+      // Ищем последнее числовое значение с единицами измерения (обычно это финальный ответ)
+      const patterns = [
+        /=\s*([0-9,.\s×·]+)\s*([А-Яа-яЁёA-Za-z²³⁴°\/]+)/g,  // = 360 м, = 60 Дж
+        /([0-9,.\s×·]+)\s*([А-Яа-яЁёA-Za-z²³⁴°\/]+)/g,      // 360 м, 60 Дж
+      ];
+      
+      let allMatches: RegExpMatchArray[] = [];
+      for (const pattern of patterns) {
+        const matches = [...text.matchAll(pattern)];
+        allMatches.push(...matches);
+      }
+      
+      // Берем последнее совпадение (обычно это финальный ответ)
+      if (allMatches.length > 0) {
+        const lastMatch = allMatches[allMatches.length - 1];
+        let number = lastMatch[1].trim().replace(/\s/g, '').replace(/×/g, '').replace(/·/g, '');
+        const unit = lastMatch[2].trim();
+        
+        // Обрабатываем случаи с умножением типа "36·10 = 360"
+        if (number.includes('=')) {
+          const parts = number.split('=');
+          number = parts[parts.length - 1].trim();
+        }
+        
+        return `${number} ${unit}`;
+      }
+      
+      return null;
+    };
+
+    // Функция для нормализации текста (убираем лишние пробелы, приводим к единому формату)
+    const normalizeText = (text: string): string => {
+      return text
+        .replace(/\s+/g, ' ')
+        .replace(/×/g, '')
+        .replace(/·/g, '')
+        .trim()
+        .toLowerCase();
+    };
+
+    // Функция для извлечения числа из текста
+    const extractNumber = (text: string): string | null => {
+      const match = text.match(/([0-9,.\s]+)/);
+      return match ? match[1].trim().replace(/\s/g, '').replace(/,/g, '.') : null;
+    };
+
+    // Валидация и исправление правильных ответов
+    const validatedQuestions = parsed.questions.map((q: any) => {
+      let correctIndex = typeof q.correct === 'number' ? q.correct : 0;
+      const options = q.options || ['', '', '', ''];
+      const explanation = q.explanation || '';
+
+      // Если есть объяснение, пытаемся извлечь из него правильный ответ
+      if (explanation) {
+        const extractedValue = extractValueFromText(explanation);
+        
+        if (extractedValue) {
+          // Извлекаем число из извлеченного значения
+          const extractedNumber = extractNumber(extractedValue);
+          const extractedUnit = extractedValue.split(' ').slice(1).join(' ').trim();
+          
+          if (extractedNumber) {
+            // Ищем этот ответ среди вариантов
+            for (let i = 0; i < options.length; i++) {
+              const optionNumber = extractNumber(options[i]);
+              const optionUnit = options[i].replace(/[0-9,.\s]/g, '').trim();
+              
+              // Проверяем совпадение числа и единицы измерения
+              if (optionNumber && extractedNumber) {
+                // Сравниваем числа (с учетом возможных различий в формате)
+                const num1 = parseFloat(optionNumber);
+                const num2 = parseFloat(extractedNumber);
+                
+                // Если числа совпадают (с небольшой погрешностью) и единицы похожи
+                if (Math.abs(num1 - num2) < 0.01) {
+                  // Проверяем единицы измерения (может быть разный формат, но смысл тот же)
+                  const unitsMatch = !extractedUnit || 
+                    optionUnit.toLowerCase().includes(extractedUnit.toLowerCase()) ||
+                    extractedUnit.toLowerCase().includes(optionUnit.toLowerCase()) ||
+                    optionUnit.length === 0; // Если единицы не указаны в варианте
+                  
+                  if (unitsMatch) {
+                    correctIndex = i;
+                    console.log(`Исправлен правильный ответ для вопроса: "${q.question.substring(0, 50)}..."`);
+                    console.log(`  Было: ${options[typeof q.correct === 'number' ? q.correct : 0]}`);
+                    console.log(`  Стало: ${options[i]}`);
+                    console.log(`  Из объяснения: ${extractedValue}`);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return {
+        question: q.question || '',
+        options,
+        correct: correctIndex,
+        explanation,
+      };
+    });
+
+    const test: GeneratedTest = {
+      title: parsed.title || `Тест по ${sectionName}`,
+      section: sectionKey,
+      difficulty,
+      questions: validatedQuestions,
+    };
+
+    return { success: true, test };
+  } catch (parseError: any) {
+    console.error('Parse error:', parseError, result.content);
+    return { success: false, error: 'Ошибка парсинга ответа AI. Попробуйте ещё раз.' };
+  }
+}
+
+

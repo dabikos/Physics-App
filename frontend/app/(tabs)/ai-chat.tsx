@@ -1,21 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  FlatList,
+  ScrollView,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { useAuthStore } from '../../src/store/authStore';
-import api from '../../src/services/api';
+import { sendChatMessage } from '../../src/services/aiService';
+import { MathText } from '../../src/components/MathText';
+import { useTheme } from '../../src/context/ThemeContext';
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../../src/context/LanguageContext';
 
 interface Message {
   id: string;
@@ -24,30 +25,22 @@ interface Message {
   timestamp: Date;
 }
 
+interface ChatHistoryMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export default function AIChatScreen() {
-  const router = useRouter();
-  const { user, token } = useAuthStore();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const flatListRef = useRef<FlatList>(null);
-
-  useEffect(() => {
-    if (!token) {
-      Alert.alert(
-        'Требуется авторизация',
-        'Для использования AI чата необходимо войти в аккаунт',
-        [
-          { text: 'Войти', onPress: () => router.push('/auth/login') },
-          { text: 'Отмена', style: 'cancel' },
-        ]
-      );
-    }
-  }, [token]);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const { colors, isDark } = useTheme();
+  const { t } = useTranslation();
+  const { getAILanguageName } = useLanguage();
 
   const sendMessage = async () => {
-    if (!inputText.trim() || isLoading || !token) return;
+    if (!inputText.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -60,86 +53,76 @@ export default function AIChatScreen() {
     setInputText('');
     setIsLoading(true);
 
-    try {
-      const response = await api.post('/chat', {
-        message: userMessage.content,
-        session_id: sessionId,
-      });
+    const history: ChatHistoryMessage[] = messages.slice(-10).map(m => ({
+      role: m.role,
+      content: m.content,
+    }));
 
+    const result = await sendChatMessage(userMessage.content, history, getAILanguageName());
+
+    if (result.success) {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.data.response,
+        content: result.content,
         timestamp: new Date(),
       };
-
-      setSessionId(response.data.session_id);
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error: any) {
-      Alert.alert('Ошибка', 'Не удалось получить ответ от AI');
-    } finally {
-      setIsLoading(false);
+    } else {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `⚠️ ${result.error || t('aiChat.errorConnection')}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     }
+    
+    setIsLoading(false);
+    
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 300);
   };
 
-  const renderMessage = ({ item }: { item: Message }) => (
-    <View
-      style={[
-        styles.messageContainer,
-        item.role === 'user' ? styles.userMessage : styles.assistantMessage,
-      ]}
-    >
-      {item.role === 'assistant' && (
-        <View style={styles.avatarContainer}>
-          <Ionicons name="sparkles" size={16} color="#6C63FF" />
-        </View>
-      )}
-      <View
-        style={[
-          styles.messageBubble,
-          item.role === 'user' ? styles.userBubble : styles.assistantBubble,
-        ]}
-      >
-        <Text
-          style={[
-            styles.messageText,
-            item.role === 'user' ? styles.userText : styles.assistantText,
-          ]}
-        >
-          {item.content}
-        </Text>
+  // Рендер сообщения пользователя
+  const renderUserMessage = (message: Message) => (
+    <View key={message.id} style={styles.userMessageContainer}>
+      <View style={styles.userBubble}>
+        <Text style={styles.userText}>{message.content}</Text>
       </View>
     </View>
   );
 
-  if (!token) {
-    return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>AI Помощник</Text>
+  // Рендер сообщения AI - используем MathText как в "Изучить больше"
+  const renderAssistantMessage = (message: Message) => (
+    <View key={message.id} style={styles.assistantMessageContainer}>
+      <View style={styles.assistantHeader}>
+        <View style={[styles.avatarContainer, { backgroundColor: colors.accentLight }]}>
+          <Ionicons name="sparkles" size={16} color={colors.accent} />
         </View>
-        <View style={styles.emptyState}>
-          <Ionicons name="lock-closed" size={64} color="#D1D5DB" />
-          <Text style={styles.emptyTitle}>Требуется авторизация</Text>
-          <Text style={styles.emptySubtitle}>
-            Войдите в аккаунт для использования AI чата
-          </Text>
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={() => router.push('/auth/login')}
-          >
-            <Text style={styles.loginButtonText}>Войти</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
+        <Text style={[styles.assistantLabel, { color: colors.accent }]}>{t('aiChat.assistant')}</Text>
+      </View>
+      {/* Точно как в expanded - карточка с MathText */}
+      <View style={[styles.assistantCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+        <MathText
+          content={message.content}
+          textColor={colors.text}
+          fontSize={15}
+          backgroundColor={colors.card}
+        />
+      </View>
+    </View>
+  );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>AI Помощник</Text>
-        <Text style={styles.headerSubtitle}>Спроси о физике</Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('aiChat.title')}</Text>
+        <View style={[styles.headerBadge, { backgroundColor: colors.accentLight }]}>
+          <Ionicons name="flask" size={12} color={colors.accent} />
+          <Text style={[styles.headerBadgeText, { color: colors.accent }]}>LaTeX</Text>
+        </View>
       </View>
 
       <KeyboardAvoidingView
@@ -149,46 +132,78 @@ export default function AIChatScreen() {
       >
         {messages.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="chatbubble-ellipses" size={64} color="#D1D5DB" />
-            <Text style={styles.emptyTitle}>Начни диалог</Text>
-            <Text style={styles.emptySubtitle}>
-              Задай вопрос по физике и получи ответ от AI
+            <Ionicons name="chatbubble-ellipses" size={64} color={colors.border} />
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiChat.emptyTitle')}</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
+              {t('aiChat.emptySubtitle')}
             </Text>
+            <View style={styles.examplesContainer}>
+              <Text style={[styles.examplesTitle, { color: colors.textTertiary }]}>{t('aiChat.examplesTitle')}</Text>
+              <TouchableOpacity 
+                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                onPress={() => setInputText(t('aiChat.example1').replace(/^[^\p{L}]*/u, ''))}
+              >
+                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example1')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                onPress={() => setInputText(t('aiChat.example2').replace(/^[^\p{L}]*/u, ''))}
+              >
+                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example2')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                onPress={() => setInputText(t('aiChat.example3').replace(/^[^\p{L}]*/u, ''))}
+              >
+                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example3')}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            renderItem={renderMessage}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.messagesList}
-            onContentSizeChange={() =>
-              flatListRef.current?.scrollToEnd({ animated: true })
-            }
-          />
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.messagesList}
+            contentContainerStyle={styles.messagesContent}
+            showsVerticalScrollIndicator={false}
+            onContentSizeChange={() => {
+              setTimeout(() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+              }, 100);
+            }}
+          >
+            {messages.map((message) => 
+              message.role === 'user' 
+                ? renderUserMessage(message)
+                : renderAssistantMessage(message)
+            )}
+
+            {isLoading && (
+              <View style={[styles.loadingContainer, { backgroundColor: colors.card }]}>
+                <ActivityIndicator size="small" color={colors.accent} />
+                <Text style={[styles.loadingText, { color: colors.text }]}>{t('aiChat.sending')}</Text>
+                <Text style={[styles.loadingSubtext, { color: colors.textTertiary }]}>{t('aiChat.sendingSubtext')}</Text>
+              </View>
+            )}
+
+            <View style={styles.bottomPadding} />
+          </ScrollView>
         )}
 
-        {isLoading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="small" color="#6C63FF" />
-            <Text style={styles.loadingText}>AI думает...</Text>
-          </View>
-        )}
-
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { backgroundColor: colors.headerBg, borderTopColor: colors.border }]}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
             value={inputText}
             onChangeText={setInputText}
-            placeholder="Задайте вопрос по физике..."
-            placeholderTextColor="#9CA3AF"
+            placeholder={t('aiChat.placeholder')}
+            placeholderTextColor={colors.textMuted}
             multiline
             maxLength={1000}
           />
           <TouchableOpacity
             style={[
               styles.sendButton,
-              (!inputText.trim() || isLoading) && styles.sendButtonDisabled,
+              { backgroundColor: colors.accent },
+              (!inputText.trim() || isLoading) && { backgroundColor: colors.border },
             ]}
             onPress={sendMessage}
             disabled={!inputText.trim() || isLoading}
@@ -207,6 +222,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F7FA',
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 16,
     backgroundColor: '#FFFFFF',
@@ -218,65 +236,81 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1F2937',
   },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 4,
+  headerBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    gap: 4,
+  },
+  headerBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#6C63FF',
   },
   chatContainer: {
     flex: 1,
   },
   messagesList: {
-    padding: 16,
+    flex: 1,
   },
-  messageContainer: {
-    flexDirection: 'row',
+  messagesContent: {
+    padding: 12,
+  },
+  // Сообщение пользователя
+  userMessageContainer: {
+    alignItems: 'flex-end',
     marginBottom: 12,
-    alignItems: 'flex-start',
   },
-  userMessage: {
-    justifyContent: 'flex-end',
+  userBubble: {
+    maxWidth: '80%',
+    backgroundColor: '#6C63FF',
+    borderRadius: 16,
+    borderBottomRightRadius: 4,
+    padding: 12,
   },
-  assistantMessage: {
-    justifyContent: 'flex-start',
+  userText: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: '#FFFFFF',
+  },
+  // Сообщение AI
+  assistantMessageContainer: {
+    marginBottom: 16,
+  },
+  assistantHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
   },
   avatarContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#EEF2FF',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
   },
-  messageBubble: {
-    maxWidth: '75%',
-    padding: 12,
+  assistantLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#6C63FF',
+  },
+  // Карточка с ответом AI - точно как в expanded
+  assistantCard: {
     borderRadius: 16,
-  },
-  userBubble: {
-    backgroundColor: '#6C63FF',
-    borderBottomRightRadius: 4,
-  },
-  assistantBubble: {
+    overflow: 'hidden',
     backgroundColor: '#FFFFFF',
-    borderBottomLeftRadius: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowRadius: 8,
     elevation: 2,
   },
-  messageText: {
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  userText: {
-    color: '#FFFFFF',
-  },
-  assistantText: {
-    color: '#1F2937',
-  },
+  // Empty state
   emptyState: {
     flex: 1,
     justifyContent: 'center',
@@ -295,29 +329,54 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
-  loginButton: {
-    backgroundColor: '#6C63FF',
-    paddingHorizontal: 32,
+  examplesContainer: {
+    marginTop: 24,
+    width: '100%',
+    maxWidth: 300,
+  },
+  examplesTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#6B7280',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  exampleButton: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
-    marginTop: 24,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  loginButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  exampleText: {
+    fontSize: 14,
+    color: '#374151',
   },
+  // Loading
   loadingContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 12,
+    padding: 24,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginVertical: 8,
   },
   loadingText: {
-    marginLeft: 8,
-    color: '#6B7280',
-    fontSize: 14,
+    marginTop: 12,
+    color: '#1F2937',
+    fontSize: 15,
+    fontWeight: '500',
   },
+  loadingSubtext: {
+    marginTop: 4,
+    color: '#6B7280',
+    fontSize: 13,
+  },
+  // Input
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -347,5 +406,8 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     backgroundColor: '#D1D5DB',
+  },
+  bottomPadding: {
+    height: 20,
   },
 });

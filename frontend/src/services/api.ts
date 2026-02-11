@@ -1,7 +1,8 @@
 import axios from 'axios';
-import Constants from 'expo-constants';
+import i18next from 'i18next';
 
-const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'http://192.168.1.72:8003';
+// Backend URL — замените на ваш URL от DigitalOcean после деплоя
+const API_URL = 'https://ВАШЕ_ПРИЛОЖЕНИЕ.ondigitalocean.app';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
@@ -9,6 +10,13 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+// Add Accept-Language header from current i18next language
+api.interceptors.request.use((config) => {
+  const lang = i18next.language || 'ru';
+  config.headers['Accept-Language'] = lang;
+  return config;
 });
 
 api.interceptors.response.use(

@@ -9,38 +9,45 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { PHYSICS_SECTIONS, getTopicsBySubsection } from '../../src/data/physicsData';
+import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import { useFavorites } from '../../src/hooks/useFavorites';
+import { useTheme } from '../../src/context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 export default function SectionScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const [selectedSubsection, setSelectedSubsection] = useState<string | null>(null);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { PHYSICS_SECTIONS, getTopicsBySubsection } = usePhysicsData();
 
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
 
   if (!sectionData) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Раздел не найден</Text>
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+        <Text style={{ color: colors.text }}>Раздел не найден</Text>
       </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{sectionData.name}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{sectionData.name}</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
-        <Text style={styles.sectionTitle}>Подразделы</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Подразделы</Text>
 
         {sectionData.subsections.map((subsection) => {
           const topics = getTopicsBySubsection(section!, subsection.id);
@@ -50,7 +57,8 @@ export default function SectionScreen() {
               <TouchableOpacity
                 style={[
                   styles.subsectionCard,
-                  selectedSubsection === subsection.id && styles.subsectionCardActive,
+                  { backgroundColor: colors.card, shadowColor: colors.shadowColor },
+                  selectedSubsection === subsection.id && { backgroundColor: colors.accentLight },
                 ]}
                 onPress={() =>
                   setSelectedSubsection(
@@ -66,13 +74,13 @@ export default function SectionScreen() {
                   ]}
                 />
                 <View style={styles.subsectionInfo}>
-                  <Text style={styles.subsectionName}>{subsection.name}</Text>
-                  <Text style={styles.topicsCount}>{subsection.topics.length} тем</Text>
+                  <Text style={[styles.subsectionName, { color: colors.text }]}>{subsection.name}</Text>
+                  <Text style={[styles.topicsCount, { color: colors.textTertiary }]}>{t('lessons.topicsCount', { count: subsection.topics.length })}</Text>
                 </View>
                 <Ionicons
                   name={selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
                   size={20}
-                  color="#6B7280"
+                  color={colors.textTertiary}
                 />
               </TouchableOpacity>
 
@@ -81,17 +89,30 @@ export default function SectionScreen() {
                   {topics.map((topic) => (
                     <TouchableOpacity
                       key={topic.id}
-                      style={[styles.topicCard, { borderLeftColor: sectionData.color }]}
+                      style={[styles.topicCard, { borderLeftColor: sectionData.color, backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
                       onPress={() => router.push(`/lessons/topic/${topic.id}`)}
                       activeOpacity={0.8}
                     >
                       <View style={styles.topicContent}>
-                        <Text style={styles.topicTitle}>{topic.title}</Text>
-                        <Text style={styles.topicBrief} numberOfLines={2}>
+                        <Text style={[styles.topicTitle, { color: colors.text }]}>{topic.title}</Text>
+                        <Text style={[styles.topicBrief, { color: colors.textTertiary }]} numberOfLines={2}>
                           {topic.brief_info}
                         </Text>
                       </View>
-                      <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(topic.id, 'topic');
+                        }}
+                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                        style={styles.favButton}
+                      >
+                        <Ionicons
+                          name={isFavorite(topic.id, 'topic') ? 'heart' : 'heart-outline'}
+                          size={20}
+                          color={isFavorite(topic.id, 'topic') ? '#EF4444' : '#D1D5DB'}
+                        />
+                      </TouchableOpacity>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -215,5 +236,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#6B7280',
     lineHeight: 18,
+  },
+  favButton: {
+    padding: 4,
+    marginLeft: 8,
   },
 });

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -7,12 +7,15 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Literal
 import uuid
+import hashlib
+import random
 from datetime import datetime, timedelta
 import bcrypt
 import jwt
-from emergentintegrations.llm.chat import LlmChat, UserMessage
+import json as json_module
+import httpx
 
 ROOT_DIR = Path(__file__).parent
 env_path = ROOT_DIR / '.env'
@@ -26,10 +29,60 @@ db = client[os.environ.get('DB_NAME', 'physics_ai')]
 # JWT Configuration
 SECRET_KEY = os.environ.get('SECRET_KEY', 'physics-ai-secret-key-2025')
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 24
+ACCESS_TOKEN_EXPIRE_HOURS = 10000
 
-# Emergent LLM Key
-EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
+# AI API Keys (GitHub Models + Groq)
+GITHUB_PAT = os.environ.get('GITHUB_PAT', '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')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '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')
+
+GITHUB_API_URL = 'https://models.github.ai/inference/chat/completions'
+GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+
+async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096, temperature: float = 0.7) -> str:
+    """Multi-provider AI: GitHub Models -> Groq fallback"""
+    messages = []
+    if system_message:
+        messages.append({"role": "system", "content": system_message})
+    messages.append({"role": "user", "content": prompt})
+
+    providers = [
+        {"url": GITHUB_API_URL, "key": GITHUB_PAT, "model": "gpt-4o-mini", "name": "github"},
+        {"url": GROQ_API_URL, "key": GROQ_API_KEY, "model": "llama-3.1-70b-versatile", "name": "groq"},
+    ]
+
+    last_error = None
+    async with httpx.AsyncClient(timeout=60.0) as client_http:
+        for provider in providers:
+            if not provider["key"]:
+                continue
+            try:
+                resp = await client_http.post(
+                    provider["url"],
+                    headers={
+                        "Authorization": f"Bearer {provider['key']}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": provider["model"],
+                        "messages": messages,
+                        "max_tokens": max_tokens,
+                        "temperature": temperature,
+                    },
+                )
+                if resp.status_code == 429:
+                    last_error = f"{provider['name']} rate limit"
+                    continue
+                if resp.status_code == 401:
+                    last_error = f"{provider['name']} auth error"
+                    continue
+                resp.raise_for_status()
+                data = resp.json()
+                return data["choices"][0]["message"]["content"]
+            except Exception as e:
+                last_error = str(e)
+                continue
+
+    raise Exception(f"All AI providers failed: {last_error}")
 
 # Create the main app
 app = FastAPI(title="Physics AI App")
@@ -52,6 +105,8 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     name: str
+    role: Literal["student", "teacher"]
+    class_id: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -61,6 +116,8 @@ class UserResponse(BaseModel):
     id: str
     email: str
     name: str
+    role: Literal["student", "teacher"]
+    class_id: Optional[str] = None
     progress: Dict[str, Any] = {}
     created_at: datetime
 
@@ -133,6 +190,50 @@ class GenerateTestRequest(BaseModel):
     section: str
     num_questions: int = 5
     difficulty: str = "medium"
+
+class TestSubmitRequest(BaseModel):
+    answers: List[int]
+    source: Optional[str] = "mobile"
+    assigned_test_id: Optional[str] = None
+
+class AssignedTestCreate(BaseModel):
+    title: str
+    class_id: str
+    scheduled_for: Optional[str] = None
+    section: Optional[str] = None
+    difficulty: Optional[str] = None
+    questions: List[Dict[str, Any]]
+    time_limit: int = 600
+
+class TeacherScoreAdjustment(BaseModel):
+    manual_adjustment: int
+
+class TestScoreOverride(BaseModel):
+    score_override: int
+
+class PairingSessionCreate(BaseModel):
+    class_id: Optional[str] = None
+    expires_in_minutes: int = 90
+
+class PairingJoinRequest(BaseModel):
+    code: str
+
+class DemoStateUpdate(BaseModel):
+    mode: Literal["idle", "theory", "problems", "simulations", "formulas", "test", "ai-explain", "worksheet"]
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    payload: Optional[Dict[str, Any]] = None
+
+class ProfileUpdate(BaseModel):
+    name: Optional[str] = None
+    avatar: Optional[str] = None  # emoji or identifier
+    grade: Optional[str] = None  # class/grade
+
+class DemoTestSubmit(BaseModel):
+    answers: List[int]
+
+class WorksheetSubmit(BaseModel):
+    answers: Dict[str, Any]  # taskId -> student answer
 
 class TaskWithSolution(BaseModel):
     id: str
@@ -965,6 +1066,8 @@ INITIAL_TESTS = [
 @api_router.post("/auth/register", response_model=TokenResponse)
 async def register(user_data: UserCreate):
     existing = await db.users.find_one({"email": user_data.email})
+    if user_data.role == "student" and not user_data.class_id:
+        raise HTTPException(status_code=400, detail="??? ??????? ????? ??????? ?????")
     if existing:
         raise HTTPException(status_code=400, detail="Email уже зарегистрирован")
     
@@ -974,6 +1077,9 @@ async def register(user_data: UserCreate):
         "email": user_data.email,
         "password": hash_password(user_data.password),
         "name": user_data.name,
+        "role": user_data.role,
+        "class_id": user_data.class_id if user_data.role == "student" else None,
+        "manual_adjustment": 0,
         "progress": {
             "completed_lessons": [],
             "completed_tasks": [],
@@ -991,6 +1097,8 @@ async def register(user_data: UserCreate):
             id=user_id,
             email=user_data.email,
             name=user_data.name,
+            role=user_data.role,
+            class_id=user_data.class_id if user_data.role == "student" else None,
             progress=user["progress"],
             created_at=user["created_at"]
         )
@@ -1009,6 +1117,8 @@ async def login(credentials: UserLogin):
             id=user["id"],
             email=user["email"],
             name=user["name"],
+            role=user.get("role", "student"),
+            class_id=user.get("class_id"),
             progress=user.get("progress", {}),
             created_at=user["created_at"]
         )
@@ -1020,6 +1130,8 @@ async def get_me(current_user: dict = Depends(get_current_user)):
         id=current_user["id"],
         email=current_user["email"],
         name=current_user["name"],
+        role=current_user.get("role", "student"),
+        class_id=current_user.get("class_id"),
         progress=current_user.get("progress", {}),
         created_at=current_user["created_at"]
     )
@@ -1081,11 +1193,7 @@ async def generate_topic_content(topic_id: str, request: GenerateContentRequest,
         raise HTTPException(status_code=404, detail="Тема не найдена")
     
     try:
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"topic-{topic_id}-{current_user['id']}",
-            system_message="Ты - опытный преподаватель физики. Объясняй материал понятно и с примерами. Используй формулы и конкретные числовые примеры. Отвечай на русском языке."
-        ).with_model("openai", "gpt-5.2")
+        system_msg = "Ты - опытный преподаватель физики. Объясняй материал понятно и с примерами. Используй формулы и конкретные числовые примеры. Отвечай на русском языке."
         
         if request.content_type == "detailed":
             prompt = f"Расскажи подробно о теме '{topic['title']}'. Включи теоретические основы, физический смысл, историю открытия и практическое применение. Используй формулы: {', '.join(topic.get('formulas', []))}."
@@ -1094,8 +1202,7 @@ async def generate_topic_content(topic_id: str, request: GenerateContentRequest,
         else:
             prompt = f"Создай 5 практических задач по теме '{topic['title']}' разной сложности. Для каждой задачи укажи условие и ответ (без решения)."
         
-        user_message = UserMessage(text=prompt)
-        response = await chat.send_message(user_message)
+        response = await call_ai(prompt, system_message=system_msg)
         
         return {"content": response, "type": request.content_type}
     except Exception as e:
@@ -1176,13 +1283,9 @@ async def generate_task(request: GenerateTaskRequest, current_user: dict = Depen
     diff_name = difficulty_ru.get(request.difficulty, "средняя")
     
     try:
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"task-gen-{current_user['id']}-{datetime.utcnow().timestamp()}",
-            system_message="""Ты - генератор задач по физике. Создавай задачи в формате JSON.
+        system_msg = """Ты - генератор задач по физике. Создавай задачи в формате JSON.
             
 ВАЖНО: Отвечай ТОЛЬКО валидным JSON без markdown разметки, без ```json```, просто чистый JSON."""
-        ).with_model("openai", "gpt-5.2")
         
         prompt = f"""Создай задачу по физике на тему "{section_name}" сложности "{diff_name}".
 
@@ -1210,8 +1313,7 @@ async def generate_task(request: GenerateTaskRequest, current_user: dict = Depen
 
 correct_answer - это индекс правильного ответа (0, 1, 2 или 3)."""
 
-        user_message = UserMessage(text=prompt)
-        response = await chat.send_message(user_message)
+        response = await call_ai(prompt, system_message=system_msg)
         
         # Parse JSON response
         import json
@@ -1266,13 +1368,9 @@ async def generate_test(request: GenerateTestRequest, current_user: dict = Depen
     section_name = section_names.get(request.section, request.section)
     
     try:
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=f"test-gen-{current_user['id']}-{datetime.utcnow().timestamp()}",
-            system_message="""Ты - генератор тестов по физике. Создавай тесты в формате JSON.
+        system_msg = """Ты - генератор тестов по физике. Создавай тесты в формате JSON.
             
 ВАЖНО: Отвечай ТОЛЬКО валидным JSON без markdown разметки, без ```json```, просто чистый JSON."""
-        ).with_model("openai", "gpt-5.2")
         
         prompt = f"""Создай тест из {request.num_questions} вопросов по теме "{section_name}".
 
@@ -1291,8 +1389,7 @@ async def generate_test(request: GenerateTestRequest, current_user: dict = Depen
 correct - это индекс правильного ответа (0, 1, 2 или 3).
 Создай ровно {request.num_questions} вопросов."""
 
-        user_message = UserMessage(text=prompt)
-        response = await chat.send_message(user_message)
+        response = await call_ai(prompt, system_message=system_msg)
         
         # Parse JSON response
         import json
@@ -1356,34 +1453,99 @@ async def get_test(test_id: str):
     return test
 
 @api_router.post("/tests/{test_id}/submit")
-async def submit_test(test_id: str, answers: Dict[str, List[int]], current_user: dict = Depends(get_current_user)):
+async def submit_test(test_id: str, request: TestSubmitRequest, current_user: dict = Depends(get_current_user)):
     test = await db.tests.find_one({"id": test_id})
     if not test:
         for t in INITIAL_TESTS:
             if t["id"] == test_id:
                 test = t
                 break
-    
+
+    assigned_test = None
     if not test:
-        raise HTTPException(status_code=404, detail="Тест не найден")
-    
-    user_answers = answers.get("answers", [])
+        assigned_test = await db.assigned_tests.find_one({"id": test_id})
+        if not assigned_test and request.assigned_test_id:
+            assigned_test = await db.assigned_tests.find_one({"id": request.assigned_test_id})
+        if assigned_test:
+            test = assigned_test
+
+    # Also check generated_tests collection
+    if not test:
+        gen_test = await db.generated_tests.find_one({"id": test_id})
+        if gen_test:
+            test = gen_test
+
+    # If test is still not found, save the result anyway with the answers
+    # (the frontend has the test data locally and validates there)
+    if not test:
+        num_answers = len(request.answers)
+        result_id = f"test-result-{uuid.uuid4().hex[:12]}"
+        result_doc = {
+            "id": result_id,
+            "user_id": current_user["id"],
+            "class_id": current_user.get("class_id"),
+            "test_id": test_id,
+            "assigned_test_id": None,
+            "source": request.source or "mobile",
+            "score": 0,
+            "score_override": None,
+            "score_final": 0,
+            "correct_count": 0,
+            "total": num_answers,
+            "answers": request.answers,
+            "created_at": datetime.utcnow()
+        }
+        await db.test_results.insert_one(result_doc)
+
+        await db.users.update_one(
+            {"id": current_user["id"]},
+            {"$addToSet": {"progress.completed_tests": test_id}}
+        )
+
+        return {
+            "score": 0,
+            "correct_count": 0,
+            "total": num_answers,
+            "results": [],
+            "result_id": result_id
+        }
+
+    user_answers = request.answers
     correct_count = 0
     results = []
-    
-    for i, question in enumerate(test["questions"]):
-        is_correct = i < len(user_answers) and user_answers[i] == question["correct"]
+    questions = test.get("questions", [])
+
+    for i, question in enumerate(questions):
+        is_correct = i < len(user_answers) and user_answers[i] == question.get("correct")
         if is_correct:
             correct_count += 1
         results.append({
-            "question": question["question"],
+            "question": question.get("question"),
             "correct": is_correct,
-            "correct_answer": question["correct"],
+            "correct_answer": question.get("correct"),
             "user_answer": user_answers[i] if i < len(user_answers) else None
         })
-    
-    score = int((correct_count / len(test["questions"])) * 100)
-    
+
+    score = int((correct_count / len(questions)) * 100) if questions else 0
+
+    result_id = f"test-result-{uuid.uuid4().hex[:12]}"
+    result_doc = {
+        "id": result_id,
+        "user_id": current_user["id"],
+        "class_id": current_user.get("class_id"),
+        "test_id": test_id,
+        "assigned_test_id": assigned_test["id"] if assigned_test else None,
+        "source": request.source or "mobile",
+        "score": score,
+        "score_override": None,
+        "score_final": score,
+        "correct_count": correct_count,
+        "total": len(questions),
+        "answers": user_answers,
+        "created_at": datetime.utcnow()
+    }
+    await db.test_results.insert_one(result_doc)
+
     # Update user progress
     await db.users.update_one(
         {"id": current_user["id"]},
@@ -1392,12 +1554,13 @@ async def submit_test(test_id: str, answers: Dict[str, List[int]], current_user:
             "$set": {f"progress.scores.{test_id}": score}
         }
     )
-    
+
     return {
         "score": score,
         "correct_count": correct_count,
-        "total": len(test["questions"]),
-        "results": results
+        "total": len(questions),
+        "results": results,
+        "result_id": result_id
     }
 
 # ==================== Formulas Routes ====================
@@ -1433,14 +1596,9 @@ async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_cu
     try:
         session_id = request.session_id or f"chat-{current_user['id']}-{datetime.utcnow().timestamp()}"
         
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY,
-            session_id=session_id,
-            system_message="Ты - AI-помощник по физике. Помогай ученикам понять физические концепции, решать задачи и объяснять формулы. Отвечай на русском языке. Будь дружелюбным и терпеливым."
-        ).with_model("openai", "gpt-5.2")
+        system_msg = "Ты - AI-помощник по физике. Помогай ученикам понять физические концепции, решать задачи и объяснять формулы. Отвечай на русском языке. Будь дружелюбным и терпеливым."
         
-        user_message = UserMessage(text=request.message)
-        response = await chat.send_message(user_message)
+        response = await call_ai(request.message, system_message=system_msg)
         
         # Save to chat history
         await db.chat_history.insert_one({
@@ -1510,6 +1668,1402 @@ async def mark_lesson_complete(topic_id: str, current_user: dict = Depends(get_c
     )
     return {"success": True}
 
+# ==================== Profile / Stats Routes ====================
+
+XP_PER_TEST = 50
+XP_PER_TASK = 20
+XP_PER_LESSON = 30
+XP_BONUS_PERFECT_TEST = 30
+
+LEVELS = [
+    {"name": "Новичок", "min_xp": 0, "icon": "🌱"},
+    {"name": "Ученик", "min_xp": 100, "icon": "📚"},
+    {"name": "Исследователь", "min_xp": 300, "icon": "🔬"},
+    {"name": "Знаток", "min_xp": 600, "icon": "🧠"},
+    {"name": "Мастер", "min_xp": 1000, "icon": "⚡"},
+    {"name": "Физик", "min_xp": 1500, "icon": "🏆"},
+]
+
+ACHIEVEMENTS_DEFINITIONS = [
+    {"id": "first_test", "name": "Первый тест", "description": "Пройдите первый тест", "icon": "🎯", "condition": "tests_completed >= 1"},
+    {"id": "first_task", "name": "Первая задача", "description": "Решите первую задачу", "icon": "✅", "condition": "tasks_completed >= 1"},
+    {"id": "first_lesson", "name": "Первый урок", "description": "Просмотрите первый урок", "icon": "📖", "condition": "lessons_completed >= 1"},
+    {"id": "test_5", "name": "5 тестов", "description": "Пройдите 5 тестов", "icon": "📝", "condition": "tests_completed >= 5"},
+    {"id": "test_10", "name": "10 тестов", "description": "Пройдите 10 тестов", "icon": "🏅", "condition": "tests_completed >= 10"},
+    {"id": "task_10", "name": "10 задач", "description": "Решите 10 задач", "icon": "💪", "condition": "tasks_completed >= 10"},
+    {"id": "task_50", "name": "50 задач", "description": "Решите 50 задач", "icon": "🔥", "condition": "tasks_completed >= 50"},
+    {"id": "perfect_score", "name": "Отличник", "description": "Получите 100% на тесте", "icon": "💯", "condition": "has_perfect_test"},
+    {"id": "streak_3", "name": "3 дня подряд", "description": "Заходите 3 дня подряд", "icon": "🔥", "condition": "streak >= 3"},
+    {"id": "streak_5", "name": "5 дней подряд", "description": "Заходите 5 дней подряд", "icon": "🔥", "condition": "streak >= 5"},
+    {"id": "streak_7", "name": "Неделя!", "description": "Заходите 7 дней подряд", "icon": "⭐", "condition": "streak >= 7"},
+    {"id": "streak_30", "name": "Месяц!", "description": "Заходите 30 дней подряд", "icon": "👑", "condition": "streak >= 30"},
+    {"id": "xp_100", "name": "100 XP", "description": "Наберите 100 XP", "icon": "⚡", "condition": "xp >= 100"},
+    {"id": "xp_500", "name": "500 XP", "description": "Наберите 500 XP", "icon": "⚡", "condition": "xp >= 500"},
+    {"id": "xp_1000", "name": "1000 XP", "description": "Наберите 1000 XP", "icon": "🚀", "condition": "xp >= 1000"},
+    {"id": "mechanics_done", "name": "Механик", "description": "Изучите все темы механики", "icon": "⚙️", "condition": "section_mechanics_complete"},
+    {"id": "thermo_done", "name": "Термодинамик", "description": "Изучите все темы термодинамики", "icon": "🌡️", "condition": "section_thermodynamics_complete"},
+    {"id": "electro_done", "name": "Электрик", "description": "Изучите все темы электричества", "icon": "⚡", "condition": "section_electromagnetism_complete"},
+]
+
+# ==================== i18n Translations ====================
+
+def parse_accept_language(accept_language: str | None) -> str:
+    """Parse Accept-Language header and return language code (ru, en, kk)."""
+    if not accept_language:
+        return "ru"
+    for part in accept_language.split(","):
+        lang = part.split(";")[0].strip().lower()
+        if lang.startswith("en"):
+            return "en"
+        if lang.startswith("kk") or lang.startswith("kz"):
+            return "kk"
+        if lang.startswith("ru"):
+            return "ru"
+    return "ru"
+
+LEVELS_I18N = {
+    "en": [
+        {"name": "Beginner", "min_xp": 0, "icon": "🌱"},
+        {"name": "Student", "min_xp": 100, "icon": "📚"},
+        {"name": "Explorer", "min_xp": 300, "icon": "🔬"},
+        {"name": "Expert", "min_xp": 600, "icon": "🧠"},
+        {"name": "Master", "min_xp": 1000, "icon": "⚡"},
+        {"name": "Physicist", "min_xp": 1500, "icon": "🏆"},
+    ],
+    "kk": [
+        {"name": "Жаңадан бастаушы", "min_xp": 0, "icon": "🌱"},
+        {"name": "Оқушы", "min_xp": 100, "icon": "📚"},
+        {"name": "Зерттеуші", "min_xp": 300, "icon": "🔬"},
+        {"name": "Білгір", "min_xp": 600, "icon": "🧠"},
+        {"name": "Шебер", "min_xp": 1000, "icon": "⚡"},
+        {"name": "Физик", "min_xp": 1500, "icon": "🏆"},
+    ],
+}
+
+ACHIEVEMENTS_I18N = {
+    "en": {
+        "first_test": {"name": "First Test", "description": "Complete your first test"},
+        "first_task": {"name": "First Problem", "description": "Solve your first problem"},
+        "first_lesson": {"name": "First Lesson", "description": "View your first lesson"},
+        "test_5": {"name": "5 Tests", "description": "Complete 5 tests"},
+        "test_10": {"name": "10 Tests", "description": "Complete 10 tests"},
+        "task_10": {"name": "10 Problems", "description": "Solve 10 problems"},
+        "task_50": {"name": "50 Problems", "description": "Solve 50 problems"},
+        "perfect_score": {"name": "Straight A", "description": "Score 100% on a test"},
+        "streak_3": {"name": "3 Days Streak", "description": "Log in 3 days in a row"},
+        "streak_5": {"name": "5 Days Streak", "description": "Log in 5 days in a row"},
+        "streak_7": {"name": "One Week!", "description": "Log in 7 days in a row"},
+        "streak_30": {"name": "One Month!", "description": "Log in 30 days in a row"},
+        "xp_100": {"name": "100 XP", "description": "Earn 100 XP"},
+        "xp_500": {"name": "500 XP", "description": "Earn 500 XP"},
+        "xp_1000": {"name": "1000 XP", "description": "Earn 1000 XP"},
+        "mechanics_done": {"name": "Mechanic", "description": "Study all mechanics topics"},
+        "thermo_done": {"name": "Thermodynamicist", "description": "Study all thermodynamics topics"},
+        "electro_done": {"name": "Electrician", "description": "Study all electricity topics"},
+    },
+    "kk": {
+        "first_test": {"name": "Бірінші тест", "description": "Бірінші тестті тапсырыңыз"},
+        "first_task": {"name": "Бірінші есеп", "description": "Бірінші есепті шешіңіз"},
+        "first_lesson": {"name": "Бірінші сабақ", "description": "Бірінші сабақты қараңыз"},
+        "test_5": {"name": "5 тест", "description": "5 тестті тапсырыңыз"},
+        "test_10": {"name": "10 тест", "description": "10 тестті тапсырыңыз"},
+        "task_10": {"name": "10 есеп", "description": "10 есепті шешіңіз"},
+        "task_50": {"name": "50 есеп", "description": "50 есепті шешіңіз"},
+        "perfect_score": {"name": "Үздік", "description": "Тестте 100% алыңыз"},
+        "streak_3": {"name": "3 күн қатарынан", "description": "3 күн қатарынан кіріңіз"},
+        "streak_5": {"name": "5 күн қатарынан", "description": "5 күн қатарынан кіріңіз"},
+        "streak_7": {"name": "Бір апта!", "description": "7 күн қатарынан кіріңіз"},
+        "streak_30": {"name": "Бір ай!", "description": "30 күн қатарынан кіріңіз"},
+        "xp_100": {"name": "100 XP", "description": "100 XP жинаңыз"},
+        "xp_500": {"name": "500 XP", "description": "500 XP жинаңыз"},
+        "xp_1000": {"name": "1000 XP", "description": "1000 XP жинаңыз"},
+        "mechanics_done": {"name": "Механик", "description": "Механиканың барлық тақырыптарын оқыңыз"},
+        "thermo_done": {"name": "Термодинамик", "description": "Термодинамиканың барлық тақырыптарын оқыңыз"},
+        "electro_done": {"name": "Электрик", "description": "Электр тақырыптарының барлығын оқыңыз"},
+    },
+}
+
+DAILY_CHALLENGE_SECTION_NAMES_I18N = {
+    "en": {
+        "mechanics": "mechanics",
+        "thermodynamics": "thermodynamics",
+        "electromagnetism": "electricity",
+        "optics": "optics",
+        "atomic": "atomic physics",
+    },
+    "kk": {
+        "mechanics": "механика",
+        "thermodynamics": "термодинамика",
+        "electromagnetism": "электр",
+        "optics": "оптика",
+        "atomic": "атом физикасы",
+    },
+}
+
+DAILY_CHALLENGE_TEMPLATES_I18N = {
+    "en": [
+        {"type": "solve", "target": 3, "template": "Solve 3 problems on {section}", "xp": 50},
+        {"type": "test", "target": 1, "template": "Pass a test on {section}", "xp": 40},
+        {"type": "study", "target": 2, "template": "Study 2 topics on {section}", "xp": 30},
+    ],
+    "kk": [
+        {"type": "solve", "target": 3, "template": "{section} бойынша 3 есеп шеш", "xp": 50},
+        {"type": "test", "target": 1, "template": "{section} бойынша тест тапсыр", "xp": 40},
+        {"type": "study", "target": 2, "template": "{section} бойынша 2 тақырып оқы", "xp": 30},
+    ],
+}
+
+def compute_streak(user: dict) -> dict:
+    """Compute current streak and max streak from user activity_dates."""
+    activity_dates = user.get("activity_dates", [])
+    if not activity_dates:
+        return {"current": 0, "max": 0, "last_active": None}
+    
+    # Sort dates
+    sorted_dates = sorted(set(d if isinstance(d, str) else d.strftime("%Y-%m-%d") for d in activity_dates))
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    yesterday = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    # Calculate current streak
+    current_streak = 0
+    if sorted_dates[-1] == today or sorted_dates[-1] == yesterday:
+        current_streak = 1
+        for i in range(len(sorted_dates) - 2, -1, -1):
+            prev_date = datetime.strptime(sorted_dates[i + 1 if i + 1 < len(sorted_dates) else i], "%Y-%m-%d")
+            curr_date = datetime.strptime(sorted_dates[i], "%Y-%m-%d")
+            
+            # Check back from the latest
+            check_date = datetime.strptime(sorted_dates[-1], "%Y-%m-%d") - timedelta(days=current_streak)
+            if sorted_dates[i] == check_date.strftime("%Y-%m-%d"):
+                current_streak += 1
+            else:
+                break
+    
+    # Max streak
+    max_streak = 1
+    streak = 1
+    for i in range(1, len(sorted_dates)):
+        d1 = datetime.strptime(sorted_dates[i-1], "%Y-%m-%d")
+        d2 = datetime.strptime(sorted_dates[i], "%Y-%m-%d")
+        if (d2 - d1).days == 1:
+            streak += 1
+            max_streak = max(max_streak, streak)
+        else:
+            streak = 1
+    
+    if len(sorted_dates) == 1:
+        max_streak = 1
+    
+    return {
+        "current": current_streak,
+        "max": max(max_streak, current_streak),
+        "last_active": sorted_dates[-1] if sorted_dates else None
+    }
+
+def compute_xp(user: dict, test_results: list) -> int:
+    """Compute total XP from user activity."""
+    progress = user.get("progress", {})
+    tests = len(progress.get("completed_tests", []))
+    tasks = len(progress.get("completed_tasks", []))
+    lessons = len(progress.get("completed_lessons", []))
+    
+    xp = tests * XP_PER_TEST + tasks * XP_PER_TASK + lessons * XP_PER_LESSON
+    
+    # Bonus for perfect tests
+    for r in test_results:
+        if r.get("score", 0) == 100 or r.get("score_final", 0) == 100:
+            xp += XP_BONUS_PERFECT_TEST
+    
+    return xp
+
+def get_level(xp: int, lang: str = "ru") -> dict:
+    """Get current level based on XP."""
+    current_level = LEVELS[0]
+    next_level = LEVELS[1] if len(LEVELS) > 1 else None
+    current_index = 0
+    
+    for i, level in enumerate(LEVELS):
+        if xp >= level["min_xp"]:
+            current_level = level
+            current_index = i
+            next_level = LEVELS[i + 1] if i + 1 < len(LEVELS) else None
+        else:
+            break
+    
+    xp_in_level = xp - current_level["min_xp"]
+    xp_for_next = (next_level["min_xp"] - current_level["min_xp"]) if next_level else 0
+    
+    # Translate level names
+    if lang != "ru" and lang in LEVELS_I18N:
+        i18n_levels = LEVELS_I18N[lang]
+        level_name = i18n_levels[current_index]["name"] if current_index < len(i18n_levels) else current_level["name"]
+        next_index = current_index + 1
+        next_level_name = i18n_levels[next_index]["name"] if next_level and next_index < len(i18n_levels) else (next_level["name"] if next_level else None)
+    else:
+        level_name = current_level["name"]
+        next_level_name = next_level["name"] if next_level else None
+    
+    return {
+        "name": level_name,
+        "icon": current_level["icon"],
+        "level_index": current_index,
+        "total_levels": len(LEVELS),
+        "xp_in_level": xp_in_level,
+        "xp_for_next": xp_for_next,
+        "progress": (xp_in_level / xp_for_next * 100) if xp_for_next > 0 else 100,
+        "next_level": next_level_name,
+    }
+
+def compute_achievements(user: dict, test_results: list, xp: int, streak: dict, lang: str = "ru") -> list:
+    """Check which achievements the user has earned."""
+    progress = user.get("progress", {})
+    tests_completed = len(progress.get("completed_tests", []))
+    tasks_completed = len(progress.get("completed_tasks", []))
+    lessons_completed = len(progress.get("completed_lessons", []))
+    has_perfect = any(r.get("score", 0) == 100 or r.get("score_final", 0) == 100 for r in test_results)
+    current_streak = streak.get("current", 0)
+    max_streak = streak.get("max", 0)
+    use_streak = max(current_streak, max_streak)
+    
+    # Check section completion
+    sections_topics = {}
+    for t in INITIAL_TOPICS:
+        sec = t["section"]
+        if sec not in sections_topics:
+            sections_topics[sec] = set()
+        sections_topics[sec].add(t["id"])
+    
+    completed_lessons_set = set(progress.get("completed_lessons", []))
+    
+    earned = []
+    previously_earned = set(user.get("earned_achievements", []))
+    
+    for ach in ACHIEVEMENTS_DEFINITIONS:
+        cond = ach["condition"]
+        unlocked = False
+        
+        if cond.startswith("tests_completed"):
+            val = int(cond.split(">=")[1].strip())
+            unlocked = tests_completed >= val
+        elif cond.startswith("tasks_completed"):
+            val = int(cond.split(">=")[1].strip())
+            unlocked = tasks_completed >= val
+        elif cond.startswith("lessons_completed"):
+            val = int(cond.split(">=")[1].strip())
+            unlocked = lessons_completed >= val
+        elif cond == "has_perfect_test":
+            unlocked = has_perfect
+        elif cond.startswith("streak"):
+            val = int(cond.split(">=")[1].strip())
+            unlocked = use_streak >= val
+        elif cond.startswith("xp"):
+            val = int(cond.split(">=")[1].strip())
+            unlocked = xp >= val
+        elif cond.startswith("section_"):
+            sec_name = cond.replace("section_", "").replace("_complete", "")
+            section_topics = sections_topics.get(sec_name, set())
+            if section_topics:
+                unlocked = section_topics.issubset(completed_lessons_set)
+        
+        # Translate name/description if needed
+        if lang != "ru" and lang in ACHIEVEMENTS_I18N and ach["id"] in ACHIEVEMENTS_I18N[lang]:
+            tr = ACHIEVEMENTS_I18N[lang][ach["id"]]
+            a_name = tr["name"]
+            a_desc = tr["description"]
+        else:
+            a_name = ach["name"]
+            a_desc = ach["description"]
+        
+        earned.append({
+            "id": ach["id"],
+            "name": a_name,
+            "description": a_desc,
+            "icon": ach["icon"],
+            "unlocked": unlocked,
+            "is_new": unlocked and ach["id"] not in previously_earned,
+        })
+    
+    return earned
+
+def compute_section_progress(user: dict) -> list:
+    """Compute progress per physics section."""
+    progress = user.get("progress", {})
+    completed = set(progress.get("completed_lessons", []))
+    completed_tests = set(progress.get("completed_tests", []))
+    completed_tasks = set(progress.get("completed_tasks", []))
+    
+    section_colors = {
+        "mechanics": "#4A90D9",
+        "thermodynamics": "#E74C3C",
+        "electromagnetism": "#F39C12",
+        "optics": "#9B59B6",
+        "atomic": "#1ABC9C",
+    }
+    
+    result = []
+    for sec_key, sec_data in PHYSICS_SECTIONS.items():
+        total_topics = 0
+        completed_topics = 0
+        for sub in sec_data.get("subsections", []):
+            for topic in sub.get("topics", []):
+                total_topics += 1
+                if topic["id"] in completed:
+                    completed_topics += 1
+        
+        percentage = int((completed_topics / total_topics) * 100) if total_topics > 0 else 0
+        result.append({
+            "section": sec_key,
+            "name": sec_data["name"],
+            "icon": sec_data.get("icon", "book"),
+            "color": section_colors.get(sec_key, "#6366F1"),
+            "completed": completed_topics,
+            "total": total_topics,
+            "percentage": percentage,
+        })
+    
+    return result
+
+
+@api_router.get("/profile/stats")
+async def get_profile_stats(
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
+    """Get comprehensive profile stats: stats, streak, XP, level, achievements, sections."""
+    lang = parse_accept_language(accept_language)
+    user_id = current_user["id"]
+    
+    # Record today's activity
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    await db.users.update_one(
+        {"id": user_id},
+        {"$addToSet": {"activity_dates": today}}
+    )
+    # Re-fetch to include updated activity_dates
+    current_user = await db.users.find_one({"id": user_id})
+    
+    # Fetch test results
+    test_results = await db.test_results.find({"user_id": user_id}).sort("created_at", -1).to_list(500)
+    worksheet_results = await db.worksheet_results.find({"student_id": user_id}).sort("created_at", -1).to_list(500)
+    
+    progress = current_user.get("progress", {})
+    tests_completed = len(progress.get("completed_tests", []))
+    tasks_completed = len(progress.get("completed_tasks", []))
+    lessons_completed = len(progress.get("completed_lessons", []))
+    
+    # Average test score
+    scores = [r.get("score_final") or r.get("score", 0) for r in test_results]
+    avg_score = int(sum(scores) / len(scores)) if scores else 0
+    best_score = max(scores) if scores else 0
+    
+    # Streak
+    streak = compute_streak(current_user)
+    
+    # XP & Level
+    xp = compute_xp(current_user, test_results)
+    level = get_level(xp, lang)
+    
+    # Achievements
+    achievements = compute_achievements(current_user, test_results, xp, streak, lang)
+    
+    # Save newly earned achievements
+    earned_ids = [a["id"] for a in achievements if a["unlocked"]]
+    if earned_ids:
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {"earned_achievements": earned_ids}}
+        )
+    
+    # Section progress
+    section_progress = compute_section_progress(current_user)
+    
+    # Activity history (last 10)
+    history = []
+    for r in test_results[:10]:
+        test_title = "Тест"
+        test = await db.tests.find_one({"id": r.get("test_id")})
+        if test:
+            test_title = test.get("title", "Тест")
+        else:
+            for t in INITIAL_TESTS:
+                if t["id"] == r.get("test_id"):
+                    test_title = t.get("title", "Тест")
+                    break
+        history.append({
+            "type": "test",
+            "title": test_title,
+            "score": r.get("score_final") or r.get("score", 0),
+            "date": r.get("created_at").isoformat() if r.get("created_at") else None,
+            "icon": "checkbox",
+        })
+    
+    worksheet_title_i18n = {"en": "Worksheet", "kk": "Жұмыс парағы"}
+    for r in worksheet_results[:5]:
+        history.append({
+            "type": "worksheet",
+            "title": worksheet_title_i18n.get(lang, "Рабочий лист"),
+            "score": r.get("score_percent", 0),
+            "date": r.get("created_at").isoformat() if r.get("created_at") else None,
+            "icon": "document-text",
+        })
+    
+    # Sort by date
+    history.sort(key=lambda x: x.get("date") or "", reverse=True)
+    history = history[:10]
+    
+    return {
+        "user": {
+            "id": current_user["id"],
+            "email": current_user.get("email"),
+            "name": current_user.get("name"),
+            "avatar": current_user.get("avatar"),
+            "grade": current_user.get("grade"),
+            "role": current_user.get("role"),
+        },
+        "stats": {
+            "tests_completed": tests_completed,
+            "tasks_completed": tasks_completed,
+            "lessons_completed": lessons_completed,
+            "avg_score": avg_score,
+            "best_score": best_score,
+            "total_test_results": len(test_results),
+            "total_worksheet_results": len(worksheet_results),
+        },
+        "streak": streak,
+        "xp": xp,
+        "level": level,
+        "achievements": achievements,
+        "section_progress": section_progress,
+        "activity_history": history,
+    }
+
+
+@api_router.patch("/profile/update")
+async def update_profile(payload: ProfileUpdate, current_user: dict = Depends(get_current_user)):
+    """Update user profile (name, avatar, grade)."""
+    update_fields = {}
+    if payload.name is not None:
+        update_fields["name"] = payload.name
+    if payload.avatar is not None:
+        update_fields["avatar"] = payload.avatar
+    if payload.grade is not None:
+        update_fields["grade"] = payload.grade
+    
+    if not update_fields:
+        raise HTTPException(status_code=400, detail="Нет данных для обновления")
+    
+    await db.users.update_one(
+        {"id": current_user["id"]},
+        {"$set": update_fields}
+    )
+    
+    updated_user = await db.users.find_one({"id": current_user["id"]})
+    return {
+        "success": True,
+        "user": {
+            "id": updated_user["id"],
+            "email": updated_user["email"],
+            "name": updated_user.get("name"),
+            "avatar": updated_user.get("avatar"),
+            "grade": updated_user.get("grade"),
+            "role": updated_user.get("role"),
+        }
+    }
+
+
+# ==================== Favorites ====================
+
+class FavoriteToggle(BaseModel):
+    item_id: str         # topic id or formula id
+    item_type: str       # "topic" or "formula"
+
+@api_router.get("/favorites")
+async def get_favorites(current_user: dict = Depends(get_current_user)):
+    """Get user's favorites list."""
+    favs = await db.favorites.find({"user_id": current_user["id"]}).to_list(500)
+    return [{"item_id": f["item_id"], "item_type": f["item_type"]} for f in favs]
+
+@api_router.post("/favorites/toggle")
+async def toggle_favorite(payload: FavoriteToggle, current_user: dict = Depends(get_current_user)):
+    """Add or remove a favorite."""
+    existing = await db.favorites.find_one({
+        "user_id": current_user["id"],
+        "item_id": payload.item_id,
+        "item_type": payload.item_type,
+    })
+    if existing:
+        await db.favorites.delete_one({"_id": existing["_id"]})
+        return {"favorited": False}
+    else:
+        await db.favorites.insert_one({
+            "user_id": current_user["id"],
+            "item_id": payload.item_id,
+            "item_type": payload.item_type,
+            "created_at": datetime.utcnow(),
+        })
+        return {"favorited": True}
+
+# ==================== Notes ====================
+
+class NoteUpsert(BaseModel):
+    topic_id: str
+    text: str
+
+@api_router.get("/notes")
+async def get_notes(current_user: dict = Depends(get_current_user)):
+    """Get all user notes."""
+    notes = await db.notes.find({"user_id": current_user["id"]}).to_list(500)
+    return {n["topic_id"]: n["text"] for n in notes}
+
+@api_router.put("/notes")
+async def save_note(payload: NoteUpsert, current_user: dict = Depends(get_current_user)):
+    """Create or update a note for a topic."""
+    if not payload.text.strip():
+        await db.notes.delete_one({"user_id": current_user["id"], "topic_id": payload.topic_id})
+        return {"saved": True, "deleted": True}
+    await db.notes.update_one(
+        {"user_id": current_user["id"], "topic_id": payload.topic_id},
+        {"$set": {"text": payload.text, "updated_at": datetime.utcnow()}},
+        upsert=True,
+    )
+    return {"saved": True}
+
+# ==================== Daily Challenge ====================
+
+DAILY_CHALLENGE_SECTIONS = ["mechanics", "thermodynamics", "electromagnetism", "optics", "atomic"]
+
+@api_router.get("/daily-challenge")
+async def get_daily_challenge(
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
+    """Get today's daily challenge. Deterministic based on date."""
+    lang = parse_accept_language(accept_language)
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    # Check if already completed today
+    completed = await db.daily_challenges.find_one({
+        "user_id": current_user["id"],
+        "date": today,
+        "completed": True,
+    })
+    
+    # Generate deterministic challenge based on date hash
+    day_hash = int(hashlib.md5(today.encode()).hexdigest(), 16)
+    section_idx = day_hash % len(DAILY_CHALLENGE_SECTIONS)
+    section = DAILY_CHALLENGE_SECTIONS[section_idx]
+    
+    section_names_ru = {
+        "mechanics": "механике",
+        "thermodynamics": "термодинамике",
+        "electromagnetism": "электричеству",
+        "optics": "оптике",
+        "atomic": "атомной физике",
+    }
+    
+    challenge_types_ru = [
+        {"type": "solve", "target": 3, "title": f"Реши 3 задачи по {section_names_ru[section]}", "xp": 50},
+        {"type": "test", "target": 1, "title": f"Пройди тест по {section_names_ru[section]}", "xp": 40},
+        {"type": "study", "target": 2, "title": f"Изучи 2 темы по {section_names_ru[section]}", "xp": 30},
+    ]
+    challenge_idx = (day_hash // len(DAILY_CHALLENGE_SECTIONS)) % len(challenge_types_ru)
+    challenge = challenge_types_ru[challenge_idx]
+    
+    # Apply i18n if not Russian
+    if lang != "ru" and lang in DAILY_CHALLENGE_SECTION_NAMES_I18N and lang in DAILY_CHALLENGE_TEMPLATES_I18N:
+        sec_name = DAILY_CHALLENGE_SECTION_NAMES_I18N[lang].get(section, section)
+        templates = DAILY_CHALLENGE_TEMPLATES_I18N[lang]
+        if challenge_idx < len(templates):
+            tmpl = templates[challenge_idx]
+            challenge = {
+                "type": tmpl["type"],
+                "target": tmpl["target"],
+                "title": tmpl["template"].format(section=sec_name),
+                "xp": tmpl["xp"],
+            }
+    
+    # Count user's progress for today
+    if challenge["type"] == "solve":
+        today_tasks = await db.test_results.count_documents({
+            "user_id": current_user["id"],
+            "created_at": {"$gte": datetime.strptime(today, "%Y-%m-%d")},
+        })
+        progress = min(today_tasks, challenge["target"])
+    elif challenge["type"] == "test":
+        today_tests = await db.test_results.count_documents({
+            "user_id": current_user["id"],
+            "created_at": {"$gte": datetime.strptime(today, "%Y-%m-%d")},
+        })
+        progress = min(today_tests, challenge["target"])
+    else:
+        progress = 0
+    
+    return {
+        "date": today,
+        "section": section,
+        "type": challenge["type"],
+        "title": challenge["title"],
+        "target": challenge["target"],
+        "progress": progress,
+        "xp_reward": challenge["xp"],
+        "completed": completed is not None,
+    }
+
+@api_router.post("/daily-challenge/complete")
+async def complete_daily_challenge(current_user: dict = Depends(get_current_user)):
+    """Mark daily challenge as completed and award XP."""
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    existing = await db.daily_challenges.find_one({
+        "user_id": current_user["id"],
+        "date": today,
+        "completed": True,
+    })
+    if existing:
+        return {"already_completed": True, "xp_awarded": 0}
+    
+    await db.daily_challenges.insert_one({
+        "user_id": current_user["id"],
+        "date": today,
+        "completed": True,
+        "completed_at": datetime.utcnow(),
+    })
+    
+    # Award bonus XP via activity record
+    await db.users.update_one(
+        {"id": current_user["id"]},
+        {"$addToSet": {"activity_dates": today}}
+    )
+    
+    return {"completed": True, "xp_awarded": 50}
+
+# ==================== Search ====================
+
+@api_router.get("/search")
+async def search_content(q: str, current_user: dict = Depends(get_current_user)):
+    """Global search across topics, formulas, and tasks."""
+    query_lower = q.lower().strip()
+    if len(query_lower) < 2:
+        return {"results": []}
+    
+    results = []
+    
+    # Search in topics
+    for topic in INITIAL_TOPICS:
+        if (query_lower in topic.get("title", "").lower() or
+            query_lower in topic.get("brief_info", "").lower()):
+            results.append({
+                "type": "topic",
+                "id": topic["id"],
+                "title": topic["title"],
+                "subtitle": topic.get("section", ""),
+                "icon": "book",
+            })
+    
+    # Search in formulas
+    for formula in INITIAL_FORMULAS:
+        if (query_lower in formula.get("name", "").lower() or
+            query_lower in formula.get("formula", "").lower() or
+            query_lower in formula.get("description", "").lower()):
+            results.append({
+                "type": "formula",
+                "id": formula["id"],
+                "title": formula["name"],
+                "subtitle": formula.get("formula", ""),
+                "icon": "flask",
+            })
+    
+    # Search in sections
+    for sec_key, sec_data in PHYSICS_SECTIONS.items():
+        if query_lower in sec_data["name"].lower():
+            results.append({
+                "type": "section",
+                "id": sec_key,
+                "title": sec_data["name"],
+                "subtitle": f"{len(sec_data.get('subsections', []))} подразделов",
+                "icon": "folder",
+            })
+        # Search subsection names
+        for sub in sec_data.get("subsections", []):
+            if query_lower in sub["name"].lower():
+                results.append({
+                    "type": "subsection",
+                    "id": f"{sec_key}/{sub['id']}",
+                    "title": sub["name"],
+                    "subtitle": sec_data["name"],
+                    "icon": "list",
+                })
+    
+    return {"results": results[:20]}
+
+
+def require_teacher(user: dict):
+    if user.get("role") != "teacher":
+        raise HTTPException(status_code=403, detail="Teacher access required")
+
+async def generate_pairing_code() -> str:
+    for _ in range(10):
+        code = f"{random.randint(0, 999999):06d}"
+        existing = await db.pairing_sessions.find_one({
+            "code": code,
+            "active": True,
+            "expires_at": {"$gt": datetime.utcnow()}
+        })
+        if not existing:
+            return code
+    return f"{random.randint(0, 999999):06d}"
+
+def _shuffle_with_seed(items: List[Any], seed: int) -> List[Any]:
+    rng = random.Random(seed)
+    result = list(items)
+    rng.shuffle(result)
+    return result
+
+def generate_test_variant(base_questions: List[Dict[str, Any]], seed: int) -> List[Dict[str, Any]]:
+    question_indices = _shuffle_with_seed(list(range(len(base_questions))), seed)
+    variant_questions = []
+    for q_index in question_indices:
+        question = base_questions[q_index]
+        options = list(question.get("options", []))
+        option_indices = _shuffle_with_seed(list(range(len(options))), seed + q_index + 17)
+        shuffled_options = [options[i] for i in option_indices] if options else []
+        correct_index = question.get("correctIndex")
+        if correct_index is None:
+            correct_index = question.get("correct")
+        if correct_index is None:
+            correct_index = question.get("correct_answer")
+        if correct_index is None or not options:
+            new_correct = None
+        else:
+            try:
+                new_correct = option_indices.index(int(correct_index))
+            except ValueError:
+                new_correct = None
+        variant_questions.append({
+            "question": question.get("question"),
+            "options": shuffled_options,
+            "correct_index": new_correct
+        })
+    return variant_questions
+
+def get_variant_index(session_id: str, student_id: str, variant_count: int) -> int:
+    base = f"{session_id}:{student_id}".encode("utf-8")
+    digest = hashlib.sha256(base).hexdigest()
+    return int(digest, 16) % max(1, variant_count)
+
+@api_router.get("/teacher/classes")
+async def get_teacher_classes(current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    classes = await db.users.distinct("class_id", {"role": "student", "class_id": {"$ne": None}})
+    return {"classes": sorted([c for c in classes if c])}
+
+@api_router.get("/teacher/students")
+async def get_teacher_students(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    query = {"role": "student"}
+    if class_id:
+        query["class_id"] = class_id
+
+    students = await db.users.find(query).to_list(1000)
+    if not students:
+        return []
+
+    student_ids = [s["id"] for s in students]
+    scores = await db.test_results.aggregate([
+        {"$match": {"user_id": {"$in": student_ids}}},
+        {"$group": {"_id": "$user_id", "total_score": {"$sum": "$score_final"}, "last_test_at": {"$max": "$created_at"}}}
+    ]).to_list(1000)
+    score_map = {s["_id"]: s for s in scores}
+
+    result = []
+    for s in students:
+        score_info = score_map.get(s["id"], {})
+        total_score = int(score_info.get("total_score", 0))
+        manual_adjustment = int(s.get("manual_adjustment", 0))
+        result.append({
+            "id": s["id"],
+            "name": s.get("name"),
+            "email": s.get("email"),
+            "class_id": s.get("class_id"),
+            "total_score": total_score,
+            "manual_adjustment": manual_adjustment,
+            "total_with_adjustment": total_score + manual_adjustment,
+            "last_test_at": score_info.get("last_test_at")
+        })
+
+    return result
+
+@api_router.get("/teacher/students/{student_id}/results")
+async def get_student_results(student_id: str, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    results = await db.test_results.find({"user_id": student_id}).sort("created_at", -1).limit(200).to_list(200)
+    return results
+
+@api_router.patch("/teacher/students/{student_id}/adjustment")
+async def update_student_adjustment(student_id: str, payload: TeacherScoreAdjustment, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    await db.users.update_one(
+        {"id": student_id},
+        {"$set": {"manual_adjustment": payload.manual_adjustment}}
+    )
+    return {"success": True}
+
+@api_router.patch("/teacher/test-results/{result_id}/override")
+async def override_test_score(result_id: str, payload: TestScoreOverride, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    await db.test_results.update_one(
+        {"id": result_id},
+        {"$set": {"score_override": payload.score_override, "score_final": payload.score_override}}
+    )
+    return {"success": True}
+
+@api_router.post("/teacher/tests")
+async def create_assigned_test(payload: AssignedTestCreate, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    test_id = f"assigned-test-{uuid.uuid4().hex[:12]}"
+    doc = {
+        "id": test_id,
+        "title": payload.title,
+        "class_id": payload.class_id,
+        "scheduled_for": payload.scheduled_for,
+        "section": payload.section,
+        "difficulty": payload.difficulty,
+        "questions": payload.questions,
+        "time_limit": payload.time_limit,
+        "created_by": current_user["id"],
+        "created_at": datetime.utcnow()
+    }
+    await db.assigned_tests.insert_one(doc)
+    return doc
+
+@api_router.get("/teacher/tests")
+async def list_assigned_tests(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    query: Dict[str, Any] = {}
+    if class_id:
+        query["class_id"] = class_id
+    tests = await db.assigned_tests.find(query).sort("created_at", -1).to_list(200)
+    return tests
+
+@api_router.post("/teacher/pairing-sessions")
+async def create_pairing_session(payload: PairingSessionCreate, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    expires_in = max(5, min(payload.expires_in_minutes, 240))
+    code = await generate_pairing_code()
+    session_id = f"pair-{uuid.uuid4().hex[:12]}"
+    expires_at = datetime.utcnow() + timedelta(minutes=expires_in)
+    doc = {
+        "id": session_id,
+        "code": code,
+        "teacher_id": current_user["id"],
+        "class_id": payload.class_id,
+        "created_at": datetime.utcnow(),
+        "expires_at": expires_at,
+        "active": True,
+        "student_ids": [],
+        "last_joined_at": None,
+        "demo_state": {
+            "mode": "idle",
+            "title": "Экран демонстрации",
+            "subtitle": "Ожидайте материал от учителя",
+            "payload": {},
+            "updated_at": datetime.utcnow()
+        }
+    }
+    await db.pairing_sessions.insert_one(doc)
+    doc.pop("_id", None)
+    return doc
+
+@api_router.get("/teacher/pairing-sessions/active")
+async def get_active_pairing_session(current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    now = datetime.utcnow()
+    session = await db.pairing_sessions.find_one(
+        {"teacher_id": current_user["id"], "active": True, "expires_at": {"$gt": now}},
+        sort=[("created_at", -1)]
+    )
+    if not session:
+        return {"session": None, "students": []}
+    session.pop("_id", None)
+
+    student_ids = session.get("student_ids", [])
+    students = []
+    if student_ids:
+        students = await db.users.find({"id": {"$in": student_ids}}).to_list(500)
+        students = [
+            {
+                "id": s["id"],
+                "name": s.get("name"),
+                "email": s.get("email"),
+                "class_id": s.get("class_id")
+            }
+            for s in students
+        ]
+    return {"session": session, "students": students}
+
+@api_router.post("/teacher/pairing-sessions/{session_id}/close")
+async def close_pairing_session(session_id: str, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    await db.pairing_sessions.update_one(
+        {"id": session_id, "teacher_id": current_user["id"]},
+        {"$set": {"active": False}}
+    )
+    return {"success": True}
+
+@api_router.post("/teacher/pairing-sessions/{session_id}/demo")
+async def update_demo_state(session_id: str, payload: DemoStateUpdate, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    demo_state = {
+        "mode": payload.mode,
+        "title": payload.title,
+        "subtitle": payload.subtitle,
+        "payload": payload.payload or {},
+        "updated_at": datetime.utcnow()
+    }
+    await db.pairing_sessions.update_one(
+        {"id": session_id, "teacher_id": current_user["id"]},
+        {"$set": {"demo_state": demo_state}}
+    )
+    return {"success": True, "demo_state": demo_state}
+
+@api_router.post("/student/join-session")
+async def join_pairing_session(payload: PairingJoinRequest, current_user: dict = Depends(get_current_user)):
+    if current_user.get("role") != "student":
+        raise HTTPException(status_code=403, detail="Student access required")
+    now = datetime.utcnow()
+    session = await db.pairing_sessions.find_one(
+        {"code": payload.code, "active": True, "expires_at": {"$gt": now}}
+    )
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found or expired")
+    if session.get("class_id") and current_user.get("class_id") != session.get("class_id"):
+        raise HTTPException(status_code=400, detail="Session class mismatch")
+
+    await db.pairing_sessions.update_one(
+        {"id": session["id"]},
+        {"$addToSet": {"student_ids": current_user["id"]}, "$set": {"last_joined_at": now}}
+    )
+    return {
+        "session_id": session["id"],
+        "teacher_id": session["teacher_id"],
+        "class_id": session.get("class_id"),
+        "joined_at": now
+    }
+
+@api_router.get("/student/pairing-sessions/{session_id}")
+async def get_student_pairing_session(session_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user.get("role") != "student":
+        raise HTTPException(status_code=403, detail="Student access required")
+    now = datetime.utcnow()
+    session = await db.pairing_sessions.find_one(
+        {"id": session_id, "active": True, "expires_at": {"$gt": now}}
+    )
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found or expired")
+    if session.get("class_id") and current_user.get("class_id") != session.get("class_id"):
+        raise HTTPException(status_code=400, detail="Session class mismatch")
+    session.pop("_id", None)
+    demo_state = session.get("demo_state", {"mode": "idle", "payload": {}})
+    payload = demo_state.get("payload", {}) or {}
+
+    if demo_state.get("mode") == "test":
+        base_questions = payload.get("questions", [])
+        variant_count = int(payload.get("variant_count", 3) or 3)
+        variant_index = get_variant_index(session_id, current_user["id"], variant_count)
+        variant = await db.demo_test_variants.find_one({
+            "session_id": session_id,
+            "student_id": current_user["id"]
+        })
+        if not variant and base_questions:
+            seed = int(hashlib.sha256(f"{session_id}:{current_user['id']}:{variant_index}".encode("utf-8")).hexdigest(), 16) % (2**31)
+            variant_questions = generate_test_variant(base_questions, seed)
+            variant_doc = {
+                "session_id": session_id,
+                "student_id": current_user["id"],
+                "variant_index": variant_index,
+                "questions": variant_questions,
+                "created_at": datetime.utcnow()
+            }
+            await db.demo_test_variants.insert_one(variant_doc)
+            variant = variant_doc
+
+        sanitized_questions = []
+        if variant:
+            sanitized_questions = [
+                {"question": q.get("question"), "options": q.get("options", [])}
+                for q in variant.get("questions", [])
+            ]
+
+        payload = {
+            **payload,
+            "questions": sanitized_questions,
+            "variant_index": variant_index,
+            "variant_count": variant_count
+        }
+        demo_state = {**demo_state, "payload": payload}
+
+    result = await db.demo_test_results.find_one({
+        "session_id": session_id,
+        "student_id": current_user["id"]
+    })
+    if result:
+        result.pop("_id", None)
+
+    return {
+        "session": {
+            "id": session.get("id"),
+            "code": session.get("code"),
+            "class_id": session.get("class_id"),
+            "teacher_id": session.get("teacher_id"),
+            "expires_at": session.get("expires_at")
+        },
+        "demo_state": demo_state,
+        "result": result
+    }
+
+@api_router.post("/student/pairing-sessions/{session_id}/submit-test")
+async def submit_demo_test(session_id: str, payload: DemoTestSubmit, current_user: dict = Depends(get_current_user)):
+    if current_user.get("role") != "student":
+        raise HTTPException(status_code=403, detail="Student access required")
+    session = await db.pairing_sessions.find_one({"id": session_id, "active": True})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    demo_state = session.get("demo_state", {})
+    base_questions = (demo_state.get("payload") or {}).get("questions", [])
+    variant_count = int((demo_state.get("payload") or {}).get("variant_count", 3) or 3)
+    variant = await db.demo_test_variants.find_one({
+        "session_id": session_id,
+        "student_id": current_user["id"]
+    })
+    if not variant and base_questions:
+        variant_index = get_variant_index(session_id, current_user["id"], variant_count)
+        seed = int(hashlib.sha256(f"{session_id}:{current_user['id']}:{variant_index}".encode("utf-8")).hexdigest(), 16) % (2**31)
+        variant_questions = generate_test_variant(base_questions, seed)
+        variant_doc = {
+            "session_id": session_id,
+            "student_id": current_user["id"],
+            "variant_index": variant_index,
+            "questions": variant_questions,
+            "created_at": datetime.utcnow()
+        }
+        await db.demo_test_variants.insert_one(variant_doc)
+        variant = variant_doc
+
+    if not variant:
+        raise HTTPException(status_code=400, detail="No test available")
+
+    questions = variant.get("questions", [])
+    answers = payload.answers
+    correct = 0
+    for idx, question in enumerate(questions):
+        correct_index = question.get("correct_index")
+        if correct_index is None:
+            continue
+        if idx < len(answers) and answers[idx] == correct_index:
+            correct += 1
+    total = len(questions)
+    score = int(round((correct / total) * 100)) if total > 0 else 0
+
+    result_doc = {
+        "session_id": session_id,
+        "student_id": current_user["id"],
+        "variant_index": variant.get("variant_index"),
+        "answers": answers,
+        "correct": correct,
+        "total": total,
+        "score": score,
+        "created_at": datetime.utcnow()
+    }
+    await db.demo_test_results.update_one(
+        {"session_id": session_id, "student_id": current_user["id"]},
+        {"$set": result_doc},
+        upsert=True
+    )
+    return result_doc
+
+@api_router.get("/teacher/pairing-sessions/{session_id}/results")
+async def get_demo_results(session_id: str, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    session = await db.pairing_sessions.find_one({"id": session_id, "teacher_id": current_user["id"]})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    results = await db.demo_test_results.find({"session_id": session_id}).to_list(1000)
+    for r in results:
+        r.pop("_id", None)
+    if not results:
+        return {"results": [], "summary": {"count": 0, "average": 0}}
+
+    student_ids = [r["student_id"] for r in results]
+    students = await db.users.find({"id": {"$in": student_ids}}).to_list(1000)
+    student_map = {s["id"]: s for s in students}
+    enriched = []
+    for r in results:
+        s = student_map.get(r["student_id"], {})
+        enriched.append({
+            "student_id": r["student_id"],
+            "name": s.get("name"),
+            "email": s.get("email"),
+            "class_id": s.get("class_id"),
+            "score": r.get("score", 0),
+            "correct": r.get("correct", 0),
+            "total": r.get("total", 0),
+            "variant_index": r.get("variant_index")
+        })
+    avg = int(sum(r["score"] for r in enriched) / len(enriched)) if enriched else 0
+    return {
+        "results": enriched,
+        "summary": {
+            "count": len(enriched),
+            "average": avg
+        }
+    }
+
+@api_router.get("/assigned-tests")
+async def get_assigned_tests(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
+    query: Dict[str, Any] = {}
+    if class_id:
+        query["class_id"] = class_id
+    elif current_user.get("role") == "student":
+        query["class_id"] = current_user.get("class_id")
+
+    tests = await db.assigned_tests.find(query).sort("created_at", -1).to_list(200)
+    return tests
+
+@api_router.post("/student/pairing-sessions/{session_id}/submit-worksheet")
+async def submit_worksheet(session_id: str, payload: WorksheetSubmit, current_user: dict = Depends(get_current_user)):
+    if current_user.get("role") != "student":
+        raise HTTPException(status_code=403, detail="Student access required")
+    session = await db.pairing_sessions.find_one({"id": session_id, "active": True})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    demo_state = session.get("demo_state", {})
+    if demo_state.get("mode") != "worksheet":
+        raise HTTPException(status_code=400, detail="No worksheet active")
+
+    tasks = (demo_state.get("payload") or {}).get("tasks", [])
+    task_map = {t["id"]: t for t in tasks if "id" in t}
+
+    graded = {}
+    auto_score = 0
+    auto_total = 0
+    for task_id, student_answer in payload.answers.items():
+        task = task_map.get(task_id)
+        if not task:
+            graded[task_id] = {"answer": student_answer, "correct": None, "auto": False}
+            continue
+
+        task_type = task.get("type", "")
+        is_correct = None
+
+        if task_type == "multiple-choice":
+            correct_idx = task.get("correctIndex")
+            if correct_idx is not None and isinstance(student_answer, (int, float)):
+                is_correct = int(student_answer) == int(correct_idx)
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "true-false":
+            expected = task.get("isTrue")
+            if expected is not None:
+                student_bool = student_answer == "true" if isinstance(student_answer, str) else bool(student_answer)
+                is_correct = student_bool == expected
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "short-answer":
+            expected = (task.get("answerText") or "").strip().lower()
+            given = (str(student_answer) if student_answer else "").strip().lower()
+            if expected:
+                is_correct = given == expected
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "fill-blanks":
+            expected = task.get("blankAnswers", [])
+            given = student_answer if isinstance(student_answer, list) else []
+            if expected:
+                correct_count = sum(
+                    1 for e, g in zip(expected, given)
+                    if str(e).strip().lower() == str(g).strip().lower()
+                )
+                auto_total += len(expected)
+                auto_score += correct_count
+                is_correct = correct_count == len(expected)
+
+        elif task_type == "find-extra":
+            expected = task.get("correctItem", "")
+            if expected:
+                is_correct = str(student_answer).strip().lower() == expected.strip().lower()
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "insert-letter":
+            expected = (task.get("correctWord") or "").strip().lower()
+            if expected and student_answer is not None:
+                # Mobile sends array of letters for each blank, e.g. ["и"] for "ф_зика"
+                if isinstance(student_answer, list):
+                    word_with_blanks = task.get("wordWithBlanks", "")
+                    parts = word_with_blanks.split("_")
+                    reconstructed = ""
+                    for idx_p, part in enumerate(parts):
+                        reconstructed += part
+                        if idx_p < len(parts) - 1:
+                            letter = student_answer[idx_p] if idx_p < len(student_answer) else ""
+                            reconstructed += str(letter)
+                    given = reconstructed.strip().lower()
+                else:
+                    given = str(student_answer).strip().lower()
+                is_correct = given == expected
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "compare-numbers":
+            expected_pairs = task.get("comparePairs", [])
+            given = student_answer if isinstance(student_answer, dict) else {}
+            if expected_pairs:
+                correct_count = 0
+                for i, pair in enumerate(expected_pairs):
+                    if given.get(str(i)) == pair.get("operator"):
+                        correct_count += 1
+                auto_total += len(expected_pairs)
+                auto_score += correct_count
+                is_correct = correct_count == len(expected_pairs)
+
+        elif task_type == "sequence":
+            expected_seq = task.get("correctSequence", [])
+            given = student_answer if isinstance(student_answer, list) else []
+            if expected_seq:
+                is_correct = given == expected_seq
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "anagram":
+            expected = (task.get("anagramAnswer") or "").strip().lower()
+            given = (str(student_answer) if student_answer else "").strip().lower()
+            if expected:
+                is_correct = given == expected
+                auto_total += 1
+                if is_correct:
+                    auto_score += 1
+
+        elif task_type == "continue-sequence":
+            expected = task.get("sequenceAnswer", [])
+            given = student_answer if isinstance(student_answer, list) else []
+            if expected:
+                correct_count = sum(
+                    1 for e, g in zip(expected, given)
+                    if str(e).strip().lower() == str(g).strip().lower()
+                )
+                auto_total += len(expected)
+                auto_score += correct_count
+                is_correct = correct_count == len(expected)
+
+        elif task_type == "match-columns":
+            expected_pairs = task.get("pairs", {})
+            given = student_answer if isinstance(student_answer, dict) else {}
+            if expected_pairs:
+                # Mobile sends {leftIndex: rightIndex}, convert to text-based matching
+                left_col = task.get("leftColumn", [])
+                right_col = task.get("rightColumn", [])
+                correct_count = 0
+                for k, v in given.items():
+                    try:
+                        left_text = left_col[int(k)] if int(k) < len(left_col) else None
+                        right_text = right_col[int(v)] if int(v) < len(right_col) else None
+                    except (ValueError, TypeError):
+                        # Keys are already text (web or future format)
+                        left_text = k
+                        right_text = v
+                    if left_text and right_text and expected_pairs.get(left_text) == right_text:
+                        correct_count += 1
+                auto_total += len(expected_pairs)
+                auto_score += correct_count
+                is_correct = correct_count == len(expected_pairs)
+
+        graded[task_id] = {
+            "answer": student_answer,
+            "correct": is_correct,
+            "auto": is_correct is not None,
+        }
+
+    score_percent = int(round((auto_score / auto_total) * 100)) if auto_total > 0 else None
+
+    result_doc = {
+        "session_id": session_id,
+        "student_id": current_user["id"],
+        "answers": payload.answers,
+        "graded": graded,
+        "auto_score": auto_score,
+        "auto_total": auto_total,
+        "score_percent": score_percent,
+        "task_count": len(tasks),
+        "answered_count": len(payload.answers),
+        "created_at": datetime.utcnow(),
+    }
+    await db.worksheet_results.update_one(
+        {"session_id": session_id, "student_id": current_user["id"]},
+        {"$set": result_doc},
+        upsert=True,
+    )
+    return result_doc
+
+
+@api_router.get("/teacher/pairing-sessions/{session_id}/worksheet-results")
+async def get_worksheet_results(session_id: str, current_user: dict = Depends(get_current_user)):
+    require_teacher(current_user)
+    session = await db.pairing_sessions.find_one({"id": session_id, "teacher_id": current_user["id"]})
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    results = await db.worksheet_results.find({"session_id": session_id}).to_list(1000)
+    for r in results:
+        r.pop("_id", None)
+    if not results:
+        return {"results": [], "summary": {"count": 0, "average": None}}
+
+    student_ids = [r["student_id"] for r in results]
+    students = await db.users.find({"id": {"$in": student_ids}}).to_list(1000)
+    student_map = {s["id"]: s for s in students}
+
+    enriched = []
+    for r in results:
+        s = student_map.get(r["student_id"], {})
+        enriched.append({
+            "student_id": r["student_id"],
+            "name": s.get("name"),
+            "email": s.get("email"),
+            "class_id": s.get("class_id"),
+            "answers": r.get("answers", {}),
+            "graded": r.get("graded", {}),
+            "auto_score": r.get("auto_score", 0),
+            "auto_total": r.get("auto_total", 0),
+            "score_percent": r.get("score_percent"),
+            "task_count": r.get("task_count", 0),
+            "answered_count": r.get("answered_count", 0),
+            "created_at": r.get("created_at"),
+        })
+
+    scored = [r["score_percent"] for r in enriched if r["score_percent"] is not None]
+    avg = int(sum(scored) / len(scored)) if scored else None
+
+    return {
+        "results": enriched,
+        "summary": {
+            "count": len(enriched),
+            "average": avg,
+        },
+    }
+
+
 # ==================== Init Data ====================
 
 @api_router.post("/init-data")
@@ -1543,10 +3097,16 @@ async def root():
 # Include the router in the main app
 app.include_router(api_router)
 
+cors_origins_env = os.environ.get("CORS_ORIGINS")
+if cors_origins_env:
+    cors_origins = [origin.strip() for origin in cors_origins_env.split(",") if origin.strip()]
+else:
+    cors_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
+    allow_credentials=False if "*" in cors_origins else True,
+    allow_origins=cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

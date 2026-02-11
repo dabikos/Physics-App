@@ -5,44 +5,49 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
-  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Test, TestDifficulty } from '../../src/data/physicsData';
+import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import api from '../../src/services/api';
-import { useAuthStore } from '../../src/store/authStore';
+import { useAuth } from '../../src/context/AuthContext';
 import { SuccessModal } from '../../src/components/SuccessModal';
+import { MathContent } from '../../src/components/MathContent';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../src/context/ThemeContext';
 
-interface Question {
-  question: string;
-  options: string[];
-  correct: number;
-}
-
-interface Test {
-  id: string;
-  section: string;
-  title: string;
-  questions: Question[];
-  time_limit: number;
-}
-
-interface Section {
-  name: string;
-  color: string;
-}
+const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => string) => {
+  switch (difficulty) {
+    case 'basic':
+      return { label: t('difficulty.basic'), color: '#10B981', emoji: '🟢' };
+    case 'standard':
+      return { label: t('difficulty.standard'), color: '#F59E0B', emoji: '🟡' };
+    case 'advanced':
+      return { label: t('difficulty.advanced'), color: '#F97316', emoji: '🟠' };
+    case 'olympiad':
+      return { label: t('difficulty.olympiad'), color: '#EF4444', emoji: '🔴' };
+    default:
+      return { label: t('difficulty.basic'), color: '#10B981', emoji: '🟢' };
+  }
+};
 
 export default function TestsSectionScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
-  const { token } = useAuthStore();
-  const [sectionData, setSectionData] = useState<Section | null>(null);
-  const [tests, setTests] = useState<Test[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const { PHYSICS_SECTIONS, getTestsBySection } = usePhysicsData();
+  
+  const sectionData = section ? PHYSICS_SECTIONS[section] : null;
+  const tests = section ? getTestsBySection(section) : [];
+
+  const { user } = useAuth();
+  const [assignedTests, setAssignedTests] = useState<Test[]>([]);
+  const [loadingAssigned, setLoadingAssigned] = useState(false);
+  
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
@@ -51,15 +56,39 @@ export default function TestsSectionScreen() {
   const [testFinished, setTestFinished] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [generating, setGenerating] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    fetchData();
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [section]);
+  }, []);
+
+  useEffect(() => {
+    const loadAssignedTests = async () => {
+      if (!user || user.role !== 'student') return;
+      setLoadingAssigned(true);
+      try {
+        const response = await api.get('/assigned-tests');
+        const items = Array.isArray(response.data) ? response.data : [];
+        const mapped: Test[] = items.map((t: any) => ({
+          id: t.id,
+          section: t.section || section || 'mechanics',
+          title: t.title || '????',
+          difficulty: 'standard',
+          questions: t.questions || [],
+          time_limit: t.time_limit || 600,
+        }));
+        setAssignedTests(mapped);
+      } catch (error) {
+        console.log('Assigned tests load error:', error);
+      } finally {
+        setLoadingAssigned(false);
+      }
+    };
+
+    loadAssignedTests();
+  }, [user, section]);
 
   useEffect(() => {
     if (testStarted && timeLeft > 0) {
@@ -77,51 +106,6 @@ export default function TestsSectionScreen() {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [testStarted]);
-
-  const fetchData = async () => {
-    try {
-      const [sectionRes, testsRes] = await Promise.all([
-        api.get(`/sections/${section}`),
-        api.get(`/tests?section=${section}`),
-      ]);
-      setSectionData(sectionRes.data);
-      setTests(testsRes.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const generateTest = async () => {
-    if (!token) {
-      Alert.alert('Требуется авторизация', 'Войдите для генерации тестов', [
-        { text: 'Войти', onPress: () => router.push('/auth/login') },
-        { text: 'Отмена', style: 'cancel' },
-      ]);
-      return;
-    }
-
-    setGenerating(true);
-    try {
-      const response = await api.post('/tests/generate', {
-        section: section,
-        num_questions: 5,
-        difficulty: 'medium',
-      });
-      
-      const newTest = response.data;
-      setTests(prev => [...prev, newTest]);
-      Alert.alert('Успех', 'Новый тест сгенерирован!', [
-        { text: 'Начать', onPress: () => startTest(newTest) },
-        { text: 'Позже', style: 'cancel' },
-      ]);
-    } catch (error: any) {
-      Alert.alert('Ошибка', 'Не удалось сгенерировать тест');
-    } finally {
-      setGenerating(false);
-    }
-  };
 
   const startTest = (test: Test) => {
     setSelectedTest(test);
@@ -155,22 +139,20 @@ export default function TestsSectionScreen() {
     if (timerRef.current) clearInterval(timerRef.current);
     setTestStarted(false);
     setTestFinished(true);
+    calculateLocalResults();
+    await submitTestResult();
+    setShowSuccessModal(true);
+  };
 
-    if (token && selectedTest) {
-      try {
-        const response = await api.post(`/tests/${selectedTest.id}/submit`, {
-          answers: answers,
-        });
-        setResults(response.data);
-        setShowSuccessModal(true);
-      } catch (error) {
-        console.error('Error submitting test:', error);
-        calculateLocalResults();
-        setShowSuccessModal(true);
-      }
-    } else {
-      calculateLocalResults();
-      setShowSuccessModal(true);
+  const submitTestResult = async () => {
+    if (!selectedTest) return;
+    try {
+      await api.post(`/tests/${selectedTest.id}/submit`, {
+        answers,
+        source: 'mobile',
+      });
+    } catch (error) {
+      console.log('Test submit error:', error);
     }
   };
 
@@ -215,70 +197,87 @@ export default function TestsSectionScreen() {
     setShowSuccessModal(false);
   };
 
-  if (loading) {
+  if (!sectionData) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
-      </View>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('tests.title')}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={styles.emptyState}>
+          <Text style={[styles.emptyText, { color: colors.textTertiary }]}>{t('common.sectionNotFound')}</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   // Test results screen
   if (testFinished && results) {
+    const difficultyInfo = selectedTest ? getDifficultyInfo(selectedTest.difficulty, t) : null;
+    
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={resetTest}>
-            <Ionicons name="close" size={24} color="#1F2937" />
+            <Ionicons name="close" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Результаты</Text>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('tests.results')}</Text>
           <View style={styles.headerPlaceholder} />
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.resultsCard}>
+          <View style={[styles.resultsCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
             <View style={[
               styles.scoreCircle,
-              { backgroundColor: results.score >= 70 ? '#D1FAE5' : results.score >= 50 ? '#FEF3C7' : '#FEE2E2' }
+              { backgroundColor: results.score >= 70 ? colors.successBg : results.score >= 50 ? colors.warningBg : colors.errorBg }
             ]}>
               <Text style={[
                 styles.scoreText,
-                { color: results.score >= 70 ? '#10B981' : results.score >= 50 ? '#F59E0B' : '#EF4444' }
+                { color: results.score >= 70 ? colors.success : results.score >= 50 ? colors.warning : colors.error }
               ]}>
                 {results.score}%
               </Text>
             </View>
-            <Text style={styles.scoreLabel}>
-              {results.correct_count} из {results.total} правильных
+            <Text style={[styles.scoreLabel, { color: colors.textTertiary }]}>
+              {t('tests.correctAnswers')}: {results.correct_count} {t('tests.of')} {results.total}
             </Text>
-            <Text style={styles.scoreMessage}>
-              {results.score >= 70 ? 'Отличный результат!' : 
-               results.score >= 50 ? 'Хорошо, но есть куда расти' : 
-               'Нужно повторить материал'}
+            {difficultyInfo && (
+              <View style={[styles.difficultyBadgeLarge, { backgroundColor: difficultyInfo.color + '20' }]}>
+                <Text style={styles.difficultyEmoji}>{difficultyInfo.emoji}</Text>
+                <Text style={[styles.difficultyLabelLarge, { color: difficultyInfo.color }]}>
+                  {difficultyInfo.label}
+                </Text>
+              </View>
+            )}
+            <Text style={[styles.scoreMessage, { color: colors.text }]}>
+              {results.score >= 70 ? t('tests.passed') : t('tests.failed')}
             </Text>
           </View>
 
-          <Text style={styles.detailsTitle}>Подробные результаты</Text>
+          <Text style={[styles.detailsTitle, { color: colors.text }]}>{t('tests.results')}</Text>
           {results.results?.map((r: any, i: number) => (
             <View key={i} style={[
               styles.resultItem,
-              { borderLeftColor: r.correct ? '#10B981' : '#EF4444' }
+              { backgroundColor: colors.card, borderLeftColor: r.correct ? colors.success : colors.error }
             ]}>
               <View style={styles.resultHeader}>
                 <Ionicons
                   name={r.correct ? 'checkmark-circle' : 'close-circle'}
                   size={20}
-                  color={r.correct ? '#10B981' : '#EF4444'}
+                  color={r.correct ? colors.success : colors.error}
                 />
-                <Text style={styles.resultQuestion} numberOfLines={2}>
+                <Text style={[styles.resultQuestion, { color: colors.textSecondary }]} numberOfLines={2}>
                   {r.question}
                 </Text>
               </View>
             </View>
           ))}
 
-          <TouchableOpacity style={styles.retryButton} onPress={resetTest}>
-            <Text style={styles.retryButtonText}>Вернуться к тестам</Text>
+          <TouchableOpacity style={[styles.retryButton, { backgroundColor: colors.accent }]} onPress={resetTest}>
+            <Text style={styles.retryButtonText}>{t('tests.backToTests')}</Text>
           </TouchableOpacity>
 
           <View style={styles.bottomPadding} />
@@ -290,44 +289,50 @@ export default function TestsSectionScreen() {
   // Active test screen
   if (testStarted && selectedTest) {
     const currentQuestion = selectedTest.questions[currentQuestionIndex];
+    const difficultyInfo = getDifficultyInfo(selectedTest.difficulty, t);
 
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => {
-              Alert.alert('Выйти из теста?', 'Прогресс будет потерян', [
-                { text: 'Отмена', style: 'cancel' },
-                { text: 'Выйти', style: 'destructive', onPress: resetTest },
+              Alert.alert(t('tests.exitTest'), t('tests.progressLost'), [
+                { text: t('common.cancel'), style: 'cancel' },
+                { text: t('tests.exitButton'), style: 'destructive', onPress: resetTest },
               ]);
             }}
           >
-            <Ionicons name="close" size={24} color="#1F2937" />
+            <Ionicons name="close" size={24} color={colors.text} />
           </TouchableOpacity>
-          <View style={styles.timerContainer}>
-            <Ionicons name="time" size={18} color={timeLeft < 60 ? '#EF4444' : '#6B7280'} />
-            <Text style={[styles.timerText, timeLeft < 60 && styles.timerTextWarning]}>
+          <View style={[styles.timerContainer, { backgroundColor: colors.inputBg }]}>
+            <Ionicons name="time" size={18} color={timeLeft < 60 ? colors.error : colors.textTertiary} />
+            <Text style={[styles.timerText, { color: colors.textTertiary }, timeLeft < 60 && styles.timerTextWarning]}>
               {formatTime(timeLeft)}
             </Text>
           </View>
-          <Text style={styles.questionCounter}>
+          <Text style={[styles.questionCounter, { color: colors.accentText }]}>
             {currentQuestionIndex + 1}/{selectedTest.questions.length}
           </Text>
         </View>
 
-        <View style={styles.progressBar}>
+        <View style={[styles.progressBar, { backgroundColor: colors.border }]}>
           <View
             style={[
               styles.progressFill,
-              { width: `${((currentQuestionIndex + 1) / selectedTest.questions.length) * 100}%` },
+              { 
+                width: `${((currentQuestionIndex + 1) / selectedTest.questions.length) * 100}%`,
+                backgroundColor: difficultyInfo.color
+              },
             ]}
           />
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.questionCard}>
-            <Text style={styles.questionText}>{currentQuestion.question}</Text>
+          <View style={[styles.questionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+            <View style={styles.questionContainer}>
+              <MathContent content={currentQuestion.question} fontSize={18} textColor={colors.text} />
+            </View>
 
             <View style={styles.optionsContainer}>
               {currentQuestion.options.map((option, index) => (
@@ -335,22 +340,27 @@ export default function TestsSectionScreen() {
                   key={index}
                   style={[
                     styles.optionButton,
-                    answers[currentQuestionIndex] === index && styles.optionSelected,
+                    { backgroundColor: colors.optionBg, borderColor: colors.optionBorder },
+                    answers[currentQuestionIndex] === index && [styles.optionSelected, { borderColor: colors.accent, backgroundColor: colors.optionSelectedBg }],
                   ]}
                   onPress={() => selectAnswer(index)}
                 >
                   <View style={[
                     styles.optionCircle,
-                    answers[currentQuestionIndex] === index && styles.optionCircleSelected,
+                    { backgroundColor: colors.optionCircleBg },
+                    answers[currentQuestionIndex] === index && [styles.optionCircleSelected, { backgroundColor: colors.accent }],
                   ]}>
                     <Text style={[
                       styles.optionLetter,
+                      { color: colors.textTertiary },
                       answers[currentQuestionIndex] === index && styles.optionLetterSelected,
                     ]}>
                       {String.fromCharCode(65 + index)}
                     </Text>
                   </View>
-                  <Text style={styles.optionText}>{option}</Text>
+                  <View style={styles.optionTextContainer}>
+                    <MathContent content={option} fontSize={15} textColor={colors.text} />
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
@@ -362,19 +372,19 @@ export default function TestsSectionScreen() {
               onPress={prevQuestion}
               disabled={currentQuestionIndex === 0}
             >
-              <Ionicons name="arrow-back" size={20} color={currentQuestionIndex === 0 ? '#D1D5DB' : '#6C63FF'} />
-              <Text style={[styles.navButtonText, currentQuestionIndex === 0 && styles.navButtonTextDisabled]}>
-                Назад
+              <Ionicons name="arrow-back" size={20} color={currentQuestionIndex === 0 ? colors.textMuted : colors.accent} />
+              <Text style={[styles.navButtonText, { color: colors.accent }, currentQuestionIndex === 0 && { color: colors.textMuted }]}>
+                {t('common.back')}
               </Text>
             </TouchableOpacity>
 
             {currentQuestionIndex === selectedTest.questions.length - 1 ? (
               <TouchableOpacity style={styles.finishButton} onPress={finishTest}>
-                <Text style={styles.finishButtonText}>Завершить</Text>
+                <Text style={styles.finishButtonText}>{t('common.finish')}</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.nextButton} onPress={nextQuestion}>
-                <Text style={styles.nextButtonText}>Далее</Text>
+              <TouchableOpacity style={[styles.nextButton, { backgroundColor: colors.accent }]} onPress={nextQuestion}>
+                <Text style={styles.nextButtonText}>{t('common.next')}</Text>
                 <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
               </TouchableOpacity>
             )}
@@ -386,7 +396,7 @@ export default function TestsSectionScreen() {
         <SuccessModal
           visible={showSuccessModal}
           onClose={handleCloseSuccessModal}
-          title="Тест завершён!"
+          title={t('tests.completed')}
           subtitle={selectedTest?.title}
           score={results?.score}
           type="test"
@@ -395,92 +405,147 @@ export default function TestsSectionScreen() {
     );
   }
 
+  const assignedForSection = assignedTests.filter(t => !t.section || t.section === section);
+
+  // Group tests by difficulty
+  const testsByDifficulty = {
+    basic: tests.filter(t => t.difficulty === 'basic'),
+    standard: tests.filter(t => t.difficulty === 'standard'),
+    advanced: tests.filter(t => t.difficulty === 'advanced'),
+    olympiad: tests.filter(t => t.difficulty === 'olympiad'),
+  };
+
   // Tests list screen
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{sectionData?.name}</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{sectionData.name}</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Generate test button */}
-        <TouchableOpacity
-          style={styles.generateTestButton}
-          onPress={generateTest}
-          disabled={generating}
-        >
-          <LinearGradient
-            colors={['#1ABC9C', '#16A085']}
-            style={styles.generateGradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-          >
-            {generating ? (
-              <ActivityIndicator color="#FFFFFF" size="small" />
-            ) : (
-              <Ionicons name="sparkles" size={18} color="#FFFFFF" />
-            )}
-            <Text style={styles.generateText}>
-              {generating ? 'Генерация...' : 'Сгенерировать тест'}
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
+        <View style={[styles.statsContainer, { backgroundColor: colors.card }]}>
+          <Text style={[styles.statsText, { color: colors.textTertiary }]}>{t('tests.totalTests', { count: tests.length })}</Text>
+        </View>
 
-        <Text style={styles.sectionTitle}>Доступные тесты</Text>
-
-        {tests.length === 0 ? (
+        {tests.length === 0 && assignedForSection.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="document-text" size={64} color="#D1D5DB" />
-            <Text style={styles.emptyText}>Тесты в разработке</Text>
+            <Ionicons name="document-text" size={64} color={colors.textMuted} />
+            <Text style={[styles.emptyText, { color: colors.textTertiary }]}>{t('tests.testsInDev')}</Text>
+            <Text style={[styles.emptySubtext, { color: colors.textMuted }]}>{t('tests.testsInDevMessage')}</Text>
           </View>
         ) : (
-          tests.map((test) => (
-            <TouchableOpacity
-              key={test.id}
-              style={styles.testCard}
-              onPress={() => startTest(test)}
-              activeOpacity={0.8}
-            >
-              <View style={styles.testIcon}>
-                <Ionicons name="document-text" size={24} color="#6C63FF" />
-              </View>
-              <View style={styles.testInfo}>
-                <Text style={styles.testTitle}>{test.title}</Text>
-                <View style={styles.testMeta}>
-                  <View style={styles.testMetaItem}>
-                    <Ionicons name="help-circle" size={14} color="#6B7280" />
-                    <Text style={styles.testMetaText}>{test.questions.length} вопросов</Text>
-                  </View>
-                  <View style={styles.testMetaItem}>
-                    <Ionicons name="time" size={14} color="#6B7280" />
-                    <Text style={styles.testMetaText}>{Math.floor(test.time_limit / 60)} мин</Text>
-                  </View>
+          <>
+            {assignedForSection.length > 0 && (
+              <View style={styles.difficultySection}>
+                <View style={styles.difficultySectionHeader}>
+                  <Text style={styles.difficultyEmoji}>??</Text>
+                  <Text style={[styles.difficultySectionTitle, { color: '#6366F1' }]}>
+                    ??????????? ({assignedForSection.length})
+                  </Text>
                 </View>
+                {assignedForSection.map((test) => renderTestCard(test))}
               </View>
-              <View style={styles.startButton}>
-                <Ionicons name="play" size={20} color="#FFFFFF" />
+            )}
+
+            {/* Basic tests */}
+            {testsByDifficulty.basic.length > 0 && (
+              <View style={styles.difficultySection}>
+                <View style={styles.difficultySectionHeader}>
+                  <Text style={styles.difficultyEmoji}>🟢</Text>
+                  <Text style={[styles.difficultySectionTitle, { color: '#10B981' }]}>
+                    {t('difficulty.basic')} ({testsByDifficulty.basic.length})
+                  </Text>
+                </View>
+                {testsByDifficulty.basic.map((test) => renderTestCard(test))}
               </View>
-            </TouchableOpacity>
-          ))
+            )}
+
+            {/* Standard tests */}
+            {testsByDifficulty.standard.length > 0 && (
+              <View style={styles.difficultySection}>
+                <View style={styles.difficultySectionHeader}>
+                  <Text style={styles.difficultyEmoji}>🟡</Text>
+                  <Text style={[styles.difficultySectionTitle, { color: '#F59E0B' }]}>
+                    {t('difficulty.standard')} ({testsByDifficulty.standard.length})
+                  </Text>
+                </View>
+                {testsByDifficulty.standard.map((test) => renderTestCard(test))}
+              </View>
+            )}
+
+            {/* Advanced tests */}
+            {testsByDifficulty.advanced.length > 0 && (
+              <View style={styles.difficultySection}>
+                <View style={styles.difficultySectionHeader}>
+                  <Text style={styles.difficultyEmoji}>🟠</Text>
+                  <Text style={[styles.difficultySectionTitle, { color: '#F97316' }]}>
+                    {t('difficulty.advanced')} ({testsByDifficulty.advanced.length})
+                  </Text>
+                </View>
+                {testsByDifficulty.advanced.map((test) => renderTestCard(test))}
+              </View>
+            )}
+
+            {/* Olympiad tests */}
+            {testsByDifficulty.olympiad.length > 0 && (
+              <View style={styles.difficultySection}>
+                <View style={styles.difficultySectionHeader}>
+                  <Text style={styles.difficultyEmoji}>🔴</Text>
+                  <Text style={[styles.difficultySectionTitle, { color: '#EF4444' }]}>
+                    {t('difficulty.olympiad')} ({testsByDifficulty.olympiad.length})
+                  </Text>
+                </View>
+                {testsByDifficulty.olympiad.map((test) => renderTestCard(test))}
+              </View>
+            )}
+          </>
         )}
+
+        <View style={styles.bottomPadding} />
       </ScrollView>
     </SafeAreaView>
   );
+
+  function renderTestCard(test: Test) {
+    const difficultyInfo = getDifficultyInfo(test.difficulty, t);
+    
+    return (
+      <TouchableOpacity
+        key={test.id}
+        style={[styles.testCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor, borderLeftColor: difficultyInfo.color }]}
+        onPress={() => startTest(test)}
+        activeOpacity={0.8}
+      >
+        <View style={styles.testContent}>
+          <View style={styles.testMainInfo}>
+            <Text style={[styles.testTitle, { color: colors.text }]}>{test.title}</Text>
+            <View style={styles.testMeta}>
+              <View style={styles.testMetaItem}>
+                <Ionicons name="help-circle-outline" size={14} color={colors.textTertiary} />
+                <Text style={[styles.testMetaText, { color: colors.textTertiary }]}>{test.questions.length} {t('tests.questions')}</Text>
+              </View>
+              <View style={styles.testMetaItem}>
+                <Ionicons name="time-outline" size={14} color={colors.textTertiary} />
+                <Text style={[styles.testMetaText, { color: colors.textTertiary }]}>{Math.floor(test.time_limit / 60)} {t('tests.minutes')}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={[styles.startButton, { backgroundColor: difficultyInfo.color }]}>
+            <Ionicons name="play" size={18} color="#FFFFFF" />
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5F7FA',
   },
   header: {
@@ -507,22 +572,17 @@ const styles = StyleSheet.create({
   headerPlaceholder: {
     width: 44,
   },
-  generateTestButton: {
-    marginBottom: 16,
-  },
-  generateGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+  statsContainer: {
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    gap: 8,
+    padding: 12,
+    marginBottom: 16,
+    alignItems: 'center',
   },
-  generateText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
+  statsText: {
+    fontSize: 14,
+    color: '#6B7280',
+    fontWeight: '500',
   },
   timerContainer: {
     flexDirection: 'row',
@@ -558,11 +618,21 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1F2937',
+  difficultySection: {
     marginBottom: 20,
+  },
+  difficultySectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 8,
+  },
+  difficultySectionTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  difficultyEmoji: {
+    fontSize: 18,
   },
   emptyState: {
     flex: 1,
@@ -571,43 +641,44 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '600',
     color: '#6B7280',
     marginTop: 16,
   },
+  emptySubtext: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    marginTop: 8,
+    textAlign: 'center',
+  },
   testCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 10,
+    borderLeftWidth: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
     elevation: 2,
   },
-  testIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: '#EEF2FF',
-    justifyContent: 'center',
+  testContent: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  testInfo: {
+  testMainInfo: {
     flex: 1,
-    marginLeft: 12,
   },
   testTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#1F2937',
+    marginBottom: 6,
   },
   testMeta: {
     flexDirection: 'row',
-    marginTop: 6,
     gap: 16,
   },
   testMetaItem: {
@@ -616,13 +687,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   testMetaText: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#6B7280',
   },
   startButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#6C63FF',
     justifyContent: 'center',
     alignItems: 'center',
@@ -636,6 +707,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 3,
+  },
+  questionContainer: {
+    marginBottom: 24,
   },
   questionText: {
     fontSize: 18,
@@ -679,6 +753,9 @@ const styles = StyleSheet.create({
   },
   optionLetterSelected: {
     color: '#FFFFFF',
+  },
+  optionTextContainer: {
+    flex: 1,
   },
   optionText: {
     flex: 1,
@@ -761,7 +838,20 @@ const styles = StyleSheet.create({
   scoreLabel: {
     fontSize: 16,
     color: '#6B7280',
-    marginBottom: 8,
+    marginBottom: 12,
+  },
+  difficultyBadgeLarge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 12,
+    gap: 6,
+  },
+  difficultyLabelLarge: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   scoreMessage: {
     fontSize: 18,

@@ -1,0 +1,634 @@
+import React, { useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  ActivityIndicator,
+  Animated,
+  StatusBar,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../src/context/AuthContext';
+
+export default function RegisterScreen() {
+  const router = useRouter();
+  const { signUp } = useAuth();
+  const { t } = useTranslation();
+  
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState<'student' | 'teacher'>('student');
+  const [classId, setClassId] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Анимация ошибки
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+
+  const shake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true }),
+    ]).start();
+  };
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleRegister = async () => {
+    // Валидация
+    if (!name.trim()) {
+      setError(t('auth.enterName'));
+      shake();
+      return;
+    }
+    if (!email.trim()) {
+      setError(t('auth.enterEmail'));
+      shake();
+      return;
+    }
+    if (!validateEmail(email.trim())) {
+      setError(t('auth.invalidEmail'));
+      shake();
+      return;
+    }
+    if (password.length < 6) {
+      setError(t('auth.passwordTooShort'));
+      shake();
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError(t('auth.passwordsDontMatch'));
+      shake();
+      return;
+    }
+
+    setError(null);
+    setLoading(true);
+
+    const result = await signUp(email.trim(), password, name.trim(), role, classId.trim());
+    
+    setLoading(false);
+
+    if (result.success) {
+      router.replace('/(tabs)');
+    } else {
+      setError(result.error || t('auth.registerError'));
+      shake();
+    }
+  };
+
+  // Проверка силы пароля
+  const getPasswordStrength = () => {
+    if (password.length === 0) return { level: 0, text: '', color: '#4A5568' };
+    if (password.length < 6) return { level: 1, text: t('auth.passwordWeak'), color: '#EF4444' };
+    if (password.length < 8) return { level: 2, text: t('auth.passwordMedium'), color: '#F59E0B' };
+    if (/[A-Z]/.test(password) && /[0-9]/.test(password)) {
+      return { level: 4, text: t('auth.passwordStrong'), color: '#10B981' };
+    }
+    return { level: 3, text: t('auth.passwordGood'), color: '#22C55E' };
+  };
+
+  const passwordStrength = getPasswordStrength();
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      
+      <LinearGradient
+        colors={['#0F0C29', '#302B63', '#24243E']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradient}
+      />
+
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
+        >
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Кнопка назад */}
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+
+            {/* Заголовок */}
+            <View style={styles.header}>
+              <View style={styles.iconContainer}>
+                <Ionicons name="person-add" size={32} color="#764BA2" />
+              </View>
+              <Text style={styles.title}>{t('auth.register')}</Text>
+              <Text style={styles.subtitle}>
+                {t('auth.registerSubtitle')}
+              </Text>
+            </View>
+
+            {/* Форма */}
+            <Animated.View 
+              style={[
+                styles.form,
+                { transform: [{ translateX: shakeAnim }] }
+              ]}
+            >
+              {/* Имя */}
+              <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <Ionicons name="person-outline" size={20} color="#764BA2" />
+                </View>
+                <TextInput
+                  style={styles.input}
+                  placeholder={t('auth.name')}
+                  placeholderTextColor="rgba(255,255,255,0.4)"
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  autoComplete="off"
+                  textContentType="none"
+                  value={name}
+                  onChangeText={(text) => {
+                    setName(text);
+                    setError(null);
+                  }}
+                />
+              </View>
+
+              
+              
+                                          {/* Роль */}
+              <View style={styles.roleContainer}>
+                <View style={styles.roleButtons}>
+                  <TouchableOpacity
+                    style={[styles.roleCard, role === 'student' && styles.roleCardActive]}
+                    onPress={() => setRole('student')}
+                    activeOpacity={0.9}
+                  >
+                    <View style={[styles.roleIconCircle, role === 'student' && styles.roleIconCircleActive]}>
+                      <Ionicons
+                        name="school"
+                        size={20}
+                        color={role === 'student' ? '#FFFFFF' : '#8B7CF6'}
+                      />
+                    </View>
+                    <Text style={[styles.roleTitle, role === 'student' && styles.roleTitleActive]}>
+                      {t('auth.student')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.roleCard, role === 'teacher' && styles.roleCardActive]}
+                    onPress={() => setRole('teacher')}
+                    activeOpacity={0.9}
+                  >
+                    <View style={[styles.roleIconCircle, role === 'teacher' && styles.roleIconCircleActive]}>
+                      <Ionicons
+                        name="ribbon"
+                        size={20}
+                        color={role === 'teacher' ? '#FFFFFF' : '#8B7CF6'}
+                      />
+                    </View>
+                    <Text style={[styles.roleTitle, role === 'teacher' && styles.roleTitleActive]}>
+                      {t('auth.teacher')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Класс */}
+              {role === 'student' && (
+                <View style={styles.inputContainer}>
+                  <View style={styles.inputIcon}>
+                    <Ionicons name="school-outline" size={20} color="#764BA2" />
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={t('auth.grade')}
+                    placeholderTextColor="rgba(255,255,255,0.4)"
+                    autoCapitalize="characters"
+                    autoCorrect={false}
+                    autoComplete="off"
+                    textContentType="none"
+                    value={classId}
+                    onChangeText={(textValue) => {
+                      setClassId(textValue);
+                      setError(null);
+                    }}
+                  />
+                </View>
+              )}
+
+              {/* Email */}
+              <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <Ionicons name="mail-outline" size={20} color="#764BA2" />
+                </View>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor="rgba(255,255,255,0.4)"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    setError(null);
+                  }}
+                />
+              </View>
+
+              {/* Пароль */}
+              <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <Ionicons name="lock-closed-outline" size={20} color="#764BA2" />
+                </View>
+                <TextInput
+                  style={styles.input}
+                  placeholder={t('auth.passwordPlaceholder')}
+                  placeholderTextColor="rgba(255,255,255,0.4)"
+                  secureTextEntry={!showPassword}
+                  textContentType="none"
+                  autoComplete="off"
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    setError(null);
+                  }}
+                />
+                <TouchableOpacity
+                  style={styles.eyeButton}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="rgba(255,255,255,0.6)"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Индикатор силы пароля */}
+              {password.length > 0 && (
+                <View style={styles.passwordStrength}>
+                  <View style={styles.strengthBars}>
+                    {[1, 2, 3, 4].map((level) => (
+                      <View
+                        key={level}
+                        style={[
+                          styles.strengthBar,
+                          {
+                            backgroundColor:
+                              level <= passwordStrength.level
+                                ? passwordStrength.color
+                                : 'rgba(255,255,255,0.1)',
+                          },
+                        ]}
+                      />
+                    ))}
+                  </View>
+                  <Text style={[styles.strengthText, { color: passwordStrength.color }]}>
+                    {passwordStrength.text}
+                  </Text>
+                </View>
+              )}
+
+              {/* Подтверждение пароля */}
+              <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <Ionicons name="shield-checkmark-outline" size={20} color="#764BA2" />
+                </View>
+                <TextInput
+                  style={styles.input}
+                  placeholder={t('auth.confirmPassword')}
+                  placeholderTextColor="rgba(255,255,255,0.4)"
+                  secureTextEntry={!showPassword}
+                  textContentType="none"
+                  autoComplete="off"
+                  value={confirmPassword}
+                  onChangeText={(text) => {
+                    setConfirmPassword(text);
+                    setError(null);
+                  }}
+                />
+                {confirmPassword.length > 0 && (
+                  <Ionicons
+                    name={password === confirmPassword ? 'checkmark-circle' : 'close-circle'}
+                    size={20}
+                    color={password === confirmPassword ? '#10B981' : '#EF4444'}
+                  />
+                )}
+              </View>
+
+              {/* Ошибка */}
+              {error && (
+                <View style={styles.errorContainer}>
+                  <Ionicons name="alert-circle" size={18} color="#EF4444" />
+                  <Text style={styles.errorText}>{error}</Text>
+                </View>
+              )}
+
+              {/* Кнопка регистрации */}
+              <TouchableOpacity
+                style={[styles.registerButton, loading && styles.registerButtonDisabled]}
+                onPress={handleRegister}
+                disabled={loading}
+                activeOpacity={0.9}
+              >
+                <LinearGradient
+                  colors={loading ? ['#4A5568', '#4A5568'] : ['#764BA2', '#667EEA']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.registerButtonGradient}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                  ) : (
+                    <>
+                      <Text style={styles.registerButtonText}>{t('auth.register')}</Text>
+                      <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
+                    </>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+
+              {/* Соглашение */}
+              <Text style={styles.agreement}>
+                {t('auth.termsAgree')}{' '}
+                <Text style={styles.agreementLink}>{t('auth.termsLink')}</Text>
+              </Text>
+            </Animated.View>
+
+            {/* Вход */}
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>{t('auth.haveAccountAlt')}</Text>
+              <TouchableOpacity onPress={() => router.replace('/(auth)/login')}>
+                <Text style={styles.loginLink}>{t('auth.login')}</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+  },
+  backButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 32,
+  },
+  iconContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 24,
+    backgroundColor: 'rgba(118, 75, 162, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: 'rgba(255,255,255,0.6)',
+    textAlign: 'center',
+  },
+  form: {
+    gap: 14,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    paddingHorizontal: 16,
+    height: 58,
+  },
+  inputIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: 'rgba(118, 75, 162, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#FFFFFF',
+  },
+  roleContainer: {
+    gap: 12,
+    marginBottom: 6,
+  },
+  roleLabel: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: 13,
+    fontWeight: '700',
+    marginLeft: 4,
+  },
+  roleButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  roleCard: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+  },
+  roleCardActive: {
+    backgroundColor: 'rgba(118, 75, 162, 0.25)',
+    borderColor: 'rgba(118, 75, 162, 0.7)',
+  },
+  roleIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: 'rgba(139,124,246,0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roleIconCircleActive: {
+    backgroundColor: 'rgba(118, 75, 162, 0.9)',
+  },
+  roleTextWrap: {
+    flex: 1,
+  },
+  roleTitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  roleTitleActive: {
+    color: '#FFFFFF',
+  },
+  roleSubtitle: {
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: 11,
+    marginTop: 2,
+  },
+  roleSubtitleActive: {
+    color: 'rgba(255,255,255,0.8)',
+  },
+  eyeButton: {
+    padding: 8,
+  },
+  passwordStrength: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  strengthBars: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  strengthBar: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+  },
+  strengthText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    gap: 10,
+  },
+  errorText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#FCA5A5',
+  },
+  registerButton: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginTop: 8,
+    shadowColor: '#764BA2',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  registerButtonDisabled: {
+    shadowOpacity: 0,
+  },
+  registerButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 18,
+    gap: 10,
+  },
+  registerButtonText: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  agreement: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  agreementLink: {
+    color: '#667EEA',
+    textDecorationLine: 'underline',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 24,
+    gap: 6,
+  },
+  footerText: {
+    fontSize: 15,
+    color: 'rgba(255,255,255,0.6)',
+  },
+  loginLink: {
+    fontSize: 15,
+    color: '#764BA2',
+    fontWeight: '600',
+  },
+});
+
+
+
+
+
+
+
+
+
+
+
+
+

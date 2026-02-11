@@ -1,49 +1,80 @@
-import React, { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import { useAuthStore } from '../src/store/authStore';
+import { View, ActivityIndicator } from 'react-native';
+import { AuthProvider, useAuth } from '../src/context/AuthContext';
+import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
+import { LanguageProvider } from '../src/context/LanguageContext';
+import '../src/config/i18n';
 
-export default function RootLayout() {
-  const { loadUser, isLoading } = useAuthStore();
+// Компонент навигации с проверкой авторизации
+function RootLayoutNav() {
+  const { user, loading } = useAuth();
+  const { colors } = useTheme();
+  const segments = useSegments();
+  const router = useRouter();
+  const [initialRouteDone, setInitialRouteDone] = useState(false);
 
   useEffect(() => {
-    loadUser();
-  }, []);
+    if (loading) return;
 
-  if (isLoading) {
+    const inAuthGroup = segments[0] === '(auth)';
+    const isWelcomeScreen = segments[1] === 'welcome';
+    
+    // При первом запуске всегда показываем welcome экран
+    if (!initialRouteDone && !isWelcomeScreen) {
+      router.replace('/(auth)/welcome');
+      setInitialRouteDone(true);
+      return;
+    }
+    
+    // Если пользователь авторизован и находится на экране авторизации (кроме welcome)
+    if (user && inAuthGroup && !isWelcomeScreen) {
+      router.replace('/(tabs)');
+    }
+
+    if (!initialRouteDone) {
+      setInitialRouteDone(true);
+    }
+  }, [user, loading, segments]);
+
+  if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   }
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={colors.statusBarStyle} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#F5F7FA' },
+          contentStyle: { backgroundColor: colors.background },
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="auth" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="lessons" options={{ headerShown: false }} />
         <Stack.Screen name="tasks" options={{ headerShown: false }} />
         <Stack.Screen name="tests" options={{ headerShown: false }} />
         <Stack.Screen name="formulas" options={{ headerShown: false }} />
+        <Stack.Screen name="games" options={{ headerShown: false }} />
       </Stack>
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F7FA',
-  },
-});
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <RootLayoutNav />
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+  );
+}

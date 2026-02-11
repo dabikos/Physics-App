@@ -1,107 +1,215 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../src/services/api';
+import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import { MathText } from '../../src/components/MathText';
+import { useTheme } from '../../src/context/ThemeContext';
 
-interface Formula {
-  id: string;
-  section: string;
-  name: string;
-  formula: string;
-  description: string;
-  variables: Record<string, string>;
-  unit: string;
-}
+const convertToLatex = (formula: string): string => {
+  let result = formula;
 
-export default function FormulaDetailScreen() {
-  const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const [formula, setFormula] = useState<Formula | null>(null);
-  const [loading, setLoading] = useState(true);
+  result = result
+    .replace(/\u0394([a-zA-Z0-9])/g, '\\Delta $1')
+    .replace(/\u0394/g, '\\Delta')
+    .replace(/\u03BD([a-zA-Z0-9])/g, '\\nu $1')
+    .replace(/\u03BD/g, '\\nu')
+    .replace(/\u03BB([a-zA-Z0-9])/g, '\\lambda $1')
+    .replace(/\u03BB/g, '\\lambda')
+    .replace(/\u03C0([a-zA-Z0-9])/g, '\\pi $1')
+    .replace(/\u03C0/g, '\\pi')
+    .replace(/\u03B1([a-zA-Z0-9])/g, '\\alpha $1')
+    .replace(/\u03B1/g, '\\alpha')
+    .replace(/\u03B2([a-zA-Z0-9])/g, '\\beta $1')
+    .replace(/\u03B2/g, '\\beta')
+    .replace(/\u03B3([a-zA-Z0-9])/g, '\\gamma $1')
+    .replace(/\u03B3/g, '\\gamma')
+    .replace(/\u03B4([a-zA-Z0-9])/g, '\\delta $1')
+    .replace(/\u03B4/g, '\\delta')
+    .replace(/\u03B8([a-zA-Z0-9])/g, '\\theta $1')
+    .replace(/\u03B8/g, '\\theta')
+    .replace(/\u03BC([a-zA-Z0-9])/g, '\\mu $1')
+    .replace(/\u03BC/g, '\\mu')
+    .replace(/\u03C1([a-zA-Z0-9])/g, '\\rho $1')
+    .replace(/\u03C1/g, '\\rho')
+    .replace(/\u03C9([a-zA-Z0-9])/g, '\\omega $1')
+    .replace(/\u03C9/g, '\\omega')
+    .replace(/\u03A9([a-zA-Z0-9])/g, '\\Omega $1')
+    .replace(/\u03A9/g, '\\Omega')
+    .replace(/\u03A3([a-zA-Z0-9])/g, '\\Sigma $1')
+    .replace(/\u03A3/g, '\\Sigma')
+    .replace(/\u2211/g, '\\sum')
+    .replace(/\u222B/g, '\\int')
+    .replace(/\u221E/g, '\\infty')
+    .replace(/\u2192/g, '\\rightarrow');
 
-  useEffect(() => {
-    fetchFormula();
-  }, [id]);
+  result = result.replace(/\u221A\(([^)]+)\)/g, (match, expr) => {
+    const inner = expr.replace(/\//g, ' \\div ');
+    return `\\sqrt{${inner}}`;
+  });
 
-  const fetchFormula = async () => {
-    try {
-      const response = await api.get(`/formulas/${id}`);
-      setFormula(response.data);
-    } catch (error) {
-      console.error('Error fetching formula:', error);
-    } finally {
-      setLoading(false);
+  result = result.replace(/([a-zA-Z0-9_]+)\s*\/\s*([a-zA-Z0-9_]+)/g, (match, num, den) => {
+    if (match.includes('\\sqrt') || match.includes('\\frac') || match.includes('\\cdot')) {
+      return match;
     }
-  };
+    if (num.includes('\\') || den.includes('\\')) {
+      return match;
+    }
+    return `\\frac{${num}}{${den}}`;
+  });
 
-  if (loading) {
+  result = result.replace(/\(([^)]+)\)\s*\/\s*\(([^)]+)\)/g, (match, num, den) => {
+    if (match.includes('\\sqrt') || match.includes('\\frac')) {
+      return match;
+    }
+    if (num.includes('\\') || den.includes('\\')) {
+      return match;
+    }
+    return `\\frac{${num}}{${den}}`;
+  });
+
+  result = result
+    .replace(/\u00B2/g, '^2')
+    .replace(/\u00B3/g, '^3')
+    .replace(/\u2074/g, '^4');
+
+  result = result
+    .replace(/\u2080/g, '_0')
+    .replace(/\u2081/g, '_1')
+    .replace(/\u2082/g, '_2')
+    .replace(/\u2083/g, '_3');
+
+  result = result
+    .replace(/\u00B7/g, ' \\cdot ')
+    .replace(/\u00D7/g, ' \\times ')
+    .replace(/\u00F7/g, ' \\div ');
+
+  result = result.replace(/\bcos\b/g, '\\cos');
+  result = result.replace(/\bsin\b/g, '\\sin');
+
+  return result;
+};
+
+
+// Компонент для отображения LaTeX формулы
+const FormulaDisplay: React.FC<{
+  formula: string;
+  color?: string;
+  fontSize?: number;
+  backgroundColor?: string;
+}> = ({ formula, color = '#FFFFFF', fontSize = 28, backgroundColor = 'transparent' }) => {
+  if (!formula || !formula.trim()) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6C63FF" />
+      <View style={{ minHeight: 60, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color, fontSize, fontWeight: '600' }}>{formula || ''}</Text>
       </View>
     );
   }
 
+  const latexFormula = convertToLatex(formula);
+  const content = latexFormula.includes('$') ? latexFormula : `$$${latexFormula}$$`;
+
+  return (
+    <View style={{ width: '100%' }}>
+      <MathText
+        content={content}
+        textColor={color}
+        fontSize={fontSize}
+        backgroundColor={backgroundColor}
+      />
+    </View>
+  );
+};
+const VariableItem: React.FC<{ variable: string; meaning: string; colors: any }> = ({ variable, meaning, colors }) => {
+  const content = `$${convertToLatex(variable)}$`;
+  return (
+    <View style={styles.variableRow}>
+      <View style={[styles.variableBadge, { backgroundColor: colors.accentLight }]}>
+        <MathText content={content} textColor={colors.accentText} fontSize={18} backgroundColor="transparent" />
+      </View>
+      <Text style={[styles.variableMeaning, { color: colors.textSecondary }]}>{meaning}</Text>
+    </View>
+  );
+};
+export default function FormulaDetailScreen() {
+  const router = useRouter();
+  const { t } = useTranslation();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { colors } = useTheme();
+  const { getFormulaById } = usePhysicsData();
+  
+  const formula = id ? getFormulaById(id) : null;
+
   if (!formula) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Формула не найдена</Text>
-      </View>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('formulas.title')}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+          <Ionicons name="flask-outline" size={64} color={colors.textMuted} />
+          <Text style={[styles.notFoundTitle, { color: colors.textTertiary }]}>{t('formulas.title')}</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1}>
+        <Text style={[styles.headerTitle, { color: colors.text }]} numberOfLines={1}>
           {formula.name}
         </Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+        {/* Главная формула с LaTeX */}
         <View style={styles.formulaCard}>
-          <Text style={styles.formulaMainText}>{formula.formula}</Text>
+          <FormulaDisplay 
+            formula={formula.formula} 
+            color="#FFFFFF" 
+            fontSize={32}
+            backgroundColor="transparent"
+          />
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="information-circle" size={22} color="#6C63FF" />
-            <Text style={styles.sectionTitle}>Описание</Text>
+            <Ionicons name="information-circle" size={22} color={colors.accent} />
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('formulas.description')}</Text>
           </View>
-          <View style={styles.sectionContent}>
-            <Text style={styles.descriptionText}>{formula.description}</Text>
+          <View style={[styles.sectionContent, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+            <Text style={[styles.descriptionText, { color: colors.textSecondary }]}>{formula.description}</Text>
           </View>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Ionicons name="list" size={22} color="#E74C3C" />
-            <Text style={styles.sectionTitle}>Значения величин</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('formulas.variables')}</Text>
           </View>
-          <View style={styles.variablesContainer}>
+          <View style={[styles.variablesContainer, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
             {Object.entries(formula.variables).map(([variable, meaning]) => (
-              <View key={variable} style={styles.variableRow}>
-                <View style={styles.variableBadge}>
-                  <Text style={styles.variableText}>{variable}</Text>
-                </View>
-                <Text style={styles.variableMeaning}>{meaning}</Text>
-              </View>
+              <VariableItem key={variable} variable={variable} meaning={meaning} colors={colors} />
             ))}
           </View>
         </View>
@@ -109,9 +217,9 @@ export default function FormulaDetailScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Ionicons name="cube" size={22} color="#1ABC9C" />
-            <Text style={styles.sectionTitle}>Единица измерения</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('formulas.unit')}</Text>
           </View>
-          <View style={styles.sectionContent}>
+          <View style={[styles.sectionContent, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
             <Text style={styles.unitText}>{formula.unit}</Text>
           </View>
         </View>
@@ -132,6 +240,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5F7FA',
+  },
+  notFoundTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#6B7280',
+    marginTop: 16,
   },
   header: {
     flexDirection: 'row',
@@ -167,20 +281,14 @@ const styles = StyleSheet.create({
   formulaCard: {
     backgroundColor: '#6C63FF',
     borderRadius: 20,
-    padding: 32,
-    alignItems: 'center',
+    padding: 24,
     marginBottom: 24,
     shadowColor: '#6C63FF',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 8,
-  },
-  formulaMainText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
+    minHeight: 100,
   },
   section: {
     marginBottom: 20,
@@ -228,17 +336,14 @@ const styles = StyleSheet.create({
   },
   variableBadge: {
     backgroundColor: '#EEF2FF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 8,
     marginRight: 12,
-    minWidth: 50,
+    minWidth: 60,
+    height: 38,
+    justifyContent: 'center',
     alignItems: 'center',
-  },
-  variableText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#4338CA',
   },
   variableMeaning: {
     flex: 1,

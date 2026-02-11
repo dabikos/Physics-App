@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 interface GivenItem {
   symbol: string;
@@ -23,26 +25,31 @@ interface SolutionDisplayProps {
   isCorrect: boolean;
 }
 
-const FormulaBox: React.FC<{ formula: string }> = ({ formula }) => (
-  <View style={styles.formulaBox}>
-    <Text style={styles.formulaText}>{formula}</Text>
+const FormulaBox: React.FC<{ formula: string; colors: any }> = ({ formula, colors }) => (
+  <View style={[styles.formulaBox, { backgroundColor: colors.isDark ? 'rgba(99,102,241,0.15)' : '#EEF2FF', borderColor: colors.isDark ? 'rgba(99,102,241,0.3)' : '#C7D2FE' }]}>
+    <Text style={[styles.formulaText, { color: colors.isDark ? '#A5B4FC' : '#4338CA' }]}>{formula}</Text>
   </View>
 );
 
 export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ solution, isCorrect }) => {
+  const { colors, isDark } = useTheme();
+  const { t } = useTranslation();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
       <LinearGradient
-        colors={isCorrect ? ['#D1FAE5', '#A7F3D0'] : ['#FEE2E2', '#FECACA']}
+        colors={isCorrect 
+          ? (isDark ? ['#064E3B', '#065F46'] : ['#D1FAE5', '#A7F3D0']) 
+          : (isDark ? ['#7F1D1D', '#991B1B'] : ['#FEE2E2', '#FECACA'])}
         style={styles.headerGradient}
       >
         <Ionicons 
           name={isCorrect ? 'checkmark-circle' : 'close-circle'} 
           size={28} 
-          color={isCorrect ? '#059669' : '#DC2626'} 
+          color={isCorrect ? (isDark ? '#34D399' : '#059669') : (isDark ? '#FCA5A5' : '#DC2626')} 
         />
-        <Text style={[styles.headerText, { color: isCorrect ? '#059669' : '#DC2626' }]}>
-          {isCorrect ? 'Правильно!' : 'Неправильно'}
+        <Text style={[styles.headerText, { color: isCorrect ? (isDark ? '#34D399' : '#059669') : (isDark ? '#FCA5A5' : '#DC2626') }]}>
+          {isCorrect ? t('tasks.correctResult') : t('tasks.incorrectResult')}
         </Text>
       </LinearGradient>
 
@@ -53,16 +60,16 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ solution, isCo
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Ionicons name="clipboard" size={18} color="#6C63FF" />
-                <Text style={styles.sectionTitle}>Дано</Text>
+                <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('tasks.givenLabel')}</Text>
               </View>
-              <View style={styles.givenContainer}>
+              <View style={[styles.givenContainer, { backgroundColor: isDark ? colors.inputBg : '#F3F4F6' }]}>
                 {solution.given.map((item, index) => (
                   <View key={index} style={styles.givenRow}>
-                    <View style={styles.givenSymbol}>
-                      <Text style={styles.symbolText}>{item.symbol}</Text>
+                    <View style={[styles.givenSymbol, { backgroundColor: isDark ? 'rgba(99,102,241,0.2)' : '#EEF2FF' }]}>
+                      <Text style={[styles.symbolText, { color: isDark ? '#A5B4FC' : '#4338CA' }]}>{item.symbol}</Text>
                     </View>
-                    <Text style={styles.givenEquals}>=</Text>
-                    <Text style={styles.givenValue}>{item.value} {item.unit}</Text>
+                    <Text style={[styles.givenEquals, { color: colors.textTertiary }]}>=</Text>
+                    <Text style={[styles.givenValue, { color: colors.text }]}>{item.value} {item.unit}</Text>
                   </View>
                 ))}
               </View>
@@ -73,10 +80,10 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ solution, isCo
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Ionicons name="swap-horizontal" size={18} color="#F59E0B" />
-                <Text style={styles.sectionTitle}>СИ</Text>
+                <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('tasks.siLabel')}</Text>
               </View>
-              <View style={styles.siBox}>
-                <Text style={styles.siText}>{solution.si_conversion}</Text>
+              <View style={[styles.siBox, { backgroundColor: isDark ? 'rgba(245,158,11,0.15)' : '#FEF3C7', borderLeftColor: '#F59E0B' }]}>
+                <Text style={[styles.siText, { color: isDark ? '#FCD34D' : '#92400E' }]}>{solution.si_conversion}</Text>
               </View>
             </View>
           )}
@@ -88,11 +95,11 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ solution, isCo
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Ionicons name="flask" size={18} color="#8B5CF6" />
-                <Text style={styles.sectionTitle}>Формулы</Text>
+                <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('tasks.formulasLabel')}</Text>
               </View>
               <View style={styles.formulasContainer}>
                 {solution.formulas.map((formula, index) => (
-                  <FormulaBox key={index} formula={formula} />
+                  <FormulaBox key={index} formula={formula} colors={{ isDark }} />
                 ))}
               </View>
             </View>
@@ -105,15 +112,15 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ solution, isCo
         <View style={styles.fullSection}>
           <View style={styles.sectionHeader}>
             <Ionicons name="list" size={18} color="#3B82F6" />
-            <Text style={styles.sectionTitle}>Решение</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('tasks.solutionLabel')}</Text>
           </View>
-          <View style={styles.stepsContainer}>
+          <View style={[styles.stepsContainer, { backgroundColor: isDark ? colors.inputBg : '#F9FAFB' }]}>
             {solution.steps.map((step, index) => (
               <View key={index} style={styles.stepRow}>
                 <View style={styles.stepNumber}>
                   <Text style={styles.stepNumberText}>{index + 1}</Text>
                 </View>
-                <Text style={styles.stepText}>{step}</Text>
+                <Text style={[styles.stepText, { color: colors.textSecondary }]}>{step}</Text>
               </View>
             ))}
           </View>
@@ -127,7 +134,7 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ solution, isCo
             colors={['#6C63FF', '#8B5CF6']}
             style={styles.answerGradient}
           >
-            <Text style={styles.answerLabel}>Ответ:</Text>
+            <Text style={styles.answerLabel}>{t('tasks.answerLabel')}</Text>
             <Text style={styles.answerValue}>{solution.answer}</Text>
           </LinearGradient>
         </View>
