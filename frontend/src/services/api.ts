@@ -1,8 +1,8 @@
 import axios from 'axios';
 import i18next from 'i18next';
 
-// Backend URL — замените на ваш URL от DigitalOcean после деплоя
-const API_URL = 'https://ВАШЕ_ПРИЛОЖЕНИЕ.ondigitalocean.app';
+// Backend URL — DigitalOcean App Platform
+const API_URL = 'https://physics-app-hgw72.ondigitalocean.app';
 
 const api = axios.create({
   baseURL: `${API_URL}/api`,
