@@ -21,8 +21,17 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     console.error('API Error:', error.response?.data || error.message);
+
+    // Auto-logout on invalid/expired token
+    if (error.response?.status === 401 && error.response?.data?.detail === 'Invalid token') {
+      const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
+      await AsyncStorage.removeItem('auth_token');
+      await AsyncStorage.removeItem('auth_user');
+      delete api.defaults.headers.common.Authorization;
+    }
+
     return Promise.reject(error);
   }
 );

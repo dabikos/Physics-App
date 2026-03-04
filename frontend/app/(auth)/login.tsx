@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Animated,
   StatusBar,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -18,18 +19,38 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/context/AuthContext';
+import * as WebBrowser from 'expo-web-browser';
+import * as Crypto from 'expo-crypto';
+import { GOOGLE_WEB_CLIENT_ID, GOOGLE_REDIRECT_URI } from '../../src/config/google';
+
+WebBrowser.maybeCompleteAuthSession();
+
+// Generate PKCE code verifier & challenge
+async function generatePKCE() {
+  const randomBytes = await Crypto.getRandomBytesAsync(32);
+  const codeVerifier = btoa(String.fromCharCode(...randomBytes))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  const digest = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    codeVerifier,
+    { encoding: Crypto.CryptoEncoding.BASE64 }
+  );
+  const codeChallenge = digest.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return { codeVerifier, codeChallenge };
+}
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogleCode } = useAuth();
   const { t } = useTranslation();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Анимация ошибки
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
@@ -64,8 +85,72 @@ export default function LoginScreen() {
     if (result.success) {
       router.replace('/(tabs)');
     } else {
+      // If email not verified, redirect to verification
+      if (result.error?.includes('не подтверждён')) {
+        router.push({ pathname: '/(auth)/verify-email', params: { email: email.trim() } });
+        return;
+      }
       setError(result.error || t('auth.loginError'));
       shake();
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    if (!GOOGLE_WEB_CLIENT_ID) {
+      setError(t('auth.googleSetupRequired'));
+      shake();
+      return;
+    }
+    setError(null);
+    setGoogleLoading(true);
+    try {
+      const { codeVerifier, codeChallenge } = await generatePKCE();
+
+      // Return URL for app — where backend will redirect with the code
+      const returnUrl = Linking.createURL('auth');
+
+      // Build Google OAuth URL with backend as redirect_uri
+      const params = new URLSearchParams({
+        client_id: GOOGLE_WEB_CLIENT_ID,
+        redirect_uri: GOOGLE_REDIRECT_URI,
+        response_type: 'code',
+        scope: 'openid profile email',
+        code_challenge: codeChallenge,
+        code_challenge_method: 'S256',
+        state: returnUrl,
+        access_type: 'offline',
+        prompt: 'select_account',
+      });
+
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+
+      // Open browser — it will redirect: Google → backend → app deep link
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, returnUrl);
+
+      if (result.type === 'success' && result.url) {
+        const url = new URL(result.url);
+        const code = url.searchParams.get('code');
+        const error = url.searchParams.get('error');
+
+        if (error) {
+          setError(error);
+          shake();
+        } else if (code) {
+          // Exchange code for tokens via backend
+          const authResult = await signInWithGoogleCode(code, codeVerifier, GOOGLE_REDIRECT_URI);
+          if (authResult.success) {
+            router.replace('/(tabs)');
+          } else {
+            setError(authResult.error || t('auth.googleError'));
+            shake();
+          }
+        }
+      }
+    } catch (err: any) {
+      setError(err?.message || t('auth.googleError'));
+      shake();
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -202,6 +287,30 @@ export default function LoginScreen() {
                     </>
                   )}
                 </LinearGradient>
+              </TouchableOpacity>
+
+              {/* Разделитель */}
+              <View style={styles.dividerRow}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>{t('auth.or')}</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              {/* Google Sign-In */}
+              <TouchableOpacity
+                style={[styles.googleButton, googleLoading && styles.loginButtonDisabled]}
+                onPress={handleGoogleSignIn}
+                disabled={googleLoading}
+                activeOpacity={0.9}
+              >
+                {googleLoading ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <>
+                    <Ionicons name="logo-google" size={20} color="#FFFFFF" />
+                    <Text style={styles.googleButtonText}>{t('auth.continueWithGoogle')}</Text>
+                  </>
+                )}
               </TouchableOpacity>
             </Animated.View>
 
@@ -346,6 +455,37 @@ const styles = StyleSheet.create({
   loginButtonText: {
     fontSize: 17,
     fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  dividerText: {
+    color: 'rgba(255,255,255,0.4)',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    paddingVertical: 16,
+  },
+  googleButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
     color: '#FFFFFF',
   },
   footer: {

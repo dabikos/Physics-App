@@ -1,5 +1,6 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -11,6 +12,9 @@ from typing import List, Optional, Dict, Any, Literal
 import uuid
 import hashlib
 import random
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
 import bcrypt
 import jwt
@@ -30,6 +34,17 @@ db = client[os.environ.get('DB_NAME', 'physics_ai')]
 SECRET_KEY = os.environ.get('SECRET_KEY', 'physics-ai-secret-key-2025')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 10000
+
+# SMTP Configuration for email sending
+SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
+SMTP_USER = os.environ.get('SMTP_USER', '')  # your-email@gmail.com
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')  # App Password from Google
+SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER if os.environ.get('SMTP_USER') else 'noreply@physicsai.app')
+
+# Google OAuth (from Google Cloud Console)
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
 # AI API Keys (GitHub Models + Groq)
 GITHUB_PAT = os.environ.get('GITHUB_PAT', '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')
@@ -107,6 +122,35 @@ class UserCreate(BaseModel):
     name: str
     role: Literal["student", "teacher"]
     class_id: Optional[str] = None
+
+class GoogleAuthRequest(BaseModel):
+    id_token: str
+    name: Optional[str] = None
+    role: Literal["student", "teacher"] = "student"
+    class_id: Optional[str] = None
+
+class GoogleCodeRequest(BaseModel):
+    code: str
+    code_verifier: str
+    redirect_uri: str
+    name: Optional[str] = None
+    role: Literal["student", "teacher"] = "student"
+    class_id: Optional[str] = None
+
+class VerifyEmailRequest(BaseModel):
+    email: EmailStr
+    code: str
+
+class ResendCodeRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordConfirm(BaseModel):
+    email: EmailStr
+    code: str
+    new_password: str
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -244,6 +288,77 @@ class TaskWithSolution(BaseModel):
     correct_answer: int
     difficulty: str
     solution: Dict[str, Any]  # given, si_units, solution_steps, answer
+
+# ==================== Email Helper ====================
+
+def generate_verification_code() -> str:
+    """Generate a 6-digit verification code."""
+    return str(random.randint(100000, 999999))
+
+async def send_email(to_email: str, subject: str, html_body: str) -> bool:
+    """Send an email via SMTP. Returns True on success."""
+    if not SMTP_USER or not SMTP_PASSWORD:
+        logger.warning("SMTP not configured — email not sent")
+        return False
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg["From"] = SMTP_FROM
+        msg["To"] = to_email
+        msg.attach(MIMEText(html_body, "html", "utf-8"))
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASSWORD)
+            server.sendmail(SMTP_FROM, to_email, msg.as_string())
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send email to {to_email}: {e}")
+        return False
+
+async def send_verification_email(to_email: str, code: str) -> bool:
+    """Send a 6-digit verification code to the user."""
+    html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:32px;background:#1a1a2e;border-radius:16px;color:#fff">
+        <h2 style="text-align:center;color:#667EEA">Физика AI</h2>
+        <p style="text-align:center;font-size:16px">Ваш код подтверждения:</p>
+        <div style="text-align:center;font-size:36px;font-weight:bold;letter-spacing:8px;color:#667EEA;padding:24px 0">{code}</div>
+        <p style="text-align:center;color:#999;font-size:13px">Код действителен 10 минут. Если вы не запрашивали это письмо — проигнорируйте его.</p>
+    </div>
+    """
+    return await send_email(to_email, f"Код подтверждения: {code}", html)
+
+async def send_reset_password_email(to_email: str, code: str) -> bool:
+    """Send a password reset code to the user."""
+    html = f"""
+    <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:32px;background:#1a1a2e;border-radius:16px;color:#fff">
+        <h2 style="text-align:center;color:#F59E0B">Физика AI</h2>
+        <p style="text-align:center;font-size:16px">Код для сброса пароля:</p>
+        <div style="text-align:center;font-size:36px;font-weight:bold;letter-spacing:8px;color:#F59E0B;padding:24px 0">{code}</div>
+        <p style="text-align:center;color:#999;font-size:13px">Код действителен 10 минут. Если вы не запрашивали сброс пароля — проигнорируйте это письмо.</p>
+    </div>
+    """
+    return await send_email(to_email, f"Сброс пароля — код: {code}", html)
+
+async def verify_google_id_token(id_token: str) -> dict:
+    """Verify a Google ID token and return user info."""
+    async with httpx.AsyncClient(timeout=10.0) as http:
+        resp = await http.get(
+            "https://oauth2.googleapis.com/tokeninfo",
+            params={"id_token": id_token},
+        )
+        if resp.status_code != 200:
+            raise HTTPException(status_code=401, detail="Неверный Google токен")
+        data = resp.json()
+        # Optionally verify audience
+        if GOOGLE_CLIENT_ID and data.get("aud") != GOOGLE_CLIENT_ID:
+            raise HTTPException(status_code=401, detail="Неверный Google Client ID")
+        return {
+            "email": data["email"],
+            "name": data.get("name", data.get("email", "").split("@")[0]),
+            "email_verified": data.get("email_verified", "false") == "true",
+            "google_id": data.get("sub"),
+        }
 
 # ==================== Auth Helpers ====================
 
@@ -1063,15 +1178,22 @@ INITIAL_TESTS = [
 
 # ==================== Auth Routes ====================
 
-@api_router.post("/auth/register", response_model=TokenResponse)
+@api_router.post("/auth/register")
 async def register(user_data: UserCreate):
+    """Register — saves user as unverified, sends 6-digit code to email."""
     existing = await db.users.find_one({"email": user_data.email})
     if user_data.role == "student" and not user_data.class_id:
-        raise HTTPException(status_code=400, detail="??? ??????? ????? ??????? ?????")
+        raise HTTPException(status_code=400, detail="Для ученика нужно указать класс")
     if existing:
-        raise HTTPException(status_code=400, detail="Email уже зарегистрирован")
+        # If user exists but not verified, allow re-register (overwrite)
+        if not existing.get("email_verified", False):
+            await db.users.delete_one({"email": user_data.email})
+        else:
+            raise HTTPException(status_code=400, detail="Email уже зарегистрирован")
     
     user_id = str(uuid.uuid4())
+    verification_code = generate_verification_code()
+    
     user = {
         "id": user_id,
         "email": user_data.email,
@@ -1080,6 +1202,145 @@ async def register(user_data: UserCreate):
         "role": user_data.role,
         "class_id": user_data.class_id if user_data.role == "student" else None,
         "manual_adjustment": 0,
+        "email_verified": False,
+        "verification_code": verification_code,
+        "verification_code_expires": datetime.utcnow() + timedelta(minutes=10),
+        "auth_provider": "email",
+        "progress": {
+            "completed_lessons": [],
+            "completed_tasks": [],
+            "completed_tests": [],
+            "scores": {}
+        },
+        "created_at": datetime.utcnow()
+    }
+    await db.users.insert_one(user)
+    
+    # Send verification code
+    email_sent = await send_verification_email(user_data.email, verification_code)
+    
+    return {
+        "status": "verification_required",
+        "email": user_data.email,
+        "email_sent": email_sent,
+        "message": "Код подтверждения отправлен на email" if email_sent else "SMTP не настроен — код: " + verification_code,
+    }
+
+
+@api_router.post("/auth/verify-email", response_model=TokenResponse)
+async def verify_email(request: VerifyEmailRequest):
+    """Verify 6-digit code and activate account."""
+    user = await db.users.find_one({"email": request.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    
+    if user.get("email_verified"):
+        raise HTTPException(status_code=400, detail="Email уже подтверждён")
+    
+    stored_code = user.get("verification_code")
+    expires = user.get("verification_code_expires")
+    
+    if not stored_code or stored_code != request.code:
+        raise HTTPException(status_code=400, detail="Неверный код")
+    
+    if expires and datetime.utcnow() > expires:
+        raise HTTPException(status_code=400, detail="Код истёк. Запросите новый")
+    
+    # Activate account
+    await db.users.update_one(
+        {"id": user["id"]},
+        {
+            "$set": {"email_verified": True},
+            "$unset": {"verification_code": "", "verification_code_expires": ""}
+        }
+    )
+    
+    token = create_token(user["id"])
+    return TokenResponse(
+        access_token=token,
+        user=UserResponse(
+            id=user["id"],
+            email=user["email"],
+            name=user["name"],
+            role=user.get("role", "student"),
+            class_id=user.get("class_id"),
+            progress=user.get("progress", {}),
+            created_at=user["created_at"]
+        )
+    )
+
+
+@api_router.post("/auth/resend-code")
+async def resend_verification_code(request: ResendCodeRequest):
+    """Resend a new 6-digit verification code."""
+    user = await db.users.find_one({"email": request.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    
+    if user.get("email_verified"):
+        raise HTTPException(status_code=400, detail="Email уже подтверждён")
+    
+    new_code = generate_verification_code()
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {
+            "verification_code": new_code,
+            "verification_code_expires": datetime.utcnow() + timedelta(minutes=10),
+        }}
+    )
+    
+    email_sent = await send_verification_email(request.email, new_code)
+    return {
+        "success": True,
+        "email_sent": email_sent,
+        "message": "Новый код отправлен" if email_sent else "SMTP не настроен — код: " + new_code,
+    }
+
+
+@api_router.post("/auth/google", response_model=TokenResponse)
+async def google_auth(request: GoogleAuthRequest):
+    """Sign in or register with Google. Verifies the Google ID token."""
+    google_info = await verify_google_id_token(request.id_token)
+    email = google_info["email"]
+    
+    # Check if user already exists
+    user = await db.users.find_one({"email": email})
+    
+    if user:
+        # Existing user — just sign in
+        # Update google_id if missing
+        if not user.get("google_id"):
+            await db.users.update_one(
+                {"id": user["id"]},
+                {"$set": {"google_id": google_info["google_id"], "email_verified": True}}
+            )
+        token = create_token(user["id"])
+        return TokenResponse(
+            access_token=token,
+            user=UserResponse(
+                id=user["id"],
+                email=user["email"],
+                name=user["name"],
+                role=user.get("role", "student"),
+                class_id=user.get("class_id"),
+                progress=user.get("progress", {}),
+                created_at=user["created_at"]
+            )
+        )
+    
+    # New user — create account (no password, email auto-verified)
+    user_id = str(uuid.uuid4())
+    user = {
+        "id": user_id,
+        "email": email,
+        "password": None,  # Google users have no password
+        "name": request.name or google_info["name"],
+        "role": request.role,
+        "class_id": request.class_id if request.role == "student" else None,
+        "manual_adjustment": 0,
+        "email_verified": True,
+        "auth_provider": "google",
+        "google_id": google_info["google_id"],
         "progress": {
             "completed_lessons": [],
             "completed_tasks": [],
@@ -1095,20 +1356,221 @@ async def register(user_data: UserCreate):
         access_token=token,
         user=UserResponse(
             id=user_id,
-            email=user_data.email,
-            name=user_data.name,
-            role=user_data.role,
-            class_id=user_data.class_id if user_data.role == "student" else None,
+            email=email,
+            name=user["name"],
+            role=user["role"],
+            class_id=user.get("class_id"),
             progress=user["progress"],
             created_at=user["created_at"]
         )
     )
 
+
+@api_router.post("/auth/google-code", response_model=TokenResponse)
+async def google_auth_code(request: GoogleCodeRequest):
+    """Exchange Google authorization code for tokens, then sign in or register."""
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=500, detail="GOOGLE_CLIENT_ID not configured")
+    
+    # Exchange auth code for tokens via Google's token endpoint
+    exchange_data = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "code": request.code,
+        "code_verifier": request.code_verifier,
+        "grant_type": "authorization_code",
+        "redirect_uri": request.redirect_uri,
+    }
+    # Add client_secret if available (required for Web client type)
+    if GOOGLE_CLIENT_SECRET:
+        exchange_data["client_secret"] = GOOGLE_CLIENT_SECRET
+    
+    async with httpx.AsyncClient() as client:
+        token_resp = await client.post(
+            "https://oauth2.googleapis.com/token",
+            data=exchange_data,
+        )
+    
+    if token_resp.status_code != 200:
+        error_detail = token_resp.json().get("error_description", "Failed to exchange auth code")
+        raise HTTPException(status_code=400, detail=error_detail)
+    
+    tokens = token_resp.json()
+    id_token_str = tokens.get("id_token")
+    
+    if not id_token_str:
+        raise HTTPException(status_code=400, detail="No id_token in Google response")
+    
+    # Verify the id_token and get user info
+    google_info = await verify_google_id_token(id_token_str)
+    email = google_info["email"]
+    
+    # Check if user already exists
+    user = await db.users.find_one({"email": email})
+    
+    if user:
+        if not user.get("google_id"):
+            await db.users.update_one(
+                {"id": user["id"]},
+                {"$set": {"google_id": google_info["google_id"], "email_verified": True}}
+            )
+        token = create_token(user["id"])
+        return TokenResponse(
+            access_token=token,
+            user=UserResponse(
+                id=user["id"],
+                email=user["email"],
+                name=user["name"],
+                role=user.get("role", "student"),
+                class_id=user.get("class_id"),
+                progress=user.get("progress", {}),
+                created_at=user["created_at"]
+            )
+        )
+    
+    # New user
+    user_id = str(uuid.uuid4())
+    new_user = {
+        "id": user_id,
+        "email": email,
+        "password": None,
+        "name": request.name or google_info["name"],
+        "role": request.role,
+        "class_id": request.class_id if request.role == "student" else None,
+        "manual_adjustment": 0,
+        "email_verified": True,
+        "auth_provider": "google",
+        "google_id": google_info["google_id"],
+        "progress": {
+            "completed_lessons": [],
+            "completed_tasks": [],
+            "completed_tests": [],
+            "scores": {}
+        },
+        "created_at": datetime.utcnow()
+    }
+    await db.users.insert_one(new_user)
+    
+    token = create_token(user_id)
+    return TokenResponse(
+        access_token=token,
+        user=UserResponse(
+            id=user_id,
+            email=email,
+            name=new_user["name"],
+            role=new_user["role"],
+            class_id=new_user.get("class_id"),
+            progress=new_user["progress"],
+            created_at=new_user["created_at"]
+        )
+    )
+
+
+@api_router.get("/auth/google/callback", response_class=HTMLResponse)
+async def google_oauth_callback(
+    code: str = Query(None),
+    state: str = Query(None),
+    error: str = Query(None),
+):
+    """OAuth redirect proxy: receives code from Google, redirects back to mobile app."""
+    import urllib.parse
+    
+    if not state:
+        return HTMLResponse("<h1>Error: missing state parameter</h1>", status_code=400)
+    
+    # state contains the app return URI (e.g. exp://192.168.1.241:8081/--/auth or physics-ai://auth)
+    return_uri = state
+    
+    if error:
+        redirect_url = f"{return_uri}?error={urllib.parse.quote(error)}"
+    elif code:
+        redirect_url = f"{return_uri}?code={urllib.parse.quote(code)}"
+    else:
+        redirect_url = f"{return_uri}?error=no_code"
+    
+    # Return HTML that redirects to the app deep link
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head><title>Redirecting...</title></head>
+    <body>
+        <p>Redirecting to app...</p>
+        <script>window.location.href = "{redirect_url}";</script>
+        <noscript><a href="{redirect_url}">Click here to continue</a></noscript>
+    </body>
+    </html>
+    """
+    return HTMLResponse(html)
+
+
+@api_router.post("/auth/reset-password/request")
+async def request_password_reset(request: ResetPasswordRequest):
+    """Send a 6-digit password reset code to email."""
+    user = await db.users.find_one({"email": request.email})
+    if not user:
+        # Don't reveal if email exists or not
+        return {"success": True, "message": "Если аккаунт существует, код отправлен на email"}
+    
+    if user.get("auth_provider") == "google" and not user.get("password"):
+        raise HTTPException(
+            status_code=400,
+            detail="Этот аккаунт использует Google вход. Сброс пароля невозможен."
+        )
+    
+    reset_code = generate_verification_code()
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {
+            "reset_code": reset_code,
+            "reset_code_expires": datetime.utcnow() + timedelta(minutes=10),
+        }}
+    )
+    
+    email_sent = await send_reset_password_email(request.email, reset_code)
+    return {
+        "success": True,
+        "email_sent": email_sent,
+        "message": "Код сброса пароля отправлен на email" if email_sent else "SMTP не настроен — код: " + reset_code,
+    }
+
+
+@api_router.post("/auth/reset-password/confirm")
+async def confirm_password_reset(request: ResetPasswordConfirm):
+    """Verify reset code and set a new password."""
+    user = await db.users.find_one({"email": request.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+    
+    stored_code = user.get("reset_code")
+    expires = user.get("reset_code_expires")
+    
+    if not stored_code or stored_code != request.code:
+        raise HTTPException(status_code=400, detail="Неверный код")
+    
+    if expires and datetime.utcnow() > expires:
+        raise HTTPException(status_code=400, detail="Код истёк. Запросите новый")
+    
+    if len(request.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Пароль должен быть не менее 6 символов")
+    
+    await db.users.update_one(
+        {"id": user["id"]},
+        {
+            "$set": {"password": hash_password(request.new_password)},
+            "$unset": {"reset_code": "", "reset_code_expires": ""}
+        }
+    )
+    
+    return {"success": True, "message": "Пароль успешно изменён"}
+
+
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(credentials: UserLogin):
     user = await db.users.find_one({"email": credentials.email})
-    if not user or not verify_password(credentials.password, user["password"]):
+    if not user or not user.get("password") or not verify_password(credentials.password, user["password"]):
         raise HTTPException(status_code=401, detail="Неверный email или пароль")
+    
+    if not user.get("email_verified", False):
+        raise HTTPException(status_code=403, detail="Email не подтверждён. Проверьте почту.")
     
     token = create_token(user["id"])
     return TokenResponse(

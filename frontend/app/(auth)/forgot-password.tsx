@@ -20,15 +20,18 @@ import { useAuth } from '../../src/context/AuthContext';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
-  const { resetPassword } = useAuth();
+  const { resetPassword, confirmResetPassword } = useAuth();
   const { t } = useTranslation();
   
   const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [step, setStep] = useState<'email' | 'code' | 'success'>('email');
 
-  const handleResetPassword = async () => {
+  const handleSendCode = async () => {
     if (!email.trim()) {
       setError(t('auth.enterEmail'));
       return;
@@ -42,32 +45,54 @@ export default function ForgotPasswordScreen() {
     setLoading(false);
 
     if (result.success) {
-      setSuccess(true);
+      setStep('code');
     } else {
       setError(result.error || t('auth.sendError'));
     }
   };
 
-  if (success) {
+  const handleConfirmReset = async () => {
+    if (!code.trim() || code.trim().length !== 6) {
+      setError(t('auth.enterFullCode'));
+      return;
+    }
+    if (newPassword.length < 6) {
+      setError(t('auth.passwordTooShort'));
+      return;
+    }
+
+    setError(null);
+    setLoading(true);
+
+    const result = await confirmResetPassword(email.trim(), code.trim(), newPassword);
+
+    setLoading(false);
+
+    if (result.success) {
+      setStep('success');
+    } else {
+      setError(result.error || t('auth.resetError'));
+    }
+  };
+
+  if (step === 'success') {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        
         <LinearGradient
           colors={['#0F0C29', '#302B63', '#24243E']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.gradient}
         />
-
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.successContainer}>
             <View style={styles.successIcon}>
               <Ionicons name="checkmark-circle" size={80} color="#10B981" />
             </View>
-            <Text style={styles.successTitle}>{t('auth.emailSent')}</Text>
+            <Text style={styles.successTitle}>{t('auth.passwordChanged')}</Text>
             <Text style={styles.successText}>
-              {t('auth.emailSentMessage', { email })}
+              {t('auth.passwordChangedMessage')}
             </Text>
             <TouchableOpacity
               style={styles.backToLoginButton}
@@ -84,14 +109,12 @@ export default function ForgotPasswordScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      
       <LinearGradient
         colors={['#0F0C29', '#302B63', '#24243E']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.gradient}
       />
-
       <SafeAreaView style={styles.safeArea}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -105,7 +128,7 @@ export default function ForgotPasswordScreen() {
             {/* Кнопка назад */}
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => router.back()}
+              onPress={() => step === 'code' ? setStep('email') : router.back()}
             >
               <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
             </TouchableOpacity>
@@ -117,31 +140,77 @@ export default function ForgotPasswordScreen() {
               </View>
               <Text style={styles.title}>{t('auth.forgotPasswordTitle')}</Text>
               <Text style={styles.subtitle}>
-                {t('auth.forgotPasswordSubtitle')}
+                {step === 'email'
+                  ? t('auth.forgotPasswordSubtitle')
+                  : t('auth.enterResetCode')}
               </Text>
             </View>
 
             {/* Форма */}
             <View style={styles.form}>
-              {/* Email */}
-              <View style={styles.inputContainer}>
-                <View style={styles.inputIcon}>
-                  <Ionicons name="mail-outline" size={20} color="#F59E0B" />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  placeholderTextColor="rgba(255,255,255,0.4)"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setError(null);
-                  }}
-                />
-              </View>
+              {step === 'email' ? (
+                <>
+                  {/* Email */}
+                  <View style={styles.inputContainer}>
+                    <View style={styles.inputIcon}>
+                      <Ionicons name="mail-outline" size={20} color="#F59E0B" />
+                    </View>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Email"
+                      placeholderTextColor="rgba(255,255,255,0.4)"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      value={email}
+                      onChangeText={(text) => { setEmail(text); setError(null); }}
+                    />
+                  </View>
+                </>
+              ) : (
+                <>
+                  {/* Code */}
+                  <View style={styles.inputContainer}>
+                    <View style={styles.inputIcon}>
+                      <Ionicons name="keypad-outline" size={20} color="#F59E0B" />
+                    </View>
+                    <TextInput
+                      style={styles.input}
+                      placeholder={t('auth.verificationCode')}
+                      placeholderTextColor="rgba(255,255,255,0.4)"
+                      keyboardType="number-pad"
+                      maxLength={6}
+                      value={code}
+                      onChangeText={(text) => { setCode(text.replace(/\D/g, '')); setError(null); }}
+                    />
+                  </View>
+
+                  {/* New password */}
+                  <View style={styles.inputContainer}>
+                    <View style={styles.inputIcon}>
+                      <Ionicons name="lock-closed-outline" size={20} color="#F59E0B" />
+                    </View>
+                    <TextInput
+                      style={styles.input}
+                      placeholder={t('auth.newPassword')}
+                      placeholderTextColor="rgba(255,255,255,0.4)"
+                      secureTextEntry={!showPassword}
+                      value={newPassword}
+                      onChangeText={(text) => { setNewPassword(text); setError(null); }}
+                    />
+                    <TouchableOpacity
+                      style={styles.eyeButton}
+                      onPress={() => setShowPassword(!showPassword)}
+                    >
+                      <Ionicons
+                        name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                        size={20}
+                        color="rgba(255,255,255,0.6)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
 
               {/* Ошибка */}
               {error && (
@@ -154,7 +223,7 @@ export default function ForgotPasswordScreen() {
               {/* Кнопка */}
               <TouchableOpacity
                 style={[styles.resetButton, loading && styles.resetButtonDisabled]}
-                onPress={handleResetPassword}
+                onPress={step === 'email' ? handleSendCode : handleConfirmReset}
                 disabled={loading}
                 activeOpacity={0.9}
               >
@@ -168,8 +237,10 @@ export default function ForgotPasswordScreen() {
                     <ActivityIndicator color="#FFFFFF" />
                   ) : (
                     <>
-                      <Text style={styles.resetButtonText}>{t('auth.sendEmail')}</Text>
-                      <Ionicons name="send" size={20} color="#FFFFFF" />
+                      <Text style={styles.resetButtonText}>
+                        {step === 'email' ? t('auth.sendCode') : t('auth.resetPasswordButton')}
+                      </Text>
+                      <Ionicons name={step === 'email' ? 'send' : 'checkmark-circle'} size={20} color="#FFFFFF" />
                     </>
                   )}
                 </LinearGradient>
@@ -271,6 +342,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#FFFFFF',
+  },
+  eyeButton: {
+    padding: 8,
   },
   errorContainer: {
     flexDirection: 'row',
