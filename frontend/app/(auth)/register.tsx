@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
   Animated,
   StatusBar,
-  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -21,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/context/AuthContext';
 import * as WebBrowser from 'expo-web-browser';
 import * as Crypto from 'expo-crypto';
+import * as Linking from 'expo-linking';
 import { GOOGLE_WEB_CLIENT_ID, GOOGLE_REDIRECT_URI } from '../../src/config/google';
 
 WebBrowser.maybeCompleteAuthSession();
