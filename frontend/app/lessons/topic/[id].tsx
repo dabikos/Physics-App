@@ -141,19 +141,49 @@ export default function TopicDetailScreen() {
   const sectionColor = topic ? PHYSICS_SECTIONS[topic.section]?.color || '#6C63FF' : '#6C63FF';
   
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { getNote, saveNote } = useNotes();
+  const { getNote, saveNote, loading: notesLoading } = useNotes();
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [noteText, setNoteText] = useState(id ? getNote(id) : '');
+  const [noteText, setNoteText] = useState('');
   const [noteExpanded, setNoteExpanded] = useState(false);
+  const [lessonCompleted, setLessonCompleted] = useState(false);
+  const [completingLesson, setCompletingLesson] = useState(false);
 
-  // Mark lesson as completed when user opens it
+  // Sync notes when they finish loading from server
+  useEffect(() => {
+    if (!notesLoading && id) {
+      const serverNote = getNote(id);
+      if (serverNote) {
+        setNoteText(serverNote);
+      }
+    }
+  }, [notesLoading, id, getNote]);
+
+  // Check if lesson already completed
   useEffect(() => {
     if (id && user) {
-      api.post(`/progress/lesson/${id}`).catch(() => {});
+      api.get('/progress').then((res) => {
+        const completedLessons: string[] = res.data?.completed_lessons || [];
+        if (completedLessons.includes(id)) {
+          setLessonCompleted(true);
+        }
+      }).catch(() => {});
     }
   }, [id, user]);
+
+  const handleCompleteLesson = async () => {
+    if (!id || lessonCompleted || completingLesson) return;
+    setCompletingLesson(true);
+    try {
+      await api.post(`/progress/lesson/${id}`);
+      setLessonCompleted(true);
+    } catch (e) {
+      console.log('Error completing lesson:', e);
+    } finally {
+      setCompletingLesson(false);
+    }
+  };
 
   const handleNoteChange = (text: string) => {
     setNoteText(text);
@@ -320,6 +350,31 @@ export default function TopicDetailScreen() {
               <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
             </View>
           </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Кнопка завершить урок */}
+        <TouchableOpacity
+          style={[
+            styles.completeLessonButton,
+            lessonCompleted && styles.completeLessonButtonDone,
+          ]}
+          onPress={handleCompleteLesson}
+          disabled={lessonCompleted || completingLesson}
+          activeOpacity={0.85}
+        >
+          {completingLesson ? (
+            <ActivityIndicator color="#FFFFFF" size="small" />
+          ) : lessonCompleted ? (
+            <>
+              <Text style={styles.completeLessonIcon}>🏅</Text>
+              <Text style={styles.completeLessonText}>{t('lessons.lessonCompleted')}</Text>
+            </>
+          ) : (
+            <>
+              <Ionicons name="checkmark-circle-outline" size={22} color="#FFFFFF" />
+              <Text style={styles.completeLessonText}>{t('lessons.completeLesson')}</Text>
+            </>
+          )}
         </TouchableOpacity>
 
         {/* Мои заметки */}
@@ -610,6 +665,35 @@ const styles = StyleSheet.create({
   },
   bottomPadding: {
     height: 40,
+  },
+  completeLessonButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: '#10B981',
+    borderRadius: 16,
+    paddingVertical: 16,
+    marginTop: 16,
+    marginBottom: 8,
+    shadowColor: '#10B981',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  completeLessonButtonDone: {
+    backgroundColor: '#6B7280',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  completeLessonText: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  completeLessonIcon: {
+    fontSize: 22,
   },
   noteContainer: {
     backgroundColor: '#FFFFFF',

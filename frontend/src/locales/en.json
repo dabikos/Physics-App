@@ -73,7 +73,11 @@
     "namePlaceholder": "Enter your name",
     "grade": "Grade (e.g. 9A)",
     "student": "Student",
+    "studentDesc": "Learning and solving tasks",
     "teacher": "Teacher",
+    "teacherDesc": "Managing classes and students",
+    "selectRole": "Who are you?",
+    "selectRoleSubtitle": "Choose a role for your account",
     "forgotPassword": "Forgot password?",
     "forgotPasswordTitle": "Password Recovery",
     "forgotPasswordSubtitle": "Enter your email and we'll send password recovery instructions",
@@ -230,7 +234,9 @@
     "aiGenerating": "AI is generating material...",
     "aiGeneratingSubtext": "This may take 10-30 seconds",
     "loadError": "Loading error",
-    "loadErrorMessage": "Failed to load content"
+    "loadErrorMessage": "Failed to load content",
+    "completeLesson": "Complete lesson",
+    "lessonCompleted": "Lesson completed"
   },
   "tests": {
     "title": "Tests",
@@ -474,5 +480,10 @@
     "nuclearPhysics": "Nuclear Physics",
     "radioactivity": "Radioactivity",
     "nuclearReactions": "Nuclear Reactions"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "emptySubtitle": "Reminders about streaks, achievements and assigned tests will appear here"
   }
 }

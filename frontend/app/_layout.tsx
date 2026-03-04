@@ -5,6 +5,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { LanguageProvider } from '../src/context/LanguageContext';
+import { usePushNotifications } from '../src/hooks/usePushNotifications';
 import '../src/config/i18n';
 
 // Компонент навигации с проверкой авторизации
@@ -14,6 +15,10 @@ function RootLayoutNav() {
   const segments = useSegments();
   const router = useRouter();
   const [initialRouteDone, setInitialRouteDone] = useState(false);
+
+  // Регистрация push-уведомлений когда пользователь авторизован
+  const pushEnabled = !!user;
+  usePushNotifications(pushEnabled);
 
   useEffect(() => {
     if (loading) return;
@@ -62,6 +67,7 @@ function RootLayoutNav() {
         <Stack.Screen name="tests" options={{ headerShown: false }} />
         <Stack.Screen name="formulas" options={{ headerShown: false }} />
         <Stack.Screen name="games" options={{ headerShown: false }} />
+        <Stack.Screen name="notifications" options={{ headerShown: false }} />
       </Stack>
     </>
   );

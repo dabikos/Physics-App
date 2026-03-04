@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,15 +13,29 @@ import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../src/context/AuthContext';
+import api from '../../src/services/api';
 
 export default function SectionScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const [selectedSubsection, setSelectedSubsection] = useState<string | null>(null);
+  const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const { isFavorite, toggleFavorite } = useFavorites();
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS, getTopicsBySubsection } = usePhysicsData();
+  const { user } = useAuth();
+
+  // Load completed lessons
+  useEffect(() => {
+    if (user) {
+      api.get('/progress').then((res) => {
+        const list: string[] = res.data?.completed_lessons || [];
+        setCompletedLessons(new Set(list));
+      }).catch(() => {});
+    }
+  }, [user]);
 
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
 
@@ -51,6 +65,8 @@ export default function SectionScreen() {
 
         {sectionData.subsections.map((subsection) => {
           const topics = getTopicsBySubsection(section!, subsection.id);
+          const completedCount = topics.filter(t => completedLessons.has(t.id)).length;
+          const allCompleted = completedCount === topics.length && topics.length > 0;
           
           return (
             <View key={subsection.id}>
@@ -70,12 +86,21 @@ export default function SectionScreen() {
                 <View
                   style={[
                     styles.subsectionDot,
-                    { backgroundColor: sectionData.color },
+                    { backgroundColor: allCompleted ? '#10B981' : sectionData.color },
                   ]}
                 />
                 <View style={styles.subsectionInfo}>
                   <Text style={[styles.subsectionName, { color: colors.text }]}>{subsection.name}</Text>
-                  <Text style={[styles.topicsCount, { color: colors.textTertiary }]}>{t('lessons.topicsCount', { count: subsection.topics.length })}</Text>
+                  <View style={styles.subsectionMeta}>
+                    <Text style={[styles.topicsCount, { color: colors.textTertiary }]}>{t('lessons.topicsCount', { count: subsection.topics.length })}</Text>
+                    {completedCount > 0 && (
+                      <View style={styles.completedBadge}>
+                        <Text style={styles.completedBadgeText}>
+                          {completedCount}/{topics.length} ✓
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
                 <Ionicons
                   name={selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
@@ -86,10 +111,16 @@ export default function SectionScreen() {
 
               {selectedSubsection === subsection.id && (
                 <View style={styles.topicsList}>
-                  {topics.map((topic) => (
+                  {topics.map((topic) => {
+                    const isCompleted = completedLessons.has(topic.id);
+                    return (
                     <TouchableOpacity
                       key={topic.id}
-                      style={[styles.topicCard, { borderLeftColor: sectionData.color, backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                      style={[
+                        styles.topicCard,
+                        { borderLeftColor: isCompleted ? '#10B981' : sectionData.color, backgroundColor: colors.card, shadowColor: colors.shadowColor },
+                        isCompleted && { opacity: 0.65 },
+                      ]}
                       onPress={() => router.push(`/lessons/topic/${topic.id}`)}
                       activeOpacity={0.8}
                     >
@@ -99,6 +130,9 @@ export default function SectionScreen() {
                           {topic.brief_info}
                         </Text>
                       </View>
+                      {isCompleted ? (
+                        <Text style={styles.completedMedal}>🏅</Text>
+                      ) : (
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
@@ -113,8 +147,10 @@ export default function SectionScreen() {
                           color={isFavorite(topic.id, 'topic') ? '#EF4444' : '#D1D5DB'}
                         />
                       </TouchableOpacity>
+                      )}
                     </TouchableOpacity>
-                  ))}
+                    );
+                  })}
                 </View>
               )}
             </View>
@@ -195,6 +231,12 @@ const styles = StyleSheet.create({
   subsectionInfo: {
     flex: 1,
   },
+  subsectionMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 2,
+  },
   subsectionName: {
     fontSize: 16,
     fontWeight: '500',
@@ -203,7 +245,17 @@ const styles = StyleSheet.create({
   topicsCount: {
     fontSize: 13,
     color: '#6B7280',
-    marginTop: 2,
+  },
+  completedBadge: {
+    backgroundColor: '#D1FAE5',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  completedBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#059669',
   },
   topicsList: {
     paddingLeft: 22,
@@ -239,6 +291,10 @@ const styles = StyleSheet.create({
   },
   favButton: {
     padding: 4,
+    marginLeft: 8,
+  },
+  completedMedal: {
+    fontSize: 22,
     marginLeft: 8,
   },
 });

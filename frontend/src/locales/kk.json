@@ -73,7 +73,11 @@
     "namePlaceholder": "Атыңызды енгізіңіз",
     "grade": "Сынып (мысалы, 9А)",
     "student": "Оқушы",
+    "studentDesc": "Оқимын және есептер шешемін",
     "teacher": "Мұғалім",
+    "teacherDesc": "Сыныптар мен оқушыларды басқарамын",
+    "selectRole": "Сіз кімсіз?",
+    "selectRoleSubtitle": "Аккаунтыңыз үшін рөлді таңдаңыз",
     "forgotPassword": "Құпия сөзді ұмыттыңыз ба?",
     "forgotPasswordTitle": "Қалпына келтіру",
     "forgotPasswordSubtitle": "Email енгізіңіз, біз құпия сөзді қалпына келтіру нұсқаулығын жібереміз",
@@ -230,7 +234,9 @@
     "aiGenerating": "AI материал дайындауда...",
     "aiGeneratingSubtext": "Бұл 10-30 секунд алуы мүмкін",
     "loadError": "Жүктеу қатесі",
-    "loadErrorMessage": "Контентті жүктеу мүмкін болмады"
+    "loadErrorMessage": "Контентті жүктеу мүмкін болмады",
+    "completeLesson": "Сабақты аяқтау",
+    "lessonCompleted": "Сабақ аяқталды"
   },
   "tests": {
     "title": "Тесттер",
@@ -474,5 +480,10 @@
     "nuclearPhysics": "Ядролық физика",
     "radioactivity": "Радиоактивтілік",
     "nuclearReactions": "Ядролық реакциялар"
+  },
+  "notifications": {
+    "title": "Хабарландырулар",
+    "empty": "Хабарландыру жоқ",
+    "emptySubtitle": "Стриктер, жетістіктер және тағайындалған тесттер туралы еске салулар осында пайда болады"
   }
 }

@@ -907,7 +907,7 @@ export default function ProfileScreen() {
               </View>
             </View>
             
-            <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]}>
+            <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]} onPress={() => router.push('/notifications')}>
               <View style={styles.settingLeft}>
                 <View style={[styles.settingIcon, { backgroundColor: colors.warningBg }]}>
                   <Ionicons name="notifications" size={20} color={colors.warning} />

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
 import api from '../services/api';
 
 interface UserData {
@@ -172,6 +173,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     try {
+      // Удаляем push-токен с сервера
+      try {
+        const tokenData = await Notifications.getExpoPushTokenAsync({
+          projectId: '0f5d864b-9c41-42d1-b161-6a29613030ae',
+        });
+        if (tokenData?.data) {
+          await api.delete('/push-token', { data: { token: tokenData.data } });
+        }
+      } catch {}
       await AsyncStorage.removeItem(TOKEN_KEY);
       await AsyncStorage.removeItem(USER_KEY);
     } finally {

@@ -73,7 +73,11 @@
     "namePlaceholder": "Введите ваше имя",
     "grade": "Класс (например, 9А)",
     "student": "Ученик",
+    "studentDesc": "Учусь и решаю задачи",
     "teacher": "Учитель",
+    "teacherDesc": "Управляю классами и учениками",
+    "selectRole": "Кто вы?",
+    "selectRoleSubtitle": "Выберите роль для вашего аккаунта",
     "forgotPassword": "Забыли пароль?",
     "forgotPasswordTitle": "Восстановление",
     "forgotPasswordSubtitle": "Введите email, и мы отправим инструкции по восстановлению пароля",
@@ -230,7 +234,9 @@
     "aiGenerating": "AI генерирует материал...",
     "aiGeneratingSubtext": "Это может занять 10-30 секунд",
     "loadError": "Ошибка загрузки",
-    "loadErrorMessage": "Не удалось загрузить контент"
+    "loadErrorMessage": "Не удалось загрузить контент",
+    "completeLesson": "Завершить урок",
+    "lessonCompleted": "Урок пройден"
   },
   "tests": {
     "title": "Тесты",
@@ -474,5 +480,10 @@
     "nuclearPhysics": "Ядерная физика",
     "radioactivity": "Радиоактивность",
     "nuclearReactions": "Ядерные реакции"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "empty": "Нет уведомлений",
+    "emptySubtitle": "Здесь будут появляться напоминания о стриках, достижениях и назначенных тестах"
   }
 }

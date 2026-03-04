@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Animated,
   StatusBar,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -53,6 +54,7 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   // Анимация ошибки
   const shakeAnim = useRef(new Animated.Value(0)).current;
@@ -117,7 +119,8 @@ export default function RegisterScreen() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async (selectedRole: 'student' | 'teacher') => {
+    setShowRoleModal(false);
     if (!GOOGLE_WEB_CLIENT_ID) {
       setError(t('auth.googleSetupRequired'));
       shake();
@@ -155,7 +158,7 @@ export default function RegisterScreen() {
         } else if (code) {
           const authResult = await signInWithGoogleCode(
             code, codeVerifier, GOOGLE_REDIRECT_URI,
-            name.trim() || undefined, role, classId.trim() || undefined
+            name.trim() || undefined, selectedRole, classId.trim() || undefined
           );
           if (authResult.success) {
             router.replace('/(tabs)');
@@ -461,7 +464,7 @@ export default function RegisterScreen() {
               {/* Google Sign-In */}
               <TouchableOpacity
                 style={[styles.googleButton, googleLoading && styles.registerButtonDisabled]}
-                onPress={handleGoogleSignIn}
+                onPress={() => setShowRoleModal(true)}
                 disabled={googleLoading}
                 activeOpacity={0.9}
               >
@@ -492,6 +495,61 @@ export default function RegisterScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      {/* Role selection modal for Google sign-in */}
+      <Modal
+        visible={showRoleModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowRoleModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowRoleModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{t('auth.selectRole')}</Text>
+            <Text style={styles.modalSubtitle}>{t('auth.selectRoleSubtitle')}</Text>
+
+            <TouchableOpacity
+              style={styles.modalRoleOption}
+              onPress={() => handleGoogleSignIn('student')}
+              activeOpacity={0.8}
+            >
+              <View style={styles.modalRoleIconContainer}>
+                <Ionicons name="school-outline" size={28} color="#667EEA" />
+              </View>
+              <View style={styles.modalRoleTextContainer}>
+                <Text style={styles.modalRoleOptionTitle}>{t('auth.student')}</Text>
+                <Text style={styles.modalRoleOptionDesc}>{t('auth.studentDesc')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="rgba(255,255,255,0.4)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalRoleOption}
+              onPress={() => handleGoogleSignIn('teacher')}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.modalRoleIconContainer, { backgroundColor: 'rgba(245, 158, 11, 0.15)' }]}>
+                <Ionicons name="people-outline" size={28} color="#F59E0B" />
+              </View>
+              <View style={styles.modalRoleTextContainer}>
+                <Text style={styles.modalRoleOptionTitle}>{t('auth.teacher')}</Text>
+                <Text style={styles.modalRoleOptionDesc}>{t('auth.teacherDesc')}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color="rgba(255,255,255,0.4)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modalCancel}
+              onPress={() => setShowRoleModal(false)}
+            >
+              <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
@@ -753,6 +811,77 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#764BA2',
     fontWeight: '600',
+  },
+  // Role selection modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  modalContent: {
+    width: '100%',
+    backgroundColor: '#1E1B4B',
+    borderRadius: 24,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.5)',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  modalRoleOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  modalRoleIconContainer: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: 'rgba(102, 126, 234, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  modalRoleTextContainer: {
+    flex: 1,
+  },
+  modalRoleOptionTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 2,
+  },
+  modalRoleOptionDesc: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.5)',
+  },
+  modalCancel: {
+    alignItems: 'center',
+    paddingVertical: 14,
+    marginTop: 4,
+  },
+  modalCancelText: {
+    fontSize: 15,
+    color: 'rgba(255,255,255,0.5)',
+    fontWeight: '500',
   },
 });
 

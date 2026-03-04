@@ -2017,6 +2017,18 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
         }
     )
 
+    # Push-уведомление учителю, если это назначенный тест
+    if assigned_test and assigned_test.get("created_by"):
+        teacher_id = assigned_test["created_by"]
+        emoji = "💯" if score == 100 else "📊"
+        student_name = current_user.get("name", "Ученик")
+        await send_push_notification(
+            teacher_id,
+            f"{emoji} {student_name} сдал тест",
+            f"Результат: {score}% ({correct_count}/{len(questions)})",
+            {"type": "test_result", "result_id": result_id},
+        )
+
     return {
         "score": score,
         "correct_count": correct_count,
@@ -2104,6 +2116,9 @@ async def get_progress(current_user: dict = Depends(get_current_user)):
     
     return {
         "overall_progress": overall_progress,
+        "completed_lessons": progress.get("completed_lessons", []),
+        "completed_tasks": progress.get("completed_tasks", []),
+        "completed_tests": progress.get("completed_tests", []),
         "lessons": {
             "completed": completed_lessons,
             "total": total_lessons,
@@ -2922,7 +2937,8 @@ async def get_teacher_classes(current_user: dict = Depends(get_current_user)):
 @api_router.get("/teacher/students")
 async def get_teacher_students(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
-    query = {"role": "student"}
+    # Only show students who connected to this teacher's pairing sessions
+    query = {"role": "student", "teacher_ids": current_user["id"]}
     if class_id:
         query["class_id"] = class_id
 
@@ -2996,6 +3012,16 @@ async def create_assigned_test(payload: AssignedTestCreate, current_user: dict =
         "created_at": datetime.utcnow()
     }
     await db.assigned_tests.insert_one(doc)
+
+    # Push-уведомление ученикам класса
+    await send_push_to_class(
+        class_id=payload.class_id,
+        title="📋 Новый тест от учителя",
+        body=f"Назначен тест: {payload.title}",
+        data={"type": "assigned_test", "test_id": test_id},
+        exclude_user_id=current_user["id"],
+    )
+
     return doc
 
 @api_router.get("/teacher/tests")
@@ -3105,9 +3131,17 @@ async def join_pairing_session(payload: PairingJoinRequest, current_user: dict =
         {"id": session["id"]},
         {"$addToSet": {"student_ids": current_user["id"]}, "$set": {"last_joined_at": now}}
     )
+
+    # Save persistent teacher-student relationship
+    teacher_id = session["teacher_id"]
+    await db.users.update_one(
+        {"id": current_user["id"]},
+        {"$addToSet": {"teacher_ids": teacher_id}}
+    )
+
     return {
         "session_id": session["id"],
-        "teacher_id": session["teacher_id"],
+        "teacher_id": teacher_id,
         "class_id": session.get("class_id"),
         "joined_at": now
     }
@@ -3549,6 +3583,361 @@ async def initialize_data():
         await db.formulas.insert_many(INITIAL_FORMULAS)
     
     return {"message": "Data initialized successfully"}
+
+# ==================== Push Notifications ====================
+
+async def send_push_notification(user_id: str, title: str, body: str, data: dict = None):
+    """Send push notification to a user via Expo Push API."""
+    tokens_docs = await db.push_tokens.find({"user_id": user_id}).to_list(10)
+    tokens = [d["token"] for d in tokens_docs if d.get("token")]
+    if not tokens:
+        return
+
+    messages = []
+    for token in tokens:
+        message = {
+            "to": token,
+            "sound": "default",
+            "title": title,
+            "body": body,
+            "channelId": "default",
+        }
+        if data:
+            message["data"] = data
+        messages.append(message)
+
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                "https://exp.host/--/api/v2/push/send",
+                json=messages,
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                timeout=10,
+            )
+            result = resp.json()
+            # Удаляем невалидные токены
+            if "data" in result:
+                items = result["data"] if isinstance(result["data"], list) else [result["data"]]
+                for i, item in enumerate(items):
+                    if item.get("status") == "error" and item.get("details", {}).get("error") in (
+                        "DeviceNotRegistered", "InvalidCredentials"
+                    ):
+                        if i < len(tokens):
+                            await db.push_tokens.delete_one({"token": tokens[i]})
+    except Exception as e:
+        logging.error(f"Push notification error: {e}")
+
+
+async def send_push_to_class(class_id: str, title: str, body: str, data: dict = None, exclude_user_id: str = None):
+    """Send push notification to all students in a class."""
+    query: Dict[str, Any] = {"role": "student"}
+    if class_id:
+        query["class_id"] = class_id
+    students = await db.users.find(query, {"id": 1}).to_list(500)
+    for student in students:
+        sid = student.get("id")
+        if sid and sid != exclude_user_id:
+            await send_push_notification(sid, title, body, data)
+
+
+@api_router.post("/cron/daily-push")
+async def cron_daily_push(request: Request):
+    """Cron endpoint: send daily reminders to inactive users.
+    Call via external cron with header X-Cron-Secret.
+    """
+    secret = request.headers.get("X-Cron-Secret", "")
+    expected = os.environ.get("CRON_SECRET", "physics-ai-cron-2024")
+    if secret != expected:
+        raise HTTPException(403, "Forbidden")
+
+    now = datetime.utcnow()
+    today = now.strftime("%Y-%m-%d")
+    yesterday = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    # Находим пользователей с push-токенами
+    all_tokens = await db.push_tokens.find({}).to_list(5000)
+    user_ids = list(set(t["user_id"] for t in all_tokens))
+
+    sent = 0
+    for uid in user_ids:
+        user = await db.users.find_one({"id": uid})
+        if not user:
+            continue
+        activity = user.get("activity_dates", [])
+        dates = sorted(set(d if isinstance(d, str) else d.strftime("%Y-%m-%d") for d in activity))
+        last = dates[-1] if dates else None
+
+        # Если не заходил сегодня
+        if not last or last < today:
+            streak = compute_streak(user)
+            current = streak.get("current", 0)
+            if current > 0:
+                title = f"🔥 Не потеряй стрик {current} дней!"
+                body = "Зайди сегодня, чтобы сохранить свою серию"
+            else:
+                title = "💡 Время учиться!"
+                body = "Физика ждёт тебя. Зайди и проверь новые задания"
+
+            await send_push_notification(uid, title, body, {"type": "daily_reminder"})
+            sent += 1
+
+    return {"sent": sent, "total_users": len(user_ids)}
+
+
+@api_router.post("/push-token")
+async def save_push_token(request: Request, current_user: dict = Depends(get_current_user)):
+    """Save Expo push token for user."""
+    body = await request.json()
+    token = body.get("token")
+    platform = body.get("platform", "unknown")
+    if not token:
+        raise HTTPException(400, "Token is required")
+
+    # Upsert: один токен -> один пользователь
+    await db.push_tokens.update_one(
+        {"token": token},
+        {"$set": {
+            "user_id": current_user["id"],
+            "token": token,
+            "platform": platform,
+            "updated_at": datetime.utcnow(),
+        }},
+        upsert=True,
+    )
+    return {"success": True}
+
+
+@api_router.delete("/push-token")
+async def delete_push_token(request: Request, current_user: dict = Depends(get_current_user)):
+    """Remove push token on logout."""
+    body = await request.json()
+    token = body.get("token")
+    if token:
+        await db.push_tokens.delete_one({"token": token, "user_id": current_user["id"]})
+    return {"success": True}
+
+
+# ==================== Notifications ====================
+
+@api_router.get("/notifications")
+async def get_notifications(
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
+    """Generate smart notifications based on user activity."""
+    lang = parse_accept_language(accept_language)
+    user_id = current_user["id"]
+    now = datetime.utcnow()
+    today = now.strftime("%Y-%m-%d")
+    yesterday = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    notifications = []
+
+    # --- 1. Streak notifications ---
+    activity_dates = current_user.get("activity_dates", [])
+    sorted_dates = sorted(set(d if isinstance(d, str) else d.strftime("%Y-%m-%d") for d in activity_dates))
+    streak = compute_streak(current_user)
+    current_streak = streak.get("current", 0)
+    last_active = sorted_dates[-1] if sorted_dates else None
+
+    if last_active and last_active < today:
+        # User hasn't been active today — remind
+        if current_streak > 0:
+            texts = {
+                "ru": {"title": "🔥 Не потеряй свой стрик!", "body": f"У тебя {current_streak} дней подряд. Зайди сегодня, чтобы не сбросить!"},
+                "en": {"title": "🔥 Don't lose your streak!", "body": f"You have {current_streak} days in a row. Come back today!"},
+                "kk": {"title": "🔥 Стригіңді жоғалтпа!", "body": f"Сенде {current_streak} күн қатарынан. Бүгін кір!"},
+            }
+            t = texts.get(lang, texts["ru"])
+            notifications.append({
+                "id": f"streak-remind-{today}",
+                "type": "streak",
+                "icon": "flame",
+                "color": "#F59E0B",
+                "title": t["title"],
+                "body": t["body"],
+                "time": now.isoformat(),
+                "read": False,
+            })
+    elif current_streak >= 3:
+        texts = {
+            "ru": {"title": "🔥 Стрик продолжается!", "body": f"Отлично! {current_streak} дней подряд. Так держать!"},
+            "en": {"title": "🔥 Streak continues!", "body": f"Great! {current_streak} days in a row. Keep it up!"},
+            "kk": {"title": "🔥 Стрик жалғасуда!", "body": f"Керемет! {current_streak} күн қатарынан. Жалғастыр!"},
+        }
+        t = texts.get(lang, texts["ru"])
+        notifications.append({
+            "id": f"streak-congrats-{today}",
+            "type": "streak",
+            "icon": "flame",
+            "color": "#10B981",
+            "title": t["title"],
+            "body": t["body"],
+            "time": now.isoformat(),
+            "read": False,
+        })
+
+    # --- 2. Daily challenge ---
+    daily_done = await db.daily_challenges.find_one({
+        "user_id": user_id, "date": today, "completed": True
+    })
+    if not daily_done:
+        texts = {
+            "ru": {"title": "🎯 Новый челлендж дня!", "body": "Выполни задание дня и получи бонусные XP"},
+            "en": {"title": "🎯 New daily challenge!", "body": "Complete today's challenge for bonus XP"},
+            "kk": {"title": "🎯 Жаңа күнделікті тапсырма!", "body": "Бүгінгі тапсырманы орында, бонус XP ал"},
+        }
+        t = texts.get(lang, texts["ru"])
+        notifications.append({
+            "id": f"daily-{today}",
+            "type": "daily_challenge",
+            "icon": "trophy",
+            "color": "#8B5CF6",
+            "title": t["title"],
+            "body": t["body"],
+            "time": now.isoformat(),
+            "read": False,
+        })
+
+    # --- 3. New achievements ---
+    test_results = await db.test_results.find({"user_id": user_id}).to_list(500)
+    xp = compute_xp(current_user, test_results)
+    achievements = compute_achievements(current_user, test_results, xp, streak, lang)
+    new_achievements = [a for a in achievements if a.get("is_new")]
+    for ach in new_achievements[:3]:
+        notifications.append({
+            "id": f"ach-{ach['id']}",
+            "type": "achievement",
+            "icon": "medal",
+            "color": "#F59E0B",
+            "title": f"{ach['icon']} {ach['name']}",
+            "body": ach["description"],
+            "time": now.isoformat(),
+            "read": False,
+        })
+
+    # --- 4. Assigned tests from teacher (for students) ---
+    if current_user.get("role") == "student":
+        class_id = current_user.get("class_id")
+        if class_id:
+            recent_tests = await db.assigned_tests.find({
+                "class_id": class_id,
+                "created_at": {"$gte": now - timedelta(days=7)}
+            }).sort("created_at", -1).limit(5).to_list(5)
+
+            completed_test_ids = set(current_user.get("progress", {}).get("completed_tests", []))
+            for at in recent_tests:
+                if at["id"] not in completed_test_ids:
+                    texts = {
+                        "ru": {"title": "📋 Новый тест от учителя", "body": f"Назначен тест: {at.get('title', 'Тест')}"},
+                        "en": {"title": "📋 New test from teacher", "body": f"Assigned test: {at.get('title', 'Test')}"},
+                        "kk": {"title": "📋 Мұғалімнен жаңа тест", "body": f"Тест тағайындалды: {at.get('title', 'Тест')}"},
+                    }
+                    t = texts.get(lang, texts["ru"])
+                    notifications.append({
+                        "id": f"assigned-{at['id']}",
+                        "type": "assigned_test",
+                        "icon": "document-text",
+                        "color": "#3B82F6",
+                        "title": t["title"],
+                        "body": t["body"],
+                        "time": at.get("created_at", now).isoformat(),
+                        "read": False,
+                    })
+
+    # --- 5. Recent test results ---
+    recent_results = test_results[:5]
+    for r in recent_results:
+        score = r.get("score_final") or r.get("score", 0)
+        created = r.get("created_at", now)
+        # Only show results from last 3 days
+        if (now - created).days > 3:
+            continue
+        emoji = "💯" if score == 100 else "📊"
+        texts = {
+            "ru": {"title": f"{emoji} Результат теста", "body": f"Вы набрали {score}% на тесте"},
+            "en": {"title": f"{emoji} Test result", "body": f"You scored {score}% on a test"},
+            "kk": {"title": f"{emoji} Тест нәтижесі", "body": f"Сіз тестте {score}% алдыңыз"},
+        }
+        t = texts.get(lang, texts["ru"])
+        notifications.append({
+            "id": f"result-{r.get('id', r.get('test_id', ''))}",
+            "type": "test_result",
+            "icon": "stats-chart",
+            "color": "#10B981" if score >= 70 else "#EF4444",
+            "title": t["title"],
+            "body": t["body"],
+            "time": created.isoformat(),
+            "read": False,
+        })
+
+    # --- 6. Learning reminder (if inactive 2+ days) ---
+    if last_active and last_active < yesterday:
+        days_inactive = (now - datetime.strptime(last_active, "%Y-%m-%d")).days
+        if days_inactive >= 2:
+            texts = {
+                "ru": {"title": "💡 Вернись к учёбе!", "body": f"Тебя не было {days_inactive} дней. Физика ждёт!"},
+                "en": {"title": "💡 Come back to study!", "body": f"You've been away for {days_inactive} days. Physics awaits!"},
+                "kk": {"title": "💡 Оқуға оралыңыз!", "body": f"Сіз {days_inactive} күн болмадыңыз. Физика күтеді!"},
+            }
+            t = texts.get(lang, texts["ru"])
+            notifications.append({
+                "id": f"inactive-{today}",
+                "type": "reminder",
+                "icon": "bulb",
+                "color": "#6366F1",
+                "title": t["title"],
+                "body": t["body"],
+                "time": now.isoformat(),
+                "read": False,
+            })
+
+    # Sort by time desc
+    notifications.sort(key=lambda n: n.get("time", ""), reverse=True)
+
+    # Mark read status from DB
+    read_ids_doc = await db.notification_reads.find_one({"user_id": user_id})
+    read_ids = set(read_ids_doc.get("read_ids", [])) if read_ids_doc else set()
+    for n in notifications:
+        if n["id"] in read_ids:
+            n["read"] = True
+
+    unread_count = sum(1 for n in notifications if not n["read"])
+
+    return {
+        "notifications": notifications,
+        "unread_count": unread_count,
+    }
+
+
+@api_router.post("/notifications/read")
+async def mark_notifications_read(request: Request, current_user: dict = Depends(get_current_user)):
+    """Mark all notifications as read."""
+    user_id = current_user["id"]
+    body = await request.json() if request.headers.get("content-type", "").startswith("application/json") else {}
+    ids = body.get("ids", [])
+    if ids:
+        await db.notification_reads.update_one(
+            {"user_id": user_id},
+            {"$addToSet": {"read_ids": {"$each": ids}}, "$set": {"last_read_at": datetime.utcnow()}},
+            upsert=True,
+        )
+    return {"success": True}
+
+
+@api_router.post("/notifications/{notification_id}/read")
+async def mark_notification_read(notification_id: str, current_user: dict = Depends(get_current_user)):
+    """Mark a specific notification as read."""
+    await db.notification_reads.update_one(
+        {"user_id": current_user["id"]},
+        {"$addToSet": {"read_ids": notification_id}},
+        upsert=True,
+    )
+    return {"success": True}
+
 
 # ==================== Root ====================
 
