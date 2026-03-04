@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
@@ -27,13 +28,37 @@ export default function SectionScreen() {
   const { PHYSICS_SECTIONS, getTopicsBySubsection } = usePhysicsData();
   const { user } = useAuth();
 
-  // Load completed lessons on every focus (so it updates when returning from topic)
+  // Load completed lessons on every focus (from server + local storage)
   useFocusEffect(
     useCallback(() => {
       if (user) {
+        // Load from local storage first (instant)
+        AsyncStorage.getItem('completed_lessons').then((val) => {
+          if (val) {
+            const local: string[] = JSON.parse(val);
+            setCompletedLessons((prev) => {
+              const merged = new Set(prev);
+              local.forEach((id) => merged.add(id));
+              return merged;
+            });
+          }
+        }).catch(() => {});
+        // Also load from server
         api.get('/progress').then((res) => {
           const list: string[] = res.data?.completed_lessons || [];
-          setCompletedLessons(new Set(list));
+          setCompletedLessons((prev) => {
+            const merged = new Set(prev);
+            list.forEach((id) => merged.add(id));
+            return merged;
+          });
+          // Sync server data to local
+          if (list.length > 0) {
+            AsyncStorage.getItem('completed_lessons').then((val) => {
+              const local: string[] = val ? JSON.parse(val) : [];
+              const all = [...new Set([...local, ...list])];
+              AsyncStorage.setItem('completed_lessons', JSON.stringify(all));
+            }).catch(() => {});
+          }
         }).catch(() => {});
       }
     }, [user])

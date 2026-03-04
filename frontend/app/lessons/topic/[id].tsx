@@ -15,6 +15,7 @@ import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { WebView } from 'react-native-webview';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePhysicsData } from '../../../src/hooks/usePhysicsData';
 import { VideoPlayer } from '../../../src/components/VideoPlayer';
 import { useFavorites } from '../../../src/hooks/useFavorites';
@@ -164,6 +165,14 @@ export default function TopicDetailScreen() {
   useFocusEffect(
     useCallback(() => {
       if (id && user) {
+        // Check local storage first (instant)
+        AsyncStorage.getItem('completed_lessons').then((val) => {
+          if (val) {
+            const local: string[] = JSON.parse(val);
+            if (local.includes(id)) setLessonCompleted(true);
+          }
+        }).catch(() => {});
+        // Also check server
         api.get('/progress').then((res) => {
           const completedLessons: string[] = res.data?.completed_lessons || [];
           if (completedLessons.includes(id)) {
@@ -180,6 +189,13 @@ export default function TopicDetailScreen() {
     try {
       await api.post(`/progress/lesson/${id}`);
       setLessonCompleted(true);
+      // Save locally too
+      try {
+        const val = await AsyncStorage.getItem('completed_lessons');
+        const arr: string[] = val ? JSON.parse(val) : [];
+        if (!arr.includes(id)) arr.push(id);
+        await AsyncStorage.setItem('completed_lessons', JSON.stringify(arr));
+      } catch {}
     } catch (e) {
       console.log('Error completing lesson:', e);
     } finally {
