@@ -917,7 +917,7 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
             </TouchableOpacity>
             
-            <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]}>
+            <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]} onPress={() => router.push('/about')}>
               <View style={styles.settingLeft}>
                 <View style={[styles.settingIcon, { backgroundColor: colors.successBg }]}>
                   <Ionicons name="information-circle" size={20} color={colors.success} />

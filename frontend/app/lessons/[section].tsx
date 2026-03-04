@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useFavorites } from '../../src/hooks/useFavorites';
@@ -27,15 +27,17 @@ export default function SectionScreen() {
   const { PHYSICS_SECTIONS, getTopicsBySubsection } = usePhysicsData();
   const { user } = useAuth();
 
-  // Load completed lessons
-  useEffect(() => {
-    if (user) {
-      api.get('/progress').then((res) => {
-        const list: string[] = res.data?.completed_lessons || [];
-        setCompletedLessons(new Set(list));
-      }).catch(() => {});
-    }
-  }, [user]);
+  // Load completed lessons on every focus (so it updates when returning from topic)
+  useFocusEffect(
+    useCallback(() => {
+      if (user) {
+        api.get('/progress').then((res) => {
+          const list: string[] = res.data?.completed_lessons || [];
+          setCompletedLessons(new Set(list));
+        }).catch(() => {});
+      }
+    }, [user])
+  );
 
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
 

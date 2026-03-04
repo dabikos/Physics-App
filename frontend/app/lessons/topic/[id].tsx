@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { WebView } from 'react-native-webview';
@@ -160,17 +160,19 @@ export default function TopicDetailScreen() {
     }
   }, [notesLoading, id, getNote]);
 
-  // Check if lesson already completed
-  useEffect(() => {
-    if (id && user) {
-      api.get('/progress').then((res) => {
-        const completedLessons: string[] = res.data?.completed_lessons || [];
-        if (completedLessons.includes(id)) {
-          setLessonCompleted(true);
-        }
-      }).catch(() => {});
-    }
-  }, [id, user]);
+  // Check if lesson already completed (on every focus)
+  useFocusEffect(
+    useCallback(() => {
+      if (id && user) {
+        api.get('/progress').then((res) => {
+          const completedLessons: string[] = res.data?.completed_lessons || [];
+          if (completedLessons.includes(id)) {
+            setLessonCompleted(true);
+          }
+        }).catch(() => {});
+      }
+    }, [id, user])
+  );
 
   const handleCompleteLesson = async () => {
     if (!id || lessonCompleted || completingLesson) return;

@@ -68,6 +68,7 @@ function RootLayoutNav() {
         <Stack.Screen name="formulas" options={{ headerShown: false }} />
         <Stack.Screen name="games" options={{ headerShown: false }} />
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
+        <Stack.Screen name="about" options={{ headerShown: false }} />
       </Stack>
     </>
   );

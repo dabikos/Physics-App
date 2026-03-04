@@ -485,5 +485,19 @@
     "title": "Notifications",
     "empty": "No notifications",
     "emptySubtitle": "Reminders about streaks, achievements and assigned tests will appear here"
+  },
+  "about": {
+    "title": "About",
+    "description": "Physics AI is a smart assistant for learning physics. Lessons, formulas, tests, AI chat and interactive tasks — all in one app.",
+    "features": "Features",
+    "featureLessons": "Lessons on all physics topics",
+    "featureFormulas": "Formula handbook with search",
+    "featureTests": "Tests and assessments",
+    "featureAI": "AI chat for problem solving",
+    "featureGames": "Educational mini-games",
+    "featureTeacher": "Teacher-student system",
+    "support": "Support",
+    "privacy": "Privacy Policy",
+    "madeWith": "Made with ❤️ for students and teachers"
   }
 }
