@@ -4,8 +4,9 @@
  */
 
 // ============= API КЛЮЧИ =============
-const GITHUB_PAT = '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';
-const GROQ_API_KEY = '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';
+// Ключи берутся из environment variables (настраиваются в Digital Ocean)
+const GITHUB_PAT = import.meta.env.VITE_GITHUB_PAT || '';
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
 
 // ============= ПРОВАЙДЕРЫ =============
 const GITHUB_API_URL = 'https://models.github.ai/inference/chat/completions';

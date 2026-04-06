@@ -46,9 +46,9 @@ SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER if os.environ.get('SMTP_USER')
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
-# AI API Keys (GitHub Models + Groq)
-GITHUB_PAT = os.environ.get('GITHUB_PAT', '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')
-GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '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')
+# AI API Keys (GitHub Models + Groq) - берутся ТОЛЬКО из ENV переменных
+GITHUB_PAT = os.environ.get('GITHUB_PAT', '')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
 
 GITHUB_API_URL = 'https://models.github.ai/inference/chat/completions'
 GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
