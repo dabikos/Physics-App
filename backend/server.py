@@ -62,7 +62,7 @@ async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096,
 
     providers = [
         {"url": GITHUB_API_URL, "key": GITHUB_PAT, "model": "gpt-4o-mini", "name": "github"},
-        {"url": GROQ_API_URL, "key": GROQ_API_KEY, "model": "llama-3.1-70b-versatile", "name": "groq"},
+        {"url": GROQ_API_URL, "key": GROQ_API_KEY, "model": "llama-3.3-70b-versatile", "name": "groq"},
     ]
 
     last_error = None

@@ -11,10 +11,9 @@ export const AI_MODELS = {
   GPT4O: 'gpt-4o',
   GPT4O_MINI: 'gpt-4o-mini',
   DEEPSEEK_R1: 'deepseek-r1',
-  // Groq Models
-  LLAMA_70B: 'llama-3.1-70b-versatile',
+  // Groq Models (актуальные на 2026)
+  LLAMA_70B: 'llama-3.3-70b-versatile',
   LLAMA_8B: 'llama-3.1-8b-instant',
-  MIXTRAL: 'mixtral-8x7b-32768',
 } as const;
 
 export interface ChatMessage {
