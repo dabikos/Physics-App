@@ -323,7 +323,9 @@ export default function HomeScreen() {
   } else if (bannerData?.section_progress) {
     const inProgress = bannerData.section_progress.find((s) => s.percentage > 0 && s.percentage < 100);
     if (inProgress) {
-      bannerSubtitle = t('home.continueSubtitle', { section: inProgress.name.toLowerCase(), percent: inProgress.percentage });
+      // Используем ключ секции для перевода вместо русского названия
+      const sectionName = t(`physics.${inProgress.section}`, { defaultValue: inProgress.name }).toLowerCase();
+      bannerSubtitle = t('home.continueSubtitle', { section: sectionName, percent: inProgress.percentage });
     }
   }
 
@@ -457,8 +459,6 @@ export default function HomeScreen() {
               subtitleColor={colors.textTertiary}
               shadowColor={colors.shadowColor}
             />
-          </View>
-          <View style={styles.menuRow}>
             <MenuCard
               title={t('home.games')}
               subtitle={t('home.gamesSubtitle')}

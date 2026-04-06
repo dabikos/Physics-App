@@ -118,7 +118,7 @@ const SolutionSteps: React.FC<{
   isCorrect: boolean;
   attempts: number;
   onHintUsed: () => void;
-}> = ({ hint, steps, fullSolution, answer, isCorrect, attempts, onHintUsed }) => {  const { t } = useTranslation();  const [showHint, setShowHint] = useState(false);
+}> = ({ hint, steps, fullSolution, answer, isCorrect, attempts, onHintUsed }) => {  const { t } = useTranslation();  const { colors: solColors, isDark: solIsDark } = useTheme();  const [showHint, setShowHint] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showFullSolution, setShowFullSolution] = useState(false);
@@ -128,25 +128,25 @@ const SolutionSteps: React.FC<{
   const canShowFullSolution = attempts >= 3 || isCorrect;
 
   return (
-    <View style={styles.solutionContainer}>
-      <Text style={styles.solutionTitle}>{t('tasks.helpTitle')}</Text>
+    <View style={[styles.solutionContainer, { backgroundColor: solColors.card }]}>
+      <Text style={[styles.solutionTitle, { color: solColors.text }]}>{t('tasks.helpTitle')}</Text>
       
       {/* Подсказка */}
       {hint && canShowHint && (
         <View style={styles.solutionSection}>
           <TouchableOpacity 
-            style={styles.solutionHeader}
+            style={[styles.solutionHeader, { backgroundColor: solIsDark ? '#2D2D30' : '#F9FAFB' }]}
             onPress={() => { setShowHint(!showHint); onHintUsed(); }}
           >
             <View style={styles.solutionHeaderLeft}>
               <Ionicons name="bulb" size={20} color="#F59E0B" />
-              <Text style={styles.solutionHeaderText}>{t('tasks.hint')}</Text>
+              <Text style={[styles.solutionHeaderText, { color: solColors.text }]}>{t('tasks.hint')}</Text>
             </View>
-            <Ionicons name={showHint ? "chevron-up" : "chevron-down"} size={20} color="#6B7280" />
+            <Ionicons name={showHint ? "chevron-up" : "chevron-down"} size={20} color={solColors.textTertiary} />
           </TouchableOpacity>
           {showHint && (
-            <View style={styles.solutionContent}>
-              <MathContent content={hint} textColor="#92400E" fontSize={15} />
+            <View style={[styles.solutionContent, { backgroundColor: solIsDark ? '#3B3520' : '#FEFCE8' }]}>
+              <MathContent content={hint} textColor={solIsDark ? '#FDE68A' : '#92400E'} fontSize={15} />
             </View>
           )}
         </View>
@@ -156,17 +156,17 @@ const SolutionSteps: React.FC<{
       {steps && steps.length > 0 && canShowSteps && (
         <View style={styles.solutionSection}>
           <TouchableOpacity 
-            style={styles.solutionHeader}
+            style={[styles.solutionHeader, { backgroundColor: solIsDark ? '#2D2D30' : '#F9FAFB' }]}
             onPress={() => setShowSteps(!showSteps)}
           >
             <View style={styles.solutionHeaderLeft}>
               <Ionicons name="list-outline" size={20} color="#6C63FF" />
-              <Text style={styles.solutionHeaderText}>{t('tasks.stepSolution')}</Text>
+              <Text style={[styles.solutionHeaderText, { color: solColors.text }]}>{t('tasks.stepSolution')}</Text>
             </View>
-            <Ionicons name={showSteps ? "chevron-up" : "chevron-down"} size={20} color="#6B7280" />
+            <Ionicons name={showSteps ? "chevron-up" : "chevron-down"} size={20} color={solColors.textTertiary} />
           </TouchableOpacity>
           {showSteps && (
-            <View style={styles.solutionContent}>
+            <View style={[styles.solutionContent, { backgroundColor: solIsDark ? '#3B3520' : '#FEFCE8' }]}>
               {steps.slice(0, currentStep + 1).map((step, index) => (
                 <View key={step.id || index} style={styles.stepItem}>
                   <View style={styles.stepNumber}>
@@ -174,15 +174,15 @@ const SolutionSteps: React.FC<{
                   </View>
                   <View style={styles.stepContent}>
                     {step.description && (
-                      <Text style={styles.stepDescription}>{step.description}</Text>
+                      <Text style={[styles.stepDescription, { color: solColors.textTertiary }]}>{step.description}</Text>
                     )}
-                    <MathContent content={step.content} fontSize={14} />
+                    <MathContent content={step.content} textColor={solIsDark ? '#FDE68A' : '#1F2937'} fontSize={14} />
                   </View>
                 </View>
               ))}
               {currentStep < steps.length - 1 && (
                 <TouchableOpacity 
-                  style={styles.nextStepButton}
+                  style={[styles.nextStepButton, { backgroundColor: solIsDark ? '#2D2B4E' : '#EEF2FF' }]}
                   onPress={() => setCurrentStep(prev => prev + 1)}
                 >
                   <Text style={styles.nextStepText}>{t('tasks.nextStep')}</Text>
@@ -198,22 +198,22 @@ const SolutionSteps: React.FC<{
       {fullSolution && canShowFullSolution && (
         <View style={styles.solutionSection}>
           <TouchableOpacity 
-            style={styles.solutionHeader}
+            style={[styles.solutionHeader, { backgroundColor: solIsDark ? '#2D2D30' : '#F9FAFB' }]}
             onPress={() => setShowFullSolution(!showFullSolution)}
           >
             <View style={styles.solutionHeaderLeft}>
               <Ionicons name="document-text" size={20} color="#10B981" />
-              <Text style={styles.solutionHeaderText}>{t('tasks.fullSolution')}</Text>
+              <Text style={[styles.solutionHeaderText, { color: solColors.text }]}>{t('tasks.fullSolution')}</Text>
             </View>
-            <Ionicons name={showFullSolution ? "chevron-up" : "chevron-down"} size={20} color="#6B7280" />
+            <Ionicons name={showFullSolution ? "chevron-up" : "chevron-down"} size={20} color={solColors.textTertiary} />
           </TouchableOpacity>
           {showFullSolution && (
-            <View style={styles.solutionContent}>
-              <MathContent content={fullSolution} fontSize={14} />
+            <View style={[styles.solutionContent, { backgroundColor: solIsDark ? '#3B3520' : '#FEFCE8' }]}>
+              <MathContent content={fullSolution} textColor={solIsDark ? '#FDE68A' : '#1F2937'} fontSize={14} />
               {answer && (
-                <View style={styles.answerBox}>
-                  <Text style={styles.answerLabel}>{t('tasks.answer')}</Text>
-                  <MathContent content={answer} textColor="#065F46" fontSize={16} />
+                <View style={[styles.answerBox, { backgroundColor: solIsDark ? '#1A3A2A' : '#D1FAE5' }]}>
+                  <Text style={[styles.answerLabel, { color: solIsDark ? '#6EE7B7' : '#065F46' }]}>{t('tasks.answer')}</Text>
+                  <MathContent content={answer} textColor={solIsDark ? '#6EE7B7' : '#065F46'} fontSize={16} />
                 </View>
               )}
             </View>
@@ -376,7 +376,7 @@ export default function InteractiveTaskScreen() {
 
           {/* Условие задачи с LaTeX */}
           <View style={[styles.conditionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-            <MathContent content={task.condition} fontSize={17} />
+            <MathContent content={task.condition} textColor={colors.text} fontSize={17} />
           </View>
 
           {/* Дано */}
@@ -387,7 +387,7 @@ export default function InteractiveTaskScreen() {
                 {task.given.map((item, index) => (
                   <View key={index} style={styles.givenItem}>
                     <View style={styles.givenSymbol}>
-                      <MathContent content={`$${item.symbol}$`} fontSize={18} />
+                      <MathContent content={`$${item.symbol}$`} textColor={colors.text} fontSize={18} />
                     </View>
                     <Text style={[styles.givenEquals, { color: colors.textTertiary }]}>=</Text>
                     <Text style={[styles.givenValue, { color: colors.text }]}>{item.value} {item.unit}</Text>
@@ -454,7 +454,7 @@ export default function InteractiveTaskScreen() {
                           )}
                         </View>
                         <View style={styles.optionTextContainer}>
-                          <MathContent content={option} fontSize={16} />
+                          <MathContent content={option} textColor={isCorrectOption ? '#065F46' : isWrongSelected ? '#B91C1C' : colors.text} fontSize={16} />
                         </View>
                       </TouchableOpacity>
                     );

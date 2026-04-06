@@ -1,27 +1,11 @@
 /**
  * Multi-Provider AI Service
- * GitHub Models API + Groq API с автоматическим fallback
+ * Работает через бэкенд API (ключи хранятся на сервере)
  */
 
-// ============= API КЛЮЧИ =============
-// Ключи берутся из environment variables (настраиваются в Digital Ocean)
-const GITHUB_PAT = import.meta.env.VITE_GITHUB_PAT || '';
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
+import api from './api';
 
-// ============= ПРОВАЙДЕРЫ =============
-const GITHUB_API_URL = 'https://models.github.ai/inference/chat/completions';
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-
-type ProviderName = 'github' | 'groq';
-
-interface ProviderConfig {
-  name: ProviderName;
-  url: string;
-  key: string;
-  model: string;
-}
-
-// Доступные модели
+// Доступные модели (для справки, реальный выбор делает бэкенд)
 export const AI_MODELS = {
   // GitHub Models
   GPT4O: 'gpt-4o',
@@ -33,19 +17,12 @@ export const AI_MODELS = {
   MIXTRAL: 'mixtral-8x7b-32768',
 } as const;
 
-const DEFAULT_MODEL = AI_MODELS.GPT4O_MINI;
-const FALLBACK_MODEL = AI_MODELS.LLAMA_70B;
-const MAX_TOKENS = 4096;
-
-// Определяем к какому провайдеру относится модель
-const GROQ_MODELS = new Set([AI_MODELS.LLAMA_70B, AI_MODELS.LLAMA_8B, AI_MODELS.MIXTRAL]);
-
-interface ChatMessage {
+export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
-interface AIResponse {
+export interface AIResponse {
   success: boolean;
   content: string;
   error?: string;
@@ -57,7 +34,7 @@ interface AIResponse {
 }
 
 /**
- * Отправка запроса к AI с автоматическим fallback между провайдерами
+ * Отправка запроса к AI через бэкенд
  */
 export async function sendAIRequest(
   messages: ChatMessage[],
@@ -65,82 +42,36 @@ export async function sendAIRequest(
     model?: string;
     maxTokens?: number;
     temperature?: number;
-    preferProvider?: ProviderName;
   }
 ): Promise<AIResponse> {
-  const requestedModel = options?.model || DEFAULT_MODEL;
-  const maxTokens = options?.maxTokens || MAX_TOKENS;
-  const temperature = options?.temperature ?? 0.7;
+  try {
+    // Формируем сообщение из массива (берём последнее user сообщение)
+    const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    const systemMessage = messages.find(m => m.role === 'system')?.content || '';
+    
+    // Формируем полный промпт
+    const fullMessage = systemMessage 
+      ? `${systemMessage}\n\n${userMessage}`
+      : userMessage;
 
-  // Строим список провайдеров с приоритетом
-  const providers: ProviderConfig[] = [];
+    const response = await api.post('/chat', {
+      message: fullMessage,
+      max_tokens: options?.maxTokens || 4096,
+      temperature: options?.temperature ?? 0.7,
+    });
 
-  if (options?.preferProvider === 'groq') {
-    providers.push({ name: 'groq', url: GROQ_API_URL, key: GROQ_API_KEY, model: GROQ_MODELS.has(requestedModel as any) ? requestedModel : FALLBACK_MODEL });
-    providers.push({ name: 'github', url: GITHUB_API_URL, key: GITHUB_PAT, model: DEFAULT_MODEL });
-  } else {
-    providers.push({ name: 'github', url: GITHUB_API_URL, key: GITHUB_PAT, model: GROQ_MODELS.has(requestedModel as any) ? DEFAULT_MODEL : requestedModel });
-    providers.push({ name: 'groq', url: GROQ_API_URL, key: GROQ_API_KEY, model: GROQ_MODELS.has(requestedModel as any) ? requestedModel : FALLBACK_MODEL });
+    return {
+      success: true,
+      content: response.data.response || '',
+    };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.detail || error.message || 'Ошибка AI сервиса';
+    return {
+      success: false,
+      content: '',
+      error: errorMessage,
+    };
   }
-
-  let lastError = '';
-
-  for (const provider of providers) {
-    if (!provider.key) continue;
-
-    try {
-      const response = await fetch(provider.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${provider.key}`,
-        },
-        body: JSON.stringify({
-          model: provider.model,
-          messages,
-          max_tokens: maxTokens,
-          temperature,
-        }),
-      });
-
-      if (response.status === 429) {
-        lastError = `${provider.name}: лимит запросов`;
-        continue; // Пробуем следующий провайдер
-      }
-
-      if (response.status === 401) {
-        lastError = `${provider.name}: неверный API ключ`;
-        continue;
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        lastError = `${provider.name}: ${response.status} - ${errorData.message || 'error'}`;
-        continue;
-      }
-
-      const data = await response.json();
-
-      return {
-        success: true,
-        content: data.choices[0]?.message?.content || '',
-        tokens: data.usage ? {
-          prompt: data.usage.prompt_tokens,
-          completion: data.usage.completion_tokens,
-          total: data.usage.total_tokens,
-        } : undefined,
-      };
-    } catch (error: any) {
-      lastError = `${provider.name}: ${error.message}`;
-      continue;
-    }
-  }
-
-  return {
-    success: false,
-    content: '',
-    error: lastError || 'Все AI провайдеры недоступны. Попробуйте позже.',
-  };
 }
 
 /**

@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 export default function InteractiveTasksIndexScreen() {
   const router = useRouter();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const { INTERACTIVE_TASKS } = useInteractiveTasks();
@@ -128,13 +128,13 @@ export default function InteractiveTasksIndexScreen() {
         </ScrollView>
 
         {/* Информационный блок */}
-        <View style={styles.infoCard}>
-          <View style={styles.infoIconContainer}>
+        <View style={[styles.infoCard, { backgroundColor: isDark ? '#3B3520' : '#FEF3C7' }]}>
+          <View style={[styles.infoIconContainer, { backgroundColor: colors.card }]}>
             <Ionicons name="bulb" size={24} color="#F59E0B" />
           </View>
           <View style={styles.infoContent}>
-            <Text style={styles.infoTitle}>{t('tasks.howItWorks')}</Text>
-            <Text style={styles.infoText}>
+            <Text style={[styles.infoTitle, { color: isDark ? '#FDE68A' : '#92400E' }]}>{t('tasks.howItWorks')}</Text>
+            <Text style={[styles.infoText, { color: isDark ? '#FCD34D' : '#B45309' }]}>
               {t('tasks.howItWorksDesc')}
             </Text>
           </View>
@@ -177,12 +177,12 @@ export default function InteractiveTasksIndexScreen() {
                     <View style={styles.taskMeta}>
                       <View style={[
                         styles.answerTypeBadge,
-                        { backgroundColor: '#F3F4F6' }
-                      ]}>
+                      { backgroundColor: colors.inputBg || '#F3F4F6' }
+                    ]}>
                         <Ionicons 
                           name={getAnswerTypeIcon(task.answerType) as any} 
                           size={12} 
-                          color="#6B7280" 
+                          color={colors.textTertiary} 
                         />
                       </View>
                     </View>
@@ -208,8 +208,8 @@ export default function InteractiveTasksIndexScreen() {
                     </View>
                     
                     <View style={styles.stepsIndicator}>
-                      <Ionicons name="layers" size={14} color="#9CA3AF" />
-                      <Text style={styles.stepsText}>{t('tasks.stepsCount', { count: task.steps.length })}</Text>
+                      <Ionicons name="layers" size={14} color={colors.textTertiary} />
+                      <Text style={[styles.stepsText, { color: colors.textTertiary }]}>{t('tasks.stepsCount', { count: task.steps.length })}</Text>
                     </View>
                   </View>
                 </View>
