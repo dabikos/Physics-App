@@ -1,5 +1,5 @@
 /**
- * Multi-Provider AI Service
+ * OpenAI AI Service
  * Работает через бэкенд API (ключи хранятся на сервере)
  */
 
@@ -7,13 +7,7 @@ import api from './api';
 
 // Доступные модели (для справки, реальный выбор делает бэкенд)
 export const AI_MODELS = {
-  // GitHub Models
-  GPT4O: 'gpt-4o',
-  GPT4O_MINI: 'gpt-4o-mini',
-  DEEPSEEK_R1: 'deepseek-r1',
-  // Groq Models (актуальные на 2026)
-  LLAMA_70B: 'llama-3.3-70b-versatile',
-  LLAMA_8B: 'llama-3.1-8b-instant',
+  GPT5_NANO: 'gpt-5-nano',
 } as const;
 
 export interface ChatMessage {
@@ -124,7 +118,7 @@ ${briefInfo}
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
   ], {
-    model: AI_MODELS.GPT4O_MINI,
+    model: AI_MODELS.GPT5_NANO,
     maxTokens: 4096,
     temperature: 0.7,
   });
@@ -164,7 +158,7 @@ export async function sendChatMessage(
   ];
 
   return sendAIRequest(messages, {
-    model: AI_MODELS.GPT4O_MINI,
+    model: AI_MODELS.GPT5_NANO,
     maxTokens: 2048,
     temperature: 0.8,
   });
@@ -199,7 +193,7 @@ export async function generateTaskHint(
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
   ], {
-    model: AI_MODELS.GPT4O_MINI,
+    model: AI_MODELS.GPT5_NANO,
     maxTokens: 512,
     temperature: 0.6,
   });
@@ -225,15 +219,8 @@ export async function checkAPIHealth(): Promise<boolean> {
  */
 export function getAPILimits() {
   return {
-    github: {
-      'gpt-4o': { rpm: 10, rpd: 50, description: 'Самая мощная модель' },
-      'gpt-4o-mini': { rpm: 15, rpd: 150, description: 'Быстрая и лёгкая' },
-      'deepseek-r1': { rpm: 15, rpd: 150, description: 'Хороша для рассуждений' },
-    },
-    groq: {
-      'llama-3.1-70b-versatile': { rpm: 30, rpd: 14400, description: 'Мощная open source' },
-      'llama-3.1-8b-instant': { rpm: 30, rpd: 14400, description: 'Быстрая open source' },
-      'mixtral-8x7b-32768': { rpm: 30, rpd: 14400, description: 'Большой контекст' },
+    openai: {
+      'gpt-5-nano': { rpm: 30, rpd: 5000, description: 'OpenAI GPT-5 Nano' },
     },
   };
 }
@@ -326,7 +313,7 @@ export async function generateTest(
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
   ], {
-    model: AI_MODELS.GPT4O_MINI,
+    model: AI_MODELS.GPT5_NANO,
     maxTokens: 4096,
     temperature: 0.7,
   });

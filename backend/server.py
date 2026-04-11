@@ -20,6 +20,7 @@ import bcrypt
 import jwt
 import json as json_module
 import httpx
+from openai import AsyncOpenAI
 
 ROOT_DIR = Path(__file__).parent
 env_path = ROOT_DIR / '.env'
@@ -46,58 +47,34 @@ SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER if os.environ.get('SMTP_USER')
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
-# AI API Keys (GitHub Models + Groq) - берутся ТОЛЬКО из ENV переменных
-GITHUB_PAT = os.environ.get('GITHUB_PAT', '')
-GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
-
-GITHUB_API_URL = 'https://models.github.ai/inference/chat/completions'
-GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+# OpenAI API settings (берутся только из ENV переменных)
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
+OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5-nano')
+openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=60.0)
 
 async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096, temperature: float = 0.7) -> str:
-    """Multi-provider AI: GitHub Models -> Groq fallback"""
+    """OpenAI chat completion (gpt-5-nano by default)."""
+    if not OPENAI_API_KEY:
+        raise Exception("OPENAI_API_KEY is not configured")
+
     messages = []
     if system_message:
         messages.append({"role": "system", "content": system_message})
     messages.append({"role": "user", "content": prompt})
 
-    providers = [
-        {"url": GROQ_API_URL, "key": GROQ_API_KEY, "model": "llama-3.3-70b-versatile", "name": "groq"},
-        {"url": GITHUB_API_URL, "key": GITHUB_PAT, "model": "gpt-4o-mini", "name": "github"},
-    ]
-
-    last_error = None
-    async with httpx.AsyncClient(timeout=60.0) as client_http:
-        for provider in providers:
-            if not provider["key"]:
-                continue
-            try:
-                resp = await client_http.post(
-                    provider["url"],
-                    headers={
-                        "Authorization": f"Bearer {provider['key']}",
-                        "Content-Type": "application/json",
-                    },
-                    json={
-                        "model": provider["model"],
-                        "messages": messages,
-                        "max_tokens": max_tokens,
-                        "temperature": temperature,
-                    },
-                )
-                if resp.status_code == 429:
-                    last_error = f"{provider['name']} rate limit"
-                    continue
-                if resp.status_code == 401:
-                    last_error = f"{provider['name']} auth error"
-                    continue
-                resp.raise_for_status()
-                data = resp.json()
-                return data["choices"][0]["message"]["content"]
-            except Exception as e:
-                last_error = str(e)
-                continue
-
-    raise Exception(f"All AI providers failed: {last_error}")
+    try:
+        completion = await openai_client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=messages,
+            max_completion_tokens=max_tokens,
+            temperature=temperature,
+        )
+        content = completion.choices[0].message.content
+        if not content:
+            raise Exception("OpenAI returned empty content")
+        return content.strip()
+    except Exception as e:
+        raise Exception(f"OpenAI request failed: {e}") from e
 
 # Create the main app
 app = FastAPI(title="Physics AI App")
