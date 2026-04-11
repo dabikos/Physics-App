@@ -26,21 +26,21 @@ function RootLayoutNav() {
 
     const inAuthGroup = segments[0] === '(auth)';
     const isWelcomeScreen = segments[1] === 'welcome';
-    
-    // При первом запуске всегда показываем welcome экран
-    if (!initialRouteDone && !isWelcomeScreen) {
-      router.replace('/(auth)/welcome');
-      setInitialRouteDone(true);
-      return;
-    }
-    
-    // Если пользователь авторизован и находится на экране авторизации (кроме welcome)
-    if (user && inAuthGroup && !isWelcomeScreen) {
-      router.replace('/(tabs)');
-    }
 
     if (!initialRouteDone) {
       setInitialRouteDone(true);
+      // При первом запуске: авторизованные пользователи идут сразу в tabs
+      if (user) {
+        router.replace('/(tabs)');
+      } else if (!isWelcomeScreen) {
+        router.replace('/(auth)/welcome');
+      }
+      return;
+    }
+
+    // Если пользователь авторизован и находится на экране авторизации (кроме welcome)
+    if (user && inAuthGroup && !isWelcomeScreen) {
+      router.replace('/(tabs)');
     }
   }, [user, loading, segments]);
 
