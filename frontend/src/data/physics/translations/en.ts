@@ -54,6 +54,48 @@ export const translations: PhysicsTranslations = {
             resonance: "Resonance",
           },
         },
+        gravitation: {
+          name: "Gravitation",
+          topics: {
+            "universal-gravitation": "Law of Universal Gravitation",
+            "gravitational-field": "Gravitational Field and Strength",
+            "weight-weightlessness": "Weight and Weightlessness",
+            "satellites-orbits": "Artificial Satellites and Orbits",
+            "kepler-laws": "Kepler's Laws",
+            "cosmic-velocities": "First, Second, and Third Cosmic Velocities",
+            "gravitational-energy": "Gravitational Potential Energy",
+          },
+        },
+        "fluid-mechanics": {
+          name: "Hydrostatics and Hydrodynamics",
+          topics: {
+            "liquid-pressure": "Pressure in Liquids",
+            "pascal-law": "Pascal's Law",
+            "archimedes-principle": "Archimedes' Principle",
+            "floating-bodies": "Flotation and Submersion",
+            "atmospheric-pressure": "Atmospheric Pressure",
+            "barometer-manometer": "Barometer and Manometer",
+            "hydraulic-machines": "Hydraulic Machines",
+            "continuity-equation": "Continuity Equation",
+            "bernoulli-equation": "Bernoulli's Equation",
+            "fluid-viscosity": "Fluid Viscosity",
+            "stokes-law": "Stokes' Law (Drag Force)",
+          },
+        },
+        acoustics: {
+          name: "Acoustics",
+          topics: {
+            "sound-waves": "Sound Waves",
+            "sound-speed-media": "Speed of Sound in Media",
+            "loudness-intensity": "Loudness and Intensity",
+            "decibel-scale": "Decibel Scale",
+            "doppler-sound": "Doppler Effect for Sound",
+            "acoustic-resonance": "Resonance in Acoustics",
+            "ultrasound-infrasound": "Ultrasound and Infrasound",
+            "timbre-instruments": "Timbre and Musical Instruments",
+            "sound-reflection-absorption": "Reflection and Absorption of Sound",
+          },
+        },
       },
     },
     thermodynamics: {
@@ -226,6 +268,75 @@ export const translations: PhysicsTranslations = {
             fission: "Nuclear Fission",
             fusion: "Thermonuclear Fusion",
             "nuclear-energy-use": "Applications of Nuclear Energy",
+          },
+        },
+      },
+    },
+    relativity: {
+      name: "Special Relativity",
+      subsections: {
+        "special-relativity": {
+          name: "Special Relativity (STR)",
+          topics: {
+            "einstein-postulates": "Einstein's Postulates",
+            "lorentz-transformations": "Lorentz Transformations",
+            "time-dilation": "Time Dilation",
+            "length-contraction": "Length Contraction",
+            "invariant-interval": "Invariant Spacetime Interval",
+            "mass-energy-emc2": "Mass–Energy Relation E = mc²",
+            "relativistic-momentum": "Relativistic Momentum",
+            "relativistic-energy": "Relativistic Energy",
+            "lightspeed-limit": "Why the Speed of Light Cannot Be Reached",
+          },
+        },
+      },
+    },
+    astronomy: {
+      name: "Astronomy",
+      subsections: {
+        "celestial-mechanics": {
+          name: "Celestial Mechanics",
+          topics: {
+            "solar-system-structure": "The Solar System",
+            "orbits-satellites": "Planetary and Satellite Orbits",
+            tides: "Tides",
+            eclipses: "Solar and Lunar Eclipses",
+          },
+        },
+        "sun-stars": {
+          name: "The Sun and Stars",
+          topics: {
+            "sun-structure-activity": "The Sun: Structure and Activity",
+            "stellar-spectra-hr": "Stellar Spectra and Hertzsprung–Russell Diagram",
+            "stellar-evolution-types": "Stellar Evolution and Types",
+            "compact-stars": "Neutron Stars, Pulsars, and Black Holes",
+          },
+        },
+        "galaxies-cosmology": {
+          name: "Galaxies and Cosmology",
+          topics: {
+            "milky-way-galaxies": "The Milky Way and Galaxy Types",
+            "hubble-expansion": "Expanding Universe and Hubble's Law",
+            "big-bang-cmb": "Big Bang and Cosmic Microwave Background",
+            "dark-cosmos-gr": "Dark Matter, Dark Energy, and General Relativity (brief)",
+          },
+        },
+        "observational-astronomy": {
+          name: "Observational Astronomy",
+          topics: {
+            "telescopes-types": "Telescopes and Instruments",
+            "angular-resolution": "Magnification and Angular Resolution",
+            "spectroscopy-photometry": "Spectroscopy and Photometry",
+            "distance-ladder-radio": "Cosmic Distances and Radio Astronomy",
+          },
+        },
+        "solar-system-bodies": {
+          name: "Planets, Small Bodies, and Life",
+          topics: {
+            "terrestrial-gas-planets": "Terrestrial and Gas Giant Planets",
+            "moon-satellites": "The Moon and Major Moons",
+            "small-bodies-exoplanets": "Asteroids, Comets, and Exoplanets",
+            "life-search": "Habitable Zone and the Search for Life",
           },
         },
       },
@@ -663,6 +774,286 @@ export const translations: PhysicsTranslations = {
       title: "Applications of Nuclear Energy",
       brief_info: "Nuclear power plants use controlled chain reactions. Advantages: large energy from small fuel amounts. Challenges: radioactive waste, safety concerns.",
       example_problem: "Section under development",
+    },
+    "universal-gravitation": {
+      title: "Law of Universal Gravitation",
+      brief_info: "Any two bodies attract with F = G·m₁·m₂/r², G ≈ 6.67×10⁻¹¹ N·m²/kg². The force lies along the line joining their centers.",
+      example_problem: "Two 100 kg spheres touch (center distance r = 0.2 m). Estimate the gravitational force.\n\nF = Gm²/r² ≈ 1.7×10⁻⁵ N — tiny for everyday masses.",
+    },
+    "gravitational-field": {
+      title: "Gravitational Field and Field Strength",
+      brief_info: "The field is described by strength γ = F/m. For a point mass M: γ = GM/r², directed toward the source.",
+      example_problem: "Near Earth's surface, γ ≈ GM/R² ≈ 9.8 m/s² — the same as g.",
+    },
+    "weight-weightlessness": {
+      title: "Weight and Weightlessness",
+      brief_info: "Weight is the force on a support or suspension. In an upward-accelerating elevator, weight exceeds mg; in free fall or orbit, apparent weight can be zero (weightlessness).",
+      example_problem: "Elevator accelerates upward at 2 m/s². Weight of a 70 kg person? P = m(g+a) = 840 N.",
+    },
+    "satellites-orbits": {
+      title: "Artificial Satellites and Orbits",
+      brief_info: "For a circular orbit, gravity provides centripetal force: v = √(GM/r), period T = 2πr/v.",
+      example_problem: "Higher orbit means lower speed and longer period (Kepler).",
+    },
+    "kepler-laws": {
+      title: "Kepler's Laws",
+      brief_info: "1) Orbits are ellipses with the Sun at a focus. 2) Equal areas in equal times. 3) T²/a³ is the same for all planets.",
+      example_problem: "If Mars's period is 1.88 Earth years, its semimajor axis is about 1.52 AU.",
+    },
+    "cosmic-velocities": {
+      title: "First, Second, and Third Cosmic Velocities",
+      brief_info: "I: circular orbit near Earth ≈ 7.9 km/s. II: escape from Earth ≈ 11.2 km/s. III: escape from the Solar System from Earth ≈ 16.7 km/s.",
+      example_problem: "v₂/v₁ = √2 because escape requires zero total mechanical energy vs negative for a bound circular orbit.",
+    },
+    "gravitational-energy": {
+      title: "Gravitational Potential Energy",
+      brief_info: "For two point masses, E_p = -Gm₁m₂/r (zero at infinity). Gravitational work is path-independent.",
+      example_problem: "Raising a satellite from R to 2R increases (makes less negative) potential energy by GMm/(2R).",
+    },
+    "liquid-pressure": {
+      title: "Pressure in Liquids",
+      brief_info: "Hydrostatic pressure p = p₀ + ρgh increases with depth; at rest, pressure is the same on the same horizontal level.",
+      example_problem: "Extra pressure 2×10⁵ Pa in water (ρ = 1000 kg/m³): depth h = p/(ρg) = 20 m.",
+    },
+    "pascal-law": {
+      title: "Pascal's Law",
+      brief_info: "Pressure applied to a confined fluid is transmitted undiminished — basis of hydraulic presses and brakes.",
+      example_problem: "Same pressure on small and large pistons: F₂ = p·S₂ can be much larger than F₁.",
+    },
+    "archimedes-principle": {
+      title: "Archimedes' Principle",
+      brief_info: "Buoyant force equals the weight of displaced fluid: F_A = ρ_fluid·g·V_submerged.",
+      example_problem: "Fully submerged 0.5 dm³ block in water: F_A ≈ 5 N.",
+    },
+    "floating-bodies": {
+      title: "Flotation and Submersion",
+      brief_info: "A body floats if average density is less than the fluid or if buoyancy balances weight. Fraction submerged: V_sub/V = ρ_body/ρ_fluid.",
+      example_problem: "Wood with ρ = 600 kg/m³ floating on water: 60% submerged, 40% above the surface.",
+    },
+    "atmospheric-pressure": {
+      title: "Atmospheric Pressure",
+      brief_info: "Air column at sea level gives p_atm ≈ 10⁵ Pa ≈ 760 mm Hg; pressure drops with altitude.",
+      example_problem: "Force on 150 cm² palm at 10⁵ Pa: F = pS ≈ 1500 N.",
+    },
+    "barometer-manometer": {
+      title: "Barometer and Manometer",
+      brief_info: "Mercury barometer height h = p/(ρg). Manometers measure gauge pressure relative to atmosphere.",
+      example_problem: "Water barometer for 10⁵ Pa needs h ≈ 10 m — impractical; mercury is used instead.",
+    },
+    "hydraulic-machines": {
+      title: "Hydraulic Machines",
+      brief_info: "Hydraulic presses multiply force via Pascal's law; energy is conserved when piston displacements are accounted for.",
+      example_problem: "Efficiency links input work to useful output work on the load.",
+    },
+    "continuity-equation": {
+      title: "Continuity Equation",
+      brief_info: "Steady flow: S₁v₁ = S₂v₂ — narrower cross section means higher speed.",
+      example_problem: "Area drops by 4× → speed increases 4×.",
+    },
+    "bernoulli-equation": {
+      title: "Bernoulli's Equation",
+      brief_info: "Along a streamline for an ideal fluid: p + ρv²/2 + ρgh = const. Faster flow tends to mean lower pressure.",
+      example_problem: "Used qualitatively for lift, atomizers, and Venturi meters.",
+    },
+    "fluid-viscosity": {
+      title: "Fluid Viscosity",
+      brief_info: "Viscosity η describes internal friction between fluid layers; important for pipe flow and Stokes drag.",
+      example_problem: "Honey flows more slowly than water mainly because η is much larger.",
+    },
+    "stokes-law": {
+      title: "Stokes' Law (Drag Force)",
+      brief_info: "For a small sphere in laminar flow: F = 6πηRv — sets terminal speed for microscopic drops and sedimentation.",
+      example_problem: "Terminal velocity balances weight, buoyancy, and viscous drag.",
+    },
+    "sound-waves": {
+      title: "Sound Waves",
+      brief_info: "Longitudinal mechanical waves; need a medium. v = λν relates speed, wavelength, and frequency.",
+      example_problem: "440 Hz in air at 340 m/s: λ ≈ 0.77 m.",
+    },
+    "sound-speed-media": {
+      title: "Speed of Sound in Different Media",
+      brief_info: "Generally fastest in solids, then liquids, then gases; in air near 20°C v ≈ 343 m/s, in water ~1500 m/s.",
+      example_problem: "Sound arrives faster underwater than through air over the same path length.",
+    },
+    "loudness-intensity": {
+      title: "Loudness and Intensity",
+      brief_info: "Intensity I is power per area (W/m²). Perceived loudness grows roughly logarithmically with I; point sources give I ∝ 1/r².",
+      example_problem: "Doubling distance from a point source reduces I by a factor of four.",
+    },
+    "decibel-scale": {
+      title: "Decibel Scale",
+      brief_info: "Sound level L = 10·log₁₀(I/I₀) dB with I₀ = 10⁻¹² W/m². Each +10 dB corresponds to a 10× intensity increase.",
+      example_problem: "I increases 100× → level rises by 20 dB.",
+    },
+    "doppler-sound": {
+      title: "Doppler Effect for Sound",
+      brief_info: "Motion of source or observer shifts observed frequency — higher when approaching, lower when receding.",
+      example_problem: "Ambulance siren pitch drops as it passes you.",
+    },
+    "acoustic-resonance": {
+      title: "Resonance in Acoustics",
+      brief_info: "Air columns and strings have natural frequencies; driving at those frequencies produces large amplitude (organ pipes, guitars).",
+      example_problem: "Open pipe length selects harmonics of standing sound waves.",
+    },
+    "ultrasound-infrasound": {
+      title: "Ultrasound and Infrasound",
+      brief_info: "Ultrasound (>20 kHz): imaging, sonar. Infrasound (<20 Hz): earthquakes, explosions; felt more than heard.",
+      example_problem: "1 MHz ultrasound has period 1 μs.",
+    },
+    "timbre-instruments": {
+      title: "Timbre and Musical Instruments",
+      brief_info: "Timbre comes from the mix of harmonics and temporal envelope — same note, different instruments.",
+      example_problem: "Spectrum distinguishes violin from flute at the same fundamental frequency.",
+    },
+    "sound-reflection-absorption": {
+      title: "Reflection and Absorption of Sound",
+      brief_info: "Hard walls reflect; porous materials absorb. Reverberation is multiple reflections decaying over time.",
+      example_problem: "Concert halls are designed to balance clarity and reverberation time.",
+    },
+    "einstein-postulates": {
+      title: "Einstein's Postulates",
+      brief_info: "(1) Physics laws are the same in all inertial frames. (2) c in vacuum is the same for all observers, regardless of source motion.",
+      example_problem: "These require Lorentz transformations instead of Galilean velocity addition at high speeds.",
+    },
+    "lorentz-transformations": {
+      title: "Lorentz Transformations",
+      brief_info: "Relate coordinates and time between inertial frames moving at relative speed v; γ = 1/√(1−v²/c²).",
+      example_problem: "For γ = 2, v ≈ 0.866c.",
+    },
+    "time-dilation": {
+      title: "Time Dilation",
+      brief_info: "Moving clocks tick slower from the lab frame: Δt = γ·Δt₀ for proper time Δt₀.",
+      example_problem: "Fast muons reach the ground because their lifetime is dilated in Earth's frame.",
+    },
+    "length-contraction": {
+      title: "Length Contraction",
+      brief_info: "Lengths along motion shrink in the lab frame: L = L₀/γ; transverse sizes unchanged.",
+      example_problem: "γ = 2 halves the measured length of a rod moving along itself.",
+    },
+    "invariant-interval": {
+      title: "Invariant Spacetime Interval",
+      brief_info: "s² = (cΔt)² − Δr² is the same in all inertial frames; light rays have s = 0.",
+      example_problem: "Interval invariance underpins causality and light cones.",
+    },
+    "mass-energy-emc2": {
+      title: "Mass–Energy Relation E = mc²",
+      brief_info: "Rest energy E₀ = mc²; mass and energy are equivalent; nuclear reactions convert small mass defects to large energy.",
+      example_problem: "9×10¹³ J corresponds to about 1 g mass difference via ΔE = Δm·c².",
+    },
+    "relativistic-momentum": {
+      title: "Relativistic Momentum",
+      brief_info: "p = γmv replaces mv; momentum grows without bound as v → c, consistent with limited v.",
+      example_problem: "At v = 0.6c, p/(mv) = γ = 1.25.",
+    },
+    "relativistic-energy": {
+      title: "Relativistic Energy",
+      brief_info: "Total energy E = γmc²; kinetic K = (γ−1)mc²; invariant relation E² = (pc)² + (mc²)².",
+      example_problem: "When γ = 2, kinetic energy equals rest energy.",
+    },
+    "lightspeed-limit": {
+      title: "Why the Speed of Light Cannot Be Reached",
+      brief_info: "Accelerating a massive particle toward c requires unbounded energy as γ → ∞; massless quanta move exactly at c.",
+      example_problem: "No finite work can push m₀ > 0 to exactly c.",
+    },
+    "solar-system-structure": {
+      title: "The Solar System",
+      brief_info: "Sun, eight planets, dwarf planets, asteroids, comets, rings; inner rocky planets vs outer gas and ice giants.",
+      example_problem: "Composition gradient reflects temperature during planet formation.",
+    },
+    "orbits-satellites": {
+      title: "Planetary and Satellite Orbits",
+      brief_info: "Nearly Keplerian ellipses; moons obey the same gravity. Geostationary orbit: 24 h period above the equator.",
+      example_problem: "The Moon shows one face due to tidal locking.",
+    },
+    tides: {
+      title: "Tides",
+      brief_info: "Differential gravity from Moon and Sun deforms oceans; spring tides at new and full Moon.",
+      example_problem: "Sun and Moon aligned → stronger tidal bulge.",
+    },
+    eclipses: {
+      title: "Solar and Lunar Eclipses",
+      brief_info: "Solar: Moon blocks the Sun (new Moon). Lunar: Earth blocks sunlight reaching the Moon (full Moon).",
+      example_problem: "Not every new Moon eclipses the Sun because the Moon's orbit is inclined to the ecliptic.",
+    },
+    "sun-structure-activity": {
+      title: "The Sun: Structure and Activity",
+      brief_info: "Core fusion, radiative and convective zones, photosphere, chromosphere, corona; sunspots and flares are magnetic activity.",
+      example_problem: "Solar energy comes from hydrogen fusion in the core.",
+    },
+    "stellar-spectra-hr": {
+      title: "Stellar Spectra and HR Diagram",
+      brief_info: "Spectral type reveals surface temperature; HR diagram plots luminosity vs temperature — main sequence, giants, white dwarfs.",
+      example_problem: "Red giants lie above/right of the main sequence.",
+    },
+    "stellar-evolution-types": {
+      title: "Stellar Evolution and Types",
+      brief_info: "From cloud collapse to main sequence, then red giant, planetary nebula and white dwarf for Sun-like stars; massive stars may explode as supernovae.",
+      example_problem: "The Sun's end state: white dwarf + expelled shell.",
+    },
+    "compact-stars": {
+      title: "Neutron Stars, Pulsars, and Black Holes",
+      brief_info: "Core collapse can yield neutron stars (beamed emission → pulsars) or black holes beyond the Schwarzschild limit.",
+      example_problem: "Pulsar pulses are like a lighthouse beam from a spinning neutron star.",
+    },
+    "milky-way-galaxies": {
+      title: "The Milky Way and Galaxy Types",
+      brief_info: "Our barred spiral with disk and halo; types include spirals, ellipticals, irregulars; central supermassive black hole.",
+      example_problem: "Order-of-magnitude ~10¹¹ stars in the Milky Way.",
+    },
+    "hubble-expansion": {
+      title: "Expanding Universe and Hubble's Law",
+      brief_info: "Galaxies recede on average: v ≈ H₀·d; redshift measures recession for distant objects.",
+      example_problem: "H₀ ≈ 70 km/s/Mpc gives distance from recession velocity.",
+    },
+    "big-bang-cmb": {
+      title: "Big Bang and Cosmic Microwave Background",
+      brief_info: "Hot early universe cooled; CMB at ~2.7 K is relic radiation with tiny anisotropies.",
+      example_problem: "CMB supports a hot, dense early state and subsequent expansion.",
+    },
+    "dark-cosmos-gr": {
+      title: "Dark Matter, Dark Energy, and GR (brief)",
+      brief_info: "Dark matter explains flat rotation curves and lensing; dark energy drives accelerated expansion. GR describes gravity as spacetime curvature.",
+      example_problem: "Dark energy acts like negative pressure; dark matter clusters like matter.",
+    },
+    "telescopes-types": {
+      title: "Telescopes and Instruments",
+      brief_info: "Refractors, reflectors, radio dishes, space telescopes above seeing-limited atmosphere.",
+      example_problem: "Large mirrors are easier than huge lenses for astronomy.",
+    },
+    "angular-resolution": {
+      title: "Magnification and Angular Resolution",
+      brief_info: "Diffraction limit θ ~ λ/D; bigger aperture or shorter wavelength improves detail; interferometry increases effective baseline.",
+      example_problem: "Large telescopes resolve smaller angles on the sky.",
+    },
+    "spectroscopy-photometry": {
+      title: "Spectroscopy and Photometry",
+      brief_info: "Spectra yield composition, temperature, radial velocity; photometry measures flux through filters.",
+      example_problem: "Redshifted galaxy lines indicate recession.",
+    },
+    "distance-ladder-radio": {
+      title: "Cosmic Distances and Radio Astronomy",
+      brief_info: "Parallax, standard candles, then Hubble's law for cosmological distances; radio maps quasars and cold gas.",
+      example_problem: "Very distant galaxies use Hubble relation when individual candles are unavailable.",
+    },
+    "terrestrial-gas-planets": {
+      title: "Terrestrial and Gas Giant Planets",
+      brief_info: "Mercury to Mars: rocky surfaces. Jupiter and Saturn: mostly H/He. Uranus and Neptune: ice giants.",
+      example_problem: "Jupiter has no solid surface like Earth's — layered fluid interior.",
+    },
+    "moon-satellites": {
+      title: "The Moon and Major Moons",
+      brief_info: "Phases from Sun–Earth–Moon geometry; tidal locking. Giant-planet moons (Titan, Europa) are astrobiology targets.",
+      example_problem: "We see one lunar face because rotation period equals orbital period.",
+    },
+    "small-bodies-exoplanets": {
+      title: "Asteroids, Comets, and Exoplanets",
+      brief_info: "Asteroid belt, Kuiper belt, Oort cloud; cometary tails near the Sun; exoplanets via transits and radial velocity.",
+      example_problem: "Transits dim a star periodically when a planet crosses its disk.",
+    },
+    "life-search": {
+      title: "Habitable Zone and the Search for Life",
+      brief_info: "Liquid-water distance from a star; SETI for technosignatures; missions seek organics and subsurface oceans.",
+      example_problem: "Habitable zone width depends on stellar luminosity.",
     },
   },
 

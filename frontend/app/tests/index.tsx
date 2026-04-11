@@ -50,6 +50,8 @@ export default function TestsScreen() {
       flash: 'flash',
       eye: 'eye',
       planet: 'planet',
+      infinite: 'infinite',
+      moon: 'moon',
     };
     return iconMap[icon] || 'checkbox';
   };

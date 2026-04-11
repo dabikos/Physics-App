@@ -1,5 +1,7 @@
 // Локальные данные физики - работает офлайн
 
+import { PHYSICS_NEW_TOPICS_CONTENT } from './physicsNewTopicsContent';
+
 export interface Topic {
   id: string;
   name: string;
@@ -74,6 +76,51 @@ export const PHYSICS_SECTIONS: Record<string, Section> = {
           { id: "pendulums", name: "Маятники" },
           { id: "mechanical-waves", name: "Механические волны" },
           { id: "resonance", name: "Резонанс" }
+        ]
+      },
+      {
+        id: "gravitation",
+        name: "Гравитация",
+        topics: [
+          { id: "universal-gravitation", name: "Закон всемирного тяготения" },
+          { id: "gravitational-field", name: "Гравитационное поле и напряжённость" },
+          { id: "weight-weightlessness", name: "Вес и невесомость" },
+          { id: "satellites-orbits", name: "Искусственные спутники и орбиты" },
+          { id: "kepler-laws", name: "Законы Кеплера" },
+          { id: "cosmic-velocities", name: "Первая, вторая и третья космические скорости" },
+          { id: "gravitational-energy", name: "Гравитационная потенциальная энергия" }
+        ]
+      },
+      {
+        id: "fluid-mechanics",
+        name: "Гидростатика и гидродинамика",
+        topics: [
+          { id: "liquid-pressure", name: "Давление в жидкостях" },
+          { id: "pascal-law", name: "Закон Паскаля" },
+          { id: "archimedes-principle", name: "Закон Архимеда" },
+          { id: "floating-bodies", name: "Плавание и погружение тел" },
+          { id: "atmospheric-pressure", name: "Атмосферное давление" },
+          { id: "barometer-manometer", name: "Барометр и манометр" },
+          { id: "hydraulic-machines", name: "Гидравлические машины" },
+          { id: "continuity-equation", name: "Уравнение неразрывности" },
+          { id: "bernoulli-equation", name: "Уравнение Бернулли" },
+          { id: "fluid-viscosity", name: "Вязкость жидкостей" },
+          { id: "stokes-law", name: "Закон Стокса (сила сопротивления)" }
+        ]
+      },
+      {
+        id: "acoustics",
+        name: "Акустика",
+        topics: [
+          { id: "sound-waves", name: "Звуковые волны" },
+          { id: "sound-speed-media", name: "Скорость звука в разных средах" },
+          { id: "loudness-intensity", name: "Громкость и интенсивность звука" },
+          { id: "decibel-scale", name: "Децибелы (шкала громкости)" },
+          { id: "doppler-sound", name: "Эффект Доплера для звука" },
+          { id: "acoustic-resonance", name: "Резонанс в акустике" },
+          { id: "ultrasound-infrasound", name: "Ультразвук и инфразвук" },
+          { id: "timbre-instruments", name: "Тембр и музыкальные инструменты" },
+          { id: "sound-reflection-absorption", name: "Отражение и поглощение звука" }
         ]
       }
     ]
@@ -274,6 +321,85 @@ export const PHYSICS_SECTIONS: Record<string, Section> = {
           { id: "fission", name: "Деление ядер" },
           { id: "fusion", name: "Термоядерный синтез" },
           { id: "nuclear-energy-use", name: "Применение ядерной энергии" }
+        ]
+      }
+    ]
+  },
+  relativity: {
+    name: "Специальная теория относительности",
+    icon: "infinite",
+    color: "#E67E22",
+    subsections: [
+      {
+        id: "special-relativity",
+        name: "СТО",
+        topics: [
+          { id: "einstein-postulates", name: "Постулаты Эйнштейна" },
+          { id: "lorentz-transformations", name: "Преобразования Лоренца" },
+          { id: "time-dilation", name: "Замедление времени" },
+          { id: "length-contraction", name: "Сокращение длины" },
+          { id: "invariant-interval", name: "Инвариантность интервала" },
+          { id: "mass-energy-emc2", name: "Связь массы и энергии E = mc²" },
+          { id: "relativistic-momentum", name: "Релятивистский импульс" },
+          { id: "relativistic-energy", name: "Релятивистская энергия" },
+          { id: "lightspeed-limit", name: "Недостижимость скорости света" }
+        ]
+      }
+    ]
+  },
+  astronomy: {
+    name: "Астрономия",
+    icon: "moon",
+    color: "#34495E",
+    subsections: [
+      {
+        id: "celestial-mechanics",
+        name: "Небесная механика",
+        topics: [
+          { id: "solar-system-structure", name: "Солнечная система" },
+          { id: "orbits-satellites", name: "Орбиты планет и спутников" },
+          { id: "tides", name: "Приливы и отливы" },
+          { id: "eclipses", name: "Затмения Солнца и Луны" }
+        ]
+      },
+      {
+        id: "sun-stars",
+        name: "Солнце и звёзды",
+        topics: [
+          { id: "sun-structure-activity", name: "Солнце: строение и активность" },
+          { id: "stellar-spectra-hr", name: "Спектры звёзд и диаграмма Герцшпрунга–Рассела" },
+          { id: "stellar-evolution-types", name: "Эволюция и типы звёзд" },
+          { id: "compact-stars", name: "Нейтронные звёзды, пульсары и чёрные дыры" }
+        ]
+      },
+      {
+        id: "galaxies-cosmology",
+        name: "Галактики и космология",
+        topics: [
+          { id: "milky-way-galaxies", name: "Млечный Путь и типы галактик" },
+          { id: "hubble-expansion", name: "Расширение Вселенной и закон Хаббла" },
+          { id: "big-bang-cmb", name: "Большой взрыв и реликтовое излучение" },
+          { id: "dark-cosmos-gr", name: "Тёмная материя, тёмная энергия и ОТО (кратко)" }
+        ]
+      },
+      {
+        id: "observational-astronomy",
+        name: "Наблюдательная астрономия",
+        topics: [
+          { id: "telescopes-types", name: "Телескопы и приборы" },
+          { id: "angular-resolution", name: "Увеличение и разрешающая способность" },
+          { id: "spectroscopy-photometry", name: "Спектроскопия и фотометрия" },
+          { id: "distance-ladder-radio", name: "Расстояния до объектов и радиоастрономия" }
+        ]
+      },
+      {
+        id: "solar-system-bodies",
+        name: "Планеты, малые тела и жизнь",
+        topics: [
+          { id: "terrestrial-gas-planets", name: "Планеты земной группы и газовые гиганты" },
+          { id: "moon-satellites", name: "Луна и крупные спутники" },
+          { id: "small-bodies-exoplanets", name: "Астероиды, кометы, экзопланеты" },
+          { id: "life-search", name: "Обитаемая зона и поиск жизни" }
         ]
       }
     ]
@@ -1112,7 +1238,8 @@ export const TOPICS_CONTENT: Record<string, TopicContent> = {
     brief_info: "АЭС используют управляемую цепную реакцию. Преимущества: много энергии из малого количества топлива. Проблемы: радиоактивные отходы, безопасность.",
     example_problem: "1 г урана-235 выделяет ≈ 82 ГДж энергии. Сколько каменного угля нужно сжечь для получения такой же энергии? (Теплота сгорания угля ≈ 30 МДж/кг)\n\nРешение:\nm_угля = E/q = 82×10⁹ / 30×10⁶ ≈ 2730 кг ≈ 2,7 тонны\n\nОтвет: ≈ 2,7 тонны угля эквивалентны 1 г урана!",
     formulas: ["E = Δm·c²"]
-  }
+  },
+  ...PHYSICS_NEW_TOPICS_CONTENT
 };
 
 // Данные формул для справочника
