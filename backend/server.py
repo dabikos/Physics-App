@@ -67,7 +67,6 @@ async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096,
             model=OPENAI_MODEL,
             messages=messages,
             max_completion_tokens=max_tokens,
-            temperature=temperature,
         )
         content = completion.choices[0].message.content
         if not content:
