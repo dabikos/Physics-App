@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query, Request
+﻿from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
@@ -24,7 +24,7 @@ from openai import AsyncOpenAI
 
 ROOT_DIR = Path(__file__).parent
 env_path = ROOT_DIR / '.env'
-load_dotenv(env_path, override=True)
+load_dotenv(env_path, override=False)
 
 # MongoDB connection
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
