@@ -6,6 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional, Dict, Any, Literal
@@ -36,12 +37,26 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'physics-ai-secret-key-2025')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 10000
 
-# SMTP Configuration for email sending
+# Email Configuration
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+EMAIL_PROVIDER = os.environ.get('EMAIL_PROVIDER', 'auto').strip().lower()
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '').strip()
+RESEND_API_URL = os.environ.get('RESEND_API_URL', 'https://api.resend.com/emails').strip()
+
+# SMTP Configuration (fallback or primary if EMAIL_PROVIDER=smtp)
 SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
 SMTP_USER = os.environ.get('SMTP_USER', '')  # your-email@gmail.com
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')  # App Password from Google
 SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER if os.environ.get('SMTP_USER') else 'noreply@physicsai.app')
+SMTP_USE_TLS = env_bool('SMTP_USE_TLS', True)
+SMTP_USE_SSL = env_bool('SMTP_USE_SSL', False)
+SMTP_TIMEOUT = float(os.environ.get('SMTP_TIMEOUT', '20'))
 
 # Google OAuth (from Google Cloud Console)
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
@@ -89,6 +104,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+logger.info(
+    "Email service initialized: provider=%s resend_api=%s smtp_host=%s smtp_port=%s smtp_from=%s",
+    EMAIL_PROVIDER,
+    bool(RESEND_API_KEY),
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_FROM,
+)
 
 # ==================== Models ====================
 
@@ -272,9 +295,56 @@ def generate_verification_code() -> str:
     return str(random.randint(100000, 999999))
 
 async def send_email(to_email: str, subject: str, html_body: str) -> bool:
-    """Send an email via SMTP. Returns True on success."""
+    """Send an email via Resend API or SMTP. Returns True on success."""
+    provider = EMAIL_PROVIDER if EMAIL_PROVIDER in {"auto", "resend_api", "smtp"} else "auto"
+
+    if provider in {"auto", "resend_api"} and RESEND_API_KEY:
+        if await send_email_via_resend_api(to_email, subject, html_body):
+            return True
+        if provider == "resend_api":
+            return False
+
+    if provider in {"auto", "smtp"}:
+        return await asyncio.to_thread(send_email_via_smtp_sync, to_email, subject, html_body)
+
+    logger.warning("Email provider misconfigured: EMAIL_PROVIDER=%s", EMAIL_PROVIDER)
+    return False
+
+async def send_email_via_resend_api(to_email: str, subject: str, html_body: str) -> bool:
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY is empty — Resend API send skipped")
+        return False
+
+    payload = {
+        "from": SMTP_FROM,
+        "to": [to_email],
+        "subject": subject,
+        "html": html_body,
+    }
+    headers = {
+        "Authorization": f"Bearer {RESEND_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as http:
+            response = await http.post(RESEND_API_URL, headers=headers, json=payload)
+        if response.status_code in {200, 201, 202}:
+            return True
+        logger.error(
+            "Resend API error for %s: status=%s body=%s",
+            to_email,
+            response.status_code,
+            response.text[:500],
+        )
+        return False
+    except Exception as e:
+        logger.error("Resend API send failed for %s: %s", to_email, e)
+        return False
+
+def send_email_via_smtp_sync(to_email: str, subject: str, html_body: str) -> bool:
     if not SMTP_USER or not SMTP_PASSWORD:
-        logger.warning("SMTP not configured — email not sent")
+        logger.warning("SMTP credentials not configured — SMTP send skipped")
         return False
     try:
         msg = MIMEMultipart("alternative")
@@ -283,13 +353,17 @@ async def send_email(to_email: str, subject: str, html_body: str) -> bool:
         msg["To"] = to_email
         msg.attach(MIMEText(html_body, "html", "utf-8"))
 
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
+        smtp_cls = smtplib.SMTP_SSL if SMTP_USE_SSL else smtplib.SMTP
+        with smtp_cls(SMTP_HOST, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
+            server.ehlo()
+            if SMTP_USE_TLS and not SMTP_USE_SSL:
+                server.starttls()
+                server.ehlo()
             server.login(SMTP_USER, SMTP_PASSWORD)
-            server.sendmail(SMTP_FROM, to_email, msg.as_string())
+            server.sendmail(SMTP_FROM, [to_email], msg.as_string())
         return True
     except Exception as e:
-        logger.error(f"Failed to send email to {to_email}: {e}")
+        logger.error("SMTP send failed for %s via %s:%s: %s", to_email, SMTP_HOST, SMTP_PORT, e)
         return False
 
 async def send_verification_email(to_email: str, code: str) -> bool:
@@ -1199,7 +1273,7 @@ async def register(user_data: UserCreate):
         "status": "verification_required",
         "email": user_data.email,
         "email_sent": email_sent,
-        "message": "Код подтверждения отправлен на email" if email_sent else "SMTP не настроен — код: " + verification_code,
+        "message": "Код подтверждения отправлен на email" if email_sent else "Email сервис не настроен или письмо не отправлено — код: " + verification_code,
     }
 
 
@@ -1269,7 +1343,7 @@ async def resend_verification_code(request: ResendCodeRequest):
     return {
         "success": True,
         "email_sent": email_sent,
-        "message": "Новый код отправлен" if email_sent else "SMTP не настроен — код: " + new_code,
+        "message": "Новый код отправлен" if email_sent else "Email сервис не настроен или письмо не отправлено — код: " + new_code,
     }
 
 
@@ -1505,7 +1579,7 @@ async def request_password_reset(request: ResetPasswordRequest):
     return {
         "success": True,
         "email_sent": email_sent,
-        "message": "Код сброса пароля отправлен на email" if email_sent else "SMTP не настроен — код: " + reset_code,
+        "message": "Код сброса пароля отправлен на email" if email_sent else "Email сервис не настроен или письмо не отправлено — код: " + reset_code,
     }
 
 
