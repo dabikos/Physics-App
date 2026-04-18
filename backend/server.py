@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import ReturnDocument
 import os
 import logging
 import asyncio
@@ -66,6 +67,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
 OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5-nano')
 openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=60.0)
+FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '3'))
 
 async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096, temperature: float = 0.7) -> str:
     """OpenAI chat completion (gpt-5-nano by default)."""
@@ -213,6 +215,10 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = None
+
+class ChatRewardClaimRequest(BaseModel):
+    ad_unit: Optional[str] = None
+    platform: Optional[str] = "android"
 
 class ProgressUpdate(BaseModel):
     section: str
@@ -2115,9 +2121,102 @@ async def get_formula(formula_id: str):
 
 # ==================== AI Chat Routes ====================
 
+def _utc_day_key() -> str:
+    return datetime.utcnow().strftime("%Y-%m-%d")
+
+async def _get_chat_quota(user_id: str) -> Dict[str, Any]:
+    day_key = _utc_day_key()
+    usage = await db.chat_usage.find_one({"user_id": user_id, "day": day_key}) or {}
+    free_used = int(usage.get("free_used", 0))
+    rewarded_credits = int(usage.get("rewarded_credits", 0))
+    return {
+        "day": day_key,
+        "free_limit": FREE_CHAT_DAILY_LIMIT,
+        "free_used": free_used,
+        "free_remaining": max(FREE_CHAT_DAILY_LIMIT - free_used, 0),
+        "rewarded_credits": max(rewarded_credits, 0),
+    }
+
+async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
+    now = datetime.utcnow()
+    day_key = _utc_day_key()
+
+    # 1) Try free daily quota first
+    free_doc = await db.chat_usage.find_one_and_update(
+        {
+            "user_id": user_id,
+            "day": day_key,
+            "free_used": {"$lt": FREE_CHAT_DAILY_LIMIT},
+        },
+        {
+            "$setOnInsert": {"created_at": now},
+            "$set": {"updated_at": now},
+            "$inc": {"free_used": 1},
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    if free_doc:
+        return {"allowed": True, "source": "free", "quota": await _get_chat_quota(user_id)}
+
+    # 2) If free quota is exhausted, consume rewarded credit
+    rewarded_doc = await db.chat_usage.find_one_and_update(
+        {
+            "user_id": user_id,
+            "day": day_key,
+            "rewarded_credits": {"$gt": 0},
+        },
+        {
+            "$setOnInsert": {"created_at": now},
+            "$set": {"updated_at": now},
+            "$inc": {"rewarded_credits": -1},
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    if rewarded_doc:
+        return {"allowed": True, "source": "rewarded", "quota": await _get_chat_quota(user_id)}
+
+    return {"allowed": False, "source": "none", "quota": await _get_chat_quota(user_id)}
+
+@api_router.get("/chat/quota")
+async def get_chat_quota(current_user: dict = Depends(get_current_user)):
+    return await _get_chat_quota(current_user["id"])
+
+@api_router.post("/chat/rewarded/claim")
+async def claim_chat_rewarded_credit(
+    request: ChatRewardClaimRequest,
+    current_user: dict = Depends(get_current_user),
+):
+    now = datetime.utcnow()
+    day_key = _utc_day_key()
+    await db.chat_usage.find_one_and_update(
+        {"user_id": current_user["id"], "day": day_key},
+        {
+            "$setOnInsert": {"created_at": now, "free_used": 0},
+            "$set": {"updated_at": now},
+            "$inc": {"rewarded_credits": 1},
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    quota = await _get_chat_quota(current_user["id"])
+    return {"success": True, "quota": quota}
+
 @api_router.post("/chat")
 async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_current_user)):
     try:
+        allowance = await _consume_chat_credit(current_user["id"])
+        if not allowance["allowed"]:
+            raise HTTPException(
+                status_code=429,
+                detail={
+                    "code": "CHAT_LIMIT_REACHED",
+                    "message": "Бесплатный лимит AI-чата исчерпан. Посмотрите рекламу, чтобы отправить ещё одно сообщение.",
+                    "quota": allowance["quota"],
+                },
+            )
+
         session_id = request.session_id or f"chat-{current_user['id']}-{datetime.utcnow().timestamp()}"
         
         system_msg = "Ты - AI-помощник по физике. Помогай ученикам понять физические концепции, решать задачи и объяснять формулы. Отвечай на русском языке. Будь дружелюбным и терпеливым."
@@ -2130,10 +2229,13 @@ async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_cu
             "session_id": session_id,
             "user_message": request.message,
             "ai_response": response,
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.utcnow(),
+            "credit_source": allowance["source"],
         })
         
-        return {"response": response, "session_id": session_id}
+        return {"response": response, "session_id": session_id, "quota": allowance["quota"]}
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error in chat: {e}")
         raise HTTPException(status_code=500, detail="Ошибка AI чата")
