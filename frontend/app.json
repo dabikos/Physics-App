@@ -33,12 +33,9 @@
     "plugins": [
       "expo-router",
       [
-        "expo-splash-screen",
+        "react-native-google-mobile-ads",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#6C63FF"
+          "androidAppId": "ca-app-pub-4380583516308857~8132939796"
         }
       ],
       "expo-font",

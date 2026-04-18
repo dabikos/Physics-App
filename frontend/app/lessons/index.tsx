@@ -38,6 +38,8 @@ export default function LessonsScreen() {
       flash: 'flash',
       eye: 'eye',
       planet: 'planet',
+      infinite: 'infinite',
+      moon: 'moon',
     };
     return iconMap[icon] || 'book';
   };

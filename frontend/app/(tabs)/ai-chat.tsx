@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { sendChatMessage } from '../../src/services/aiService';
+import { claimRewardedChatCredit, ChatQuota, getChatQuota, sendChatMessage } from '../../src/services/aiService';
 import { MathText } from '../../src/components/MathText';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
+import { CHAT_REWARDED_AD_UNIT_ID, initializeMobileAds, showRewardedChatAd } from '../../src/services/adService';
 
 interface Message {
   id: string;
@@ -34,12 +36,14 @@ export default function AIChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [chatQuota, setChatQuota] = useState<ChatQuota | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const { colors, isDark } = useTheme();
+  void isDark;
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
 
-  const sendMessage = async () => {
+  const legacySendMessage = async () => {
     if (!inputText.trim() || isLoading) return;
 
     const userMessage: Message = {
@@ -84,6 +88,112 @@ export default function AIChatScreen() {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 300);
   };
+  void legacySendMessage;
+
+  useEffect(() => {
+    initializeMobileAds().catch(() => {});
+    getChatQuota().then((result) => {
+      if (result.success && result.quota) {
+        setChatQuota(result.quota);
+      }
+    });
+  }, []);
+
+  const scrollToEnd = () => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 300);
+  };
+
+  const sendPreparedMessage = async (rawText: string) => {
+    if (!rawText.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: rawText.trim(),
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setIsLoading(true);
+
+    const history: ChatHistoryMessage[] = messages.slice(-10).map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+
+    const result = await sendChatMessage(userMessage.content, history, getAILanguageName());
+
+    if (result.success) {
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: result.content,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+      if (result.quota) setChatQuota(result.quota);
+      setIsLoading(false);
+      scrollToEnd();
+      return;
+    }
+
+    if (result.errorCode === 'CHAT_LIMIT_REACHED') {
+      setMessages((prev) => prev.filter((m) => m.id !== userMessage.id));
+      if (result.quota) setChatQuota(result.quota);
+      setInputText(userMessage.content);
+      setIsLoading(false);
+
+      Alert.alert(
+        'Лимит AI-чата',
+        'Бесплатные 3 сообщения на сегодня закончились. Посмотреть рекламу и отправить это сообщение?',
+        [
+          { text: 'Отмена', style: 'cancel' },
+          {
+            text: 'Смотреть рекламу',
+            onPress: async () => {
+              setIsLoading(true);
+              const watched = await showRewardedChatAd();
+              if (!watched) {
+                setIsLoading(false);
+                Alert.alert('Реклама не завершена', 'Чтобы отправить сообщение, нужно досмотреть рекламу.');
+                return;
+              }
+
+              const claim = await claimRewardedChatCredit(CHAT_REWARDED_AD_UNIT_ID);
+              if (!claim.success) {
+                setIsLoading(false);
+                Alert.alert('Ошибка', claim.error || 'Не удалось начислить попытку за рекламу.');
+                return;
+              }
+
+              if (claim.quota) setChatQuota(claim.quota);
+              await sendPreparedMessage(userMessage.content);
+            },
+          },
+        ]
+      );
+      return;
+    }
+
+    const errorMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      role: 'assistant',
+      content: `⚠️ ${result.error || t('aiChat.errorConnection')}`,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, errorMessage]);
+    setIsLoading(false);
+    scrollToEnd();
+  };
+
+  const sendMessage = async () => {
+    if (!inputText.trim() || isLoading) return;
+    const textToSend = inputText.trim();
+    setInputText('');
+    await sendPreparedMessage(textToSend);
+  };
 
   // Рендер сообщения пользователя
   const renderUserMessage = (message: Message) => (
@@ -124,6 +234,13 @@ export default function AIChatScreen() {
           <Text style={[styles.headerBadgeText, { color: colors.accent }]}>LaTeX</Text>
         </View>
       </View>
+      {chatQuota && (
+        <View style={[styles.quotaBar, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <Text style={[styles.quotaText, { color: colors.textSecondary }]}>
+            Бесплатно сегодня: {chatQuota.free_remaining}/{chatQuota.free_limit} | За рекламу: {chatQuota.rewarded_credits}
+          </Text>
+        </View>
+      )}
 
       <KeyboardAvoidingView
         style={styles.chatContainer}
@@ -249,6 +366,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#6C63FF',
+  },
+  quotaBar: {
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+  },
+  quotaText: {
+    fontSize: 12,
+    color: '#6B7280',
   },
   chatContainer: {
     flex: 1,

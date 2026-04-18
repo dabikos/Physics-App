@@ -1,0 +1,197 @@
+═══════════════════════════════════════════════════════════════════════════
+  ТЕМЫ УРОКОВ В ПРИЛОЖЕНИИ (актуальный перечень из PHYSICS_SECTIONS)
+  Источник данных: frontend/src/data/physicsData.ts
+═══════════════════════════════════════════════════════════════════════════
+
+1. МЕХАНИКА (mechanics)
+   ├─ Кинематика (kinematics)
+   │  ├─ linear-motion — Прямолинейное движение
+   │  ├─ uniform-accelerated — Равномерное и равноускоренное движение
+   │  ├─ circular-motion — Движение по окружности
+   │  ├─ relative-motion — Относительность движения
+   │  └─ motion-graphs — Графики движения
+   ├─ Динамика (dynamics)
+   │  ├─ newton-laws — Законы Ньютона
+   │  ├─ forces — Силы в механике
+   │  ├─ multiple-forces — Движение под действием нескольких сил
+   │  ├─ inclined-plane — Наклонная плоскость
+   │  └─ momentum — Импульс и закон сохранения импульса
+   ├─ Статика (statics)
+   │  ├─ equilibrium — Условия равновесия
+   │  ├─ torque — Момент силы
+   │  ├─ center-mass — Центр масс
+   │  └─ simple-machines — Простые механизмы
+   ├─ Законы сохранения (conservation-laws)
+   │  ├─ work — Работа
+   │  ├─ kinetic-energy — Кинетическая энергия
+   │  ├─ potential-energy — Потенциальная энергия
+   │  └─ energy-conservation — Закон сохранения энергии
+   ├─ Механические колебания и волны (oscillations-waves)
+   │  ├─ harmonic-oscillations — Гармонические колебания
+   │  ├─ pendulums — Маятники
+   │  ├─ mechanical-waves — Механические волны
+   │  └─ resonance — Резонанс
+   ├─ Гравитация (gravitation)
+   │  ├─ universal-gravitation — Закон всемирного тяготения
+   │  ├─ gravitational-field — Гравитационное поле и напряжённость
+   │  ├─ weight-weightlessness — Вес и невесомость
+   │  ├─ satellites-orbits — Искусственные спутники и орбиты
+   │  ├─ kepler-laws — Законы Кеплера
+   │  ├─ cosmic-velocities — Первая, вторая и третья космические скорости
+   │  └─ gravitational-energy — Гравитационная потенциальная энергия
+   ├─ Гидростатика и гидродинамика (fluid-mechanics)
+   │  ├─ liquid-pressure — Давление в жидкостях
+   │  ├─ pascal-law — Закон Паскаля
+   │  ├─ archimedes-principle — Закон Архимеда
+   │  ├─ floating-bodies — Плавание и погружение тел
+   │  ├─ atmospheric-pressure — Атмосферное давление
+   │  ├─ barometer-manometer — Барометр и манометр
+   │  ├─ hydraulic-machines — Гидравлические машины
+   │  ├─ continuity-equation — Уравнение неразрывности
+   │  ├─ bernoulli-equation — Уравнение Бернулли
+   │  ├─ fluid-viscosity — Вязкость жидкостей
+   │  └─ stokes-law — Закон Стокса (сила сопротивления)
+   └─ Акустика (acoustics)
+      ├─ sound-waves — Звуковые волны
+      ├─ sound-speed-media — Скорость звука в разных средах
+      ├─ loudness-intensity — Громкость и интенсивность звука
+      ├─ decibel-scale — Децибелы (шкала громкости)
+      ├─ doppler-sound — Эффект Доплера для звука
+      ├─ acoustic-resonance — Резонанс в акустике
+      ├─ ultrasound-infrasound — Ультразвук и инфразвук
+      ├─ timbre-instruments — Тембр и музыкальные инструменты
+      └─ sound-reflection-absorption — Отражение и поглощение звука
+
+2. ТЕРМОДИНАМИКА (thermodynamics)
+   ├─ Молекулярно-кинетическая теория (molecular-kinetic)
+   │  ├─ matter-structure — Строение вещества
+   │  ├─ temperature — Температура
+   │  └─ gas-pressure — Давление газа
+   ├─ Тепловые процессы (heat-processes)
+   │  ├─ thermal-conductivity — Теплопроводность
+   │  ├─ convection — Конвекция
+   │  ├─ radiation — Излучение
+   │  └─ heat-quantity — Количество теплоты
+   ├─ Идеальный газ (ideal-gas)
+   │  ├─ state-equation — Уравнение состояния
+   │  ├─ isoprocesses — Изопроцессы
+   │  └─ gas-laws — Газовые законы
+   ├─ Законы термодинамики (thermodynamics-laws)
+   │  ├─ first-law — Первый закон
+   │  ├─ second-law — Второй закон
+   │  ├─ heat-engines — Тепловые машины
+   │  └─ efficiency — КПД
+   └─ Фазовые переходы (phase-transitions)
+      ├─ melting — Плавление
+      ├─ evaporation — Испарение
+      ├─ boiling — Кипение
+      └─ phase-diagrams — Диаграммы состояния
+
+3. ЭЛЕКТРИЧЕСТВО И МАГНЕТИЗМ (electromagnetism)
+   ├─ Электростатика (electrostatics)
+   │  ├─ electric-charge — Электрический заряд
+   │  ├─ coulomb-law — Закон Кулона
+   │  ├─ electric-field — Электрическое поле
+   │  ├─ potential-voltage — Потенциал и напряжение
+   │  └─ capacitors — Конденсаторы
+   ├─ Постоянный ток (direct-current)
+   │  ├─ current-strength — Сила тока
+   │  ├─ ohm-law — Закон Ома
+   │  ├─ work-power — Работа и мощность тока
+   │  └─ conductor-connections — Соединение проводников
+   ├─ Магнетизм (magnetism)
+   │  ├─ magnetic-field — Магнитное поле
+   │  ├─ ampere-force — Сила Ампера
+   │  └─ lorentz-force — Сила Лоренца
+   ├─ Электромагнитная индукция (electromagnetic-induction)
+   │  ├─ faraday-law — Закон Фарадея
+   │  ├─ lenz-rule — Правило Ленца
+   │  ├─ inductance — Индуктивность
+   │  └─ eddy-currents — Вихревые токи
+   └─ Переменный ток (alternating-current)
+      ├─ sinusoidal-current — Синусоидальный ток
+      ├─ reactive-resistance — Реактивное сопротивление
+      ├─ transformers — Трансформаторы
+      └─ power-transmission — Передача электроэнергии
+
+4. ОПТИКА (optics)
+   ├─ Геометрическая оптика (geometric-optics)
+   │  ├─ light-propagation — Распространение света
+   │  ├─ reflection — Отражение
+   │  ├─ refraction — Преломление
+   │  ├─ lenses-mirrors — Линзы и зеркала
+   │  └─ optical-devices — Оптические приборы
+   ├─ Волновая оптика (wave-optics)
+   │  ├─ interference — Интерференция
+   │  ├─ diffraction — Дифракция
+   │  └─ polarization — Поляризация
+   └─ Квантовая оптика (quantum-optics)
+      ├─ photoelectric-effect — Фотоэффект
+      ├─ light-dualism — Дуализм света
+      ├─ emission-spectra — Спектры излучения
+      └─ lasers — Лазеры
+
+5. АТОМНАЯ И ЯДЕРНАЯ ФИЗИКА (atomic)
+   ├─ Строение атома (atom-structure)
+   │  ├─ atom-models — Модели атома
+   │  ├─ energy-levels — Энергетические уровни
+   │  └─ electron-shells — Электронные оболочки
+   ├─ Квантовая физика (quantum-physics)
+   │  ├─ de-broglie-waves — Волны де Бройля
+   │  └─ heisenberg-uncertainty — Неопределённость Гейзенберга
+   ├─ Ядерная физика (nuclear-physics)
+   │  ├─ nucleus-structure — Строение ядра
+   │  ├─ nuclear-forces — Ядерные силы
+   │  └─ binding-energy — Энергия связи
+   ├─ Радиоактивность (radioactivity)
+   │  ├─ decay-types — Виды распада
+   │  ├─ decay-law — Закон радиоактивного распада
+   │  └─ radiation-doses — Дозы излучения
+   └─ Ядерные реакции (nuclear-reactions)
+      ├─ fission — Деление ядер
+      ├─ fusion — Термоядерный синтез
+      └─ nuclear-energy-use — Применение ядерной энергии
+
+6. СПЕЦИАЛЬНАЯ ТЕОРИЯ ОТНОСИТЕЛЬНОСТИ (relativity)
+   └─ СТО (special-relativity)
+      ├─ einstein-postulates — Постулаты Эйнштейна
+      ├─ lorentz-transformations — Преобразования Лоренца
+      ├─ time-dilation — Замедление времени
+      ├─ length-contraction — Сокращение длины
+      ├─ invariant-interval — Инвариантность интервала
+      ├─ mass-energy-emc2 — Связь массы и энергии E = mc²
+      ├─ relativistic-momentum — Релятивистский импульс
+      ├─ relativistic-energy — Релятивистская энергия
+      └─ lightspeed-limit — Недостижимость скорости света
+
+7. АСТРОНОМИЯ (astronomy)
+   ├─ Небесная механика (celestial-mechanics)
+   │  ├─ solar-system-structure — Солнечная система
+   │  ├─ orbits-satellites — Орбиты планет и спутников
+   │  ├─ tides — Приливы и отливы
+   │  └─ eclipses — Затмения Солнца и Луны
+   ├─ Солнце и звёзды (sun-stars)
+   │  ├─ sun-structure-activity — Солнце: строение и активность
+   │  ├─ stellar-spectra-hr — Спектры звёзд и диаграмма Герцшпрунга–Рассела
+   │  ├─ stellar-evolution-types — Эволюция и типы звёзд
+   │  └─ compact-stars — Нейтронные звёзды, пульсары и чёрные дыры
+   ├─ Галактики и космология (galaxies-cosmology)
+   │  ├─ milky-way-galaxies — Млечный Путь и типы галактик
+   │  ├─ hubble-expansion — Расширение Вселенной и закон Хаббла
+   │  ├─ big-bang-cmb — Большой взрыв и реликтовое излучение
+   │  └─ dark-cosmos-gr — Тёмная материя, тёмная энергия и ОТО (кратко)
+   ├─ Наблюдательная астрономия (observational-astronomy)
+   │  ├─ telescopes-types — Телескопы и приборы
+   │  ├─ angular-resolution — Увеличение и разрешающая способность
+   │  ├─ spectroscopy-photometry — Спектроскопия и фотометрия
+   │  └─ distance-ladder-radio — Расстояния до объектов и радиоастрономия
+   └─ Планеты, малые тела и жизнь (solar-system-bodies)
+      ├─ terrestrial-gas-planets — Планеты земной группы и газовые гиганты
+      ├─ moon-satellites — Луна и крупные спутники
+      ├─ small-bodies-exoplanets — Астероиды, кометы, экзопланеты
+      └─ life-search — Обитаемая зона и поиск жизни
+
+═══════════════════════════════════════════════════════════════════════════
+  Примечание: имена на русском — как в приложении (язык по умолчанию).
+  id тем совпадают с ключами в TOPICS_CONTENT и переводах en/kk.
+═══════════════════════════════════════════════════════════════════════════

@@ -24,6 +24,7 @@ import { useTheme } from '../../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../src/context/AuthContext';
 import api from '../../../src/services/api';
+import { initializeMobileAds, showLearnMoreInterstitialAd } from '../../../src/services/adService';
 
 // Компонент для отображения LaTeX формулы с красивым оформлением
 const BeautifulFormula: React.FC<{
@@ -150,6 +151,11 @@ export default function TopicDetailScreen() {
   const [noteExpanded, setNoteExpanded] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [completingLesson, setCompletingLesson] = useState(false);
+  const [openingLearnMore, setOpeningLearnMore] = useState(false);
+
+  useEffect(() => {
+    initializeMobileAds().catch(() => {});
+  }, []);
 
   // Sync notes when they finish loading from server
   useEffect(() => {
@@ -206,6 +212,18 @@ export default function TopicDetailScreen() {
   const handleNoteChange = (text: string) => {
     setNoteText(text);
     if (id) saveNote(id, text);
+  };
+
+  const handleLearnMorePress = async () => {
+    if (!id || openingLearnMore) return;
+    setOpeningLearnMore(true);
+    try {
+      await showLearnMoreInterstitialAd();
+    } catch {}
+    finally {
+      setOpeningLearnMore(false);
+      router.push(`/lessons/topic/expanded/${id}`);
+    }
   };
 
   if (!topic) {
@@ -346,8 +364,9 @@ export default function TopicDetailScreen() {
         {/* Кнопка "Изучить больше" */}
         <TouchableOpacity
           style={styles.expandButton}
-          onPress={() => router.push(`/lessons/topic/expanded/${id}`)}
+          onPress={handleLearnMorePress}
           activeOpacity={0.85}
+          disabled={openingLearnMore}
         >
           <LinearGradient
             colors={[sectionColor, sectionColor + 'DD']}

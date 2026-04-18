@@ -54,6 +54,48 @@ export const translations: PhysicsTranslations = {
             resonance: "Резонанс",
           },
         },
+        gravitation: {
+          name: "Гравитация",
+          topics: {
+            "universal-gravitation": "Әлемдік тартылыс заңы",
+            "gravitational-field": "Гравитациялық өріс және кернеулілік",
+            "weight-weightlessness": "Салмақ және салмақсыздық",
+            "satellites-orbits": "Жасанды серіктер және орбиталар",
+            "kepler-laws": "Кеплер заңдары",
+            "cosmic-velocities": "Бірінші, екінші және үшінші ғарыш жылдамдықтары",
+            "gravitational-energy": "Гравитациялық потенциалдық энергия",
+          },
+        },
+        "fluid-mechanics": {
+          name: "Гидростатика және гидродинамика",
+          topics: {
+            "liquid-pressure": "Сұйықтардағы қысым",
+            "pascal-law": "Паскаль заңы",
+            "archimedes-principle": "Архимед заңы",
+            "floating-bodies": "Жүзу және бату",
+            "atmospheric-pressure": "Атмосфералық қысым",
+            "barometer-manometer": "Барометр және манометр",
+            "hydraulic-machines": "Гидравликалық машиналар",
+            "continuity-equation": "Үздіксіздік теңдеуі",
+            "bernoulli-equation": "Бернулли теңдеуі",
+            "fluid-viscosity": "Сұйықтықтың тұтқырлығы",
+            "stokes-law": "Стокс заңы (қарсыласу күші)",
+          },
+        },
+        acoustics: {
+          name: "Акустика",
+          topics: {
+            "sound-waves": "Дыбыс толқындары",
+            "sound-speed-media": "Түрлі орталарда дыбыс жылдамдығы",
+            "loudness-intensity": "Дыбыс қаттылығы және интенсивтілігі",
+            "decibel-scale": "Децибел шкаласы",
+            "doppler-sound": "Дыбыс үшін Доплер эффектісі",
+            "acoustic-resonance": "Акустикадағы резонанс",
+            "ultrasound-infrasound": "Ультрадыбыс және инфрадыбыс",
+            "timbre-instruments": "Тембр және музыкалық аспаптар",
+            "sound-reflection-absorption": "Дыбыстың шағылуы және сіңірілуі",
+          },
+        },
       },
     },
     thermodynamics: {
@@ -226,6 +268,75 @@ export const translations: PhysicsTranslations = {
             fission: "Ядроның бөлінуі",
             fusion: "Термоядролық синтез",
             "nuclear-energy-use": "Ядролық энергияны қолдану",
+          },
+        },
+      },
+    },
+    relativity: {
+      name: "Арнайы салыстырмалылық теориясы",
+      subsections: {
+        "special-relativity": {
+          name: "АСТ",
+          topics: {
+            "einstein-postulates": "Эйнштейн постулаттары",
+            "lorentz-transformations": "Лоренц түрлендірулері",
+            "time-dilation": "Уақыттың созылуы",
+            "length-contraction": "Ұзындықтың қысқаруы",
+            "invariant-interval": "Инвариантты интервал",
+            "mass-energy-emc2": "Масса мен энергия байланысы E = mc²",
+            "relativistic-momentum": "Релятивистік импульс",
+            "relativistic-energy": "Релятивистік энергия",
+            "lightspeed-limit": "Жарық жылдамдығына жету мүмкін емес",
+          },
+        },
+      },
+    },
+    astronomy: {
+      name: "Астрономия",
+      subsections: {
+        "celestial-mechanics": {
+          name: "Аспан механикасы",
+          topics: {
+            "solar-system-structure": "Күн жүйесі",
+            "orbits-satellites": "Планеталар мен серіктердің орбиталары",
+            tides: "Толқындар мен толқын төмендеулері",
+            eclipses: "Күн мен Ай тұтылулары",
+          },
+        },
+        "sun-stars": {
+          name: "Күн және жұлдыздар",
+          topics: {
+            "sun-structure-activity": "Күн: құрылысы және белсенділігі",
+            "stellar-spectra-hr": "Жұлдыз спектрлері және Герцшпрунг–Рассел диаграммасы",
+            "stellar-evolution-types": "Жұлдыз эволюциясы және түрлері",
+            "compact-stars": "Нейтронды жұлдыздар, пульсарлар және қара тесік",
+          },
+        },
+        "galaxies-cosmology": {
+          name: "Галактикалар және космология",
+          topics: {
+            "milky-way-galaxies": "Құс жолы және галактика түрлері",
+            "hubble-expansion": "Әлемнің кеңеюі және Хаббл заңы",
+            "big-bang-cmb": "Үлкен жарылыс және реликтілік сәулелену",
+            "dark-cosmos-gr": "Қараңғы материя, қараңғы энергия және ЖТ (қысқаша)",
+          },
+        },
+        "observational-astronomy": {
+          name: "Бақылау астрономиясы",
+          topics: {
+            "telescopes-types": "Телескоптар және аспаптар",
+            "angular-resolution": "Үлкейту және бұрыштық ажырату",
+            "spectroscopy-photometry": "Спектроскопия және фотометрия",
+            "distance-ladder-radio": "Қашықтықтар және радиоастрономия",
+          },
+        },
+        "solar-system-bodies": {
+          name: "Планеталар, кіші денелер және өмір",
+          topics: {
+            "terrestrial-gas-planets": "Жер тобы планеталары және газ гиганттары",
+            "moon-satellites": "Ай және ірі серіктер",
+            "small-bodies-exoplanets": "Астероидтар, кометалар, экзопланеталар",
+            "life-search": "Тұруға жарамды аймақ және өмірді іздеу",
           },
         },
       },
@@ -663,6 +774,286 @@ export const translations: PhysicsTranslations = {
       title: "Ядролық энергияны қолдану",
       brief_info: "АЭС-тер басқарылатын тізбекті реакцияларды қолданады. Артықшылығы: аз отыннан көп энергия. Мәселелер: радиоактивті қалдықтар, қауіпсіздік.",
       example_problem: "Бөлім әзірленуде",
+    },
+    "universal-gravitation": {
+      title: "Әлемдік тартылыс заңы",
+      brief_info: "Екі дене F = G·m₁·m₂/r² күшімен тартылысады, G ≈ 6,67×10⁻¹¹ Н·м²/кг². Күш орталықтарды қосатын түзу бойымен бағытталады.",
+      example_problem: "Күнделікті массалар үшін тартылыс әдетте өте әлсіз.",
+    },
+    "gravitational-field": {
+      title: "Гравитациялық өріс және кернеулілік",
+      brief_info: "Өрісті сипаттайтын шама — кернеулік γ = F/m. Нүктелік масса үшін γ = GM/r².",
+      example_problem: "Жер бетінде γ ≈ g ≈ 9,8 м/с².",
+    },
+    "weight-weightlessness": {
+      title: "Салмақ және салмақсыздық",
+      brief_info: "Салмақ — тіреу немесе ілмек реакциясы. Лифт жоғары үдеумен қозғалса, салмақ mg-дан артады; еркін түскенде нөлге жақындайды.",
+      example_problem: "a = 2 м/с² жоғары үдеу, m = 70 кг: P = m(g+a) = 840 Н.",
+    },
+    "satellites-orbits": {
+      title: "Жасанды серіктер және орбиталар",
+      brief_info: "Дөңгелек орбита үшін v = √(GM/r), период T = 2πr/v.",
+      example_problem: "Биік орбита — кіші жылдамдық, ұзақ период.",
+    },
+    "kepler-laws": {
+      title: "Кеплер заңдары",
+      brief_info: "Эллипстер, аудан заңы, T²/a³ тұрақтысы.",
+      example_problem: "Марс периоды 1,88 жыл болса, a шамамен 1,52 а.б.",
+    },
+    "cosmic-velocities": {
+      title: "Ғарыш жылдамдықтары",
+      brief_info: "I ≈ 7,9 км/с, II ≈ 11,2 км/с, III ≈ 16,7 км/с (Жер үшін шамамен).",
+      example_problem: "v₂/v₁ = √2 себебі — байланыс энергиясы нөлге дейін.",
+    },
+    "gravitational-energy": {
+      title: "Гравитациялық потенциалдық энергия",
+      brief_info: "E_p = -Gm₁m₂/r (шексіздікте нөл). Жұмыс жолға тәуелді емес.",
+      example_problem: "R-ден 2R-ге көтеру энергиясын арттырады.",
+    },
+    "liquid-pressure": {
+      title: "Сұйықтардағы қысым",
+      brief_info: "p = p₀ + ρgh. Тереңдекен қысым артады.",
+      example_problem: "Суда ρ = 1000 кг/м³, қосымша қысым 2×10⁵ Па → h ≈ 20 м.",
+    },
+    "pascal-law": {
+      title: "Паскаль заңы",
+      brief_info: "Тығындалған сұйыққа берілген қысым барлық бағытта сақталады.",
+      example_problem: "Гидравликалық пресс күшті көбейтеді.",
+    },
+    "archimedes-principle": {
+      title: "Архимед заңы",
+      brief_info: "F_A = ρ_сұйық g V — ығыстырылған сұйықтың салмағына тең.",
+      example_problem: "Толық батқан 0,5 дм³ дене суда: F_A ≈ 5 Н.",
+    },
+    "floating-bodies": {
+      title: "Жүзу және бату",
+      brief_info: "Ортақ тығыздық пен F_A мен mg теңдігі жүзу шартын анықтайды.",
+      example_problem: "Ағаш ρ = 600 кг/м³ суда: шамамен 60% батады.",
+    },
+    "atmospheric-pressure": {
+      title: "Атмосфералық қысым",
+      brief_info: "Теңіз деңгейінде p_atm ≈ 10⁵ Па. Биіктекен азаяды.",
+      example_problem: "F = pS есебі.",
+    },
+    "barometer-manometer": {
+      title: "Барометр және манометр",
+      brief_info: "Сымақ баған биіктігі p = ρgh. Манометр — артық қысымды өлшейді.",
+      example_problem: "Су барометрі үшін h ≈ 10 м керек — сондықтан сынап қолданылады.",
+    },
+    "hydraulic-machines": {
+      title: "Гидравликалық машиналар",
+      brief_info: "Паскаль заңы мен жұмыс сақталуы гидропрестердің негізі.",
+      example_problem: "ПӘК нақты жүйеде 100% емес.",
+    },
+    "continuity-equation": {
+      title: "Үздіксіздік теңдеуі",
+      brief_info: "S₁v₁ = S₂v₂ — тармақта жылдамдық үлкен.",
+      example_problem: "Аудан 4 есе кішірейсе, жылдамдық 4 есе артады.",
+    },
+    "bernoulli-equation": {
+      title: "Бернулли теңдеуі",
+      brief_info: "p + ρv²/2 + ρgh = тұрақты. Жылдамдық артса, қысым азаяды.",
+      example_problem: "Қанат көтергіш күш, атомайзер мысалдары.",
+    },
+    "fluid-viscosity": {
+      title: "Сұйықтықтың тұтқырлығы",
+      brief_info: "η — қабаттар арасындағы ішкі үйкеліс.",
+      example_problem: "Бал қан суға қарағанда баяу ағады.",
+    },
+    "stokes-law": {
+      title: "Стокс заңы",
+      brief_info: "Шар үшін F = 6πηRv — шекті жылдамдықты анықтайды.",
+      example_problem: "Түсу кезінде салмақ, Архимед және тұтқырлық теңеседі.",
+    },
+    "sound-waves": {
+      title: "Дыбыс толқындары",
+      brief_info: "Сұйық/қатты/газдағы бойлық толқын. v = λν.",
+      example_problem: "440 Гц, 340 м/с: λ ≈ 0,77 м.",
+    },
+    "sound-speed-media": {
+      title: "Түрлі орталарда дыбыс жылдамдығы",
+      brief_info: "Қаттыда әдетте жылдам, газда баяу. Әуеде ~343 м/с, суда ~1500 м/с.",
+      example_problem: "Суда дыбыс бір қашықтықты тезірек өтеді.",
+    },
+    "loudness-intensity": {
+      title: "Дыбыс қаттылығы және интенсивтілігі",
+      brief_info: "I — бірлік ауданға қуат. Нүктелік көзден I ~ 1/r².",
+      example_problem: "Қашықтық 2 есе артса, I 4 есе кемиді.",
+    },
+    "decibel-scale": {
+      title: "Децибел шкаласы",
+      brief_info: "L = 10·lg(I/I₀) дБ. I 100 есе артса, +20 дБ.",
+      example_problem: "Логарифмдік шкала құлақ сезіміне сәйкес келеді.",
+    },
+    "doppler-sound": {
+      title: "Дыбыс үшін Доплер эффектісі",
+      brief_info: "Көз немесе қабылдағыш қозғалса, жиілік өзгереді.",
+      example_problem: "Жедел жәрдем көлігі жақындағанда жиілік жоғары.",
+    },
+    "acoustic-resonance": {
+      title: "Акустикадағы резонанс",
+      brief_info: "Түтік пен ілмектердің меншікті жиіліктері.",
+      example_problem: "Ашық түтік резонансы.",
+    },
+    "ultrasound-infrasound": {
+      title: "Ультрадыбыс және инфрадыбыс",
+      brief_info: "УДЗ, эхолокация; инфрадыбыс — сейсмика, жарылыстар.",
+      example_problem: "1 МГц периоды 1 мкс.",
+    },
+    "timbre-instruments": {
+      title: "Тембр және аспаптар",
+      brief_info: "Гармоникалар қоспасы дыбысты ажыратады.",
+      example_problem: "Бір нота, әртүрлі аспап.",
+    },
+    "sound-reflection-absorption": {
+      title: "Дыбыстың шағылуы және сіңірілуі",
+      brief_info: "Қатты қабырға шағылдырады; кеңістік материал сіңіреді.",
+      example_problem: "Реверберация уақыты зал акустикасын сипаттайды.",
+    },
+    "einstein-postulates": {
+      title: "Эйнштейн постулаттары",
+      brief_info: "ИСО тең құқықты; вакуумдағы c барлық бақылаушы үшін бірдей.",
+      example_problem: "Галилей қосуының орнына Лоренц түрлендірулері.",
+    },
+    "lorentz-transformations": {
+      title: "Лоренц түрлендірулері",
+      brief_info: "γ = 1/√(1−v²/c²) координаталар мен уақытты байланыстырады.",
+      example_problem: "γ = 2 болғанда v ≈ 0,866c.",
+    },
+    "time-dilation": {
+      title: "Уақыттың созылуы",
+      brief_info: "Қозғалатын сағаттар баяу: Δt = γ·Δt₀.",
+      example_problem: "Мюондардың тірі қалуы.",
+    },
+    "length-contraction": {
+      title: "Ұзындықтың қысқаруы",
+      brief_info: "Қозғалыс бағытындағы L = L₀/γ.",
+      example_problem: "γ = 2 → ұзындық жартыға.",
+    },
+    "invariant-interval": {
+      title: "Инвариантты интервал",
+      brief_info: "s² = (cΔt)² − Δr² барлық ИСО-да бірдей.",
+      example_problem: "Жарық үшін s = 0.",
+    },
+    "mass-energy-emc2": {
+      title: "E = mc²",
+      brief_info: "Тыныштық энергия E₀ = mc²; ядролық реакцияларда Δm → энергия.",
+      example_problem: "ΔE = Δm·c² есебі.",
+    },
+    "relativistic-momentum": {
+      title: "Релятивистік импульс",
+      brief_info: "p = γmv.",
+      example_problem: "v = 0,6c кезінде γ = 1,25.",
+    },
+    "relativistic-energy": {
+      title: "Релятивистік энергия",
+      brief_info: "E = γmc², E² = p²c² + m²c⁴.",
+      example_problem: "γ = 2 болса, K = mc².",
+    },
+    "lightspeed-limit": {
+      title: "Жарық жылдамдығына шектеу",
+      brief_info: "m₀ > 0 үшін c-ға шектеусіз энергия керек; массасыз бөлшектер c жылдамдығымен жүреді.",
+      example_problem: "γ → ∞ кезінде v → c.",
+    },
+    "solar-system-structure": {
+      title: "Күн жүйесі",
+      brief_info: "Күн, сегіз планета, карликтер, астероидтар, кометалар.",
+      example_problem: "Ішкі және сыртқы планеталардың айырмашылығы.",
+    },
+    "orbits-satellites": {
+      title: "Орбиталар мен серіктер",
+      brief_info: "Кеплер эллистері; геостационарлық орбита.",
+      example_problem: "Айдың бір жағы — тайыздық бекіту.",
+    },
+    tides: {
+      title: "Толқындар",
+      brief_info: "Ай мен Күннің айырмалы тартылысы.",
+      example_problem: "Жаңа ай мен толық айда күшті толқын.",
+    },
+    eclipses: {
+      title: "Тұтылулар",
+      brief_info: "Күн тұтылуы — Ай арасында; Ай тұтылуы — Жер көлеңкесінде.",
+      example_problem: "Ай орбитасы эклиптикаға көлбеу.",
+    },
+    "sun-structure-activity": {
+      title: "Күн",
+      brief_info: "Ядро, сәулелік және конвекциялық қабаттар, хромосфера, корона; дақтар мен жарқылдар.",
+      example_problem: "Энергия — сутегі синтезі.",
+    },
+    "stellar-spectra-hr": {
+      title: "Спектрлер және HR диаграммасы",
+      brief_info: "Температура мен жарқындықты анықтау.",
+      example_problem: "Қызыл гиганттар негізгі тізбекте емес.",
+    },
+    "stellar-evolution-types": {
+      title: "Жұлдыз эволюциясы",
+      brief_info: "Күн тәрізді жұлдыздар — қызыл гигант, планеталық тұмандық, ақ карлик.",
+      example_problem: "Массивті жұлдыздар — супернова.",
+    },
+    "compact-stars": {
+      title: "Нейтронды жұлдыздар және қара тесік",
+      brief_info: "Пульсар — бұрылатын нейтронды жұлдыз сәулесі.",
+      example_problem: "Шварцшильд радиусы R_s = 2GM/c².",
+    },
+    "milky-way-galaxies": {
+      title: "Құс жолы және галактикалар",
+      brief_info: "Сығылған спираль; спиральді, эллипстік, дұрыс емес түрлер.",
+      example_problem: "Орталықта супермассивті қара тесік.",
+    },
+    "hubble-expansion": {
+      title: "Хаббл заңы",
+      brief_info: "v ≈ H₀·d; қызыл ығысу.",
+      example_problem: "H₀ ≈ 70 км/с/Мпк.",
+    },
+    "big-bang-cmb": {
+      title: "Үлкен жарылыс және CMB",
+      brief_info: "T ≈ 2,7 К реликтілік сәулелену.",
+      example_problem: "Ерте ыстық Әлем дәлелі.",
+    },
+    "dark-cosmos-gr": {
+      title: "Қараңғы Әлем және ЖТ",
+      brief_info: "Қараңғы материя — айналу қисықтары; қараңғы энергия — үдеулі кеңею; ЖТ — кеңістік-уақыт иілуі.",
+      example_problem: "Екі құбылыс әртүрлі рөл атқарады.",
+    },
+    "telescopes-types": {
+      title: "Телескоптар",
+      brief_info: "Рефрактор, рефлектор, радио, ғарыш телескоптары.",
+      example_problem: "Ірі айна ірі линзадан оңайрақ.",
+    },
+    "angular-resolution": {
+      title: "Ажырату",
+      brief_info: "θ ~ λ/D дифракция шегі.",
+      example_problem: "Диаметр артса, деталь жақсарады.",
+    },
+    "spectroscopy-photometry": {
+      title: "Спектроскопия",
+      brief_info: "Құрам, жылдамдық, температура.",
+      example_problem: "Галактиканың қызыл ығысуы.",
+    },
+    "distance-ladder-radio": {
+      title: "Қашықтықтар",
+      brief_info: "Параллакс, стандартты шамдар, содан Хаббл.",
+      example_problem: "Радиоастрономия суық газды зерттейді.",
+    },
+    "terrestrial-gas-planets": {
+      title: "Планеталар түрлері",
+      brief_info: "Тау жыныстары мен газ гиганттары.",
+      example_problem: "Юпитер — сутегі-гелий қабаттары.",
+    },
+    "moon-satellites": {
+      title: "Ай және серіктер",
+      brief_info: "Фазалар; титан, еуропа тәрізді серіктер.",
+      example_problem: "Тайыздық бекіту.",
+    },
+    "small-bodies-exoplanets": {
+      title: "Кіші денелер және экзопланеталар",
+      brief_info: "Транзит, радиалды жылдамдық әдістері.",
+      example_problem: "Транзит жұлдыз жарықтығын төмендетеді.",
+    },
+    "life-search": {
+      title: "Өмірді іздеу",
+      brief_info: "Тұруға жарамды аймақ, SETI, марсоходтар.",
+      example_problem: "Жұлдыз жарқыны аймақты анықтайды.",
     },
   },
 

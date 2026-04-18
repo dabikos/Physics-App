@@ -1,11 +1,13 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query, Request
+﻿from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import ReturnDocument
 import os
 import logging
+import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional, Dict, Any, Literal
@@ -24,7 +26,7 @@ from openai import AsyncOpenAI
 
 ROOT_DIR = Path(__file__).parent
 env_path = ROOT_DIR / '.env'
-load_dotenv(env_path, override=True)
+load_dotenv(env_path, override=False)
 
 # MongoDB connection
 mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
@@ -36,12 +38,26 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'physics-ai-secret-key-2025')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 10000
 
-# SMTP Configuration for email sending
+# Email Configuration
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+EMAIL_PROVIDER = os.environ.get('EMAIL_PROVIDER', 'auto').strip().lower()
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '').strip()
+RESEND_API_URL = os.environ.get('RESEND_API_URL', 'https://api.resend.com/emails').strip()
+
+# SMTP Configuration (fallback or primary if EMAIL_PROVIDER=smtp)
 SMTP_HOST = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(os.environ.get('SMTP_PORT', '587'))
 SMTP_USER = os.environ.get('SMTP_USER', '')  # your-email@gmail.com
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')  # App Password from Google
 SMTP_FROM = os.environ.get('SMTP_FROM', SMTP_USER if os.environ.get('SMTP_USER') else 'noreply@physicsai.app')
+SMTP_USE_TLS = env_bool('SMTP_USE_TLS', True)
+SMTP_USE_SSL = env_bool('SMTP_USE_SSL', False)
+SMTP_TIMEOUT = float(os.environ.get('SMTP_TIMEOUT', '20'))
 
 # Google OAuth (from Google Cloud Console)
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
@@ -51,6 +67,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
 OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5-nano')
 openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=60.0)
+FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '3'))
 
 async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096, temperature: float = 0.7) -> str:
     """OpenAI chat completion (gpt-5-nano by default)."""
@@ -89,6 +106,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+logger.info(
+    "Email service initialized: provider=%s resend_api=%s smtp_host=%s smtp_port=%s smtp_from=%s",
+    EMAIL_PROVIDER,
+    bool(RESEND_API_KEY),
+    SMTP_HOST,
+    SMTP_PORT,
+    SMTP_FROM,
+)
 
 # ==================== Models ====================
 
@@ -191,6 +216,10 @@ class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = None
 
+class ChatRewardClaimRequest(BaseModel):
+    ad_unit: Optional[str] = None
+    platform: Optional[str] = "android"
+
 class ProgressUpdate(BaseModel):
     section: str
     subsection: Optional[str] = None
@@ -272,9 +301,56 @@ def generate_verification_code() -> str:
     return str(random.randint(100000, 999999))
 
 async def send_email(to_email: str, subject: str, html_body: str) -> bool:
-    """Send an email via SMTP. Returns True on success."""
+    """Send an email via Resend API or SMTP. Returns True on success."""
+    provider = EMAIL_PROVIDER if EMAIL_PROVIDER in {"auto", "resend_api", "smtp"} else "auto"
+
+    if provider in {"auto", "resend_api"} and RESEND_API_KEY:
+        if await send_email_via_resend_api(to_email, subject, html_body):
+            return True
+        if provider == "resend_api":
+            return False
+
+    if provider in {"auto", "smtp"}:
+        return await asyncio.to_thread(send_email_via_smtp_sync, to_email, subject, html_body)
+
+    logger.warning("Email provider misconfigured: EMAIL_PROVIDER=%s", EMAIL_PROVIDER)
+    return False
+
+async def send_email_via_resend_api(to_email: str, subject: str, html_body: str) -> bool:
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY is empty — Resend API send skipped")
+        return False
+
+    payload = {
+        "from": SMTP_FROM,
+        "to": [to_email],
+        "subject": subject,
+        "html": html_body,
+    }
+    headers = {
+        "Authorization": f"Bearer {RESEND_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as http:
+            response = await http.post(RESEND_API_URL, headers=headers, json=payload)
+        if response.status_code in {200, 201, 202}:
+            return True
+        logger.error(
+            "Resend API error for %s: status=%s body=%s",
+            to_email,
+            response.status_code,
+            response.text[:500],
+        )
+        return False
+    except Exception as e:
+        logger.error("Resend API send failed for %s: %s", to_email, e)
+        return False
+
+def send_email_via_smtp_sync(to_email: str, subject: str, html_body: str) -> bool:
     if not SMTP_USER or not SMTP_PASSWORD:
-        logger.warning("SMTP not configured — email not sent")
+        logger.warning("SMTP credentials not configured — SMTP send skipped")
         return False
     try:
         msg = MIMEMultipart("alternative")
@@ -283,13 +359,17 @@ async def send_email(to_email: str, subject: str, html_body: str) -> bool:
         msg["To"] = to_email
         msg.attach(MIMEText(html_body, "html", "utf-8"))
 
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
+        smtp_cls = smtplib.SMTP_SSL if SMTP_USE_SSL else smtplib.SMTP
+        with smtp_cls(SMTP_HOST, SMTP_PORT, timeout=SMTP_TIMEOUT) as server:
+            server.ehlo()
+            if SMTP_USE_TLS and not SMTP_USE_SSL:
+                server.starttls()
+                server.ehlo()
             server.login(SMTP_USER, SMTP_PASSWORD)
-            server.sendmail(SMTP_FROM, to_email, msg.as_string())
+            server.sendmail(SMTP_FROM, [to_email], msg.as_string())
         return True
     except Exception as e:
-        logger.error(f"Failed to send email to {to_email}: {e}")
+        logger.error("SMTP send failed for %s via %s:%s: %s", to_email, SMTP_HOST, SMTP_PORT, e)
         return False
 
 async def send_verification_email(to_email: str, code: str) -> bool:
@@ -1199,7 +1279,7 @@ async def register(user_data: UserCreate):
         "status": "verification_required",
         "email": user_data.email,
         "email_sent": email_sent,
-        "message": "Код подтверждения отправлен на email" if email_sent else "SMTP не настроен — код: " + verification_code,
+        "message": "Код подтверждения отправлен на email" if email_sent else "Email сервис не настроен или письмо не отправлено — код: " + verification_code,
     }
 
 
@@ -1269,7 +1349,7 @@ async def resend_verification_code(request: ResendCodeRequest):
     return {
         "success": True,
         "email_sent": email_sent,
-        "message": "Новый код отправлен" if email_sent else "SMTP не настроен — код: " + new_code,
+        "message": "Новый код отправлен" if email_sent else "Email сервис не настроен или письмо не отправлено — код: " + new_code,
     }
 
 
@@ -1505,7 +1585,7 @@ async def request_password_reset(request: ResetPasswordRequest):
     return {
         "success": True,
         "email_sent": email_sent,
-        "message": "Код сброса пароля отправлен на email" if email_sent else "SMTP не настроен — код: " + reset_code,
+        "message": "Код сброса пароля отправлен на email" if email_sent else "Email сервис не настроен или письмо не отправлено — код: " + reset_code,
     }
 
 
@@ -2041,9 +2121,102 @@ async def get_formula(formula_id: str):
 
 # ==================== AI Chat Routes ====================
 
+def _utc_day_key() -> str:
+    return datetime.utcnow().strftime("%Y-%m-%d")
+
+async def _get_chat_quota(user_id: str) -> Dict[str, Any]:
+    day_key = _utc_day_key()
+    usage = await db.chat_usage.find_one({"user_id": user_id, "day": day_key}) or {}
+    free_used = int(usage.get("free_used", 0))
+    rewarded_credits = int(usage.get("rewarded_credits", 0))
+    return {
+        "day": day_key,
+        "free_limit": FREE_CHAT_DAILY_LIMIT,
+        "free_used": free_used,
+        "free_remaining": max(FREE_CHAT_DAILY_LIMIT - free_used, 0),
+        "rewarded_credits": max(rewarded_credits, 0),
+    }
+
+async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
+    now = datetime.utcnow()
+    day_key = _utc_day_key()
+
+    # 1) Try free daily quota first
+    free_doc = await db.chat_usage.find_one_and_update(
+        {
+            "user_id": user_id,
+            "day": day_key,
+            "free_used": {"$lt": FREE_CHAT_DAILY_LIMIT},
+        },
+        {
+            "$setOnInsert": {"created_at": now},
+            "$set": {"updated_at": now},
+            "$inc": {"free_used": 1},
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    if free_doc:
+        return {"allowed": True, "source": "free", "quota": await _get_chat_quota(user_id)}
+
+    # 2) If free quota is exhausted, consume rewarded credit
+    rewarded_doc = await db.chat_usage.find_one_and_update(
+        {
+            "user_id": user_id,
+            "day": day_key,
+            "rewarded_credits": {"$gt": 0},
+        },
+        {
+            "$setOnInsert": {"created_at": now},
+            "$set": {"updated_at": now},
+            "$inc": {"rewarded_credits": -1},
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    if rewarded_doc:
+        return {"allowed": True, "source": "rewarded", "quota": await _get_chat_quota(user_id)}
+
+    return {"allowed": False, "source": "none", "quota": await _get_chat_quota(user_id)}
+
+@api_router.get("/chat/quota")
+async def get_chat_quota(current_user: dict = Depends(get_current_user)):
+    return await _get_chat_quota(current_user["id"])
+
+@api_router.post("/chat/rewarded/claim")
+async def claim_chat_rewarded_credit(
+    request: ChatRewardClaimRequest,
+    current_user: dict = Depends(get_current_user),
+):
+    now = datetime.utcnow()
+    day_key = _utc_day_key()
+    await db.chat_usage.find_one_and_update(
+        {"user_id": current_user["id"], "day": day_key},
+        {
+            "$setOnInsert": {"created_at": now, "free_used": 0},
+            "$set": {"updated_at": now},
+            "$inc": {"rewarded_credits": 1},
+        },
+        upsert=True,
+        return_document=ReturnDocument.AFTER,
+    )
+    quota = await _get_chat_quota(current_user["id"])
+    return {"success": True, "quota": quota}
+
 @api_router.post("/chat")
 async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_current_user)):
     try:
+        allowance = await _consume_chat_credit(current_user["id"])
+        if not allowance["allowed"]:
+            raise HTTPException(
+                status_code=429,
+                detail={
+                    "code": "CHAT_LIMIT_REACHED",
+                    "message": "Бесплатный лимит AI-чата исчерпан. Посмотрите рекламу, чтобы отправить ещё одно сообщение.",
+                    "quota": allowance["quota"],
+                },
+            )
+
         session_id = request.session_id or f"chat-{current_user['id']}-{datetime.utcnow().timestamp()}"
         
         system_msg = "Ты - AI-помощник по физике. Помогай ученикам понять физические концепции, решать задачи и объяснять формулы. Отвечай на русском языке. Будь дружелюбным и терпеливым."
@@ -2056,10 +2229,13 @@ async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_cu
             "session_id": session_id,
             "user_message": request.message,
             "ai_response": response,
-            "timestamp": datetime.utcnow()
+            "timestamp": datetime.utcnow(),
+            "credit_source": allowance["source"],
         })
         
-        return {"response": response, "session_id": session_id}
+        return {"response": response, "session_id": session_id, "quota": allowance["quota"]}
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error in chat: {e}")
         raise HTTPException(status_code=500, detail="Ошибка AI чата")

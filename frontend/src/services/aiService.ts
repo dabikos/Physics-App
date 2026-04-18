@@ -19,11 +19,21 @@ export interface AIResponse {
   success: boolean;
   content: string;
   error?: string;
+  errorCode?: string;
+  quota?: ChatQuota;
   tokens?: {
     prompt: number;
     completion: number;
     total: number;
   };
+}
+
+export interface ChatQuota {
+  day: string;
+  free_limit: number;
+  free_used: number;
+  free_remaining: number;
+  rewarded_credits: number;
 }
 
 /**
@@ -56,13 +66,20 @@ export async function sendAIRequest(
     return {
       success: true,
       content: response.data.response || '',
+      quota: response.data.quota,
     };
   } catch (error: any) {
-    const errorMessage = error.response?.data?.detail || error.message || 'Ошибка AI сервиса';
+    const detail = error.response?.data?.detail;
+    const errorMessage =
+      (typeof detail === 'object' ? detail?.message : detail) ||
+      error.message ||
+      'Ошибка AI сервиса';
     return {
       success: false,
       content: '',
       error: errorMessage,
+      errorCode: typeof detail === 'object' ? detail?.code : undefined,
+      quota: typeof detail === 'object' ? detail?.quota : undefined,
     };
   }
 }
@@ -217,6 +234,37 @@ export async function checkAPIHealth(): Promise<boolean> {
 /**
  * Получить информацию о лимитах
  */
+export async function getChatQuota(): Promise<{ success: boolean; quota?: ChatQuota; error?: string }> {
+  try {
+    const response = await api.get('/chat/quota');
+    return { success: true, quota: response.data };
+  } catch (error: any) {
+    const detail = error.response?.data?.detail;
+    return {
+      success: false,
+      error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Не удалось получить лимиты чата',
+    };
+  }
+}
+
+export async function claimRewardedChatCredit(
+  adUnit: string
+): Promise<{ success: boolean; quota?: ChatQuota; error?: string }> {
+  try {
+    const response = await api.post('/chat/rewarded/claim', {
+      ad_unit: adUnit,
+      platform: 'android',
+    });
+    return { success: true, quota: response.data?.quota };
+  } catch (error: any) {
+    const detail = error.response?.data?.detail;
+    return {
+      success: false,
+      error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Не удалось начислить рекламный кредит',
+    };
+  }
+}
+
 export function getAPILimits() {
   return {
     openai: {
