@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,8 +16,8 @@ import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/context/AuthContext';
 import api from '../../src/services/api';
-
 export default function SectionScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const [selectedSubsection, setSelectedSubsection] = useState<string | null>(null);
@@ -75,7 +75,7 @@ export default function SectionScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
@@ -87,7 +87,8 @@ export default function SectionScreen() {
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Подразделы</Text>
 
         {sectionData.subsections.map((subsection) => {
@@ -325,3 +326,5 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
+
+

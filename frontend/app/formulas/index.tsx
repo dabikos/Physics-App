@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
@@ -136,8 +136,8 @@ const FormulaDisplay: React.FC<{ formula: string; color?: string }> = ({
     </View>
   );
 };
-
 export default function FormulasScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -162,7 +162,7 @@ export default function FormulasScreen() {
   }, {} as Record<string, typeof FORMULAS_DATA>);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
@@ -226,7 +226,8 @@ export default function FormulasScreen() {
         ))}
       </ScrollView>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
         {Object.entries(groupedFormulas).map(([sectionKey, sectionFormulas]) => (
           <View key={sectionKey} style={styles.sectionGroup}>
             <View style={styles.sectionHeader}>
@@ -442,3 +443,5 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+

@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.physicsai.app",
       "infoPlist": {
-        "NSCameraUsageDescription": "Нужно для сканирования QR-кода подключения."
+        "NSCameraUsageDescription": "Нужно для сканирования QR-кода подключения.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -20,6 +21,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#6C63FF"
       },
+      "softwareKeyboardLayoutMode": "resize",
       "permissions": [
         "CAMERA"
       ],
@@ -35,7 +37,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-4380583516308857~8132939796"
+          "androidAppId": "ca-app-pub-4380583516308857~8132939796",
+          "iosAppId": "ca-app-pub-4380583516308857~4332762758"
         }
       ],
       "expo-font",

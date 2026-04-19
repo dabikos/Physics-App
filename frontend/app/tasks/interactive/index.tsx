@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../../src/hooks/usePhysicsData';
@@ -15,8 +15,8 @@ import { InteractiveTask } from '../../../src/data/interactiveTasks';
 import { useInteractiveTasks } from '../../../src/hooks/useInteractiveTasks';
 import { useTheme } from '../../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-
 export default function InteractiveTasksIndexScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const { colors, isDark } = useTheme();
@@ -52,7 +52,7 @@ export default function InteractiveTasksIndexScreen() {
     : INTERACTIVE_TASKS;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -64,7 +64,8 @@ export default function InteractiveTasksIndexScreen() {
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
         {/* Фильтр по разделам */}
         <ScrollView 
           horizontal 
@@ -443,6 +444,8 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+
 
 
 

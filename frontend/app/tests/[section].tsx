@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Test, TestDifficulty } from '../../src/data/physicsData';
@@ -33,8 +33,8 @@ const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => strin
       return { label: t('difficulty.basic'), color: '#10B981', emoji: '🟢' };
   }
 };
-
 export default function TestsSectionScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const { colors } = useTheme();
@@ -199,7 +199,7 @@ export default function TestsSectionScreen() {
 
   if (!sectionData) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -219,7 +219,7 @@ export default function TestsSectionScreen() {
     const difficultyInfo = selectedTest ? getDifficultyInfo(selectedTest.difficulty, t) : null;
     
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={resetTest}>
             <Ionicons name="close" size={24} color={colors.text} />
@@ -228,7 +228,8 @@ export default function TestsSectionScreen() {
           <View style={styles.headerPlaceholder} />
         </View>
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
           <View style={[styles.resultsCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
             <View style={[
               styles.scoreCircle,
@@ -292,7 +293,7 @@ export default function TestsSectionScreen() {
     const difficultyInfo = getDifficultyInfo(selectedTest.difficulty, t);
 
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity
             style={styles.backButton}
@@ -328,7 +329,8 @@ export default function TestsSectionScreen() {
           />
         </View>
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
           <View style={[styles.questionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
             <View style={styles.questionContainer}>
               <MathContent content={currentQuestion.question} fontSize={18} textColor={colors.text} />
@@ -417,7 +419,7 @@ export default function TestsSectionScreen() {
 
   // Tests list screen
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -426,7 +428,8 @@ export default function TestsSectionScreen() {
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
         <View style={[styles.statsContainer, { backgroundColor: colors.card }]}>
           <Text style={[styles.statsText, { color: colors.textTertiary }]}>{t('tests.totalTests', { count: tests.length })}</Text>
         </View>
@@ -897,3 +900,5 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+

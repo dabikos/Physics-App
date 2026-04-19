@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Task } from '../../src/data/physicsData';
@@ -16,8 +16,8 @@ import { SolutionDisplay } from '../../src/components/SolutionDisplay';
 import { MathContent } from '../../src/components/MathContent';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-
 export default function TasksSectionScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const { colors } = useTheme();
@@ -80,7 +80,7 @@ export default function TasksSectionScreen() {
 
   if (!sectionData) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -97,7 +97,7 @@ export default function TasksSectionScreen() {
 
   if (tasks.length === 0) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -121,7 +121,7 @@ export default function TasksSectionScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -132,7 +132,8 @@ export default function TasksSectionScreen() {
         </Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
         <View style={[styles.taskCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
           <View style={styles.taskHeader}>
             <Text style={[styles.taskTitle, { color: colors.text }]}>{currentTask.title}</Text>
@@ -397,3 +398,5 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+

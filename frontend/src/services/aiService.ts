@@ -91,8 +91,30 @@ export async function generateExpandedContent(
   topicTitle: string,
   briefInfo: string,
   sectionName: string,
-  language: string = 'русский'
+  language: string = 'русский',
+  topicId?: string
 ): Promise<AIResponse> {
+  const resolvedTopicId = topicId?.trim();
+  if (resolvedTopicId) {
+    try {
+      const response = await api.post(`/topics/${encodeURIComponent(resolvedTopicId)}/generate`, {
+        topic_id: resolvedTopicId,
+        content_type: 'detailed',
+      });
+      return {
+        success: true,
+        content: response.data?.content || '',
+      };
+    } catch (error: any) {
+      const detail = error.response?.data?.detail;
+      return {
+        success: false,
+        content: '',
+        error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Failed to load content',
+      };
+    }
+  }
+
   const systemPrompt = `Ты — опытный преподаватель физики. Твоя задача — объяснять сложные концепции простым и понятным языком для школьников и студентов.
 
 ВАЖНО: Все формулы и математические выражения должны быть в формате LaTeX:
@@ -514,5 +536,4 @@ export async function generateTest(
     return { success: false, error: 'Ошибка парсинга ответа AI. Попробуйте ещё раз.' };
   }
 }
-
 

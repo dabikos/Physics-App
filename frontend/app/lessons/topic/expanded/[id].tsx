@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../../../src/hooks/usePhysicsData';
@@ -21,8 +21,8 @@ import { useLanguage } from '../../../../src/context/LanguageContext';
 
 const CACHE_PREFIX = 'expanded_topic_';
 const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 дней
-
 export default function ExpandedTopicScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { PHYSICS_SECTIONS, getTopicById } = usePhysicsData();
@@ -75,7 +75,8 @@ export default function ExpandedTopicScreen() {
       topic.title,
       topic.brief_info,
       sectionName,
-      getAILanguageName()
+      getAILanguageName(),
+      topic.id
     );
 
     if (result.success) {
@@ -104,7 +105,7 @@ export default function ExpandedTopicScreen() {
 
   if (!topic) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -117,7 +118,7 @@ export default function ExpandedTopicScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -149,6 +150,7 @@ export default function ExpandedTopicScreen() {
       <ScrollView 
         style={styles.content}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
         refreshControl={
           <RefreshControl
             refreshing={isRefreshing}
@@ -312,3 +314,5 @@ const styles = StyleSheet.create({
     height: 40,
   },
 });
+
+

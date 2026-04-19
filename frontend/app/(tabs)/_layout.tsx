@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
@@ -14,15 +13,14 @@ export default function TabLayout() {
   // Учитываем системные кнопки навигации (bottom inset)
   // На Android с gesture navigation insets.bottom > 0, но с 3-кнопочной навигацией может быть 0
   // Устанавливаем минимум 20px для Android чтобы не перекрывало системные кнопки
-  const bottomPadding = Platform.OS === 'ios' 
-    ? Math.max(insets.bottom, 25) 
-    : Math.max(insets.bottom, 20);
-  const tabBarHeight = Platform.OS === 'ios' ? 60 + bottomPadding : 60 + bottomPadding;
+  const bottomPadding = insets.bottom;
+  const tabBarHeight = 60 + bottomPadding;
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
           backgroundColor: colors.tabBarBg,
           borderTopWidth: 1,
@@ -74,3 +72,4 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
