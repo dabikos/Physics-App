@@ -2124,9 +2124,38 @@ async def get_formula(formula_id: str):
 def _utc_day_key() -> str:
     return datetime.utcnow().strftime("%Y-%m-%d")
 
+async def _normalize_chat_usage_day(user_id: str, day_key: str) -> Dict[str, Any]:
+    docs = await db.chat_usage.find({"user_id": user_id, "day": day_key}).sort("updated_at", -1).to_list(20)
+    if not docs:
+        return {}
+    if len(docs) == 1:
+        return docs[0]
+
+    # Merge duplicates left from older buggy upserts.
+    merged_free = sum(max(int(d.get("free_used", 0)), 0) for d in docs)
+    merged_rewarded = sum(max(int(d.get("rewarded_credits", 0)), 0) for d in docs)
+    primary = docs[0]
+    now = datetime.utcnow()
+
+    await db.chat_usage.update_one(
+        {"_id": primary["_id"]},
+        {
+            "$set": {
+                "free_used": merged_free,
+                "rewarded_credits": merged_rewarded,
+                "updated_at": now,
+            }
+        },
+    )
+    duplicate_ids = [d["_id"] for d in docs[1:]]
+    if duplicate_ids:
+        await db.chat_usage.delete_many({"_id": {"$in": duplicate_ids}})
+
+    return await db.chat_usage.find_one({"_id": primary["_id"]}) or {}
+
 async def _get_chat_quota(user_id: str) -> Dict[str, Any]:
     day_key = _utc_day_key()
-    usage = await db.chat_usage.find_one({"user_id": user_id, "day": day_key}) or {}
+    usage = await _normalize_chat_usage_day(user_id, day_key)
     free_used = int(usage.get("free_used", 0))
     rewarded_credits = int(usage.get("rewarded_credits", 0))
     return {
@@ -2141,6 +2170,22 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
     now = datetime.utcnow()
     day_key = _utc_day_key()
 
+    await _normalize_chat_usage_day(user_id, day_key)
+
+    # Ensure a single day document exists before conditional updates.
+    await db.chat_usage.update_one(
+        {"user_id": user_id, "day": day_key},
+        {
+            "$setOnInsert": {
+                "created_at": now,
+                "free_used": 0,
+                "rewarded_credits": 0,
+            },
+            "$set": {"updated_at": now},
+        },
+        upsert=True,
+    )
+
     # 1) Try free daily quota first
     free_doc = await db.chat_usage.find_one_and_update(
         {
@@ -2149,11 +2194,10 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
             "free_used": {"$lt": FREE_CHAT_DAILY_LIMIT},
         },
         {
-            "$setOnInsert": {"created_at": now},
             "$set": {"updated_at": now},
             "$inc": {"free_used": 1},
         },
-        upsert=True,
+        upsert=False,
         return_document=ReturnDocument.AFTER,
     )
     if free_doc:
@@ -2167,11 +2211,10 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
             "rewarded_credits": {"$gt": 0},
         },
         {
-            "$setOnInsert": {"created_at": now},
             "$set": {"updated_at": now},
             "$inc": {"rewarded_credits": -1},
         },
-        upsert=True,
+        upsert=False,
         return_document=ReturnDocument.AFTER,
     )
     if rewarded_doc:
