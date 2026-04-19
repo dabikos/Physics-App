@@ -7,6 +7,7 @@ import mobileAds, {
 } from 'react-native-google-mobile-ads';
 
 const ADS_TEST_MODE = String(process.env.EXPO_PUBLIC_ADS_TEST_MODE || '').toLowerCase() === 'true';
+const TEST_DEVICE_IDENTIFIERS = ['73501659-c885-4f9d-b3a4-bb2fbe0f9e60'];
 
 export const CHAT_REWARDED_AD_UNIT_ID = __DEV__
   ? TestIds.REWARDED
@@ -24,6 +25,9 @@ let adsInitialized = false;
 
 export async function initializeMobileAds(): Promise<void> {
   if (adsInitialized) return;
+  await mobileAds().setRequestConfiguration({
+    testDeviceIdentifiers: TEST_DEVICE_IDENTIFIERS,
+  });
   await mobileAds().initialize();
   adsInitialized = true;
 }
