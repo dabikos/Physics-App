@@ -65,7 +65,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
 # OpenAI API settings (берутся только из ENV переменных)
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
-OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5-nano')
+OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
 openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=60.0)
 FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '3'))
 
