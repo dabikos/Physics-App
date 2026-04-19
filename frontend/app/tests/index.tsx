@@ -8,7 +8,7 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,8 +28,8 @@ const DIFFICULTY_DATA: { key: Difficulty; color: string; emoji: string }[] = [
 ];
 
 const QUESTION_COUNTS = [5, 10, 15, 20];
-
 export default function TestsScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
   const { getAILanguageName } = useLanguage();
@@ -97,7 +97,7 @@ export default function TestsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
@@ -109,7 +109,8 @@ export default function TestsScreen() {
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
         {/* Кнопка генерации AI теста */}
         <TouchableOpacity
           style={styles.generateButton}
@@ -179,7 +180,8 @@ export default function TestsScreen() {
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
               {/* Выбор раздела */}
               <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{'📚 ' + t('tests.selectSection')}</Text>
               <View style={styles.optionsGrid}>
@@ -571,3 +573,5 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 });
+
+

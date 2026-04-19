@@ -11,7 +11,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -125,6 +125,7 @@ const SearchModal: React.FC<{ visible: boolean; onClose: () => void }> = ({ visi
   const { t } = useTranslation();
   const router = useRouter();
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
   const { query, results, loading, search, clearSearch } = useSearch();
 
   const handleSelect = (item: SearchResult) => {
@@ -220,7 +221,7 @@ const SearchModal: React.FC<{ visible: boolean; onClose: () => void }> = ({ visi
               <Ionicons name="chevron-forward" size={16} color={colors.border} />
             </TouchableOpacity>
           )}
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
         />
       </SafeAreaView>
     </Modal>
@@ -278,6 +279,7 @@ export default function HomeScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
+  const insets = useSafeAreaInsets();
   const { isOnline } = useOfflineCache();
   const bannerScale = useRef(new Animated.Value(0.9)).current;
   const bannerOpacity = useRef(new Animated.Value(0)).current;
@@ -331,7 +333,10 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
+      >
         {/* Header with search */}
         <View style={styles.header}>
           <Text style={[styles.appTitle, { color: colors.accent }]}>{t('home.appTitle')}</Text>

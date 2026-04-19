@@ -8,7 +8,7 @@ import {
   Animated,
   Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -24,8 +24,8 @@ const DIFFICULTY_COLORS = {
   advanced: '#F97316',
   olympiad: '#EF4444',
 };
-
 export default function AITestScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const params = useLocalSearchParams();
   const { colors, isDark } = useTheme();
@@ -59,7 +59,7 @@ export default function AITestScreen() {
 
   if (!test) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={styles.loadingContainer}>
           <Text style={[styles.loadingText, { color: colors.textTertiary }]}>{t('common.loading')}</Text>
         </View>
@@ -151,8 +151,8 @@ export default function AITestScreen() {
     const percentage = Math.round((totalCorrect / test.questions.length) * 100);
 
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
-        <ScrollView contentContainerStyle={styles.resultsContainer}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+        <ScrollView contentContainerStyle={[styles.resultsContainer, { paddingBottom: insets.bottom + 20 }]}>
           <View style={styles.resultsHeader}>
             <Text style={styles.resultsEmoji}>
               {percentage >= 70 ? '🎉' : percentage >= 50 ? '👍' : '📖'}
@@ -261,7 +261,7 @@ export default function AITestScreen() {
   const difficultyColor = DIFFICULTY_COLORS[test.difficulty as keyof typeof DIFFICULTY_COLORS] || '#6B7280';
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
@@ -308,6 +308,7 @@ export default function AITestScreen() {
       <Animated.ScrollView 
         style={[styles.questionContainer, { opacity: fadeAnim }]}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}
       >
         <View style={[styles.questionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
           <View style={styles.questionHeader}>
@@ -843,6 +844,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 });
+
+
+
 
 
 

@@ -6,10 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,12 +38,20 @@ export default function AIChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [chatQuota, setChatQuota] = useState<ChatQuota | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const { height: windowHeight } = useWindowDimensions();
+  const baseWindowHeightRef = useRef(windowHeight);
   const { colors, isDark } = useTheme();
   void isDark;
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
+  const windowShrink = Math.max(0, baseWindowHeightRef.current - windowHeight);
+  const androidKeyboardOffset = isKeyboardVisible
+    ? Math.max(0, keyboardHeight - windowShrink)
+    : 0;
 
   const legacySendMessage = async () => {
     if (!inputText.trim() || isLoading) return;
@@ -97,6 +107,30 @@ export default function AIChatScreen() {
         setChatQuota(result.quota);
       }
     });
+  }, []);
+
+  useEffect(() => {
+    if (!isKeyboardVisible) {
+      baseWindowHeightRef.current = windowHeight;
+    }
+  }, [windowHeight, isKeyboardVisible]);
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+
+    const showSubscription = Keyboard.addListener('keyboardDidShow', (event) => {
+      setIsKeyboardVisible(true);
+      setKeyboardHeight(event.endCoordinates?.height ?? 0);
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardVisible(false);
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
   }, []);
 
   const scrollToEnd = () => {
@@ -195,6 +229,102 @@ export default function AIChatScreen() {
     await sendPreparedMessage(textToSend);
   };
 
+  const chatBody = (
+    <>
+      <View style={styles.chatContentArea}>
+        {messages.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Ionicons name="chatbubble-ellipses" size={64} color={colors.border} />
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiChat.emptyTitle')}</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
+              {t('aiChat.emptySubtitle')}
+            </Text>
+            <View style={styles.examplesContainer}>
+              <Text style={[styles.examplesTitle, { color: colors.textTertiary }]}>{t('aiChat.examplesTitle')}</Text>
+              <TouchableOpacity
+                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                onPress={() => setInputText(t('aiChat.example1').replace(/^[^\p{L}]*/u, ''))}
+              >
+                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example1')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                onPress={() => setInputText(t('aiChat.example2').replace(/^[^\p{L}]*/u, ''))}
+              >
+                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example2')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                onPress={() => setInputText(t('aiChat.example3').replace(/^[^\p{L}]*/u, ''))}
+              >
+                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example3')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.messagesList}
+            contentContainerStyle={styles.messagesContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            onContentSizeChange={() => {
+              setTimeout(() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+              }, 100);
+            }}
+          >
+            {messages.map((message) =>
+              message.role === 'user'
+                ? renderUserMessage(message)
+                : renderAssistantMessage(message)
+            )}
+
+            {isLoading && (
+              <View style={[styles.loadingContainer, { backgroundColor: colors.card }]}>
+                <ActivityIndicator size="small" color={colors.accent} />
+                <Text style={[styles.loadingText, { color: colors.text }]}>{t('aiChat.sending')}</Text>
+                <Text style={[styles.loadingSubtext, { color: colors.textTertiary }]}>{t('aiChat.sendingSubtext')}</Text>
+              </View>
+            )}
+          </ScrollView>
+        )}
+      </View>
+
+      <View
+          style={[
+            styles.inputContainer,
+            {
+              backgroundColor: colors.headerBg,
+              borderTopColor: colors.border,
+              marginBottom: Platform.OS === 'android' ? androidKeyboardOffset : 0,
+            },
+          ]}
+        >
+        <TextInput
+          style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
+          value={inputText}
+          onChangeText={setInputText}
+          placeholder={t('aiChat.placeholder')}
+          placeholderTextColor={colors.textMuted}
+          multiline
+          maxLength={1000}
+        />
+        <TouchableOpacity
+          style={[
+            styles.sendButton,
+            { backgroundColor: colors.accent },
+            (!inputText.trim() || isLoading) && { backgroundColor: colors.border },
+          ]}
+          onPress={sendMessage}
+          disabled={!inputText.trim() || isLoading}
+        >
+          <Ionicons name="send" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+
   // Рендер сообщения пользователя
   const renderUserMessage = (message: Message) => (
     <View key={message.id} style={styles.userMessageContainer}>
@@ -242,93 +372,19 @@ export default function AIChatScreen() {
         </View>
       )}
 
-      <KeyboardAvoidingView
-        style={styles.chatContainer}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
-        {messages.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Ionicons name="chatbubble-ellipses" size={64} color={colors.border} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiChat.emptyTitle')}</Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
-              {t('aiChat.emptySubtitle')}
-            </Text>
-            <View style={styles.examplesContainer}>
-              <Text style={[styles.examplesTitle, { color: colors.textTertiary }]}>{t('aiChat.examplesTitle')}</Text>
-              <TouchableOpacity 
-                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => setInputText(t('aiChat.example1').replace(/^[^\p{L}]*/u, ''))}
-              >
-                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example1')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => setInputText(t('aiChat.example2').replace(/^[^\p{L}]*/u, ''))}
-              >
-                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example2')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => setInputText(t('aiChat.example3').replace(/^[^\p{L}]*/u, ''))}
-              >
-                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example3')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <ScrollView
-            ref={scrollViewRef}
-            style={styles.messagesList}
-            contentContainerStyle={styles.messagesContent}
-            showsVerticalScrollIndicator={false}
-            onContentSizeChange={() => {
-              setTimeout(() => {
-                scrollViewRef.current?.scrollToEnd({ animated: true });
-              }, 100);
-            }}
-          >
-            {messages.map((message) => 
-              message.role === 'user' 
-                ? renderUserMessage(message)
-                : renderAssistantMessage(message)
-            )}
-
-            {isLoading && (
-              <View style={[styles.loadingContainer, { backgroundColor: colors.card }]}>
-                <ActivityIndicator size="small" color={colors.accent} />
-                <Text style={[styles.loadingText, { color: colors.text }]}>{t('aiChat.sending')}</Text>
-                <Text style={[styles.loadingSubtext, { color: colors.textTertiary }]}>{t('aiChat.sendingSubtext')}</Text>
-              </View>
-            )}
-
-            <View style={styles.bottomPadding} />
-          </ScrollView>
-        )}
-
-        <View style={[styles.inputContainer, { backgroundColor: colors.headerBg, borderTopColor: colors.border }]}>
-          <TextInput
-            style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder={t('aiChat.placeholder')}
-            placeholderTextColor={colors.textMuted}
-            multiline
-            maxLength={1000}
-          />
-          <TouchableOpacity
-            style={[
-              styles.sendButton,
-              { backgroundColor: colors.accent },
-              (!inputText.trim() || isLoading) && { backgroundColor: colors.border },
-            ]}
-            onPress={sendMessage}
-            disabled={!inputText.trim() || isLoading}
-          >
-            <Ionicons name="send" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
+      {Platform.OS === 'ios' ? (
+        <KeyboardAvoidingView
+          style={styles.chatContainer}
+          behavior="padding"
+          keyboardVerticalOffset={0}
+        >
+          {chatBody}
+        </KeyboardAvoidingView>
+      ) : (
+        <View style={styles.chatContainer}>
+          {chatBody}
         </View>
-      </KeyboardAvoidingView>
+      )}
     </SafeAreaView>
   );
 }
@@ -379,11 +435,16 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
   },
+  chatContentArea: {
+    flex: 1,
+  },
   messagesList: {
     flex: 1,
   },
   messagesContent: {
     padding: 12,
+    paddingBottom: 12,
+    flexGrow: 1,
   },
   // Сообщение пользователя
   userMessageContainer: {
@@ -442,6 +503,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
+    paddingBottom: 24,
   },
   emptyTitle: {
     fontSize: 20,
@@ -532,8 +594,5 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     backgroundColor: '#D1D5DB',
-  },
-  bottomPadding: {
-    height: 20,
   },
 });

@@ -14,7 +14,7 @@ import {
   Dimensions,
   Switch,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -186,6 +186,7 @@ const EditProfileModal: React.FC<{
 }> = ({ visible, onClose, user, onSave }) => {
   const { colors, isDark } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const [name, setName] = useState(user?.name || '');
   const [grade, setGrade] = useState(user?.grade || '');
   const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar || '🧑‍🎓');
@@ -200,7 +201,8 @@ const EditProfileModal: React.FC<{
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
+        <View style={[styles.modalContent, { backgroundColor: colors.card, paddingBottom: 24 + insets.bottom }]}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.modalScrollContent}>
           <View style={styles.modalHeader}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>{t('profile.editProfile')}</Text>
             <TouchableOpacity onPress={onClose}>
@@ -252,6 +254,7 @@ const EditProfileModal: React.FC<{
               <Text style={styles.modalSaveText}>{t('common.save')}</Text>
             </LinearGradient>
           </TouchableOpacity>
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -264,6 +267,7 @@ export default function ProfileScreen() {
   const { user, signOut, updateUser } = useAuth();
   const { colors, isDark, toggleTheme } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const { currentLanguage, changeLanguage, availableLanguages } = useLanguage();
   const [profileData, setProfileData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -701,6 +705,7 @@ export default function ProfileScreen() {
       <ScrollView 
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.accent]} />}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
       >
         <Animated.View style={{ opacity: fadeAnim }}>
           <View style={styles.header}>
@@ -1449,6 +1454,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     padding: 24,
     maxHeight: '80%',
+  },
+  modalScrollContent: {
+    paddingBottom: 4,
   },
   modalHeader: {
     flexDirection: 'row',

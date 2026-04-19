@@ -9,8 +9,9 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -134,7 +135,9 @@ const BeautifulFormula: React.FC<{
   );
 };
 
-export default function TopicDetailScreen() {
+export default function TopicScreen() {
+
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { PHYSICS_SECTIONS, getTopicById } = usePhysicsData();
@@ -218,17 +221,22 @@ export default function TopicDetailScreen() {
     if (!id || openingLearnMore) return;
     setOpeningLearnMore(true);
     try {
-      await showLearnMoreInterstitialAd();
-    } catch {}
-    finally {
-      setOpeningLearnMore(false);
+      const adShown = await showLearnMoreInterstitialAd();
+      if (!adShown) {
+        Alert.alert(t('common.error'), t('lessons.loadErrorMessage'));
+        return;
+      }
       router.push(`/lessons/topic/expanded/${id}`);
+    } catch {
+      Alert.alert(t('common.error'), t('lessons.loadErrorMessage'));
+    } finally {
+      setOpeningLearnMore(false);
     }
   };
 
   if (!topic) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -248,7 +256,7 @@ export default function TopicDetailScreen() {
   const favorited = isFavorite(id!, 'topic');
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
@@ -275,7 +283,8 @@ export default function TopicDetailScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
         {/* Краткая информация */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -757,3 +766,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
