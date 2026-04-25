@@ -27,15 +27,15 @@ export function UniformAccelerationSimulation({ v0: v0Prop, accel: accelProp, ti
 
   useEffect(() => {
     if (v0Prop != null && v0Prop !== v0) setV0(v0Prop)
-  }, [v0Prop])
+  }, [v0, v0Prop])
 
   useEffect(() => {
     if (accelProp != null && accelProp !== accel) setAccel(accelProp)
-  }, [accelProp])
+  }, [accel, accelProp])
 
   useEffect(() => {
     if (timeScaleProp != null && timeScaleProp !== timeScale) setTimeScale(timeScaleProp)
-  }, [timeScaleProp])
+  }, [timeScale, timeScaleProp])
 
   useEffect(() => {
     if (!isRunning) return

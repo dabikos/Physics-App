@@ -15,8 +15,8 @@ import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
 const APP_VERSION = '1.0.0';
-const SUPPORT_EMAIL = 'support@physicsai.app';
-const GITHUB_URL = 'https://github.com/dabikos/Physics-App';
+const SUPPORT_EMAIL = 'support@physicsai.me';
+const TELEGRAM_URL = 'https://t.me/+4nopjpXt51w0YjMy';
 const PRIVACY_URL = 'https://github.com/dabikos/Physics-App/blob/main/PRIVACY_POLICY.md';
 
 export default function AboutScreen() {
@@ -28,6 +28,40 @@ export default function AboutScreen() {
   const openLink = (url: string) => {
     Linking.openURL(url).catch(() => {});
   };
+
+  const linkItems: {
+    icon: keyof typeof Ionicons.glyphMap;
+    iconColor: string;
+    iconBackground: string;
+    label: string;
+    value: string;
+    onPress: () => void;
+  }[] = [
+    {
+      icon: 'mail',
+      iconColor: colors.accent,
+      iconBackground: colors.accent + '15',
+      label: t('about.support'),
+      value: SUPPORT_EMAIL,
+      onPress: () => openLink(`mailto:${SUPPORT_EMAIL}`),
+    },
+    {
+      icon: 'shield-checkmark',
+      iconColor: '#10B981',
+      iconBackground: 'rgba(16,185,129,0.12)',
+      label: t('about.privacy'),
+      value: t('common.open'),
+      onPress: () => openLink(PRIVACY_URL),
+    },
+    {
+      icon: 'paper-plane',
+      iconColor: '#229ED9',
+      iconBackground: 'rgba(34,158,217,0.12)',
+      label: t('about.telegram'),
+      value: t('common.open'),
+      onPress: () => openLink(TELEGRAM_URL),
+    },
+  ];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -47,7 +81,11 @@ export default function AboutScreen() {
         {/* Logo & Name */}
         <View style={styles.logoSection}>
           <View style={[styles.logoContainer, { backgroundColor: colors.accent + '15' }]}>
-            <Ionicons name="flask" size={56} color={colors.accent} />
+            <Image
+              source={require('../assets/images/adaptive-icon.png')}
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
           </View>
           <Text style={[styles.appName, { color: colors.text }]}>Физика AI</Text>
           <Text style={[styles.version, { color: colors.textMuted }]}>v{APP_VERSION}</Text>
@@ -82,33 +120,26 @@ export default function AboutScreen() {
 
         {/* Links */}
         <View style={[styles.card, { backgroundColor: colors.card }]}>
-          <TouchableOpacity style={styles.linkRow} onPress={() => openLink(`mailto:${SUPPORT_EMAIL}`)}>
-            <View style={styles.linkLeft}>
-              <Ionicons name="mail" size={20} color={colors.accent} />
-              <Text style={[styles.linkText, { color: colors.textSecondary }]}>{t('about.support')}</Text>
-            </View>
-            <Text style={[styles.linkValue, { color: colors.textMuted }]}>{SUPPORT_EMAIL}</Text>
-          </TouchableOpacity>
+          {linkItems.map((item, index) => (
+            <React.Fragment key={item.label}>
+              <TouchableOpacity style={styles.linkRow} onPress={item.onPress}>
+                <View style={styles.linkLeft}>
+                  <View style={[styles.linkIconBox, { backgroundColor: item.iconBackground }]}>
+                    <Ionicons name={item.icon} size={18} color={item.iconColor} />
+                  </View>
+                  <View style={styles.linkMeta}>
+                    <Text style={[styles.linkText, { color: colors.textSecondary }]}>{item.label}</Text>
+                    <Text style={[styles.linkValue, { color: colors.textMuted }]}>{item.value}</Text>
+                  </View>
+                </View>
+                <Ionicons name="open-outline" size={18} color={colors.textMuted} />
+              </TouchableOpacity>
 
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-
-          <TouchableOpacity style={styles.linkRow} onPress={() => openLink(PRIVACY_URL)}>
-            <View style={styles.linkLeft}>
-              <Ionicons name="shield-checkmark" size={20} color="#10B981" />
-              <Text style={[styles.linkText, { color: colors.textSecondary }]}>{t('about.privacy')}</Text>
-            </View>
-            <Ionicons name="open-outline" size={18} color={colors.textMuted} />
-          </TouchableOpacity>
-
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-
-          <TouchableOpacity style={styles.linkRow} onPress={() => openLink(GITHUB_URL)}>
-            <View style={styles.linkLeft}>
-              <Ionicons name="logo-github" size={20} color={colors.text} />
-              <Text style={[styles.linkText, { color: colors.textSecondary }]}>GitHub</Text>
-            </View>
-            <Ionicons name="open-outline" size={18} color={colors.textMuted} />
-          </TouchableOpacity>
+              {index < linkItems.length - 1 ? (
+                <View style={[styles.divider, { backgroundColor: colors.border }]} />
+              ) : null}
+            </React.Fragment>
+          ))}
         </View>
 
         {/* Credits */}
@@ -165,6 +196,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
+    overflow: 'hidden',
+  },
+  logoImage: {
+    width: 76,
+    height: 76,
   },
   appName: {
     fontSize: 26,
@@ -217,13 +253,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    flex: 1,
+  },
+  linkIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  linkMeta: {
+    flex: 1,
   },
   linkText: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   linkValue: {
     fontSize: 13,
+    marginTop: 2,
   },
   divider: {
     height: 1,

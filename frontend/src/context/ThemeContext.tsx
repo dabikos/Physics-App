@@ -184,7 +184,6 @@ const THEME_KEY = 'app_theme';
 // ==================== Provider ====================
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -195,8 +194,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         }
       } catch {
         // default light
-      } finally {
-        setLoaded(true);
       }
     };
     loadTheme();
@@ -215,9 +212,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const isDark = theme === 'dark';
   const colors = isDark ? darkColors : lightColors;
-
-  // Don't render until theme is loaded to avoid flash
-  if (!loaded) return null;
 
   return (
     <ThemeContext.Provider value={{ theme, colors, isDark, toggleTheme, setTheme }}>

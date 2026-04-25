@@ -56,7 +56,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           setVideoUri(videoSource);
         }
         setIsLoading(false);
-      } catch (err) {
+      } catch {
         setError('Не удалось загрузить видео');
         setIsLoading(false);
       }
@@ -71,10 +71,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (playbackStatus.isLoaded) {
       setIsLoading(false);
       setIsPlaying(playbackStatus.isPlaying);
-      
-      if (playbackStatus.error) {
-        setError(playbackStatus.error);
-      }
     } else if (playbackStatus.error) {
       setError(playbackStatus.error);
       setIsLoading(false);
@@ -152,7 +148,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             resizeMode={ResizeMode.CONTAIN}
             onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
             onError={(error) => {
-              setError(error.message || 'Ошибка воспроизведения');
+              setError(typeof error === 'string' ? error : 'Ошибка воспроизведения');
               setIsLoading(false);
             }}
             onLoadStart={() => setIsLoading(true)}

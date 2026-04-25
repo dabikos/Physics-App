@@ -53,7 +53,7 @@ const GameCard: React.FC<GameCardProps> = ({
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [index, opacity, translateY]);
 
   const handlePressIn = () => {
     Animated.spring(scale, {
@@ -129,7 +129,7 @@ export default function GamesScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [bannerOpacity, bannerScale]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>

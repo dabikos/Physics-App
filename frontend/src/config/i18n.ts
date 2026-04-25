@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +8,7 @@ import en from '../locales/en.json';
 import kk from '../locales/kk.json';
 
 const LANGUAGE_KEY = '@app_language';
+const i18n = createInstance();
 
 const resources = {
   ru: { translation: ru },

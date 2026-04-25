@@ -4,7 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 interface MathTextProps {
@@ -27,8 +27,6 @@ export const MathText: React.FC<MathTextProps> = ({
   backgroundColor = 'transparent',
   style,
 }) => {
-  const { width } = useWindowDimensions();
-
   const html = useMemo(() => {
     // Преобразуем markdown-подобное форматирование в HTML
     let processedContent = content
@@ -183,7 +181,7 @@ export const MathText: React.FC<MathTextProps> = ({
       if (data.type === 'height' && data.value > 0) {
         setWebViewHeight(data.value + 20);
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   };

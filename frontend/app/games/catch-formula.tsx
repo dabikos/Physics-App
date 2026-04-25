@@ -134,7 +134,7 @@ export default function CatchFormulaGame() {
   const [gameOver, setGameOver] = useState(false);
   const [fallingBlocks, setFallingBlocks] = useState<FallingBlock[]>([]);
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
-  const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
+  const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const blockIdCounter = useRef(0);
   const currentFormulaRef = useRef(0); // Ref для актуального значения формулы
 
@@ -146,7 +146,6 @@ export default function CatchFormulaGame() {
     const id = `block-${blockIdCounter.current++}`;
     const blockWidth = 70;
     const padding = 20;
-    const minSpacing = blockWidth + padding;
     
     // Используем равномерное распределение для предотвращения наложения
     const totalBlocks = existingBlocks.length + 1; // +1 для нового блока
@@ -179,7 +178,6 @@ export default function CatchFormulaGame() {
   // Анимация падения блока
   const animateBlock = (block: FallingBlock) => {
     const fallDuration = 6000 + Math.random() * 4000; // 6-10 секунд (в 2 раза медленнее)
-    const bottomBoundary = SCREEN_HEIGHT - 200; // Граница снизу (учитывая формулу и хедер)
 
     Animated.parallel([
       Animated.timing(block.position.y, {
@@ -752,4 +750,3 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
 });
-

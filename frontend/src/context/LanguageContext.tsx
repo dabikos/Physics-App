@@ -34,7 +34,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         i18n.changeLanguage(lang);
       }
     });
-  }, []);
+  }, [i18n]);
 
   useEffect(() => {
     const validLang = (i18n.language === 'ru' || i18n.language === 'en' || i18n.language === 'kk')

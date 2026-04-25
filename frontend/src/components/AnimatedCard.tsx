@@ -37,7 +37,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       ]).start();
     }, delay + index * 100);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [delay, index, opacity, translateY]);
 
   const handlePressIn = () => {
     Animated.spring(scale, {

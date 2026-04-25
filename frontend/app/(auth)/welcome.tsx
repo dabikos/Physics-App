@@ -59,7 +59,7 @@ const FloatingAtom: React.FC<{ delay: number; size: number; top: number; left: n
 
     const timer = setTimeout(animate, delay);
     return () => clearTimeout(timer);
-  }, []);
+  }, [delay, opacity, translateY]);
 
   return (
     <Animated.View
@@ -137,7 +137,7 @@ export default function WelcomeScreen() {
         }),
       ]),
     ]).start();
-  }, []);
+  }, [buttonsOpacity, buttonsTranslateY, logoScale, subtitleOpacity, titleOpacity, titleTranslateY]);
 
   return (
     <View style={styles.container}>
@@ -507,5 +507,4 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
 

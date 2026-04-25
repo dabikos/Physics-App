@@ -12,10 +12,8 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { 
   getAuth, 
   initializeAuth,
-  getReactNativePersistence,
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
 // Firebase конфигурация
@@ -43,10 +41,8 @@ if (Platform.OS === 'web') {
   auth = getAuth(app);
 } else {
   try {
-    auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage),
-    });
-  } catch (error) {
+    auth = initializeAuth(app);
+  } catch {
     // Если auth уже инициализирован
     auth = getAuth(app);
   }

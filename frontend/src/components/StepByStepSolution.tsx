@@ -59,7 +59,7 @@ export function StepByStepSolution({
       }).start();
       onHintUsed?.();
     }
-  }, [showHint]);
+  }, [hintOpacity, onHintUsed, showHint]);
 
   // Анимация появления шага
   const animateStep = (index: number) => {

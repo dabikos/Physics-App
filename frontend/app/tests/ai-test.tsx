@@ -14,7 +14,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GeneratedTest } from '../../src/services/aiService';
 import { MathContent } from '../../src/components/MathContent';
-import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
 
@@ -30,7 +29,6 @@ export default function AITestScreen() {
   const params = useLocalSearchParams();
   const { colors, isDark } = useTheme();
   const { t } = useTranslation();
-  const { PHYSICS_SECTIONS } = usePhysicsData();
   
   // Парсим данные теста из параметров
   const [test, setTest] = useState<GeneratedTest | null>(null);
@@ -55,7 +53,7 @@ export default function AITestScreen() {
         router.back();
       }
     }
-  }, [params.testData]);
+  }, [params.testData, router, t]);
 
   if (!test) {
     return (
@@ -257,7 +255,6 @@ export default function AITestScreen() {
   }
 
   // Основной экран теста
-  const sectionData = PHYSICS_SECTIONS[test.section];
   const difficultyColor = DIFFICULTY_COLORS[test.difficulty as keyof typeof DIFFICULTY_COLORS] || '#6B7280';
 
   return (

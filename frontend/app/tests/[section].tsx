@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -46,7 +46,6 @@ export default function TestsSectionScreen() {
 
   const { user } = useAuth();
   const [assignedTests, setAssignedTests] = useState<Test[]>([]);
-  const [loadingAssigned, setLoadingAssigned] = useState(false);
   
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -56,7 +55,7 @@ export default function TestsSectionScreen() {
   const [testFinished, setTestFinished] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     return () => {
@@ -67,7 +66,6 @@ export default function TestsSectionScreen() {
   useEffect(() => {
     const loadAssignedTests = async () => {
       if (!user || user.role !== 'student') return;
-      setLoadingAssigned(true);
       try {
         const response = await api.get('/assigned-tests');
         const items = Array.isArray(response.data) ? response.data : [];
@@ -82,30 +80,11 @@ export default function TestsSectionScreen() {
         setAssignedTests(mapped);
       } catch (error) {
         console.log('Assigned tests load error:', error);
-      } finally {
-        setLoadingAssigned(false);
       }
     };
 
     loadAssignedTests();
   }, [user, section]);
-
-  useEffect(() => {
-    if (testStarted && timeLeft > 0) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            finishTest();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [testStarted]);
 
   const startTest = (test: Test) => {
     setSelectedTest(test);
@@ -135,16 +114,7 @@ export default function TestsSectionScreen() {
     }
   };
 
-  const finishTest = async () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setTestStarted(false);
-    setTestFinished(true);
-    calculateLocalResults();
-    await submitTestResult();
-    setShowSuccessModal(true);
-  };
-
-  const submitTestResult = async () => {
+  const submitTestResult = useCallback(async () => {
     if (!selectedTest) return;
     try {
       await api.post(`/tests/${selectedTest.id}/submit`, {
@@ -154,9 +124,9 @@ export default function TestsSectionScreen() {
     } catch (error) {
       console.log('Test submit error:', error);
     }
-  };
+  }, [answers, selectedTest]);
 
-  const calculateLocalResults = () => {
+  const calculateLocalResults = useCallback(() => {
     if (!selectedTest) return;
     let correctCount = 0;
     const resultDetails = selectedTest.questions.map((q, i) => {
@@ -175,7 +145,33 @@ export default function TestsSectionScreen() {
       total: selectedTest.questions.length,
       results: resultDetails,
     });
-  };
+  }, [answers, selectedTest]);
+
+  const finishTest = useCallback(async () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setTestStarted(false);
+    setTestFinished(true);
+    calculateLocalResults();
+    await submitTestResult();
+    setShowSuccessModal(true);
+  }, [calculateLocalResults, submitTestResult]);
+
+  useEffect(() => {
+    if (testStarted && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            finishTest();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [finishTest, testStarted, timeLeft]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

@@ -17,11 +17,11 @@ export function OhmsLawSimulation({ voltage: voltageProp, resistance: resistance
 
   useEffect(() => {
     if (voltageProp != null && voltageProp !== voltage) setVoltage(voltageProp)
-  }, [voltageProp])
+  }, [voltage, voltageProp])
 
   useEffect(() => {
     if (resistanceProp != null && resistanceProp !== resistance) setResistance(resistanceProp)
-  }, [resistanceProp])
+  }, [resistance, resistanceProp])
 
   return (
     <View style={styles.card}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -30,7 +30,7 @@ export default function ExpandedTopicScreen() {
   const topic = id ? getTopicById(id) : null;
   const sectionInfo = topic ? PHYSICS_SECTIONS[topic.section] : null;
   const sectionColor = sectionInfo?.color || '#6C63FF';
-  const sectionName = sectionInfo?.title || 'Физика';
+  const sectionName = sectionInfo?.name || 'Физика';
 
   const [expandedContent, setExpandedContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
@@ -40,13 +40,7 @@ export default function ExpandedTopicScreen() {
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
 
-  useEffect(() => {
-    if (topic) {
-      loadContent();
-    }
-  }, [topic?.id]);
-
-  const loadContent = async (forceRefresh = false) => {
+  const loadContent = useCallback(async (forceRefresh = false) => {
     if (!topic) return;
     
     setError(null);
@@ -63,40 +57,52 @@ export default function ExpandedTopicScreen() {
             return;
           }
         }
-      } catch (e) {
+      } catch {
         // Кэш не найден, продолжаем
       }
     }
 
     // Генерируем новый контент
     setIsLoading(true);
-    
-    const result = await generateExpandedContent(
-      topic.title,
-      topic.brief_info,
-      sectionName,
-      getAILanguageName(),
-      topic.id
-    );
 
-    if (result.success) {
-      setExpandedContent(result.content);
-      // Сохраняем в кэш
-      try {
-        await AsyncStorage.setItem(
-          CACHE_PREFIX + topic.id,
-          JSON.stringify({ content: result.content, timestamp: Date.now() })
-        );
-      } catch (e) {
-        // Ошибка кэширования не критична
+    try {
+      const result = await generateExpandedContent(
+        topic.title,
+        topic.brief_info,
+        sectionName,
+        getAILanguageName(),
+        topic.id
+      );
+
+      if (result.success) {
+        setExpandedContent(result.content);
+
+        // Сохраняем в кэш
+        try {
+          await AsyncStorage.setItem(
+            CACHE_PREFIX + topic.id,
+            JSON.stringify({ content: result.content, timestamp: Date.now() })
+          );
+        } catch {
+          // Ошибка кэширования не критична
+        }
+      } else {
+        setError(result.error || t('lessons.loadErrorMessage'));
       }
-    } else {
-      setError(result.error || t('lessons.errorLoading'));
+    } catch (error: any) {
+      const detail = error?.response?.data?.detail;
+      setError((typeof detail === 'string' ? detail : detail?.message) || error?.message || t('lessons.loadErrorMessage'));
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
-    
-    setIsLoading(false);
-    setIsRefreshing(false);
-  };
+  }, [getAILanguageName, sectionName, t, topic]);
+
+  useEffect(() => {
+    if (topic) {
+      loadContent();
+    }
+  }, [loadContent, topic]);
 
   const handleRefresh = () => {
     setIsRefreshing(true);

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Svg, { Line, Circle, Polygon } from 'react-native-svg'
@@ -25,15 +25,15 @@ export function EnergyInclineSimulation({ mass: massProp, height: heightProp, an
 
   useEffect(() => {
     if (massProp != null && massProp !== mass) setMass(massProp)
-  }, [massProp])
+  }, [mass, massProp])
 
   useEffect(() => {
     if (heightProp != null && heightProp !== height) setHeight(heightProp)
-  }, [heightProp])
+  }, [height, heightProp])
 
   useEffect(() => {
     if (angleProp != null && angleProp !== angle) setAngle(angleProp)
-  }, [angleProp])
+  }, [angle, angleProp])
 
   useEffect(() => {
     if (!isRunning) return

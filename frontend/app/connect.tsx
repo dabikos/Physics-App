@@ -35,7 +35,7 @@ export default function ConnectScreen() {
       return { disabled: true, text: t('connect.studentOnly') }
     }
     return { disabled: false, text: '' }
-  }, [user])
+  }, [t, user])
 
   const handleJoin = async () => {
     if (roleInfo.disabled) {

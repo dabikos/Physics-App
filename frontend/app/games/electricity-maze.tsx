@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import Svg, { Path, Circle, Line, Rect } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -118,25 +118,9 @@ export default function ElectricityMazeGame() {
       bulbGlow.setValue(0);
       setCurrentFlow(false);
     }
-  }, [circuitComplete, gameStarted]);
+  }, [bulbGlow, circuitComplete, currentAnimation, gameStarted]);
 
-  // Проверка завершения цепи
-  useEffect(() => {
-    const battery = elements.find((e) => e.id === 'battery');
-    const bulb = elements.find((e) => e.id === 'bulb');
-    
-    if (battery && bulb) {
-      // Проверяем, есть ли путь от батареи до лампочки
-      const pathExists = checkCircuitPath('battery', 'bulb');
-      setCircuitComplete(pathExists);
-      
-      if (pathExists && !circuitComplete) {
-        setScore((prev) => prev + 50);
-      }
-    }
-  }, [wires, elements]);
-
-  const checkCircuitPath = (from: string, to: string): boolean => {
+  const checkCircuitPath = useCallback((from: string, to: string): boolean => {
     const visited = new Set<string>();
     const queue = [from];
     visited.add(from);
@@ -161,7 +145,23 @@ export default function ElectricityMazeGame() {
     }
 
     return false;
-  };
+  }, [wires]);
+
+  // Проверка завершения цепи
+  useEffect(() => {
+    const battery = elements.find((e) => e.id === 'battery');
+    const bulb = elements.find((e) => e.id === 'bulb');
+    
+    if (battery && bulb) {
+      // Проверяем, есть ли путь от батареи до лампочки
+      const pathExists = checkCircuitPath('battery', 'bulb');
+      setCircuitComplete(pathExists);
+      
+      if (pathExists && !circuitComplete) {
+        setScore((prev) => prev + 50);
+      }
+    }
+  }, [checkCircuitPath, circuitComplete, elements]);
 
   const handleElementPress = (elementId: string) => {
     if (!gameStarted || gameOver) return;
@@ -795,4 +795,3 @@ const styles = StyleSheet.create({
     textShadowRadius: 4,
   },
 });
-

@@ -1,11 +1,18 @@
 import axios from 'axios';
 import i18next from 'i18next';
 
-// Backend URL — DigitalOcean App Platform
-const API_URL = 'https://physics-app-hgw72.ondigitalocean.app';
+const API_PROFILES: Record<string, string> = {
+  development: 'http://10.0.2.2:8000',
+  preview: 'https://physics-app-hgw72.ondigitalocean.app',
+  production: 'https://physics-app-hgw72.ondigitalocean.app',
+};
+
+const apiProfile = String(process.env.EXPO_PUBLIC_API_PROFILE || 'production').trim().toLowerCase();
+const envApiUrl = String(process.env.EXPO_PUBLIC_API_URL || '').trim();
+const resolvedApiUrl = (envApiUrl || API_PROFILES[apiProfile] || API_PROFILES.production).replace(/\/+$/, '');
 
 const api = axios.create({
-  baseURL: `${API_URL}/api`,
+  baseURL: `${resolvedApiUrl}/api`,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -22,7 +29,15 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+    const detail = error.response?.data?.detail;
+    const errorCode = typeof detail === 'object' ? detail?.code : undefined;
+    const isExpectedChatLimit = errorCode === 'CHAT_LIMIT_REACHED';
+
+    if (isExpectedChatLimit) {
+      console.warn('API Chat Limit:', error.response?.data);
+    } else {
+      console.error('API Error:', error.response?.data || error.message);
+    }
 
     // Auto-logout on invalid/expired token
     if (error.response?.status === 401 && error.response?.data?.detail === 'Invalid token') {

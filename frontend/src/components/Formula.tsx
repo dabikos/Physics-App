@@ -4,7 +4,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 interface FormulaProps {
@@ -27,8 +27,6 @@ export const Formula: React.FC<FormulaProps> = ({
   fontSize = 18,
   backgroundColor = 'transparent',
 }) => {
-  const { width } = useWindowDimensions();
-
   const html = useMemo(() => {
     // Экранируем специальные символы для HTML
     const escapedFormula = formula
@@ -83,7 +81,7 @@ export const Formula: React.FC<FormulaProps> = ({
         trust: true,
         strict: false
       });
-    } catch (e) {
+    } catch {
       document.getElementById('formula').innerHTML = '<span style="color: #ff6b6b;">Ошибка формулы</span>';
     }
   </script>

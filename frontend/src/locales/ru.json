@@ -34,7 +34,8 @@
     "toMenu": "В меню",
     "startGame": "Начать игру",
     "gameOver": "Игра окончена!",
-    "yourScore": "Ваш счёт: {{score}}"
+    "yourScore": "Ваш счёт: {{score}}",
+    "open": "Открыть"
   },
   "difficulty": {
     "basic": "Базовый",
@@ -153,7 +154,12 @@
     "topic": "Тема",
     "formula": "Формула",
     "section": "Раздел",
-    "subsection": "Подраздел"
+    "subsection": "Подраздел",
+    "dailyChallengeTitles": {
+      "solve": "Решить {{count}} задач по разделу {{section}}",
+      "test": "Пройти тест по разделу {{section}}",
+      "study": "Изучить {{count}} тем по разделу {{section}}"
+    }
   },
   "aiChat": {
     "title": "AI Помощник",
@@ -168,7 +174,15 @@
     "example3": "🔌 Что такое закон Ома?",
     "assistant": "AI Помощник",
     "badge": "LaTeX",
-    "errorConnection": "Ошибка соединения"
+    "errorConnection": "Ошибка соединения",
+    "freeToday": "Бесплатно сегодня",
+    "forAd": "За рекламу",
+    "limitTitle": "Лимит AI-чата",
+    "limitMessage": "3 бесплатных сообщения на сегодня закончились. Посмотреть рекламу и отправить это сообщение?",
+    "watchAd": "Смотреть рекламу",
+    "adNotFinishedTitle": "Реклама не досмотрена",
+    "adNotFinishedMessage": "Чтобы отправить сообщение, нужно досмотреть рекламу до конца.",
+    "rewardClaimError": "Не удалось выдать попытку за рекламу."
   },
   "profile": {
     "title": "Профиль",
@@ -205,7 +219,63 @@
     "maxLevel": "Максимальный уровень! 🎉",
     "day": "день",
     "days2_4": "дня",
-    "days5_20": "дней"
+    "days5_20": "дней",
+    "achievementItems": {
+      "first_test": {
+        "name": "?????? ????"
+      },
+      "first_task": {
+        "name": "?????? ??????"
+      },
+      "first_lesson": {
+        "name": "?????? ????"
+      },
+      "test_5": {
+        "name": "5 ??????"
+      },
+      "test_10": {
+        "name": "10 ??????"
+      },
+      "task_10": {
+        "name": "10 ?????"
+      },
+      "task_50": {
+        "name": "50 ?????"
+      },
+      "perfect_score": {
+        "name": "????????"
+      },
+      "streak_3": {
+        "name": "3 ??? ??????"
+      },
+      "streak_5": {
+        "name": "5 ???? ??????"
+      },
+      "streak_7": {
+        "name": "??????!"
+      },
+      "streak_30": {
+        "name": "?????!"
+      },
+      "xp_100": {
+        "name": "100 XP"
+      },
+      "xp_500": {
+        "name": "500 XP"
+      },
+      "xp_1000": {
+        "name": "1000 XP"
+      },
+      "mechanics_done": {
+        "name": "???????"
+      },
+      "thermo_done": {
+        "name": "????????????"
+      },
+      "electro_done": {
+        "name": "????????"
+      }
+    }
   },
   "lessons": {
     "title": "Уроки",
@@ -498,6 +568,7 @@
     "featureTeacher": "Система учитель-ученик",
     "support": "Поддержка",
     "privacy": "Политика конфиденциальности",
-    "madeWith": "Сделано с ❤️ для учеников и учителей"
+    "madeWith": "Сделано с ❤️ для учеников и учителей",
+    "telegram": "Telegram"
   }
 }

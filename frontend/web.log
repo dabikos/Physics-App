@@ -1,0 +1,70 @@
+
+> frontend@1.0.0 web
+> expo start --web --port 8082
+
+env: load .env
+env: export EXPO_PUBLIC_GITHUB_PAT EXPO_PUBLIC_FIREBASE_API_KEY EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN EXPO_PUBLIC_FIREBASE_PROJECT_ID EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID EXPO_PUBLIC_FIREBASE_APP_ID EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID EXPO_PUBLIC_API_PROFILE
+Starting project at D:\Physics App\Physics-App\frontend
+Starting Metro Bundler
+Waiting on http://localhost:8082
+Logs for your project will appear below.
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ node_modules\expo-router\node\render.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules\expo-router\entry.js ▓▓▓▓░░░░░░░░░░░░ 28.7% (15/28)
+λ node_modules\expo-router\node\render.js ▓▓▓▓▓░░░░░░░░░░░ 36.5% (287/475)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓░░░░░░░░░░ 38.4% (319/531)
+λ node_modules\expo-router\node\render.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 68.8% (613/739)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓░░░░░░░░ 56.1% (675/901)
+λ node_modules\expo-router\node\render.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 74.3% ( 898/1042)
+Web node_modules\expo-router\entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 84.1% (1073/1189)
+λ node_modules\expo-router\node\render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ 88.4% (1142/1232)
+Web Bundling failed 15213ms node_modules\expo-router\entry.js (1326 modules)
+λ Bundling failed 15222ms node_modules\expo-router\node\render.js (1350 modules)
+
+Metro error: Importing native-only module "react-native/Libraries/Utilities/codegenNativeComponent" on web from: node_modules\react-native-google-mobile-ads\lib\module\specs\components\GoogleMobileAdsBannerViewNativeComponent.ts
+
+Import stack:
+
+ node_modules\react-native-google-mobile-ads\lib\module\specs\components\GoogleMobileAdsBannerViewNativeComponent.ts
+ | import "react-native/Libraries/Utilities/codegenNativeComponent"
+           ^ Importing react-native internals is not supported on web.
+
+ node_modules\react-native-google-mobile-ads\lib\module\ads\BannerAd.js
+ | import "../specs/components/GoogleMobileAdsBannerViewNativeComponent"
+
+ node_modules\react-native-google-mobile-ads\lib\module\index.js
+ | import "./ads/BannerAd"
+
+ src\services\adService.ts
+ | import "react-native-google-mobile-ads"
+
+ app\lessons\topic\[id].tsx
+ | import "../../../src/services/adService"
+
+ app (require.context)
+
+
+
+Web Bundled 422ms node_modules\expo-router\_error.js (323 modules)
+ LOG  [web] Logs will appear in the browser console
+
+<--- Last few GCs --->
+
+[15156:000002A34E5D1000]  2047693 ms: Mark-Compact (reduce) 2047.5 (2086.1) -> 2046.4 (2084.1) MB, pooled: 0 MB, 774.83 / 0.00 ms  (+ 111.1 ms in 0 steps since start of marking, biggest step 0.0 ms, walltime since start of marking 949 ms) (average mu = 0.[15156:000002A34E5D1000]  2049872 ms: Mark-Compact (reduce) 2047.4 (2084.1) -> 2046.7 (2084.3) MB, pooled: 0 MB, 1748.02 / 0.00 ms  (+ 73.3 ms in 0 steps since start of marking, biggest step 0.0 ms, walltime since start of marking 1877 ms) (average mu = 0
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF6B628A2ED node::SetCppgcReference+17725
+ 2: 00007FF6B61F1EA8 v8::base::CPU::num_virtual_address_bits+92328
+ 3: 00007FF6B6D72EE1 v8::Isolate::ReportExternalAllocationLimitReached+65
+ 4: 00007FF6B6D5FB66 v8::Function::Experimental_IsNopFunction+2870
+ 5: 00007FF6B6BACDC0 v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+31456
+ 6: 00007FF6B6BA9E2A v8::internal::StrongRootAllocatorBase::StrongRootAllocatorBase+19274
+ 7: 00007FF6B6BBF681 v8::Isolate::GetHeapProfiler+7793
+ 8: 00007FF6B6BBFF28 v8::Isolate::GetHeapProfiler+10008
+ 9: 00007FF6B6BD0BDB v8::Isolate::GetHeapProfiler+78795
+10: 00007FF6B6899ACB v8::base::AddressSpaceReservation::AddressSpaceReservation+322075
+11: 00007FF656DED4BA 

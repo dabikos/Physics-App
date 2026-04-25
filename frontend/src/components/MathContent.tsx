@@ -201,7 +201,7 @@ export const MathContent: React.FC<MathContentProps> = ({
             if (data.height > 0) {
               setHeight(Math.max(inline ? 28 : 40, data.height + 10));
             }
-          } catch (e) {}
+          } catch {}
         }}
       />
     </View>

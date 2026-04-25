@@ -658,4 +658,108 @@ export const testsEn: Record<string, TestTranslation> = {
       { question: "A neutron star is:", options: ["A star made of neutrons", "An ordinary star", "A white dwarf", "A red giant"] },
     ]
   },
+
+  // ==================== ASTRONOMY ====================
+  "astronomy-basic-1": {
+    title: "Basics of Astronomy",
+    questions: [
+      { question: "What is the system containing the Sun, planets, and small bodies called?", options: ["Andromeda Galaxy", "Solar System", "Local Group", "Orion Nebula"] },
+      { question: "Why does the Moon shine in the night sky?", options: ["It emits light itself", "It reflects sunlight", "It is heated by Earth", "It consists of glowing gas"] },
+      { question: "Which planet is a gas giant?", options: ["Mars", "Earth", "Jupiter", "Mercury"] },
+      { question: "What is Earth's path around the Sun called?", options: ["Equator", "Orbit", "Meridian", "Spiral"] },
+      { question: "What does a telescope primarily study?", options: ["Atomic nuclei", "Celestial bodies and their radiation", "Only Earth's magnetic field", "Only chemical reactions"] },
+    ]
+  },
+  "astronomy-standard-1": {
+    title: "Celestial Mechanics and Observation",
+    questions: [
+      { question: "Which law connects orbital period and semi-major axis of a planet?", options: ["Ohm's law", "Kepler's third law", "Pascal's law", "Archimedes' law"] },
+      { question: "A geostationary satellite must be:", options: ["Above a pole", "On an equatorial orbit with a 24-hour period", "On any low orbit", "On the Moon's orbit"] },
+      { question: "What does redshift in a galaxy spectrum mean?", options: ["The galaxy is receding", "The galaxy is cooling quickly", "The galaxy rotates around Earth", "The galaxy is losing mass"] },
+      { question: "Why do space telescopes produce sharper images than many ground telescopes?", options: ["They are always larger", "They avoid atmospheric turbulence", "They work only at night", "They are closer to the stars"] },
+      { question: "Which quantity is commonly measured in light-years?", options: ["Mass of a star", "Distance to a star", "Surface temperature", "Rotation period of a planet"] },
+    ]
+  },
+  "astronomy-advanced-1": {
+    title: "Stars, Galaxies, and Cosmology",
+    questions: [
+      { question: "What does the Hertzsprung-Russell diagram show?", options: ["Mass versus orbital radius", "Luminosity versus surface temperature", "Only chemical composition", "Motion of galaxies in the Local Group"] },
+      { question: "What is the final stage of a Sun-like star?", options: ["Black hole", "White dwarf", "Neutron star", "A new Sun"] },
+      { question: "What fact underlies Hubble's law?", options: ["Brighter stars are colder", "The farther the galaxy, the greater its recession speed", "The larger the planet mass, the smaller its radius", "Closer galaxies have larger redshift"] },
+      { question: "What best indicates an unseen compact object in a binary system?", options: ["Change in Earth's atmospheric color", "Orbital motion of the visible star around the center of mass", "Permanent absence of spectrum", "Absence of gravity near the system"] },
+      { question: "What is spectroscopy used for in astronomy?", options: ["Only measuring planet mass", "Determining composition, temperature, and radial velocity", "Only photographing nebulae", "Only measuring distances in meters"] },
+    ]
+  },
+  "astronomy-advanced-2": {
+    title: "Observational Astronomy and Distances",
+    questions: [
+      { question: "Which method is used most directly to measure distances to nearby stars?", options: ["Annual parallax", "Ohm's law", "Nuclear mass measurement", "Blackbody spectrum"] },
+      { question: "What mainly determines a telescope's angular resolution?", options: ["Only body color", "Aperture diameter and wavelength", "Only telescope mass", "Only observing time"] },
+      { question: "Why are radio telescopes often combined into interferometers?", options: ["To reduce the speed of light", "To increase the effective baseline and improve resolution", "To make the signal colorful", "To measure only air temperature"] },
+      { question: "What can be found from a star's spectral lines?", options: ["Only its distance", "Composition, temperature, and radial velocity", "Only a planet's orbital size", "Only the age of the Universe"] },
+      { question: "What is a standard candle in astronomy?", options: ["Any bright star", "An object with known luminosity used to estimate distance", "Any object radiating only in radio", "A telescope with fixed aperture"] },
+    ]
+  },
+  "astronomy-olympiad-1": {
+    title: "Olympiad Astronomy",
+    questions: [
+      { question: "According to Kepler's third law for bodies orbiting the same center, the ratio T²/a³ is:", options: ["The same for all orbits", "Larger for heavier satellites", "Smaller at larger distance", "Always zero"] },
+      { question: "Why are total solar eclipses rare at one location on Earth?", options: ["Because the Sun is too far away", "Because the Moon's shadow forms a narrow path on Earth", "Because the Moon shines too weakly", "Because the atmosphere always blocks them"] },
+      { question: "If a star has large proper motion across the sky, that usually means it is:", options: ["Relatively close", "Necessarily very massive", "A black hole", "At the galactic center"] },
+      { question: "What best explains flat galaxy rotation curves?", options: ["Only visible matter in the disk", "The presence of additional unseen mass", "Absence of gravity at the outskirts", "Only radiation pressure"] },
+      { question: "Which expression belongs to Hubble's law?", options: ["v = H₀d", "F = ma", "pV = const", "E = mc²"] },
+    ]
+  },
+
+  // ==================== RELATIVITY ====================
+  "relativity-basic-1": {
+    title: "Basics of Special Relativity",
+    questions: [
+      { question: "Who formulated special relativity?", options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Niels Bohr"] },
+      { question: "Which quantity is the same for all inertial observers in vacuum?", options: ["Speed of light", "Mass of any body", "Length of any rod", "Period of a pendulum"] },
+      { question: "What happens to time for rapidly moving clocks from the viewpoint of an outside observer?", options: ["It goes faster", "It goes slower", "It does not change", "It disappears"] },
+      { question: "What happens to the length of a body along the direction of motion?", options: ["It increases", "It does not change", "It contracts", "It becomes zero at any speed"] },
+      { question: "What is the formula E = mc² called?", options: ["Law of gravitation", "Mass-energy relation", "Kepler's law", "Equation of state of a gas"] },
+    ]
+  },
+  "relativity-standard-1": {
+    title: "Relativistic Effects",
+    questions: [
+      { question: "As a body's speed approaches c, the Lorentz factor γ:", options: ["Tends to zero", "Remains equal to 1", "Increases", "Becomes negative"] },
+      { question: "Which formula describes time dilation?", options: ["Δt = Δt₀ / γ", "Δt = γΔt₀", "Δt = mv", "Δt = c / v"] },
+      { question: "Relativistic momentum equals:", options: ["p = mv²", "p = γmv", "p = mc²", "p = F / t"] },
+      { question: "Why can't a particle with nonzero rest mass reach light speed?", options: ["Its charge disappears", "It would require infinite energy", "Its mass decreases", "Time stops acting"] },
+      { question: "What is true about proper length?", options: ["It is measured in the body's rest frame", "It is always less than observed length", "It depends only on mass", "It becomes zero for any motion"] },
+    ]
+  },
+  "relativity-advanced-1": {
+    title: "Energy, Momentum, and Invariants",
+    questions: [
+      { question: "How is the total energy of a particle written in special relativity?", options: ["E = γmc²", "E = mv² / 2", "E = p / c", "E = Fq"] },
+      { question: "What is the interval for a light signal?", options: ["s > 0", "s < 0", "s = 0", "s = c"] },
+      { question: "How are energy, momentum, and rest mass related?", options: ["E = pc + mc²", "E² = p²c² + m²c⁴", "E = p² / 2m", "E² = p² + m²"] },
+      { question: "If γ = 2, then the kinetic energy equals:", options: ["0", "mc² / 2", "(γ - 1)mc² = mc²", "2mc²"] },
+      { question: "What does interval invariance mean physically?", options: ["All observers measure the same length", "There is a spacetime quantity identical in all inertial frames", "All bodies have the same speed", "Mass disappears in motion"] },
+    ]
+  },
+  "relativity-advanced-2": {
+    title: "Lorentz Transformations and Observers",
+    questions: [
+      { question: "What replaces Galilean transformations at speeds comparable to light speed?", options: ["Newton transformations", "Lorentz transformations", "Fourier transforms", "Maxwell transforms"] },
+      { question: "Why can't we simply add speeds by the classical formula u + v in special relativity?", options: ["Because that could exceed c", "Because mass disappears", "Because momentum stops existing", "Because time does not exist"] },
+      { question: "In which frame is proper time measured?", options: ["In the frame where the process occurs at one point", "Only in the laboratory frame", "Only on a moving spaceship", "It is identical in any frame"] },
+      { question: "What does relativity of simultaneity mean?", options: ["All clocks always run identically", "Events simultaneous in one inertial frame may not be simultaneous in another", "Time depends only on temperature", "Simultaneity cannot be defined at all"] },
+      { question: "What happens to γ as v → c?", options: ["γ → 0", "γ → 1", "γ → ∞", "γ becomes negative"] },
+    ]
+  },
+  "relativity-olympiad-1": {
+    title: "Olympiad Relativity",
+    questions: [
+      { question: "At what speed is the Lorentz factor equal to 2?", options: ["0.5c", "0.707c", "0.866c", "0.95c"] },
+      { question: "If γ = 10 and the proper lifetime of a particle is 2 μs, what is it in the laboratory frame?", options: ["0.2 μs", "2 μs", "20 μs", "200 μs"] },
+      { question: "Which is the invariant energy-momentum relation?", options: ["E² - p²c² = m²c⁴", "E = pc", "E = p²/2m", "E² + p²c² = 0"] },
+      { question: "What is true for a particle with zero rest mass?", options: ["It always moves slower than c", "It can be at rest", "It moves at speed c", "Its energy is always zero"] },
+      { question: "Which effect is confirmed by the observation of cosmic muons near Earth's surface?", options: ["Length contraction without time dilation", "Time dilation for fast particles", "Violation of energy conservation", "Change of muon charge in the atmosphere"] },
+    ]
+  },
 };

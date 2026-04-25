@@ -10,11 +10,8 @@ export default function TabLayout() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
-  // Учитываем системные кнопки навигации (bottom inset)
-  // На Android с gesture navigation insets.bottom > 0, но с 3-кнопочной навигацией может быть 0
-  // Устанавливаем минимум 20px для Android чтобы не перекрывало системные кнопки
-  const bottomPadding = insets.bottom;
-  const tabBarHeight = 60 + bottomPadding;
+  const tabBarBottomOffset = Math.max(insets.bottom, 12);
+  const tabBarHeight = 64;
 
   return (
     <Tabs
@@ -22,23 +19,31 @@ export default function TabLayout() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
+          position: 'absolute',
+          left: 12,
+          right: 12,
+          bottom: tabBarBottomOffset,
           backgroundColor: colors.tabBarBg,
-          borderTopWidth: 1,
-          borderTopColor: colors.tabBarBorder,
+          borderWidth: 1,
+          borderColor: colors.tabBarBorder,
+          borderRadius: 18,
           height: tabBarHeight,
-          paddingBottom: bottomPadding,
-          paddingTop: 10,
-          elevation: 10,
+          paddingBottom: 8,
+          paddingTop: 8,
+          elevation: 0,
           shadowColor: colors.shadowColor,
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         },
         tabBarActiveTintColor: colors.tabBarActive,
         tabBarInactiveTintColor: colors.tabBarInactive,
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: '600',
+        },
+        tabBarItemStyle: {
+          paddingVertical: 1,
         },
       }}
     >

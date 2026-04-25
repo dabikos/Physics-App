@@ -449,16 +449,6 @@ export async function generateTest(
       return null;
     };
 
-    // Функция для нормализации текста (убираем лишние пробелы, приводим к единому формату)
-    const normalizeText = (text: string): string => {
-      return text
-        .replace(/\s+/g, ' ')
-        .replace(/×/g, '')
-        .replace(/·/g, '')
-        .trim()
-        .toLowerCase();
-    };
-
     // Функция для извлечения числа из текста
     const extractNumber = (text: string): string | null => {
       const match = text.match(/([0-9,.\s]+)/);

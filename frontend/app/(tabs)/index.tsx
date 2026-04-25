@@ -39,7 +39,7 @@ interface DailyChallenge {
 interface ProfileBannerData {
   streak: { current: number };
   stats: { lessons_completed: number; tests_completed: number };
-  section_progress: Array<{ section: string; name: string; percentage: number }>;
+  section_progress: { section: string; name: string; percentage: number }[];
 }
 
 // ==================== Menu Card ====================
@@ -90,7 +90,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [index, opacity, translateY]);
 
   const handlePressIn = () => {
     Animated.spring(scale, { toValue: 0.95, friction: 5, useNativeDriver: true }).start();
@@ -234,6 +234,11 @@ const DailyChallengeCard: React.FC<{ challenge: DailyChallenge | null }> = ({ ch
   if (!challenge) return null;
 
   const progressPercent = challenge.target > 0 ? Math.min(100, (challenge.progress / challenge.target) * 100) : 0;
+  const localizedTitle = t(`home.dailyChallengeTitles.${challenge.type}`, {
+    count: challenge.target,
+    section: t(`physics.${challenge.section}`, { defaultValue: challenge.section }),
+    defaultValue: challenge.title,
+  });
 
   return (
     <View style={dcStyles.container}>
@@ -253,7 +258,7 @@ const DailyChallengeCard: React.FC<{ challenge: DailyChallenge | null }> = ({ ch
           </View>
         </View>
 
-        <Text style={dcStyles.title}>{challenge.title}</Text>
+        <Text style={dcStyles.title}>{localizedTitle}</Text>
 
         <View style={dcStyles.progressRow}>
           <View style={dcStyles.progressBarBg}>
@@ -310,7 +315,11 @@ export default function HomeScreen() {
       Animated.spring(bannerScale, { toValue: 1, friction: 6, useNativeDriver: true }),
       Animated.timing(bannerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
     ]).start();
-  }, []);
+  }, [bannerOpacity, bannerScale]);
+
+  useEffect(() => {
+    fetchHomeData();
+  }, [fetchHomeData]);
 
   // Build personalized banner text
   const firstName = user?.name?.split(' ')[0] || t('auth.student');

@@ -34,7 +34,8 @@
     "toMenu": "Мәзірге",
     "startGame": "Ойынды бастау",
     "gameOver": "Ойын аяқталды!",
-    "yourScore": "Сіздің ұпайыңыз: {{score}}"
+    "yourScore": "Сіздің ұпайыңыз: {{score}}",
+    "open": "Ашу"
   },
   "difficulty": {
     "basic": "Базалық",
@@ -153,7 +154,12 @@
     "topic": "Тақырып",
     "formula": "Формула",
     "section": "Бөлім",
-    "subsection": "Бөлімше"
+    "subsection": "Бөлімше",
+    "dailyChallengeTitles": {
+      "solve": "{{section}} бойынша {{count}} есеп шығару",
+      "test": "{{section}} бойынша тест тапсыру",
+      "study": "{{section}} бойынша {{count}} тақырып оқу"
+    }
   },
   "aiChat": {
     "title": "AI Көмекші",
@@ -168,7 +174,15 @@
     "example3": "🔌 Ом заңы деген не?",
     "assistant": "AI Көмекші",
     "badge": "LaTeX",
-    "errorConnection": "Қосылу қатесі"
+    "errorConnection": "Қосылу қатесі",
+    "freeToday": "Бүгін тегін",
+    "forAd": "Жарнама үшін",
+    "limitTitle": "AI чат лимиті",
+    "limitMessage": "Бүгінгі 3 тегін хабарлама аяқталды. Жарнаманы қарап, осы хабарды жібересіз бе?",
+    "watchAd": "Жарнаманы көру",
+    "adNotFinishedTitle": "Жарнама аяқталмады",
+    "adNotFinishedMessage": "Хабарламаны жіберу үшін жарнаманы соңына дейін көру керек.",
+    "rewardClaimError": "Жарнама үшін қосымша әрекет беру мүмкін болмады."
   },
   "profile": {
     "title": "Профиль",
@@ -205,7 +219,63 @@
     "maxLevel": "Максималды деңгей! 🎉",
     "day": "күн",
     "days2_4": "күн",
-    "days5_20": "күн"
+    "days5_20": "күн",
+    "achievementItems": {
+      "first_test": {
+        "name": "Бірінші тест"
+      },
+      "first_task": {
+        "name": "Бірінші есеп"
+      },
+      "first_lesson": {
+        "name": "Бірінші сабақ"
+      },
+      "test_5": {
+        "name": "5 тест"
+      },
+      "test_10": {
+        "name": "10 тест"
+      },
+      "task_10": {
+        "name": "10 есеп"
+      },
+      "task_50": {
+        "name": "50 есеп"
+      },
+      "perfect_score": {
+        "name": "Үздік"
+      },
+      "streak_3": {
+        "name": "3 күн қатарынан"
+      },
+      "streak_5": {
+        "name": "5 күн қатарынан"
+      },
+      "streak_7": {
+        "name": "Бір апта!"
+      },
+      "streak_30": {
+        "name": "Бір ай!"
+      },
+      "xp_100": {
+        "name": "100 XP"
+      },
+      "xp_500": {
+        "name": "500 XP"
+      },
+      "xp_1000": {
+        "name": "1000 XP"
+      },
+      "mechanics_done": {
+        "name": "Механик"
+      },
+      "thermo_done": {
+        "name": "Термодинамик"
+      },
+      "electro_done": {
+        "name": "Электрик"
+      }
+    }
   },
   "lessons": {
     "title": "Сабақтар",
@@ -498,6 +568,7 @@
     "featureTeacher": "Мұғалім-оқушы жүйесі",
     "support": "Қолдау",
     "privacy": "Құпиялылық саясаты",
-    "madeWith": "Оқушылар мен мұғалімдер үшін ❤️ жасалды"
+    "madeWith": "Оқушылар мен мұғалімдер үшін ❤️ жасалды",
+    "telegram": "Telegram"
   }
 }

@@ -34,7 +34,8 @@
     "toMenu": "To menu",
     "startGame": "Start game",
     "gameOver": "Game over!",
-    "yourScore": "Your score: {{score}}"
+    "yourScore": "Your score: {{score}}",
+    "open": "Open"
   },
   "difficulty": {
     "basic": "Basic",
@@ -153,7 +154,12 @@
     "topic": "Topic",
     "formula": "Formula",
     "section": "Section",
-    "subsection": "Subsection"
+    "subsection": "Subsection",
+    "dailyChallengeTitles": {
+      "solve": "Solve {{count}} problems on {{section}}",
+      "test": "Pass a test on {{section}}",
+      "study": "Study {{count}} topics on {{section}}"
+    }
   },
   "aiChat": {
     "title": "AI Assistant",
@@ -168,7 +174,15 @@
     "example3": "🔌 What is Ohm's law?",
     "assistant": "AI Assistant",
     "badge": "LaTeX",
-    "errorConnection": "Connection error"
+    "errorConnection": "Connection error",
+    "freeToday": "Free today",
+    "forAd": "For ads",
+    "limitTitle": "AI chat limit",
+    "limitMessage": "Your 3 free messages for today are over. Watch an ad and send this message?",
+    "watchAd": "Watch ad",
+    "adNotFinishedTitle": "Ad not finished",
+    "adNotFinishedMessage": "To send the message, you need to watch the ad to the end.",
+    "rewardClaimError": "Failed to grant an ad-based attempt."
   },
   "profile": {
     "title": "Profile",
@@ -205,7 +219,63 @@
     "maxLevel": "Max level! 🎉",
     "day": "day",
     "days2_4": "days",
-    "days5_20": "days"
+    "days5_20": "days",
+    "achievementItems": {
+      "first_test": {
+        "name": "First Test"
+      },
+      "first_task": {
+        "name": "First Problem"
+      },
+      "first_lesson": {
+        "name": "First Lesson"
+      },
+      "test_5": {
+        "name": "5 Tests"
+      },
+      "test_10": {
+        "name": "10 Tests"
+      },
+      "task_10": {
+        "name": "10 Problems"
+      },
+      "task_50": {
+        "name": "50 Problems"
+      },
+      "perfect_score": {
+        "name": "Straight A"
+      },
+      "streak_3": {
+        "name": "3 Days Streak"
+      },
+      "streak_5": {
+        "name": "5 Days Streak"
+      },
+      "streak_7": {
+        "name": "One Week!"
+      },
+      "streak_30": {
+        "name": "One Month!"
+      },
+      "xp_100": {
+        "name": "100 XP"
+      },
+      "xp_500": {
+        "name": "500 XP"
+      },
+      "xp_1000": {
+        "name": "1000 XP"
+      },
+      "mechanics_done": {
+        "name": "Mechanic"
+      },
+      "thermo_done": {
+        "name": "Thermodynamicist"
+      },
+      "electro_done": {
+        "name": "Electrician"
+      }
+    }
   },
   "lessons": {
     "title": "Lessons",
@@ -498,6 +568,7 @@
     "featureTeacher": "Teacher-student system",
     "support": "Support",
     "privacy": "Privacy Policy",
-    "madeWith": "Made with ❤️ for students and teachers"
+    "madeWith": "Made with ❤️ for students and teachers",
+    "telegram": "Telegram"
   }
 }

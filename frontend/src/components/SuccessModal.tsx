@@ -51,7 +51,7 @@ const Confetti: React.FC<{ delay: number; left: number }> = ({ delay, left }) =>
       ]).start();
     }, delay);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [delay, opacity, rotate, translateY]);
 
   const spin = rotate.interpolate({
     inputRange: [0, 10],
@@ -96,7 +96,7 @@ const Star: React.FC<{ delay: number; style: any }> = ({ delay, style }) => {
       ]).start();
     }, delay);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [delay, opacity, scale]);
 
   return (
     <Animated.View style={[style, { transform: [{ scale }], opacity }]}>
@@ -143,7 +143,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
         ]),
       ]).start();
     }
-  }, [visible]);
+  }, [checkAnim, scaleAnim, textAnim, visible]);
 
   const getIcon = () => {
     switch (type) {

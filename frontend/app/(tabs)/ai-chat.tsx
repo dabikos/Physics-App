@@ -11,9 +11,8 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Platform,
-  useWindowDimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { claimRewardedChatCredit, ChatQuota, getChatQuota, sendChatMessage } from '../../src/services/aiService';
 import { MathText } from '../../src/components/MathText';
@@ -40,18 +39,23 @@ export default function AIChatScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   const [chatQuota, setChatQuota] = useState<ChatQuota | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
-  const { height: windowHeight } = useWindowDimensions();
-  const baseWindowHeightRef = useRef(windowHeight);
+
   const { colors, isDark } = useTheme();
   void isDark;
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
-  const windowShrink = Math.max(0, baseWindowHeightRef.current - windowHeight);
-  const androidKeyboardOffset = isKeyboardVisible
-    ? Math.max(0, keyboardHeight - windowShrink)
-    : 0;
+  const insets = useSafeAreaInsets();
+  const tabBarBottomOffset = Math.max(insets.bottom, 12);
+  const tabBarHeight = 64;
+  const inputDockHeight = 64;
+  const chatBottomClearance = tabBarBottomOffset + tabBarHeight;
+  const inputDockGap = 8;
+  const keyboardDockOffset = Math.max(keyboardHeight - insets.bottom, 0);
+  const inputBottomOffset = isKeyboardVisible ? keyboardDockOffset : chatBottomClearance + inputDockGap;
+
 
   const legacySendMessage = async () => {
     if (!inputText.trim() || isLoading) return;
@@ -91,9 +95,9 @@ export default function AIChatScreen() {
       };
       setMessages((prev) => [...prev, errorMessage]);
     }
-    
+
     setIsLoading(false);
-    
+
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, 300);
@@ -101,7 +105,7 @@ export default function AIChatScreen() {
   void legacySendMessage;
 
   useEffect(() => {
-    initializeMobileAds().catch(() => {});
+    initializeMobileAds().catch(() => { });
     getChatQuota().then((result) => {
       if (result.success && result.quota) {
         setChatQuota(result.quota);
@@ -110,28 +114,25 @@ export default function AIChatScreen() {
   }, []);
 
   useEffect(() => {
-    if (!isKeyboardVisible) {
-      baseWindowHeightRef.current = windowHeight;
-    }
-  }, [windowHeight, isKeyboardVisible]);
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
-
-    const showSubscription = Keyboard.addListener('keyboardDidShow', (event) => {
+    const showSub = Keyboard.addListener(showEvent, (event) => {
       setIsKeyboardVisible(true);
       setKeyboardHeight(event.endCoordinates?.height ?? 0);
     });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    const hideSub = Keyboard.addListener(hideEvent, () => {
       setIsKeyboardVisible(false);
       setKeyboardHeight(0);
     });
 
     return () => {
-      showSubscription.remove();
-      hideSubscription.remove();
+      showSub.remove();
+      hideSub.remove();
     };
   }, []);
+
+
 
   const scrollToEnd = () => {
     setTimeout(() => {
@@ -180,25 +181,25 @@ export default function AIChatScreen() {
       setIsLoading(false);
 
       Alert.alert(
-        'Лимит AI-чата',
-        'Бесплатные 3 сообщения на сегодня закончились. Посмотреть рекламу и отправить это сообщение?',
+        t('aiChat.limitTitle'),
+        t('aiChat.limitMessage'),
         [
-          { text: 'Отмена', style: 'cancel' },
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: 'Смотреть рекламу',
+            text: t('aiChat.watchAd'),
             onPress: async () => {
               setIsLoading(true);
               const watched = await showRewardedChatAd();
               if (!watched) {
                 setIsLoading(false);
-                Alert.alert('Реклама не завершена', 'Чтобы отправить сообщение, нужно досмотреть рекламу.');
+                Alert.alert(t('aiChat.adNotFinishedTitle'), t('aiChat.adNotFinishedMessage'));
                 return;
               }
 
               const claim = await claimRewardedChatCredit(CHAT_REWARDED_AD_UNIT_ID);
               if (!claim.success) {
                 setIsLoading(false);
-                Alert.alert('Ошибка', claim.error || 'Не удалось начислить попытку за рекламу.');
+                Alert.alert(t('common.error'), claim.error || t('aiChat.rewardClaimError'));
                 return;
               }
 
@@ -265,7 +266,10 @@ export default function AIChatScreen() {
           <ScrollView
             ref={scrollViewRef}
             style={styles.messagesList}
-            contentContainerStyle={styles.messagesContent}
+            contentContainerStyle={[
+              styles.messagesContent,
+              { paddingBottom: inputBottomOffset + inputDockHeight + 24 },
+            ]}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
             onContentSizeChange={() => {
@@ -292,15 +296,16 @@ export default function AIChatScreen() {
       </View>
 
       <View
-          style={[
-            styles.inputContainer,
-            {
-              backgroundColor: colors.headerBg,
-              borderTopColor: colors.border,
-              marginBottom: Platform.OS === 'android' ? androidKeyboardOffset : 0,
-            },
-          ]}
-        >
+        style={[
+          styles.inputContainer,
+          {
+            backgroundColor: colors.headerBg,
+            borderColor: colors.border,
+            bottom: inputBottomOffset,
+            shadowColor: colors.shadowColor,
+          },
+        ]}
+      >
         <TextInput
           style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
           value={inputText}
@@ -326,34 +331,38 @@ export default function AIChatScreen() {
   );
 
   // Рендер сообщения пользователя
-  const renderUserMessage = (message: Message) => (
-    <View key={message.id} style={styles.userMessageContainer}>
-      <View style={styles.userBubble}>
-        <Text style={styles.userText}>{message.content}</Text>
+  function renderUserMessage(message: Message) {
+    return (
+      <View key={message.id} style={styles.userMessageContainer}>
+        <View style={styles.userBubble}>
+          <Text style={styles.userText}>{message.content}</Text>
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
 
   // Рендер сообщения AI - используем MathText как в "Изучить больше"
-  const renderAssistantMessage = (message: Message) => (
-    <View key={message.id} style={styles.assistantMessageContainer}>
-      <View style={styles.assistantHeader}>
-        <View style={[styles.avatarContainer, { backgroundColor: colors.accentLight }]}>
-          <Ionicons name="sparkles" size={16} color={colors.accent} />
+  function renderAssistantMessage(message: Message) {
+    return (
+      <View key={message.id} style={styles.assistantMessageContainer}>
+        <View style={styles.assistantHeader}>
+          <View style={[styles.avatarContainer, { backgroundColor: colors.accentLight }]}>
+            <Ionicons name="sparkles" size={16} color={colors.accent} />
+          </View>
+          <Text style={[styles.assistantLabel, { color: colors.accent }]}>{t('aiChat.assistant')}</Text>
         </View>
-        <Text style={[styles.assistantLabel, { color: colors.accent }]}>{t('aiChat.assistant')}</Text>
+        {/* Точно как в expanded - карточка с MathText */}
+        <View style={[styles.assistantCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+          <MathText
+            content={message.content}
+            textColor={colors.text}
+            fontSize={15}
+            backgroundColor={colors.card}
+          />
+        </View>
       </View>
-      {/* Точно как в expanded - карточка с MathText */}
-      <View style={[styles.assistantCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-        <MathText
-          content={message.content}
-          textColor={colors.text}
-          fontSize={15}
-          backgroundColor={colors.card}
-        />
-      </View>
-    </View>
-  );
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -367,24 +376,18 @@ export default function AIChatScreen() {
       {chatQuota && (
         <View style={[styles.quotaBar, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
           <Text style={[styles.quotaText, { color: colors.textSecondary }]}>
-            Бесплатно сегодня: {chatQuota.free_remaining}/{chatQuota.free_limit} | За рекламу: {chatQuota.rewarded_credits}
+            {t('aiChat.freeToday')}: {chatQuota.free_remaining}/{chatQuota.free_limit} | {t('aiChat.forAd')}: {chatQuota.rewarded_credits}
           </Text>
         </View>
       )}
 
-      {Platform.OS === 'ios' ? (
-        <KeyboardAvoidingView
-          style={styles.chatContainer}
-          behavior="padding"
-          keyboardVerticalOffset={0}
-        >
-          {chatBody}
-        </KeyboardAvoidingView>
-      ) : (
-        <View style={styles.chatContainer}>
-          {chatBody}
-        </View>
-      )}
+      <KeyboardAvoidingView
+        style={styles.chatContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={0}
+      >
+        {chatBody}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -566,21 +569,31 @@ const styles = StyleSheet.create({
   },
   // Input
   inputContainer: {
+    position: 'absolute',
+    left: 10,
+    right: 10,
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    padding: 12,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderWidth: 1,
+    borderRadius: 18,
+    height: 64,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 16,
+    elevation: 3,
   },
   input: {
     flex: 1,
     backgroundColor: '#F3F4F6',
     borderRadius: 20,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     fontSize: 15,
-    maxHeight: 100,
+    minHeight: 44,
+    maxHeight: 44,
     color: '#1F2937',
   },
   sendButton: {

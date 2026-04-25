@@ -14,7 +14,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
-import { InteractiveTask } from '../../../src/data/interactiveTasks';
+import type { InteractiveTask, SolutionStep } from '../../../src/data/interactiveTasks';
 import { useInteractiveTasks } from '../../../src/hooks/useInteractiveTasks';
 import { NumberInput } from '../../../src/components/NumberInput';
 import { useTheme } from '../../../src/context/ThemeContext';
@@ -99,15 +99,12 @@ const MathContent: React.FC<{
           try {
             const data = JSON.parse(event.nativeEvent.data);
             if (data.height > 0) setHeight(data.height + 5);
-          } catch (e) {}
+          } catch {}
         }}
       />
     </View>
   );
 };
-
-// Импортируем тип шага
-import { SolutionStep } from '../../../src/data/interactiveTasks';
 
 // Компонент для отображения шагов решения с LaTeX
 const SolutionSteps: React.FC<{
@@ -212,7 +209,7 @@ const SolutionSteps: React.FC<{
               <MathContent content={fullSolution} textColor={solIsDark ? '#FDE68A' : '#1F2937'} fontSize={14} />
               {answer && (
                 <View style={[styles.answerBox, { backgroundColor: solIsDark ? '#1A3A2A' : '#D1FAE5' }]}>
-                  <Text style={[styles.answerLabel, { color: solIsDark ? '#6EE7B7' : '#065F46' }]}>{t('tasks.answer')}</Text>
+                  <Text style={[styles.answerBoxLabel, { color: solIsDark ? '#6EE7B7' : '#065F46' }]}>{t('tasks.answer')}</Text>
                   <MathContent content={answer} textColor={solIsDark ? '#6EE7B7' : '#065F46'} fontSize={16} />
                 </View>
               )}
@@ -227,7 +224,7 @@ export default function InteractiveTaskScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const { getInteractiveTaskById } = useInteractiveTasks();
   
@@ -937,7 +934,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 12,
   },
-  answerLabel: {
+  answerBoxLabel: {
     fontSize: 12,
     fontWeight: '600',
     color: '#065F46',

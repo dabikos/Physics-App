@@ -2,10 +2,15 @@ import { useMemo } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import {
   PHYSICS_SECTIONS,
-  TOPICS_CONTENT,
-  FORMULAS_DATA,
-  TASKS_DATA,
-  TESTS_DATA,
+  getAllFormulas,
+  getAllTasks,
+  getAllTests,
+  getAllTopicsContent,
+  getFormulaById as getFormulaByIdRaw,
+  getTasksBySection as getTasksBySectionRaw,
+  getTestsBySection as getTestsBySectionRaw,
+  getTopicById as getTopicByIdRaw,
+  getTopicsBySubsection as getTopicsBySubsectionRaw,
   Section,
   TopicContent,
   Formula,
@@ -22,7 +27,7 @@ const translationsMap: Record<string, PhysicsTranslations | null> = {
   kk: kkTranslations,
 };
 
-function applySectonTranslations(
+function applySectionTranslations(
   sections: Record<string, Section>,
   tr: PhysicsTranslations['sections'] | undefined
 ): Record<string, Section> {
@@ -37,13 +42,13 @@ function applySectonTranslations(
     result[key] = {
       ...section,
       name: sTr.name || section.name,
-      subsections: section.subsections.map(sub => {
+      subsections: section.subsections.map((sub) => {
         const subTr = sTr.subsections?.[sub.id];
         if (!subTr) return sub;
         return {
           ...sub,
           name: subTr.name || sub.name,
-          topics: sub.topics.map(topic => ({
+          topics: sub.topics.map((topic) => ({
             ...topic,
             name: subTr.topics?.[topic.id] || topic.name,
           })),
@@ -81,7 +86,7 @@ function applyFormulaTranslations(
   tr: PhysicsTranslations['formulas'] | undefined
 ): Formula[] {
   if (!tr) return formulas;
-  return formulas.map(f => {
+  return formulas.map((f) => {
     const fTr = tr[f.id];
     if (!fTr) return f;
     return {
@@ -99,22 +104,16 @@ function applyTaskTranslations(
   tr: PhysicsTranslations['tasks'] | undefined
 ): Task[] {
   if (!tr) return tasks;
-  return tasks.map(t => {
-    const tTr = tr[t.id];
-    if (!tTr) return t;
-    // Find the index of the correct answer in original options,
-    // then use the same index in translated options
-    const correctIdx = t.options.indexOf(t.correct_answer);
-    const translatedOptions = tTr.options?.length ? tTr.options : t.options;
+  return tasks.map((task) => {
+    const tTr = tr[task.id];
+    if (!tTr) return task;
     return {
-      ...t,
-      title: tTr.title || t.title,
-      question: tTr.question || t.question,
-      options: translatedOptions,
-      correct_answer: correctIdx >= 0 && translatedOptions[correctIdx]
-        ? translatedOptions[correctIdx]
-        : t.correct_answer,
-      explanation: tTr.explanation || t.explanation,
+      ...task,
+      title: tTr.title || task.title,
+      question: tTr.question || task.question,
+      options: tTr.options?.length ? tTr.options : task.options,
+      // correct_answer is index in options, no remapping required
+      explanation: tTr.explanation || task.explanation,
     };
   });
 }
@@ -124,13 +123,13 @@ function applyTestTranslations(
   tr: PhysicsTranslations['tests'] | undefined
 ): Test[] {
   if (!tr) return tests;
-  return tests.map(t => {
-    const tTr = tr[t.id];
-    if (!tTr) return t;
+  return tests.map((test) => {
+    const tTr = tr[test.id];
+    if (!tTr) return test;
     return {
-      ...t,
-      title: tTr.title || t.title,
-      questions: t.questions.map((q, i) => {
+      ...test,
+      title: tTr.title || test.title,
+      questions: test.questions.map((q, i) => {
         const qTr = tTr.questions?.[i];
         if (!qTr) return q;
         return {
@@ -143,73 +142,162 @@ function applyTestTranslations(
   });
 }
 
-export function usePhysicsData() {
+function topicFallbackByLanguage(lang: string): string {
+  if (lang === 'en') return 'Section under development';
+  if (lang === 'kk') return '\u0411\u04e9\u043b\u0456\u043c \u0434\u0430\u0439\u044b\u043d\u0434\u0430\u043b\u0443\u0434\u0430';
+  return '\u0420\u0430\u0437\u0434\u0435\u043b \u0432 \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0435';
+}
+
+function isDefaultTopicFallback(value: string): boolean {
+  return value === 'Section under development' || value === '\u0420\u0430\u0437\u0434\u0435\u043b \u0432 \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0435';
+}
+
+type PhysicsDataResult = {
+  PHYSICS_SECTIONS: Record<string, Section>;
+  TOPICS_CONTENT: Record<string, TopicContent>;
+  FORMULAS_DATA: Formula[];
+  TASKS_DATA: Task[];
+  TESTS_DATA: Test[];
+  getTopicById: (id: string) => TopicContent | null;
+  getFormulaById: (id: string) => Formula | null;
+  getTasksBySection: (section: string) => Task[];
+  getTestsBySection: (section: string) => Test[];
+  getTopicsBySubsection: (sectionId: string, subsectionId: string) => TopicContent[];
+};
+
+export function usePhysicsData(): PhysicsDataResult {
   const { currentLanguage } = useLanguage();
 
+  const tr = translationsMap[currentLanguage];
+
+  const translatedSections = useMemo(() => {
+    return applySectionTranslations(PHYSICS_SECTIONS, tr?.sections);
+  }, [tr]);
+
   const data = useMemo(() => {
-    const tr = translationsMap[currentLanguage];
-    if (!tr) {
-      // Russian or no translations available
-      return {
-        PHYSICS_SECTIONS,
-        TOPICS_CONTENT,
-        FORMULAS_DATA,
-        TASKS_DATA,
-        TESTS_DATA,
-      };
-    }
+    let topicsCache: Record<string, TopicContent> | null = null;
+    let formulasCache: Formula[] | null = null;
+    let tasksCache: Task[] | null = null;
+    let testsCache: Test[] | null = null;
 
-    return {
-      PHYSICS_SECTIONS: applySectonTranslations(PHYSICS_SECTIONS, tr.sections),
-      TOPICS_CONTENT: applyTopicTranslations(TOPICS_CONTENT, tr.topics),
-      FORMULAS_DATA: applyFormulaTranslations(FORMULAS_DATA, tr.formulas),
-      TASKS_DATA: applyTaskTranslations(TASKS_DATA, tr.tasks),
-      TESTS_DATA: applyTestTranslations(TESTS_DATA, tr.tests),
+    const getAllTopicsTranslated = (): Record<string, TopicContent> => {
+      if (topicsCache) return topicsCache;
+      topicsCache = applyTopicTranslations(getAllTopicsContent(), tr?.topics);
+      return topicsCache;
     };
-  }, [currentLanguage]);
 
-  const getTopicById = (id: string): TopicContent | null => {
-    return data.TOPICS_CONTENT[id] || null;
-  };
+    const getAllFormulasTranslated = (): Formula[] => {
+      if (formulasCache) return formulasCache;
+      formulasCache = applyFormulaTranslations(getAllFormulas(), tr?.formulas);
+      return formulasCache;
+    };
 
-  const getFormulaById = (id: string): Formula | null => {
-    return data.FORMULAS_DATA.find(f => f.id === id) || null;
-  };
+    const getAllTasksTranslated = (): Task[] => {
+      if (tasksCache) return tasksCache;
+      tasksCache = applyTaskTranslations(getAllTasks(), tr?.tasks);
+      return tasksCache;
+    };
 
-  const getTasksBySection = (section: string): Task[] => {
-    return data.TASKS_DATA.filter(t => t.section === section);
-  };
+    const getAllTestsTranslated = (): Test[] => {
+      if (testsCache) return testsCache;
+      testsCache = applyTestTranslations(getAllTests(), tr?.tests);
+      return testsCache;
+    };
 
-  const getTestsBySection = (section: string): Test[] => {
-    return data.TESTS_DATA.filter(t => t.section === section);
-  };
+    const getTopicById = (id: string): TopicContent | null => {
+      const topic = getTopicByIdRaw(id);
+      if (!topic) return null;
 
-  const getTopicsBySubsection = (sectionId: string, subsectionId: string): TopicContent[] => {
-    const section = data.PHYSICS_SECTIONS[sectionId];
-    if (!section) return [];
-    const subsection = section.subsections.find(s => s.id === subsectionId);
-    if (!subsection) return [];
-    return subsection.topics.map(topic => {
-      return data.TOPICS_CONTENT[topic.id] || {
-        id: topic.id,
-        section: sectionId,
-        subsection: subsectionId,
-        title: topic.name,
-        brief_info: currentLanguage === 'en' ? 'Section under development' :
-                     currentLanguage === 'kk' ? 'Бөлім дайындалуда' :
-                     'Раздел в разработке',
-        example_problem: '',
-        formulas: [],
+      const tTr = tr?.topics?.[id];
+      const translated = tTr
+        ? {
+            ...topic,
+            title: tTr.title || topic.title,
+            brief_info: tTr.brief_info || topic.brief_info,
+            example_problem: tTr.example_problem || topic.example_problem,
+          }
+        : topic;
+
+      if (isDefaultTopicFallback(translated.brief_info)) {
+        return { ...translated, brief_info: topicFallbackByLanguage(currentLanguage) };
+      }
+
+      return translated;
+    };
+
+    const getFormulaById = (id: string): Formula | null => {
+      const formula = getFormulaByIdRaw(id);
+      if (!formula) return null;
+
+      const fTr = tr?.formulas?.[id];
+      if (!fTr) return formula;
+
+      return {
+        ...formula,
+        name: fTr.name || formula.name,
+        description: fTr.description || formula.description,
+        variables: fTr.variables || formula.variables,
+        unit: fTr.unit || formula.unit,
       };
-    });
-  };
+    };
 
-  return {
-    ...data,
-    getTopicById,
-    getFormulaById,
-    getTasksBySection,
-    getTestsBySection,
-    getTopicsBySubsection,
-  };
+    const getTasksBySection = (section: string): Task[] => {
+      return applyTaskTranslations(getTasksBySectionRaw(section), tr?.tasks);
+    };
+
+    const getTestsBySection = (section: string): Test[] => {
+      return applyTestTranslations(getTestsBySectionRaw(section), tr?.tests);
+    };
+
+    const getTopicsBySubsection = (sectionId: string, subsectionId: string): TopicContent[] => {
+      const topics = getTopicsBySubsectionRaw(sectionId, subsectionId);
+      return topics.map((topic) => {
+        const tTr = tr?.topics?.[topic.id];
+        if (!tTr) {
+          if (isDefaultTopicFallback(topic.brief_info)) {
+            return { ...topic, brief_info: topicFallbackByLanguage(currentLanguage) };
+          }
+          return topic;
+        }
+        return {
+          ...topic,
+          title: tTr.title || topic.title,
+          brief_info: tTr.brief_info || topic.brief_info,
+          example_problem: tTr.example_problem || topic.example_problem,
+        };
+      });
+    };
+
+    const result = {
+      PHYSICS_SECTIONS: translatedSections,
+      getTopicById,
+      getFormulaById,
+      getTasksBySection,
+      getTestsBySection,
+      getTopicsBySubsection,
+    } as PhysicsDataResult;
+
+    Object.defineProperties(result, {
+      TOPICS_CONTENT: {
+        enumerable: true,
+        get: getAllTopicsTranslated,
+      },
+      FORMULAS_DATA: {
+        enumerable: true,
+        get: getAllFormulasTranslated,
+      },
+      TASKS_DATA: {
+        enumerable: true,
+        get: getAllTasksTranslated,
+      },
+      TESTS_DATA: {
+        enumerable: true,
+        get: getAllTestsTranslated,
+      },
+    });
+
+    return result;
+  }, [currentLanguage, tr, translatedSections]);
+
+  return data;
 }

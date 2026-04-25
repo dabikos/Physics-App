@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface AnimatedIconProps {
@@ -21,14 +21,7 @@ export const AnimatedIcon: React.FC<AnimatedIconProps> = ({
   const scaleValue = useRef(new Animated.Value(1)).current;
   const rotateValue = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      startAnimation();
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const startAnimation = () => {
+  const startAnimation = useCallback(() => {
     switch (animation) {
       case 'bounce':
         Animated.loop(
@@ -94,7 +87,14 @@ export const AnimatedIcon: React.FC<AnimatedIconProps> = ({
         ).start();
         break;
     }
-  };
+  }, [animatedValue, animation, rotateValue, scaleValue]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      startAnimation();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [delay, startAnimation]);
 
   const spin = rotateValue.interpolate({
     inputRange: [0, 1],

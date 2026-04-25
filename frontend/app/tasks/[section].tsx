@@ -9,7 +9,6 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Task } from '../../src/data/physicsData';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { SuccessModal } from '../../src/components/SuccessModal';
 import { SolutionDisplay } from '../../src/components/SolutionDisplay';
@@ -76,6 +75,20 @@ export default function TasksSectionScreen() {
       case 'hard': return t('difficulty.hard');
       default: return difficulty;
     }
+  };
+
+  const getOptionState = (index: number) => {
+    if (!showResult) return 'default';
+    if (index === currentTask.correct_answer) return 'correct';
+    if (selectedAnswer === index && !isCorrect) return 'wrong';
+    return 'default';
+  };
+
+  const getOptionTextColor = (index: number) => {
+    const optionState = getOptionState(index);
+    if (optionState === 'correct') return '#064E3B';
+    if (optionState === 'wrong') return '#7F1D1D';
+    return colors.text;
   };
 
   if (!sectionData) {
@@ -149,39 +162,44 @@ export default function TasksSectionScreen() {
           </View>
 
           <View style={styles.optionsContainer}>
-            {currentTask.options.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.optionButton,
-                  { backgroundColor: colors.optionBg, borderColor: colors.optionBorder },
-                  selectedAnswer === index && [styles.optionSelected, { borderColor: colors.accent, backgroundColor: colors.optionSelectedBg }],
-                  showResult && index === currentTask.correct_answer && styles.optionCorrect,
-                  showResult && selectedAnswer === index && !isCorrect && styles.optionWrong,
-                ]}
-                onPress={() => !showResult && setSelectedAnswer(index)}
-                disabled={showResult}
-              >
-                <View style={[
-                  styles.optionCircle,
-                  { backgroundColor: colors.optionCircleBg },
-                  selectedAnswer === index && [styles.optionCircleSelected, { backgroundColor: colors.accent }],
-                  showResult && index === currentTask.correct_answer && styles.optionCircleCorrect,
-                  showResult && selectedAnswer === index && !isCorrect && styles.optionCircleWrong,
-                ]}>
-                  <Text style={[
-                    styles.optionLetter,
-                    { color: colors.textTertiary },
-                    (selectedAnswer === index || (showResult && index === currentTask.correct_answer)) && styles.optionLetterSelected,
+            {currentTask.options.map((option, index) => {
+              const optionState = getOptionState(index);
+              const optionTextColor = getOptionTextColor(index);
+
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.optionButton,
+                    { backgroundColor: colors.optionBg, borderColor: colors.optionBorder },
+                    selectedAnswer === index && [styles.optionSelected, { borderColor: colors.accent, backgroundColor: colors.optionSelectedBg }],
+                    optionState === 'correct' && styles.optionCorrect,
+                    optionState === 'wrong' && styles.optionWrong,
+                  ]}
+                  onPress={() => !showResult && setSelectedAnswer(index)}
+                  disabled={showResult}
+                >
+                  <View style={[
+                    styles.optionCircle,
+                    { backgroundColor: colors.optionCircleBg },
+                    selectedAnswer === index && [styles.optionCircleSelected, { backgroundColor: colors.accent }],
+                    optionState === 'correct' && styles.optionCircleCorrect,
+                    optionState === 'wrong' && styles.optionCircleWrong,
                   ]}>
-                    {String.fromCharCode(65 + index)}
-                  </Text>
-                </View>
-                <View style={styles.optionTextContainer}>
-                  <MathContent content={option} fontSize={15} textColor={colors.text} />
-                </View>
-              </TouchableOpacity>
-            ))}
+                    <Text style={[
+                      styles.optionLetter,
+                      { color: colors.textTertiary },
+                      (selectedAnswer === index || optionState === 'correct') && styles.optionLetterSelected,
+                    ]}>
+                      {String.fromCharCode(65 + index)}
+                    </Text>
+                  </View>
+                  <View style={styles.optionTextContainer}>
+                    <MathContent content={option} fontSize={15} textColor={optionTextColor} />
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 

@@ -3,8 +3,6 @@ import { useLanguage } from '../context/LanguageContext';
 import {
   INTERACTIVE_TASKS,
   InteractiveTask,
-  getInteractiveTasksBySection as _getBySection,
-  getInteractiveTaskById as _getById,
 } from '../data/interactiveTasks';
 import {
   InteractiveTaskI18n,

@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
-import { generateTest, GeneratedTest } from '../../src/services/aiService';
+import { generateTest } from '../../src/services/aiService';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useLanguage } from '../../src/context/LanguageContext';
@@ -171,7 +171,7 @@ export default function TestsScreen() {
         <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
           <View style={[styles.modalContainer, { backgroundColor: colors.modalBg }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>{'🧪 ' + t('tests.settingsTitle')}</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('tests.settingsTitle')}</Text>
               <TouchableOpacity
                 style={[styles.modalCloseButton, { backgroundColor: colors.inputBg }]}
                 onPress={() => setShowModal(false)}
@@ -183,7 +183,7 @@ export default function TestsScreen() {
             <ScrollView showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
               {/* Выбор раздела */}
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{'📚 ' + t('tests.selectSection')}</Text>
+              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.sectionLabel')}</Text>
               <View style={styles.optionsGrid}>
                 {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
                   <TouchableOpacity
@@ -210,7 +210,7 @@ export default function TestsScreen() {
               </View>
 
               {/* Выбор сложности */}
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{'📊 ' + t('tests.difficultyLabel')}</Text>
+              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.difficultyLabel')}</Text>
               <View style={styles.difficultyOptions}>
                 {DIFFICULTIES.map((diff) => (
                   <TouchableOpacity
@@ -238,7 +238,7 @@ export default function TestsScreen() {
               </View>
 
               {/* Выбор количества вопросов */}
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{'🔢 ' + t('tests.questionsCount')}</Text>
+              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.questionCountLabel')}</Text>
               <View style={styles.countOptions}>
                 {QUESTION_COUNTS.map((count) => (
                   <TouchableOpacity

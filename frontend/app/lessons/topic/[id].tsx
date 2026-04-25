@@ -121,7 +121,7 @@ const BeautifulFormula: React.FC<{
                 const data = JSON.parse(event.nativeEvent.data);
                 if (data.loaded) setLoaded(true);
                 if (data.height > 0) setHeight(Math.max(50, data.height + 16));
-              } catch (e) {}
+              } catch {}
             }}
           />
         </View>
