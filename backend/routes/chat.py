@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from datetime import datetime
 from pymongo import ReturnDocument
 
@@ -8,6 +8,8 @@ from server import (
     ChatRewardClaimRequest,
     ChatRequest,
     get_current_user,
+    language_name_from_code,
+    parse_accept_language,
     _get_chat_quota,
     _consume_chat_credit,
     _utc_day_key,
@@ -44,7 +46,11 @@ async def claim_chat_rewarded_credit(
     return {"success": True, "quota": quota}
 
 @router.post("/chat")
-async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_current_user)):
+async def chat_with_ai(
+    request: ChatRequest,
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     try:
         allowance = await _consume_chat_credit(current_user["id"])
         if not allowance["allowed"]:
@@ -58,9 +64,11 @@ async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_cu
             )
 
         session_id = request.session_id or f"chat-{current_user['id']}-{datetime.utcnow().timestamp()}"
+        lang_code = request.language or parse_accept_language(accept_language)
+        language = language_name_from_code(lang_code)
         
         fallback_system_msg = """You are an AI physics tutor for school and university students.
-Answer in Russian unless the user explicitly asks for another language.
+Answer in {language}. If the user's message clearly asks for another language, follow the user's request.
 
 Answer quality rules:
 - Explain in simple words, but keep physics accurate.
@@ -74,6 +82,7 @@ Answer quality rules:
 - Keep the answer compact unless the user asks for a detailed explanation."""
         prompt_config = await get_ai_prompt("ai_chat")
         system_msg = prompt_config.get("prompt") if prompt_config else fallback_system_msg
+        system_msg = system_msg.replace("{language}", language)
         max_tokens = prompt_config.get("max_tokens") if prompt_config else None
         temperature = prompt_config.get("temperature") if prompt_config else None
         

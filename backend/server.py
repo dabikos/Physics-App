@@ -237,6 +237,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     session_id: Optional[str] = None
+    language: Optional[str] = None
 
 class ChatRewardClaimRequest(BaseModel):
     ad_unit: Optional[str] = None
@@ -1301,7 +1302,12 @@ async def get_topic(topic_id: str):
     return topic
 
 @api_router.post("/topics/{topic_id}/generate")
-async def generate_topic_content(topic_id: str, request: GenerateContentRequest, current_user: dict = Depends(get_current_user)):
+async def generate_topic_content(
+    topic_id: str,
+    request: GenerateContentRequest,
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     topic = await db.topics.find_one({"id": topic_id})
     if not topic:
         for t in INITIAL_TOPICS:
@@ -1313,9 +1319,11 @@ async def generate_topic_content(topic_id: str, request: GenerateContentRequest,
         raise HTTPException(status_code=404, detail="Тема не найдена")
     
     try:
+        lang_code = parse_accept_language(accept_language)
+        language = language_name_from_code(lang_code)
         formulas = ', '.join(topic.get('formulas', [])) or 'choose the key formulas for this topic yourself'
         fallback_system_msg = """You are an experienced physics teacher for school and university students.
-Always write the final answer in Russian. Be clear, accurate, and focused on the topic.
+Always write the final answer in {language}. Be clear, accurate, and focused on the topic.
 
 Formula and math rules:
 - Write every formula and mathematical expression only in LaTeX.
@@ -1327,6 +1335,7 @@ Formula and math rules:
 - For calculations, use: given data, formula, substitution, final answer."""
         prompt_config = await get_ai_prompt("learn_more")
         system_msg = prompt_config.get("prompt") if prompt_config else fallback_system_msg
+        system_msg = system_msg.replace("{language}", language)
         user_template = prompt_config.get("user_template") if prompt_config else None
         
         if user_template:
@@ -1336,6 +1345,7 @@ Formula and math rules:
                     "topic_title": topic["title"],
                     "formulas": formulas,
                     "content_type": request.content_type,
+                    "language": language,
                 },
             )
         elif request.content_type == "detailed":
@@ -1538,7 +1548,11 @@ correct_answer - это индекс правильного ответа (0, 1, 
         raise HTTPException(status_code=500, detail="Ошибка генерации задачи")
 
 @api_router.post("/tests/generate")
-async def generate_test(request: GenerateTestRequest, current_user: dict = Depends(get_current_user)):
+async def generate_test(
+    request: GenerateTestRequest,
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     """Generate a new test using AI"""
     section_names = {
         "mechanics": "Механика",
@@ -1551,11 +1565,14 @@ async def generate_test(request: GenerateTestRequest, current_user: dict = Depen
     section_name = section_names.get(request.section, request.section)
     
     try:
+        lang_code = parse_accept_language(accept_language)
+        language = language_name_from_code(lang_code)
         fallback_system_msg = """Ты - генератор тестов по физике. Создавай тесты в формате JSON.
             
 ВАЖНО: Отвечай ТОЛЬКО валидным JSON без markdown разметки, без ```json```, просто чистый JSON."""
         prompt_config = await get_ai_prompt("test_generator")
         system_msg = prompt_config.get("prompt") if prompt_config else fallback_system_msg
+        system_msg = system_msg.replace("{language}", language)
         user_template = prompt_config.get("user_template") if prompt_config else None
         
         if user_template:
@@ -1565,6 +1582,7 @@ async def generate_test(request: GenerateTestRequest, current_user: dict = Depen
                     "num_questions": request.num_questions,
                     "section_name": section_name,
                     "difficulty": request.difficulty,
+                    "language": language,
                 },
             )
         else:
@@ -2009,6 +2027,13 @@ def parse_accept_language(accept_language: str | None) -> str:
         if lang.startswith("ru"):
             return "ru"
     return "ru"
+
+def language_name_from_code(language_code: str | None) -> str:
+    if language_code == "en":
+        return "English"
+    if language_code == "kk":
+        return "Kazakh"
+    return "Russian"
 
 LEVELS_I18N = {
     "en": [

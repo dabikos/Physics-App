@@ -45,22 +45,28 @@ export async function sendAIRequest(
     model?: string;
     maxTokens?: number;
     temperature?: number;
+    language?: string;
   }
 ): Promise<AIResponse> {
   try {
-    // Формируем сообщение из массива (берём последнее user сообщение)
-    const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
     const systemMessage = messages.find(m => m.role === 'system')?.content || '';
-    
-    // Формируем полный промпт
-    const fullMessage = systemMessage 
-      ? `${systemMessage}\n\n${userMessage}`
-      : userMessage;
+    const conversationMessages = messages
+      .filter(m => m.role !== 'system')
+      .slice(-12);
+
+    const conversationText = conversationMessages
+      .map(m => `${m.role === 'assistant' ? 'AI' : 'Пользователь'}: ${m.content}`)
+      .join('\n\n');
+
+    const fullMessage = systemMessage
+      ? `${systemMessage}\n\nКонтекст диалога:\n${conversationText}`
+      : conversationText;
 
     const response = await api.post('/chat', {
       message: fullMessage,
       max_tokens: options?.maxTokens || 4096,
       temperature: options?.temperature ?? 0.7,
+      language: options?.language,
     });
 
     return {
@@ -199,7 +205,8 @@ export async function sendChatMessage(
   return sendAIRequest(messages, {
     model: AI_MODELS.GPT5_NANO,
     maxTokens: 2048,
-    temperature: 0.8,
+    temperature: 0.65,
+    language,
   });
 }
 

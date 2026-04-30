@@ -127,7 +127,7 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
             "name": "AI Chat Physics Tutor",
             "prompt": (
                 "You are an AI physics tutor for school and university students.\n"
-                "Answer in Russian unless the user explicitly asks for another language.\n\n"
+                "Answer in {language}. If the user's message clearly asks for another language, follow the user's request.\n\n"
                 "Answer quality rules:\n"
                 "- Explain in simple words, but keep physics accurate.\n"
                 "- Write every formula and mathematical expression only in LaTeX.\n"
@@ -147,7 +147,7 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
             "name": "Learn More Topic Expansion",
             "prompt": (
                 "You are an experienced physics teacher for school and university students.\n"
-                "Always write the final answer in Russian. Be clear, accurate, and focused on the topic.\n\n"
+                "Always write the final answer in {language}. Be clear, accurate, and focused on the topic.\n\n"
                 "Formula and math rules:\n"
                 "- Write every formula and mathematical expression only in LaTeX.\n"
                 "- Use inline math like $v = v_0 + at$.\n"
@@ -158,10 +158,10 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
                 "- For calculations, use: given data, formula, substitution, final answer."
             ),
             "user_template": (
-                "Create an expanded Russian explanation for the physics topic: {topic_title}.\n\n"
+                "Create an expanded explanation in {language} for the physics topic: {topic_title}.\n\n"
                 "Key formulas for the topic: {formulas}.\n"
                 "Content type: {content_type}.\n\n"
-                "Use this structure in Russian:\n"
+                "Use this structure in {language}:\n"
                 "1. Short overview: what the topic means and why it matters.\n"
                 "2. Physical meaning: explain the idea in simple words.\n"
                 "3. Main formulas: only LaTeX, with explanations of every symbol.\n"
@@ -180,12 +180,13 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
             "prompt": (
                 "You are a physics test generator.\n"
                 "Return only valid JSON. Do not use Markdown, code fences, comments, or extra text.\n"
-                "Questions and options must be in Russian.\n"
+                "Questions, options, and title must be in {language}.\n"
                 "Use LaTeX for formulas inside strings when formulas are needed.\n"
                 "Each question must have exactly four options and one correct answer index."
             ),
             "user_template": (
                 "Create a physics test with exactly {num_questions} questions for the topic: {section_name}.\n"
+                "Language: {language}.\n"
                 "Difficulty: {difficulty}.\n\n"
                 "Return JSON in exactly this shape:\n"
                 "{{\n"
@@ -210,7 +211,14 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
             """
             INSERT INTO ai_prompts (key, name, prompt, user_template, temperature, max_tokens)
             VALUES ($1, $2, $3, $4, $5, $6)
-            ON CONFLICT (key) DO NOTHING
+            ON CONFLICT (key) DO UPDATE SET
+                name = EXCLUDED.name,
+                prompt = EXCLUDED.prompt,
+                user_template = EXCLUDED.user_template,
+                temperature = EXCLUDED.temperature,
+                max_tokens = EXCLUDED.max_tokens,
+                updated_at = NOW()
+            WHERE ai_prompts.updated_by IS NULL
             """,
             item["key"],
             item["name"],
