@@ -1312,16 +1312,62 @@ async def generate_topic_content(topic_id: str, request: GenerateContentRequest,
         raise HTTPException(status_code=404, detail="Тема не найдена")
     
     try:
-        system_msg = "Ты - опытный преподаватель физики. Объясняй материал понятно и с примерами. Используй формулы и конкретные числовые примеры. Отвечай на русском языке."
+        formulas = ', '.join(topic.get('formulas', [])) or 'choose the key formulas for this topic yourself'
+        system_msg = """You are an experienced physics teacher for school and university students.
+Always write the final answer in Russian. Be clear, accurate, and focused on the topic.
+
+Formula and math rules:
+- Write every formula and mathematical expression only in LaTeX.
+- Use inline math like $v = v_0 + at$.
+- Put important formulas on separate lines like $$F = ma$$.
+- Do not write plain-text formulas like F=ma when it is a mathematical formula.
+- After every important formula, explain each symbol and its units.
+- Structure the answer with short Markdown headings.
+- For calculations, use: given data, formula, substitution, final answer."""
         
         if request.content_type == "detailed":
-            prompt = f"Расскажи подробно о теме '{topic['title']}'. Включи теоретические основы, физический смысл, историю открытия и практическое применение. Используй формулы: {', '.join(topic.get('formulas', []))}."
+            prompt = f"""Create an expanded Russian explanation for the physics topic: {topic['title']}.
+
+Key formulas for the topic: {formulas}.
+
+Use this structure in Russian:
+1. Short overview: what the topic means and why it matters.
+2. Physical meaning: explain the idea in simple words.
+3. Main formulas: only LaTeX, with explanations of every symbol.
+4. How to apply it: a step-by-step method for solving problems.
+5. Calculation example: a small problem with given data, formula, substitution, and answer.
+6. Common mistakes: 3-5 frequent student mistakes.
+7. Summary: a compact final recap.
+
+The text must help the student understand the material, not just memorize it. Avoid unnecessary complexity, but keep enough detail."""
         elif request.content_type == "examples":
-            prompt = f"Приведи 3 подробных примера решения задач по теме '{topic['title']}' с использованием формул: {', '.join(topic.get('formulas', []))}. Каждый пример должен быть с подробным решением."
+            prompt = f"""Give 3 detailed Russian worked examples for the physics topic: {topic['title']}.
+
+Key formulas: {formulas}.
+
+For each example use this structure in Russian:
+- Problem statement
+- Given data
+- Find
+- Formula, necessarily in LaTeX
+- Solution
+- Short explanation of the result
+
+All formulas must be in LaTeX."""
         else:
-            prompt = f"Создай 5 практических задач по теме '{topic['title']}' разной сложности. Для каждой задачи укажи условие и ответ (без решения)."
+            prompt = f"""Create 5 Russian practice problems for the physics topic: {topic['title']} with different difficulty levels.
+
+Key formulas: {formulas}.
+
+For each problem include:
+- problem statement;
+- difficulty level;
+- short answer;
+- main formula in LaTeX.
+
+Do not provide full solutions, only the problem and answer."""
         
-        response = await call_ai(prompt, system_message=system_msg)
+        response = await call_ai(prompt, system_message=system_msg, temperature=0.55)
         
         return {"content": response, "type": request.content_type}
     except Exception as e:
@@ -2828,11 +2874,14 @@ from routes.auth import router as auth_router
 from routes.chat import router as chat_router
 from routes.teacher import router as teacher_router
 from routes.notifications import router as notifications_router
+from routes.admin import router as admin_router
+from postgres import close_postgres_pool, init_postgres_schema
 
 api_router.include_router(auth_router)
 api_router.include_router(chat_router)
 api_router.include_router(teacher_router)
 api_router.include_router(notifications_router)
+api_router.include_router(admin_router)
 
 # ==================== Root ====================
 
@@ -2870,6 +2919,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_postgres():
+    await init_postgres_schema()
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    await close_postgres_pool()
     client.close()
