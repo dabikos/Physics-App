@@ -29,6 +29,7 @@ class AIPromptUpsert(BaseModel):
     key: str = Field(min_length=1, max_length=120)
     name: str = Field(min_length=1, max_length=200)
     prompt: str = Field(min_length=1)
+    user_template: Optional[str] = None
     model: Optional[str] = None
     temperature: Optional[float] = Field(default=None, ge=0, le=2)
     max_tokens: Optional[int] = Field(default=None, ge=1, le=20000)

@@ -13,6 +13,7 @@ from server import (
     _utc_day_key,
     call_ai,
 )
+from postgres import get_ai_prompt
 
 router = APIRouter()
 
@@ -58,7 +59,7 @@ async def chat_with_ai(request: ChatRequest, current_user: dict = Depends(get_cu
 
         session_id = request.session_id or f"chat-{current_user['id']}-{datetime.utcnow().timestamp()}"
         
-        system_msg = """You are an AI physics tutor for school and university students.
+        fallback_system_msg = """You are an AI physics tutor for school and university students.
 Answer in Russian unless the user explicitly asks for another language.
 
 Answer quality rules:
@@ -71,8 +72,17 @@ Answer quality rules:
 - If data is missing, ask a clarifying question instead of inventing numbers.
 - If the question is not about physics, politely bring the conversation back to physics.
 - Keep the answer compact unless the user asks for a detailed explanation."""
+        prompt_config = await get_ai_prompt("ai_chat")
+        system_msg = prompt_config.get("prompt") if prompt_config else fallback_system_msg
+        max_tokens = prompt_config.get("max_tokens") if prompt_config else None
+        temperature = prompt_config.get("temperature") if prompt_config else None
         
-        response = await call_ai(request.message, system_message=system_msg)
+        response = await call_ai(
+            request.message,
+            system_message=system_msg,
+            max_tokens=max_tokens or 4096,
+            temperature=temperature if temperature is not None else 0.7,
+        )
         
         # Save to chat history
         await db.chat_history.insert_one({

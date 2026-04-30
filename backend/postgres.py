@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from string import Formatter
 from typing import Any, Optional
 
 import asyncpg
@@ -72,6 +73,7 @@ async def init_postgres_schema() -> None:
                 key TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
                 prompt TEXT NOT NULL,
+                user_template TEXT,
                 model TEXT,
                 temperature NUMERIC(3, 2),
                 max_tokens INTEGER,
@@ -114,6 +116,7 @@ async def init_postgres_schema() -> None:
                 ON notification_deliveries(campaign_id);
             """
         )
+        await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
         await seed_default_ai_prompts(conn)
 
 
@@ -123,8 +126,18 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
             "key": "ai_chat",
             "name": "AI Chat Physics Tutor",
             "prompt": (
-                "You are an AI physics tutor. Answer in Russian by default. "
-                "Use LaTeX for every formula and solve problems step by step."
+                "You are an AI physics tutor for school and university students.\n"
+                "Answer in Russian unless the user explicitly asks for another language.\n\n"
+                "Answer quality rules:\n"
+                "- Explain in simple words, but keep physics accurate.\n"
+                "- Write every formula and mathematical expression only in LaTeX.\n"
+                "- Use inline math like $v = v_0 + at$ and important formulas on separate lines like $$F = ma$$.\n"
+                "- Do not write formulas as plain text like F=ma when LaTeX is possible.\n"
+                "- After a formula, briefly explain symbols and units.\n"
+                "- When solving a problem, use this structure: given data, find, formula, substitution, answer.\n"
+                "- If data is missing, ask a clarifying question instead of inventing numbers.\n"
+                "- If the question is not about physics, politely bring the conversation back to physics.\n"
+                "- Keep the answer compact unless the user asks for a detailed explanation."
             ),
             "temperature": 0.65,
             "max_tokens": 2048,
@@ -133,10 +146,61 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
             "key": "learn_more",
             "name": "Learn More Topic Expansion",
             "prompt": (
-                "Create a clear Russian physics explanation. Use Markdown sections, "
-                "LaTeX formulas, symbol explanations, and one calculation example."
+                "You are an experienced physics teacher for school and university students.\n"
+                "Always write the final answer in Russian. Be clear, accurate, and focused on the topic.\n\n"
+                "Formula and math rules:\n"
+                "- Write every formula and mathematical expression only in LaTeX.\n"
+                "- Use inline math like $v = v_0 + at$.\n"
+                "- Put important formulas on separate lines like $$F = ma$$.\n"
+                "- Do not write plain-text formulas like F=ma when it is a mathematical formula.\n"
+                "- After every important formula, explain each symbol and its units.\n"
+                "- Structure the answer with short Markdown headings.\n"
+                "- For calculations, use: given data, formula, substitution, final answer."
+            ),
+            "user_template": (
+                "Create an expanded Russian explanation for the physics topic: {topic_title}.\n\n"
+                "Key formulas for the topic: {formulas}.\n"
+                "Content type: {content_type}.\n\n"
+                "Use this structure in Russian:\n"
+                "1. Short overview: what the topic means and why it matters.\n"
+                "2. Physical meaning: explain the idea in simple words.\n"
+                "3. Main formulas: only LaTeX, with explanations of every symbol.\n"
+                "4. How to apply it: a step-by-step method for solving problems.\n"
+                "5. Calculation example: a small problem with given data, formula, substitution, and answer.\n"
+                "6. Common mistakes: 3-5 frequent student mistakes.\n"
+                "7. Summary: a compact final recap.\n\n"
+                "The text must help the student understand the material, not just memorize it."
             ),
             "temperature": 0.55,
+            "max_tokens": 4096,
+        },
+        {
+            "key": "test_generator",
+            "name": "AI Test Generator",
+            "prompt": (
+                "You are a physics test generator.\n"
+                "Return only valid JSON. Do not use Markdown, code fences, comments, or extra text.\n"
+                "Questions and options must be in Russian.\n"
+                "Use LaTeX for formulas inside strings when formulas are needed.\n"
+                "Each question must have exactly four options and one correct answer index."
+            ),
+            "user_template": (
+                "Create a physics test with exactly {num_questions} questions for the topic: {section_name}.\n"
+                "Difficulty: {difficulty}.\n\n"
+                "Return JSON in exactly this shape:\n"
+                "{{\n"
+                "  \"title\": \"Тест по {section_name}\",\n"
+                "  \"questions\": [\n"
+                "    {{\n"
+                "      \"question\": \"Текст вопроса?\",\n"
+                "      \"options\": [\"вариант A\", \"вариант B\", \"вариант C\", \"вариант D\"],\n"
+                "      \"correct\": 0\n"
+                "    }}\n"
+                "  ]\n"
+                "}}\n\n"
+                "\"correct\" is the zero-based index of the right option: 0, 1, 2, or 3."
+            ),
+            "temperature": 0.5,
             "max_tokens": 4096,
         },
     ]
@@ -144,16 +208,48 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
     for item in defaults:
         await conn.execute(
             """
-            INSERT INTO ai_prompts (key, name, prompt, temperature, max_tokens)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO ai_prompts (key, name, prompt, user_template, temperature, max_tokens)
+            VALUES ($1, $2, $3, $4, $5, $6)
             ON CONFLICT (key) DO NOTHING
             """,
             item["key"],
             item["name"],
             item["prompt"],
+            item.get("user_template"),
             item["temperature"],
             item["max_tokens"],
         )
+
+
+def render_prompt_template(template: str, variables: dict[str, Any]) -> str:
+    allowed = {name for _, name, _, _ in Formatter().parse(template) if name}
+    values = {key: variables.get(key, "") for key in allowed}
+    return template.format(**values)
+
+
+async def get_ai_prompt(key: str) -> Optional[dict[str, Any]]:
+    if not DATABASE_URL:
+        return None
+
+    try:
+        pool = await get_postgres_pool()
+        row = await pool.fetchrow(
+            """
+            SELECT key, name, prompt, user_template, model, temperature, max_tokens, enabled
+            FROM ai_prompts
+            WHERE key = $1 AND enabled = TRUE
+            """,
+            key,
+        )
+        if not row:
+            return None
+        return {
+            **dict(row),
+            "temperature": float(row["temperature"]) if row["temperature"] is not None else None,
+        }
+    except Exception as exc:
+        logger.warning("Failed to load AI prompt '%s' from PostgreSQL: %s", key, exc)
+        return None
 
 
 async def postgres_health() -> dict[str, Any]:
@@ -229,11 +325,12 @@ async def upsert_ai_prompt(payload: dict[str, Any], updated_by: str) -> dict[str
     pool = await get_postgres_pool()
     row = await pool.fetchrow(
         """
-        INSERT INTO ai_prompts (key, name, prompt, model, temperature, max_tokens, enabled, updated_by)
-        VALUES ($1, $2, $3, $4, $5, $6, COALESCE($7, TRUE), $8)
+        INSERT INTO ai_prompts (key, name, prompt, user_template, model, temperature, max_tokens, enabled, updated_by)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, COALESCE($8, TRUE), $9)
         ON CONFLICT (key) DO UPDATE SET
             name = EXCLUDED.name,
             prompt = EXCLUDED.prompt,
+            user_template = EXCLUDED.user_template,
             model = EXCLUDED.model,
             temperature = EXCLUDED.temperature,
             max_tokens = EXCLUDED.max_tokens,
@@ -245,6 +342,7 @@ async def upsert_ai_prompt(payload: dict[str, Any], updated_by: str) -> dict[str
         payload["key"],
         payload["name"],
         payload["prompt"],
+        payload.get("user_template"),
         payload.get("model"),
         payload.get("temperature"),
         payload.get("max_tokens"),

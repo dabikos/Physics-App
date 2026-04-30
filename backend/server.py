@@ -23,6 +23,7 @@ import jwt
 import json as json_module
 import httpx
 from openai import AsyncOpenAI
+from postgres import get_ai_prompt, render_prompt_template
 
 ROOT_DIR = Path(__file__).parent
 env_path = ROOT_DIR / '.env'
@@ -1313,7 +1314,7 @@ async def generate_topic_content(topic_id: str, request: GenerateContentRequest,
     
     try:
         formulas = ', '.join(topic.get('formulas', [])) or 'choose the key formulas for this topic yourself'
-        system_msg = """You are an experienced physics teacher for school and university students.
+        fallback_system_msg = """You are an experienced physics teacher for school and university students.
 Always write the final answer in Russian. Be clear, accurate, and focused on the topic.
 
 Formula and math rules:
@@ -1324,8 +1325,20 @@ Formula and math rules:
 - After every important formula, explain each symbol and its units.
 - Structure the answer with short Markdown headings.
 - For calculations, use: given data, formula, substitution, final answer."""
+        prompt_config = await get_ai_prompt("learn_more")
+        system_msg = prompt_config.get("prompt") if prompt_config else fallback_system_msg
+        user_template = prompt_config.get("user_template") if prompt_config else None
         
-        if request.content_type == "detailed":
+        if user_template:
+            prompt = render_prompt_template(
+                user_template,
+                {
+                    "topic_title": topic["title"],
+                    "formulas": formulas,
+                    "content_type": request.content_type,
+                },
+            )
+        elif request.content_type == "detailed":
             prompt = f"""Create an expanded Russian explanation for the physics topic: {topic['title']}.
 
 Key formulas for the topic: {formulas}.
@@ -1367,7 +1380,12 @@ For each problem include:
 
 Do not provide full solutions, only the problem and answer."""
         
-        response = await call_ai(prompt, system_message=system_msg, temperature=0.55)
+        response = await call_ai(
+            prompt,
+            system_message=system_msg,
+            max_tokens=(prompt_config or {}).get("max_tokens") or 4096,
+            temperature=(prompt_config or {}).get("temperature") if (prompt_config or {}).get("temperature") is not None else 0.55,
+        )
         
         return {"content": response, "type": request.content_type}
     except Exception as e:
@@ -1533,11 +1551,24 @@ async def generate_test(request: GenerateTestRequest, current_user: dict = Depen
     section_name = section_names.get(request.section, request.section)
     
     try:
-        system_msg = """Ты - генератор тестов по физике. Создавай тесты в формате JSON.
+        fallback_system_msg = """Ты - генератор тестов по физике. Создавай тесты в формате JSON.
             
 ВАЖНО: Отвечай ТОЛЬКО валидным JSON без markdown разметки, без ```json```, просто чистый JSON."""
+        prompt_config = await get_ai_prompt("test_generator")
+        system_msg = prompt_config.get("prompt") if prompt_config else fallback_system_msg
+        user_template = prompt_config.get("user_template") if prompt_config else None
         
-        prompt = f"""Создай тест из {request.num_questions} вопросов по теме "{section_name}".
+        if user_template:
+            prompt = render_prompt_template(
+                user_template,
+                {
+                    "num_questions": request.num_questions,
+                    "section_name": section_name,
+                    "difficulty": request.difficulty,
+                },
+            )
+        else:
+            prompt = f"""Создай тест из {request.num_questions} вопросов по теме "{section_name}".
 
 Верни JSON в ТОЧНОМ формате (без markdown):
 {{
@@ -1554,7 +1585,12 @@ async def generate_test(request: GenerateTestRequest, current_user: dict = Depen
 correct - это индекс правильного ответа (0, 1, 2 или 3).
 Создай ровно {request.num_questions} вопросов."""
 
-        response = await call_ai(prompt, system_message=system_msg)
+        response = await call_ai(
+            prompt,
+            system_message=system_msg,
+            max_tokens=(prompt_config or {}).get("max_tokens") or 4096,
+            temperature=(prompt_config or {}).get("temperature") if (prompt_config or {}).get("temperature") is not None else 0.7,
+        )
         
         # Parse JSON response
         import json
