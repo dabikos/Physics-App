@@ -1,0 +1,328 @@
+{
+  "section": {
+    "id": "electromagnetism",
+    "name": "Электричество и магнетизм",
+    "icon": "flash",
+    "color": "#F39C12",
+    "order_index": 2
+  },
+  "subsections": [
+    {
+      "id": "electrostatics",
+      "section_id": "electromagnetism",
+      "name": "Электростатика",
+      "order_index": 0
+    },
+    {
+      "id": "direct-current",
+      "section_id": "electromagnetism",
+      "name": "Постоянный ток",
+      "order_index": 1
+    },
+    {
+      "id": "magnetism",
+      "section_id": "electromagnetism",
+      "name": "Магнетизм",
+      "order_index": 2
+    },
+    {
+      "id": "electromagnetic-induction",
+      "section_id": "electromagnetism",
+      "name": "Электромагнитная индукция",
+      "order_index": 3
+    },
+    {
+      "id": "alternating-current",
+      "section_id": "electromagnetism",
+      "name": "Переменный ток",
+      "order_index": 4
+    }
+  ],
+  "topics": [
+    {
+      "id": "electric-charge",
+      "section_id": "electromagnetism",
+      "subsection_id": "electrostatics",
+      "title": "Электрический заряд",
+      "brief_info": "Электрический заряд — свойство тел взаимодействовать электромагнитным полем. Заряд квантован: q = ne (e = 1,6×10⁻¹⁹ Кл). Заряд сохраняется.",
+      "example_problem": "Сколько электронов нужно удалить, чтобы тело получило заряд 3,2×10⁻¹⁸ Кл?\n\nРешение:\nn = q/e = 3,2×10⁻¹⁸ / 1,6×10⁻¹⁹ = 20 электронов\n\nОтвет: 20 электронов",
+      "formulas": [
+        "q = ne",
+        "e = 1,6×10⁻¹⁹ Кл"
+      ],
+      "video": null,
+      "order_index": 0
+    },
+    {
+      "id": "coulomb-law",
+      "section_id": "electromagnetism",
+      "subsection_id": "electrostatics",
+      "title": "Закон Кулона",
+      "brief_info": "Сила взаимодействия двух точечных зарядов: F = k|q₁q₂|/r², где k = 9×10⁹ Н·м²/Кл². Одноимённые заряды отталкиваются, разноимённые — притягиваются.",
+      "example_problem": "Найти силу взаимодействия двух зарядов по 1 мкКл на расстоянии 3 м.\n\nРешение:\nF = kq₁q₂/r² = 9×10⁹ × 10⁻⁶ × 10⁻⁶ / 9 = 0,001 Н = 1 мН\n\nОтвет: 1 мН",
+      "formulas": [
+        "F = k|q₁q₂|/r²",
+        "k = 9×10⁹ Н·м²/Кл²"
+      ],
+      "video": null,
+      "order_index": 1
+    },
+    {
+      "id": "electric-field",
+      "section_id": "electromagnetism",
+      "subsection_id": "electrostatics",
+      "title": "Электрическое поле",
+      "brief_info": "Электрическое поле — особая форма материи, через которую осуществляется взаимодействие зарядов. Характеризуется напряжённостью E = F/q. Силовые линии идут от + к -.",
+      "example_problem": "Найти напряжённость поля точечного заряда 2 мкКл на расстоянии 1 м.\n\nРешение:\nE = kq/r² = 9×10⁹ × 2×10⁻⁶ / 1 = 18000 В/м = 18 кВ/м\n\nОтвет: 18 кВ/м",
+      "formulas": [
+        "E = F/q",
+        "E = kq/r²"
+      ],
+      "video": null,
+      "order_index": 2
+    },
+    {
+      "id": "potential-voltage",
+      "section_id": "electromagnetism",
+      "subsection_id": "electrostatics",
+      "title": "Потенциал и напряжение",
+      "brief_info": "Потенциал φ = W/q — энергетическая характеристика поля. Напряжение U = φ₁ - φ₂ = A/q. Связь с напряжённостью: E = U/d (в однородном поле).",
+      "example_problem": "Найти работу по перемещению заряда 5 мкКл между точками с разностью потенциалов 100 В.\n\nРешение:\nA = qU = 5×10⁻⁶ × 100 = 5×10⁻⁴ Дж = 0,5 мДж\n\nОтвет: 0,5 мДж",
+      "formulas": [
+        "U = φ₁ - φ₂",
+        "A = qU",
+        "E = U/d"
+      ],
+      "video": null,
+      "order_index": 3
+    },
+    {
+      "id": "capacitors",
+      "section_id": "electromagnetism",
+      "subsection_id": "electrostatics",
+      "title": "Конденсаторы",
+      "brief_info": "Конденсатор накапливает электрический заряд. Ёмкость C = q/U. Для плоского конденсатора: C = ε₀εS/d. Энергия: W = CU²/2 = q²/2C.",
+      "example_problem": "Найти ёмкость конденсатора, если при напряжении 100 В он накапливает заряд 5 мкКл.\n\nРешение:\nC = q/U = 5×10⁻⁶ / 100 = 5×10⁻⁸ Ф = 50 нФ\n\nОтвет: 50 нФ",
+      "formulas": [
+        "C = q/U",
+        "C = ε₀εS/d",
+        "W = CU²/2"
+      ],
+      "video": null,
+      "order_index": 4
+    },
+    {
+      "id": "current-strength",
+      "section_id": "electromagnetism",
+      "subsection_id": "direct-current",
+      "title": "Сила тока",
+      "brief_info": "Сила тока I = q/t — заряд, проходящий через поперечное сечение проводника за единицу времени. Измеряется в амперах. Направление тока — направление движения положительных зарядов.",
+      "example_problem": "Через проводник за 10 с прошёл заряд 50 Кл. Найти силу тока.\n\nРешение:\nI = q/t = 50/10 = 5 А\n\nОтвет: 5 А",
+      "formulas": [
+        "I = q/t",
+        "I = neSv"
+      ],
+      "video": null,
+      "order_index": 0
+    },
+    {
+      "id": "ohm-law",
+      "section_id": "electromagnetism",
+      "subsection_id": "direct-current",
+      "title": "Закон Ома",
+      "brief_info": "Закон Ома для участка цепи: I = U/R. Для полной цепи: I = ε/(R+r), где ε — ЭДС источника, r — его внутреннее сопротивление.",
+      "example_problem": "Найти силу тока при напряжении 12 В и сопротивлении 4 Ом.\n\nРешение:\nI = U/R = 12/4 = 3 А\n\nОтвет: 3 А",
+      "formulas": [
+        "I = U/R",
+        "I = ε/(R+r)"
+      ],
+      "video": {
+        "asset": "../../../../assets/videos/ohm-law.mp4"
+      },
+      "order_index": 1
+    },
+    {
+      "id": "work-power",
+      "section_id": "electromagnetism",
+      "subsection_id": "direct-current",
+      "title": "Работа и мощность тока",
+      "brief_info": "Работа тока A = UIt = I²Rt = U²t/R. Мощность P = UI = I²R = U²/R. Закон Джоуля-Ленца: Q = I²Rt — теплота, выделяемая проводником.",
+      "example_problem": "Найти мощность, потребляемую лампой при напряжении 220 В и силе тока 0,5 А.\n\nРешение:\nP = UI = 220 × 0,5 = 110 Вт\n\nОтвет: 110 Вт",
+      "formulas": [
+        "P = UI",
+        "A = UIt",
+        "Q = I²Rt"
+      ],
+      "video": null,
+      "order_index": 2
+    },
+    {
+      "id": "conductor-connections",
+      "section_id": "electromagnetism",
+      "subsection_id": "direct-current",
+      "title": "Соединение проводников",
+      "brief_info": "Последовательное: R = R₁+R₂, I одинаков, U = U₁+U₂. Параллельное: 1/R = 1/R₁+1/R₂, U одинаково, I = I₁+I₂.",
+      "example_problem": "Найти общее сопротивление двух резисторов по 6 Ом при параллельном соединении.\n\nРешение:\n1/R = 1/6 + 1/6 = 2/6 = 1/3\nR = 3 Ом\n\nОтвет: 3 Ом",
+      "formulas": [
+        "R = R₁+R₂ (послед.)",
+        "1/R = 1/R₁+1/R₂ (парал.)"
+      ],
+      "video": null,
+      "order_index": 3
+    },
+    {
+      "id": "magnetic-field",
+      "section_id": "electromagnetism",
+      "subsection_id": "magnetism",
+      "title": "Магнитное поле",
+      "brief_info": "Магнитное поле создаётся движущимися зарядами и действует на движущиеся заряды. Характеризуется индукцией B (Тл). Силовые линии замкнуты.",
+      "example_problem": "Найти индукцию магнитного поля на расстоянии 10 см от длинного прямого проводника с током 5 А.\n\nРешение:\nB = μ₀I/(2πr) = 4π×10⁻⁷ × 5 / (2π × 0,1)\nB = 2×10⁻⁷ × 5 / 0,1 = 10⁻⁵ Тл = 10 мкТл\n\nОтвет: 10 мкТл",
+      "formulas": [
+        "B = μ₀I/(2πr)",
+        "Ф = BS"
+      ],
+      "video": null,
+      "order_index": 0
+    },
+    {
+      "id": "ampere-force",
+      "section_id": "electromagnetism",
+      "subsection_id": "magnetism",
+      "title": "Сила Ампера",
+      "brief_info": "Сила Ампера действует на проводник с током в магнитном поле: F = BILsinα. Направление определяется правилом левой руки.",
+      "example_problem": "Найти силу, действующую на проводник длиной 0,5 м с током 2 А в магнитном поле 0,1 Тл (перпендикулярно).\n\nРешение:\nF = BIL = 0,1 × 2 × 0,5 = 0,1 Н\n\nОтвет: 0,1 Н",
+      "formulas": [
+        "F = BILsinα"
+      ],
+      "video": null,
+      "order_index": 1
+    },
+    {
+      "id": "lorentz-force",
+      "section_id": "electromagnetism",
+      "subsection_id": "magnetism",
+      "title": "Сила Лоренца",
+      "brief_info": "Сила Лоренца действует на движущийся заряд в магнитном поле: F = qvBsinα. Заставляет заряд двигаться по окружности или спирали.",
+      "example_problem": "Найти радиус движения электрона со скоростью 10⁶ м/с в магнитном поле 0,01 Тл.\n\nРешение:\nR = mv/(qB) = 9,1×10⁻³¹ × 10⁶ / (1,6×10⁻¹⁹ × 0,01) ≈ 0,57 мм\n\nОтвет: ≈ 0,57 мм",
+      "formulas": [
+        "F = qvBsinα",
+        "R = mv/(qB)"
+      ],
+      "video": null,
+      "order_index": 2
+    },
+    {
+      "id": "faraday-law",
+      "section_id": "electromagnetism",
+      "subsection_id": "electromagnetic-induction",
+      "title": "Закон Фарадея",
+      "brief_info": "ЭДС индукции равна скорости изменения магнитного потока: ε = -dФ/dt. Знак минус — правило Ленца. Это основа работы генераторов.",
+      "example_problem": "Магнитный поток через катушку изменился на 0,5 Вб за 0,1 с. Найти ЭДС индукции.\n\nРешение:\nε = ΔФ/Δt = 0,5/0,1 = 5 В\n\nОтвет: 5 В",
+      "formulas": [
+        "ε = -dФ/dt",
+        "ε = BLv"
+      ],
+      "video": null,
+      "order_index": 0
+    },
+    {
+      "id": "lenz-rule",
+      "section_id": "electromagnetism",
+      "subsection_id": "electromagnetic-induction",
+      "title": "Правило Ленца",
+      "brief_info": "Индукционный ток направлен так, чтобы противодействовать причине его вызвавшей. Это следствие закона сохранения энергии.",
+      "example_problem": "Магнит подносят северным полюсом к катушке. Определите направление индукционного тока.\n\nРешение:\nПо правилу Ленца, индукционный ток должен создать поле, отталкивающее магнит (противодействие причине). Значит, ближний торец катушки становится северным полюсом. Ток течёт против часовой стрелки (если смотреть со стороны магнита).\n\nОтвет: ток течёт против часовой стрелки (со стороны магнита).",
+      "formulas": [
+        "ε = -dФ/dt"
+      ],
+      "video": null,
+      "order_index": 1
+    },
+    {
+      "id": "inductance",
+      "section_id": "electromagnetism",
+      "subsection_id": "electromagnetic-induction",
+      "title": "Индуктивность",
+      "brief_info": "Индуктивность L характеризует способность катушки создавать магнитный поток: Ф = LI. ЭДС самоиндукции: ε = -L(dI/dt). Энергия магнитного поля: W = LI²/2.",
+      "example_problem": "Найти энергию магнитного поля катушки с индуктивностью 0,5 Гн при токе 2 А.\n\nРешение:\nW = LI²/2 = 0,5 × 4 / 2 = 1 Дж\n\nОтвет: 1 Дж",
+      "formulas": [
+        "Ф = LI",
+        "ε = -L(dI/dt)",
+        "W = LI²/2"
+      ],
+      "video": null,
+      "order_index": 2
+    },
+    {
+      "id": "eddy-currents",
+      "section_id": "electromagnetism",
+      "subsection_id": "electromagnetic-induction",
+      "title": "Вихревые токи",
+      "brief_info": "Вихревые токи (токи Фуко) — индукционные токи в массивных проводниках. Вызывают нагрев. Используются в индукционных печах, демпферах.",
+      "example_problem": "Почему сердечники трансформаторов делают не из сплошного металла, а из тонких изолированных пластин?\n\nРешение:\nВ сплошном сердечнике переменное магнитное поле создаёт вихревые токи большой величины. Эти токи выделяют тепло (Q = I²Rt), что приводит к потерям энергии и перегреву. Тонкие изолированные пластины разрывают контуры вихревых токов и минимизируют потери.\n\nОтвет: для уменьшения потерь на вихревые токи.",
+      "formulas": [
+        "Q = I²Rt"
+      ],
+      "video": null,
+      "order_index": 3
+    },
+    {
+      "id": "sinusoidal-current",
+      "section_id": "electromagnetism",
+      "subsection_id": "alternating-current",
+      "title": "Синусоидальный ток",
+      "brief_info": "Переменный ток изменяется по синусоидальному закону: i = I₀sin(ωt). Характеризуется амплитудой, частотой, фазой. Действующее значение: I = I₀/√2.",
+      "example_problem": "Амплитуда переменного тока 10 А. Найти действующее значение.\n\nРешение:\nI = I₀/√2 = 10/1,41 ≈ 7,07 А\n\nОтвет: ≈ 7,07 А",
+      "formulas": [
+        "i = I₀sin(ωt)",
+        "I = I₀/√2",
+        "U = U₀/√2"
+      ],
+      "video": null,
+      "order_index": 0
+    },
+    {
+      "id": "reactive-resistance",
+      "section_id": "electromagnetism",
+      "subsection_id": "alternating-current",
+      "title": "Реактивное сопротивление",
+      "brief_info": "Индуктивное сопротивление: X_L = ωL. Ёмкостное: X_C = 1/(ωC). Полное сопротивление: Z = √(R² + (X_L - X_C)²).",
+      "example_problem": "Найти индуктивное сопротивление катушки 0,1 Гн при частоте 50 Гц.\n\nРешение:\nX_L = 2πfL = 2π × 50 × 0,1 ≈ 31,4 Ом\n\nОтвет: ≈ 31,4 Ом",
+      "formulas": [
+        "X_L = ωL",
+        "X_C = 1/(ωC)",
+        "Z = √(R² + (X_L - X_C)²)"
+      ],
+      "video": null,
+      "order_index": 1
+    },
+    {
+      "id": "transformers",
+      "section_id": "electromagnetism",
+      "subsection_id": "alternating-current",
+      "title": "Трансформаторы",
+      "brief_info": "Трансформатор изменяет напряжение переменного тока. Коэффициент трансформации: k = U₁/U₂ = n₁/n₂. При k>1 — понижающий, k<1 — повышающий.",
+      "example_problem": "Первичная обмотка 1000 витков, вторичная 50 витков. Найти напряжение на выходе при входном 220 В.\n\nРешение:\nU₂ = U₁n₂/n₁ = 220 × 50/1000 = 11 В\n\nОтвет: 11 В",
+      "formulas": [
+        "U₁/U₂ = n₁/n₂",
+        "P₁ ≈ P₂"
+      ],
+      "video": null,
+      "order_index": 2
+    },
+    {
+      "id": "power-transmission",
+      "section_id": "electromagnetism",
+      "subsection_id": "alternating-current",
+      "title": "Передача электроэнергии",
+      "brief_info": "Для уменьшения потерь (P = I²R) электроэнергию передают при высоком напряжении. На электростанции напряжение повышают, у потребителя — понижают трансформаторами.",
+      "example_problem": "Электростанция передаёт мощность 100 кВт. Сопротивление линии 10 Ом. Найти потери при напряжении 10 кВ и 100 кВ.\n\nРешение:\nПри U = 10 кВ: I = P/U = 100000/10000 = 10 А\nP_пот = I²R = 100 × 10 = 1000 Вт = 1 кВт (1%)\n\nПри U = 100 кВ: I = 100000/100000 = 1 А\nP_пот = 1 × 10 = 10 Вт (0,01%)\n\nОтвет: 1 кВт и 10 Вт. Повышение напряжения в 10 раз снижает потери в 100 раз.",
+      "formulas": [
+        "P_потерь = I²R",
+        "P = UI"
+      ],
+      "video": null,
+      "order_index": 3
+    }
+  ]
+}

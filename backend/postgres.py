@@ -165,7 +165,7 @@ async def init_postgres_schema() -> None:
         )
         await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
         await seed_default_ai_prompts(conn)
-        await seed_mechanics_lessons(conn)
+        await seed_lesson_content(conn)
 
 
 async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
@@ -277,12 +277,17 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
         )
 
 
-async def seed_mechanics_lessons(conn: asyncpg.Connection) -> None:
-    seed_path = ROOT_DIR / "content" / "mechanics_lessons.json"
-    if not seed_path.exists():
-        logger.warning("Mechanics lesson seed file is missing: %s", seed_path)
+async def seed_lesson_content(conn: asyncpg.Connection) -> None:
+    seed_paths = sorted((ROOT_DIR / "content").glob("*_lessons.json"))
+    if not seed_paths:
+        logger.warning("Lesson seed files are missing in %s", ROOT_DIR / "content")
         return
 
+    for seed_path in seed_paths:
+        await seed_lesson_file(conn, seed_path)
+
+
+async def seed_lesson_file(conn: asyncpg.Connection, seed_path: Path) -> None:
     payload = json.loads(seed_path.read_text(encoding="utf-8"))
     section = payload["section"]
     await conn.execute(
@@ -301,7 +306,7 @@ async def seed_mechanics_lessons(conn: asyncpg.Connection) -> None:
         section["name"],
         section.get("icon"),
         section.get("color"),
-        0,
+        section.get("order_index", 0),
     )
 
     for subsection in payload["subsections"]:
