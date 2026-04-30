@@ -1,12 +1,14 @@
 import json
 import logging
 import os
+from pathlib import Path
 from string import Formatter
 from typing import Any, Optional
 
 import asyncpg
 
 logger = logging.getLogger(__name__)
+ROOT_DIR = Path(__file__).parent
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 _pool: Optional[asyncpg.Pool] = None
@@ -114,10 +116,56 @@ async def init_postgres_schema() -> None:
 
             CREATE INDEX IF NOT EXISTS idx_notification_deliveries_campaign
                 ON notification_deliveries(campaign_id);
+
+            CREATE TABLE IF NOT EXISTS lesson_sections (
+                id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                icon TEXT,
+                color TEXT,
+                order_index INTEGER NOT NULL DEFAULT 0,
+                is_published BOOLEAN NOT NULL DEFAULT TRUE,
+                source TEXT NOT NULL DEFAULT 'seed',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+
+            CREATE TABLE IF NOT EXISTS lesson_subsections (
+                id TEXT PRIMARY KEY,
+                section_id TEXT NOT NULL REFERENCES lesson_sections(id) ON DELETE CASCADE,
+                name TEXT NOT NULL,
+                order_index INTEGER NOT NULL DEFAULT 0,
+                is_published BOOLEAN NOT NULL DEFAULT TRUE,
+                source TEXT NOT NULL DEFAULT 'seed',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+
+            CREATE TABLE IF NOT EXISTS lesson_topics (
+                id TEXT PRIMARY KEY,
+                section_id TEXT NOT NULL REFERENCES lesson_sections(id) ON DELETE CASCADE,
+                subsection_id TEXT NOT NULL REFERENCES lesson_subsections(id) ON DELETE CASCADE,
+                title TEXT NOT NULL,
+                brief_info TEXT NOT NULL DEFAULT '',
+                example_problem TEXT NOT NULL DEFAULT '',
+                formulas JSONB NOT NULL DEFAULT '[]'::jsonb,
+                video JSONB,
+                order_index INTEGER NOT NULL DEFAULT 0,
+                is_published BOOLEAN NOT NULL DEFAULT TRUE,
+                source TEXT NOT NULL DEFAULT 'seed',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_lesson_subsections_section_order
+                ON lesson_subsections(section_id, order_index);
+
+            CREATE INDEX IF NOT EXISTS idx_lesson_topics_section_subsection_order
+                ON lesson_topics(section_id, subsection_id, order_index);
             """
         )
         await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
         await seed_default_ai_prompts(conn)
+        await seed_mechanics_lessons(conn)
 
 
 async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
@@ -229,6 +277,83 @@ async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
         )
 
 
+async def seed_mechanics_lessons(conn: asyncpg.Connection) -> None:
+    seed_path = ROOT_DIR / "content" / "mechanics_lessons.json"
+    if not seed_path.exists():
+        logger.warning("Mechanics lesson seed file is missing: %s", seed_path)
+        return
+
+    payload = json.loads(seed_path.read_text(encoding="utf-8"))
+    section = payload["section"]
+    await conn.execute(
+        """
+        INSERT INTO lesson_sections (id, name, icon, color, order_index, source)
+        VALUES ($1, $2, $3, $4, $5, 'seed')
+        ON CONFLICT (id) DO UPDATE SET
+            name = EXCLUDED.name,
+            icon = EXCLUDED.icon,
+            color = EXCLUDED.color,
+            order_index = EXCLUDED.order_index,
+            updated_at = NOW()
+        WHERE lesson_sections.source = 'seed'
+        """,
+        section["id"],
+        section["name"],
+        section.get("icon"),
+        section.get("color"),
+        0,
+    )
+
+    for subsection in payload["subsections"]:
+        await conn.execute(
+            """
+            INSERT INTO lesson_subsections (id, section_id, name, order_index, source)
+            VALUES ($1, $2, $3, $4, 'seed')
+            ON CONFLICT (id) DO UPDATE SET
+                section_id = EXCLUDED.section_id,
+                name = EXCLUDED.name,
+                order_index = EXCLUDED.order_index,
+                updated_at = NOW()
+            WHERE lesson_subsections.source = 'seed'
+            """,
+            subsection["id"],
+            subsection["section_id"],
+            subsection["name"],
+            subsection["order_index"],
+        )
+
+    for topic in payload["topics"]:
+        await conn.execute(
+            """
+            INSERT INTO lesson_topics (
+                id, section_id, subsection_id, title, brief_info,
+                example_problem, formulas, video, order_index, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8::jsonb, $9, 'seed')
+            ON CONFLICT (id) DO UPDATE SET
+                section_id = EXCLUDED.section_id,
+                subsection_id = EXCLUDED.subsection_id,
+                title = EXCLUDED.title,
+                brief_info = EXCLUDED.brief_info,
+                example_problem = EXCLUDED.example_problem,
+                formulas = EXCLUDED.formulas,
+                video = EXCLUDED.video,
+                order_index = EXCLUDED.order_index,
+                updated_at = NOW()
+            WHERE lesson_topics.source = 'seed'
+            """,
+            topic["id"],
+            topic["section_id"],
+            topic["subsection_id"],
+            topic["title"],
+            topic["brief_info"],
+            topic["example_problem"],
+            json.dumps(topic.get("formulas") or []),
+            json.dumps(topic.get("video")) if topic.get("video") is not None else None,
+            topic["order_index"],
+        )
+
+
 def render_prompt_template(template: str, variables: dict[str, Any]) -> str:
     allowed = {name for _, name, _, _ in Formatter().parse(template) if name}
     values = {key: variables.get(key, "") for key in allowed}
@@ -267,11 +392,24 @@ async def postgres_health() -> dict[str, Any]:
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         result = await conn.fetchrow("SELECT NOW() AS now, current_database() AS database")
+        lesson_counts = await conn.fetchrow(
+            """
+            SELECT
+                (SELECT COUNT(*) FROM lesson_sections) AS sections,
+                (SELECT COUNT(*) FROM lesson_subsections) AS subsections,
+                (SELECT COUNT(*) FROM lesson_topics) AS topics
+            """
+        )
         return {
             "configured": True,
             "ok": True,
             "database": result["database"],
             "server_time": result["now"].isoformat(),
+            "lessons": {
+                "sections": lesson_counts["sections"],
+                "subsections": lesson_counts["subsections"],
+                "topics": lesson_counts["topics"],
+            },
         }
 
 

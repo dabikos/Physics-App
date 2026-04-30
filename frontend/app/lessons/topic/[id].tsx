@@ -19,6 +19,7 @@ import { WebView } from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePhysicsData } from '../../../src/hooks/usePhysicsData';
 import { VideoPlayer } from '../../../src/components/VideoPlayer';
+import { MathContent } from '../../../src/components/MathContent';
 import { useFavorites } from '../../../src/hooks/useFavorites';
 import { useNotes } from '../../../src/hooks/useNotes';
 import { useTheme } from '../../../src/context/ThemeContext';
@@ -294,7 +295,7 @@ export default function TopicScreen() {
             <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('lessons.briefInfo')}</Text>
           </View>
           <View style={[styles.sectionContent, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-            <Text style={[styles.briefText, { color: colors.textSecondary }]}>{topic.brief_info}</Text>
+            <MathContent content={topic.brief_info} fontSize={16} textColor={colors.textSecondary} />
           </View>
         </View>
 
@@ -355,7 +356,7 @@ export default function TopicScreen() {
                 <Ionicons name="bulb" size={18} color="#F59E0B" />
                 <Text style={styles.exampleLabel}>{t('lessons.solution')}</Text>
               </View>
-              <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{topic.example_problem}</Text>
+              <MathContent content={topic.example_problem} fontSize={15} textColor={colors.textSecondary} />
             </View>
           </View>
         )}

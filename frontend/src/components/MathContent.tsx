@@ -24,9 +24,60 @@ const hasFormulas = (text: string): boolean => {
   if (/\$\$.+?\$\$|\$[^$]+\$/.test(text)) return true;
   // Проверяем LaTeX команды
   if (/\\[a-zA-Z]+/.test(text)) return true;
+  // Простые формулы без $...$: F = ma, v = s/t, p = rho gh
+  if (/[A-Za-zА-Яа-яαβγδεπΔθλμρσωξνΣΩ][A-Za-zА-Яа-я0-9_αβγδεπΔθλμρσωξνΣΩ]*\s*[=≈]\s*[^.!?\n]+/.test(text)) return true;
   // Проверяем специальные символы
   if (/[²³⁴⁵⁶⁻⁰¹₀₁₂₃αβγδεπΔ∑∫√×÷≈≠≤≥∞θλμρσωνΣΩ→←]/.test(text)) return true;
   return false;
+};
+
+const normalizeFormulaSymbols = (value: string): string => {
+  return value
+    .replace(/×/g, '\\times ')
+    .replace(/·/g, '\\cdot ')
+    .replace(/÷/g, '\\div ')
+    .replace(/√\(([^)]+)\)/g, '\\sqrt{$1}')
+    .replace(/√([A-Za-z0-9_]+)/g, '\\sqrt{$1}')
+    .replace(/²/g, '^2')
+    .replace(/³/g, '^3')
+    .replace(/⁴/g, '^4')
+    .replace(/⁵/g, '^5')
+    .replace(/⁶/g, '^6')
+    .replace(/⁻/g, '^-')
+    .replace(/₀/g, '_0')
+    .replace(/₁/g, '_1')
+    .replace(/₂/g, '_2')
+    .replace(/₃/g, '_3')
+    .replace(/π/g, '\\pi ')
+    .replace(/ρ/g, '\\rho ')
+    .replace(/ν/g, '\\nu ')
+    .replace(/λ/g, '\\lambda ')
+    .replace(/α/g, '\\alpha ')
+    .replace(/μ/g, '\\mu ')
+    .replace(/ω/g, '\\omega ')
+    .replace(/γ/g, '\\gamma ')
+    .replace(/η/g, '\\eta ')
+    .replace(/Δ/g, '\\Delta ');
+};
+
+const autoWrapInlineFormulas = (text: string): string => {
+  if (/\$\$.+?\$\$|\$[^$]+\$/.test(text)) {
+    return text;
+  }
+
+  return text
+    .split('\n')
+    .map((line) => {
+      if (!/[=≈]/.test(line)) {
+        return line;
+      }
+
+      return line.replace(
+        /([A-Za-zαβγδεπΔθλμρσωξνΣΩ][A-Za-z0-9_αβγδεπΔθλμρσωξνΣΩ]*(?:\s*[=≈+\-*/^·×÷]\s*[\dA-Za-zαβγδεπΔθλμρσωξνΣΩ().,_⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+)+)/g,
+        (match) => `$${normalizeFormulaSymbols(match.trim())}$`
+      );
+    })
+    .join('\n');
 };
 
 // Простой рендер формулы как текст (fallback)
@@ -108,7 +159,7 @@ export const MathContent: React.FC<MathContentProps> = ({
   };
 
   // Подготавливаем контент - сохраняем пробелы
-  let processedContent = escapeHtml(content);
+  let processedContent = escapeHtml(autoWrapInlineFormulas(content));
 
   const html = `
 <!DOCTYPE html>
