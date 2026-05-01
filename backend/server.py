@@ -1798,6 +1798,12 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
 
 @api_router.get("/formulas")
 async def get_formulas(section: Optional[str] = None):
+    if is_postgres_configured():
+        try:
+            return {"items": await list_physics_formulas(section_id=section)}
+        except Exception as exc:
+            logger.warning("Failed to load formulas from PostgreSQL: %s", exc)
+
     query = {}
     if section:
         query["section"] = section
@@ -1807,18 +1813,26 @@ async def get_formulas(section: Optional[str] = None):
         filtered = INITIAL_FORMULAS
         if section:
             filtered = [f for f in filtered if f["section"] == section]
-        return filtered
-    return formulas
+        return {"items": filtered}
+    return {"items": formulas}
 
 @api_router.get("/formulas/{formula_id}")
 async def get_formula(formula_id: str):
+    if is_postgres_configured():
+        try:
+            item = await get_physics_formula(formula_id)
+            if item:
+                return {"item": item}
+        except Exception as exc:
+            logger.warning("Failed to load formula '%s' from PostgreSQL: %s", formula_id, exc)
+
     formula = await db.formulas.find_one({"id": formula_id})
     if not formula:
         for f in INITIAL_FORMULAS:
             if f["id"] == formula_id:
-                return f
+                return {"item": f}
         raise HTTPException(status_code=404, detail="Формула не найдена")
-    return formula
+    return {"item": formula}
 
 # ==================== AI Chat Routes ====================
 
@@ -2936,13 +2950,21 @@ from routes.chat import router as chat_router
 from routes.teacher import router as teacher_router
 from routes.notifications import router as notifications_router
 from routes.admin import router as admin_router
-from postgres import close_postgres_pool, init_postgres_schema
+from routes.practice import router as practice_router
+from postgres import (
+    close_postgres_pool,
+    get_physics_formula,
+    init_postgres_schema,
+    is_postgres_configured,
+    list_physics_formulas,
+)
 
 api_router.include_router(auth_router)
 api_router.include_router(chat_router)
 api_router.include_router(teacher_router)
 api_router.include_router(notifications_router)
 api_router.include_router(admin_router)
+api_router.include_router(practice_router)
 
 # ==================== Root ====================
 

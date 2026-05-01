@@ -156,11 +156,29 @@ async def init_postgres_schema() -> None:
                 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             );
 
+            CREATE TABLE IF NOT EXISTS physics_formulas (
+                id TEXT PRIMARY KEY,
+                section_id TEXT NOT NULL REFERENCES lesson_sections(id) ON DELETE CASCADE,
+                name TEXT NOT NULL,
+                formula TEXT NOT NULL,
+                description TEXT NOT NULL DEFAULT '',
+                variables JSONB NOT NULL DEFAULT '{}'::jsonb,
+                unit TEXT NOT NULL DEFAULT '',
+                order_index INTEGER NOT NULL DEFAULT 0,
+                is_published BOOLEAN NOT NULL DEFAULT TRUE,
+                source TEXT NOT NULL DEFAULT 'seed',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+
             CREATE INDEX IF NOT EXISTS idx_lesson_subsections_section_order
                 ON lesson_subsections(section_id, order_index);
 
             CREATE INDEX IF NOT EXISTS idx_lesson_topics_section_subsection_order
                 ON lesson_topics(section_id, subsection_id, order_index);
+
+            CREATE INDEX IF NOT EXISTS idx_physics_formulas_section_order
+                ON physics_formulas(section_id, order_index);
 
             CREATE TABLE IF NOT EXISTS practice_tests (
                 id TEXT PRIMARY KEY,
@@ -206,9 +224,11 @@ async def init_postgres_schema() -> None:
                 ON practice_tasks(section_id, subsection_id, order_index);
             """
         )
+        await conn.execute("ALTER TABLE physics_formulas ENABLE ROW LEVEL SECURITY")
         await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
         await seed_default_ai_prompts(conn)
         await seed_lesson_content(conn)
+        await seed_formula_content(conn)
         await seed_practice_content(conn)
 
 
@@ -403,6 +423,43 @@ async def seed_lesson_file(conn: asyncpg.Connection, seed_path: Path) -> None:
         )
 
 
+async def seed_formula_content(conn: asyncpg.Connection) -> None:
+    seed_path = ROOT_DIR / "content" / "formulas.json"
+    if not seed_path.exists():
+        logger.warning("Formula seed file is missing: %s", seed_path)
+        return
+
+    payload = json.loads(seed_path.read_text(encoding="utf-8"))
+    for index, formula in enumerate(payload.get("formulas", [])):
+        await conn.execute(
+            """
+            INSERT INTO physics_formulas (
+                id, section_id, name, formula, description, variables,
+                unit, order_index, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, 'seed')
+            ON CONFLICT (id) DO UPDATE SET
+                section_id = EXCLUDED.section_id,
+                name = EXCLUDED.name,
+                formula = EXCLUDED.formula,
+                description = EXCLUDED.description,
+                variables = EXCLUDED.variables,
+                unit = EXCLUDED.unit,
+                order_index = EXCLUDED.order_index,
+                updated_at = NOW()
+            WHERE physics_formulas.source = 'seed'
+            """,
+            formula["id"],
+            formula["section"],
+            formula["name"],
+            formula["formula"],
+            formula.get("description", ""),
+            json.dumps(formula.get("variables") or {}),
+            formula.get("unit", ""),
+            formula.get("order_index", index),
+        )
+
+
 async def seed_practice_content(conn: asyncpg.Connection) -> None:
     content_dir = ROOT_DIR / "content"
 
@@ -525,6 +582,139 @@ async def get_ai_prompt(key: str) -> Optional[dict[str, Any]]:
         return None
 
 
+def _practice_test_row(row: asyncpg.Record) -> dict[str, Any]:
+    return {
+        **dict(row),
+        "section": row["section_id"],
+        "questions": _decode_jsonb(row["questions"]) or [],
+        "created_at": row["created_at"].isoformat(),
+        "updated_at": row["updated_at"].isoformat(),
+    }
+
+
+def _practice_task_row(row: asyncpg.Record) -> dict[str, Any]:
+    return {
+        **dict(row),
+        "section": row["section_id"],
+        "created_at": row["created_at"].isoformat(),
+        "updated_at": row["updated_at"].isoformat(),
+    }
+
+
+def _formula_row(row: asyncpg.Record) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "section": row["section_id"],
+        "name": row["name"],
+        "formula": row["formula"],
+        "description": row["description"],
+        "variables": _decode_jsonb(row["variables"]) or {},
+        "unit": row["unit"],
+        "created_at": row["created_at"].isoformat(),
+        "updated_at": row["updated_at"].isoformat(),
+    }
+
+
+async def list_physics_formulas(section_id: str | None = None) -> list[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    rows = await pool.fetch(
+        """
+        SELECT *
+        FROM physics_formulas
+        WHERE is_published = TRUE
+            AND ($1::text IS NULL OR section_id = $1)
+        ORDER BY section_id, order_index, id
+        """,
+        section_id,
+    )
+    return [_formula_row(row) for row in rows]
+
+
+async def get_physics_formula(formula_id: str) -> Optional[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    row = await pool.fetchrow(
+        """
+        SELECT *
+        FROM physics_formulas
+        WHERE id = $1 AND is_published = TRUE
+        """,
+        formula_id,
+    )
+    return _formula_row(row) if row else None
+
+
+async def list_practice_tests(
+    section_id: str | None = None,
+    subsection_id: str | None = None,
+    topic_id: str | None = None,
+) -> list[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    rows = await pool.fetch(
+        """
+        SELECT *
+        FROM practice_tests
+        WHERE is_published = TRUE
+            AND ($1::text IS NULL OR section_id = $1)
+            AND ($2::text IS NULL OR subsection_id = $2)
+            AND ($3::text IS NULL OR topic_id = $3)
+        ORDER BY section_id, subsection_id, order_index, id
+        """,
+        section_id,
+        subsection_id,
+        topic_id,
+    )
+    return [_practice_test_row(row) for row in rows]
+
+
+async def get_practice_test(test_id: str) -> Optional[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    row = await pool.fetchrow(
+        """
+        SELECT *
+        FROM practice_tests
+        WHERE id = $1 AND is_published = TRUE
+        """,
+        test_id,
+    )
+    return _practice_test_row(row) if row else None
+
+
+async def list_practice_tasks(
+    section_id: str | None = None,
+    subsection_id: str | None = None,
+    topic_id: str | None = None,
+) -> list[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    rows = await pool.fetch(
+        """
+        SELECT *
+        FROM practice_tasks
+        WHERE is_published = TRUE
+            AND ($1::text IS NULL OR section_id = $1)
+            AND ($2::text IS NULL OR subsection_id = $2)
+            AND ($3::text IS NULL OR topic_id = $3)
+        ORDER BY section_id, subsection_id, order_index, id
+        """,
+        section_id,
+        subsection_id,
+        topic_id,
+    )
+    return [_practice_task_row(row) for row in rows]
+
+
+async def get_practice_task(task_id: str) -> Optional[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    row = await pool.fetchrow(
+        """
+        SELECT *
+        FROM practice_tasks
+        WHERE id = $1 AND is_published = TRUE
+        """,
+        task_id,
+    )
+    return _practice_task_row(row) if row else None
+
+
 async def postgres_health() -> dict[str, Any]:
     if not DATABASE_URL:
         return {"configured": False, "ok": False}
@@ -537,7 +727,8 @@ async def postgres_health() -> dict[str, Any]:
             SELECT
                 (SELECT COUNT(*) FROM lesson_sections) AS sections,
                 (SELECT COUNT(*) FROM lesson_subsections) AS subsections,
-                (SELECT COUNT(*) FROM lesson_topics) AS topics
+                (SELECT COUNT(*) FROM lesson_topics) AS topics,
+                (SELECT COUNT(*) FROM physics_formulas) AS formulas
             """
         )
         practice_counts = await conn.fetchrow(
@@ -557,6 +748,7 @@ async def postgres_health() -> dict[str, Any]:
                 "sections": lesson_counts["sections"],
                 "subsections": lesson_counts["subsections"],
                 "topics": lesson_counts["topics"],
+                "formulas": lesson_counts["formulas"],
             },
             "practice": {
                 "tests": practice_counts["tests"],

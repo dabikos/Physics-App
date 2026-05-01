@@ -1,35 +1,55 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import type { EventSubscription } from 'expo-modules-core';
 import Constants from 'expo-constants';
+import type * as ExpoNotifications from 'expo-notifications';
 import api from '../services/api';
 
-// Настройка обработки уведомлений в foreground
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
+type PermissionStatusLike = {
+  status?: string;
+  granted?: boolean;
+};
+
+const isExpoGo = Constants.appOwnership === 'expo';
+
+const getPermissionStatus = (permission: PermissionStatusLike) => {
+  if (permission.status) {
+    return permission.status;
+  }
+
+  return permission.granted ? 'granted' : 'undetermined';
+};
+
+async function getNotificationsModule() {
+  if (isExpoGo) {
+    return null;
+  }
+
+  try {
+    return await import('expo-notifications');
+  } catch {
+    return null;
+  }
+}
 
 async function registerForPushNotificationsAsync(): Promise<string | null> {
-  // Push уведомления работают только на физических устройствах
+  const Notifications = await getNotificationsModule();
+  if (!Notifications) {
+    return null;
+  }
+
   if (!Device.isDevice) {
     console.log('Push notifications require a physical device');
     return null;
   }
 
-  // Проверяем/запрашиваем разрешение
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  const existingPermission = await Notifications.getPermissionsAsync();
+  const existingStatus = getPermissionStatus(existingPermission as PermissionStatusLike);
   let finalStatus = existingStatus;
 
   if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
+    const requestedPermission = await Notifications.requestPermissionsAsync();
+    finalStatus = getPermissionStatus(requestedPermission as PermissionStatusLike);
   }
 
   if (finalStatus !== 'granted') {
@@ -37,13 +57,10 @@ async function registerForPushNotificationsAsync(): Promise<string | null> {
     return null;
   }
 
-  // Получаем Expo Push Token
   try {
     const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-    const tokenData = await Notifications.getExpoPushTokenAsync({
-      projectId,
-    });
-    return tokenData.data; // "ExponentPushToken[xxxxx]"
+    const tokenData = await Notifications.getExpoPushTokenAsync({ projectId });
+    return tokenData.data;
   } catch (error) {
     console.log('Error getting push token:', error);
     return null;
@@ -52,56 +69,66 @@ async function registerForPushNotificationsAsync(): Promise<string | null> {
 
 export function usePushNotifications(enabled: boolean = true) {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
-  const [notification, setNotification] = useState<Notifications.Notification | null>(null);
-  const notificationListener = useRef<EventSubscription | null>(null);
-  const responseListener = useRef<EventSubscription | null>(null);
+  const [notification, setNotification] = useState<ExpoNotifications.Notification | null>(null);
+  const notificationListener = useRef<ExpoNotifications.EventSubscription | null>(null);
+  const responseListener = useRef<ExpoNotifications.EventSubscription | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || isExpoGo) {
+      return;
+    }
 
-    // Регистрация токена
+    let isMounted = true;
+
     registerForPushNotificationsAsync().then(async (token) => {
-      if (token) {
+      if (token && isMounted) {
         setExpoPushToken(token);
-        // Отправляем токен на бэкенд
         try {
           await api.post('/push-token', { token, platform: Platform.OS });
-        } catch (e) {
-          console.log('Failed to save push token:', e);
+        } catch (error) {
+          console.log('Failed to save push token:', error);
         }
       }
     });
 
-    // Слушатель входящих уведомлений (foreground)
-    notificationListener.current = Notifications.addNotificationReceivedListener((notif) => {
-      setNotification(notif);
-    });
+    getNotificationsModule().then((Notifications) => {
+      if (!Notifications || !isMounted) {
+        return;
+      }
 
-    // Слушатель нажатия на уведомление
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      const data = response.notification.request.content.data;
-      // Можно обрабатывать навигацию по data.type
-      console.log('Notification tapped:', data);
-    });
-
-    // Android: настройка канала уведомлений
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'Основные',
-        importance: Notifications.AndroidImportance.HIGH,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#6C63FF',
-        sound: 'default',
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowBanner: true,
+          shouldShowList: true,
+          shouldPlaySound: true,
+          shouldSetBadge: true,
+        }),
       });
-    }
+
+      notificationListener.current = Notifications.addNotificationReceivedListener((nextNotification) => {
+        setNotification(nextNotification);
+      });
+
+      responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+        const data = response.notification.request.content.data;
+        console.log('Notification tapped:', data);
+      });
+
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'Основные',
+          importance: Notifications.AndroidImportance.HIGH,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#6C63FF',
+          sound: 'default',
+        });
+      }
+    });
 
     return () => {
-      if (notificationListener.current) {
-        notificationListener.current.remove();
-      }
-      if (responseListener.current) {
-        responseListener.current.remove();
-      }
+      isMounted = false;
+      notificationListener.current?.remove();
+      responseListener.current?.remove();
     };
   }, [enabled]);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   View,
@@ -6,13 +6,16 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import type { Formula } from '../../src/data/physicsData';
 import { MathText } from '../../src/components/MathText';
 import { useTheme } from '../../src/context/ThemeContext';
+import api from '../../src/services/api';
 
 const convertToLatex = (formula: string): string => {
   let result = formula;
@@ -146,8 +149,57 @@ export default function FormulaDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const { getFormulaById } = usePhysicsData();
+  const [remoteFormula, setRemoteFormula] = useState<Formula | null>(null);
+  const [loading, setLoading] = useState(true);
   
-  const formula = id ? getFormulaById(id) : null;
+  const localFormula = id ? getFormulaById(id) : null;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadFormula = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const response = await api.get(`/formulas/${id}`);
+        const item = response.data?.item || null;
+        if (!cancelled) setRemoteFormula(item);
+      } catch (error) {
+        console.log('Formula detail load error:', error);
+        if (!cancelled) setRemoteFormula(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadFormula();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  const formula = remoteFormula || localFormula;
+
+  if (!formula && loading) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('formulas.title')}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+          <ActivityIndicator color={colors.accent} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!formula) {
     return (

@@ -3,11 +3,9 @@
     "name": "Физика AI",
     "slug": "physics-ai",
     "version": "1.0.0",
-    "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "physics-ai",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.physicsai.app",
@@ -50,7 +48,22 @@
           "color": "#6C63FF",
           "defaultChannel": "default"
         }
-      ]
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-logo.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#10172F",
+          "dark": {
+            "image": "./assets/images/splash-logo.png",
+            "backgroundColor": "#10172F"
+          }
+        }
+      ],
+      "expo-image",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

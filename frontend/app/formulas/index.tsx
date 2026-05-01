@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   View,
@@ -12,13 +12,54 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import type { Formula } from '../../src/data/physicsData';
 import { MathText } from '../../src/components/MathText';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
+import api from '../../src/services/api';
 
 // Компонент для красивого отображения формулы в LaTeX
 const convertToLatex = (formula: string): string => {
     let result = formula;
+
+    result = result
+      .replace(/\u0394([a-zA-Z0-9])/g, '\\Delta $1')
+      .replace(/\u0394/g, '\\Delta')
+      .replace(/\u03BD([a-zA-Z0-9])/g, '\\nu $1')
+      .replace(/\u03BD/g, '\\nu')
+      .replace(/\u03BB([a-zA-Z0-9])/g, '\\lambda $1')
+      .replace(/\u03BB/g, '\\lambda')
+      .replace(/\u03C0([a-zA-Z0-9])/g, '\\pi $1')
+      .replace(/\u03C0/g, '\\pi')
+      .replace(/\u03B1([a-zA-Z0-9])/g, '\\alpha $1')
+      .replace(/\u03B1/g, '\\alpha')
+      .replace(/\u03B2([a-zA-Z0-9])/g, '\\beta $1')
+      .replace(/\u03B2/g, '\\beta')
+      .replace(/\u03B3([a-zA-Z0-9])/g, '\\gamma $1')
+      .replace(/\u03B3/g, '\\gamma')
+      .replace(/\u03B8([a-zA-Z0-9])/g, '\\theta $1')
+      .replace(/\u03B8/g, '\\theta')
+      .replace(/\u03C3([a-zA-Z0-9])/g, '\\sigma $1')
+      .replace(/\u03C3/g, '\\sigma')
+      .replace(/\u2211/g, '\\sum')
+      .replace(/\u222B/g, '\\int')
+      .replace(/\u221E/g, '\\infty')
+      .replace(/\u2192/g, '\\rightarrow')
+      .replace(/\u00B2/g, '^2')
+      .replace(/\u00B3/g, '^3')
+      .replace(/\u2074/g, '^4')
+      .replace(/\u2080/g, '_0')
+      .replace(/\u2081/g, '_1')
+      .replace(/\u2082/g, '_2')
+      .replace(/\u2083/g, '_3')
+      .replace(/\u00B7/g, ' \\cdot ')
+      .replace(/\u00D7/g, ' \\times ')
+      .replace(/\u00F7/g, ' \\div ');
+
+    result = result.replace(/\u221A\(([^)]+)\)/g, (match, expr) => {
+      const inner = expr.replace(/\//g, ' \\div ');
+      return `\\sqrt{${inner}}`;
+    });
     
     // ВАЖНО: Сначала заменяем греческие буквы
     // Добавляем пробелы после них, если следующая буква/цифра (чтобы LaTeX правильно разделил команду и переменную)
@@ -111,6 +152,7 @@ const convertToLatex = (formula: string): string => {
     // Обрабатываем cos, sin и другие функции
     result = result.replace(/\bcos\b/g, '\\cos');
     result = result.replace(/\bsin\b/g, '\\sin');
+    result = result.replace(/\blg\b/g, '\\lg');
     
     return result;
 };
@@ -142,16 +184,38 @@ export default function FormulasScreen() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [remoteFormulas, setRemoteFormulas] = useState<Formula[]>([]);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { colors } = useTheme();
   const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
+  const formulasData = remoteFormulas.length > 0 ? remoteFormulas : FORMULAS_DATA;
 
-  const filteredFormulas = FORMULAS_DATA.filter((formula) => {
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadFormulas = async () => {
+      try {
+        const response = await api.get('/formulas');
+        const items = Array.isArray(response.data?.items) ? response.data.items : [];
+        if (!cancelled) setRemoteFormulas(items);
+      } catch (error) {
+        console.log('Formulas load error:', error);
+        if (!cancelled) setRemoteFormulas([]);
+      }
+    };
+
+    loadFormulas();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const filteredFormulas = useMemo(() => formulasData.filter((formula) => {
     const matchesSearch = formula.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       formula.formula.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesSection = !selectedSection || formula.section === selectedSection;
     return matchesSearch && matchesSection;
-  });
+  }), [formulasData, searchQuery, selectedSection]);
 
   const groupedFormulas = filteredFormulas.reduce((acc, formula) => {
     if (!acc[formula.section]) {
@@ -159,7 +223,7 @@ export default function FormulasScreen() {
     }
     acc[formula.section].push(formula);
     return acc;
-  }, {} as Record<string, typeof FORMULAS_DATA>);
+  }, {} as Record<string, Formula[]>);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>

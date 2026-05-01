@@ -8,9 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView,
   Keyboard,
-  Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,7 +36,6 @@ export default function AIChatScreen() {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const [chatQuota, setChatQuota] = useState<ChatQuota | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -48,13 +45,11 @@ export default function AIChatScreen() {
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
   const insets = useSafeAreaInsets();
-  const tabBarBottomOffset = Math.max(insets.bottom, 12);
+  const tabBarBottomOffset = insets.bottom;
   const tabBarHeight = 64;
-  const inputDockHeight = 64;
   const chatBottomClearance = tabBarBottomOffset + tabBarHeight;
   const inputDockGap = 8;
-  const keyboardDockOffset = Math.max(keyboardHeight - insets.bottom, 0);
-  const inputBottomOffset = isKeyboardVisible ? keyboardDockOffset : chatBottomClearance + inputDockGap;
+  const inputBottomOffset = isKeyboardVisible ? 0 : chatBottomClearance + inputDockGap;
 
 
   const legacySendMessage = async () => {
@@ -114,16 +109,11 @@ export default function AIChatScreen() {
   }, []);
 
   useEffect(() => {
-    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
-    const showSub = Keyboard.addListener(showEvent, (event) => {
+    const showSub = Keyboard.addListener('keyboardDidShow', () => {
       setIsKeyboardVisible(true);
-      setKeyboardHeight(event.endCoordinates?.height ?? 0);
     });
-    const hideSub = Keyboard.addListener(hideEvent, () => {
+    const hideSub = Keyboard.addListener('keyboardDidHide', () => {
       setIsKeyboardVisible(false);
-      setKeyboardHeight(0);
     });
 
     return () => {
@@ -234,41 +224,48 @@ export default function AIChatScreen() {
     <>
       <View style={styles.chatContentArea}>
         {messages.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Ionicons name="chatbubble-ellipses" size={64} color={colors.border} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiChat.emptyTitle')}</Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
-              {t('aiChat.emptySubtitle')}
-            </Text>
-            <View style={styles.examplesContainer}>
-              <Text style={[styles.examplesTitle, { color: colors.textTertiary }]}>{t('aiChat.examplesTitle')}</Text>
-              <TouchableOpacity
-                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => setInputText(t('aiChat.example1').replace(/^[^\p{L}]*/u, ''))}
-              >
-                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example1')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => setInputText(t('aiChat.example2').replace(/^[^\p{L}]*/u, ''))}
-              >
-                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example2')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => setInputText(t('aiChat.example3').replace(/^[^\p{L}]*/u, ''))}
-              >
-                <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example3')}</Text>
-              </TouchableOpacity>
+          <ScrollView
+            style={styles.messagesList}
+            contentContainerStyle={styles.emptyStateContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.emptyState}>
+              <Ionicons name="chatbubble-ellipses" size={64} color={colors.border} />
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('aiChat.emptyTitle')}</Text>
+              <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
+                {t('aiChat.emptySubtitle')}
+              </Text>
+              <View style={styles.examplesContainer}>
+                <Text style={[styles.examplesTitle, { color: colors.textTertiary }]}>{t('aiChat.examplesTitle')}</Text>
+                <TouchableOpacity
+                  style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                  onPress={() => setInputText(t('aiChat.example1').replace(/^[^\p{L}]*/u, ''))}
+                >
+                  <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example1')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                  onPress={() => setInputText(t('aiChat.example2').replace(/^[^\p{L}]*/u, ''))}
+                >
+                  <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example2')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.exampleButton, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+                  onPress={() => setInputText(t('aiChat.example3').replace(/^[^\p{L}]*/u, ''))}
+                >
+                  <Text style={[styles.exampleText, { color: colors.textSecondary }]}>{t('aiChat.example3')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </ScrollView>
         ) : (
           <ScrollView
             ref={scrollViewRef}
             style={styles.messagesList}
             contentContainerStyle={[
               styles.messagesContent,
-              { paddingBottom: inputBottomOffset + inputDockHeight + 24 },
+              { paddingBottom: 16 },
             ]}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
@@ -301,7 +298,12 @@ export default function AIChatScreen() {
           {
             backgroundColor: colors.headerBg,
             borderColor: colors.border,
-            bottom: inputBottomOffset,
+            marginBottom: inputBottomOffset,
+            marginHorizontal: isKeyboardVisible ? 0 : 10,
+            borderRadius: isKeyboardVisible ? 0 : 18,
+            borderLeftWidth: isKeyboardVisible ? 0 : 1,
+            borderRightWidth: isKeyboardVisible ? 0 : 1,
+            borderBottomWidth: isKeyboardVisible ? 0 : 1,
             shadowColor: colors.shadowColor,
           },
         ]}
@@ -310,6 +312,7 @@ export default function AIChatScreen() {
           style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
           value={inputText}
           onChangeText={setInputText}
+          onFocus={() => setIsKeyboardVisible(true)}
           placeholder={t('aiChat.placeholder')}
           placeholderTextColor={colors.textMuted}
           multiline
@@ -381,13 +384,9 @@ export default function AIChatScreen() {
         </View>
       )}
 
-      <KeyboardAvoidingView
-        style={styles.chatContainer}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={0}
-      >
+      <View style={styles.chatContainer}>
         {chatBody}
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -501,12 +500,15 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   // Empty state
-  emptyState: {
-    flex: 1,
+  emptyStateContent: {
+    flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingTop: 24,
     paddingBottom: 24,
+  },
+  emptyState: {
+    alignItems: 'center',
   },
   emptyTitle: {
     fontSize: 20,
@@ -569,9 +571,6 @@ const styles = StyleSheet.create({
   },
   // Input
   inputContainer: {
-    position: 'absolute',
-    left: 10,
-    right: 10,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,

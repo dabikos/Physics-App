@@ -10,7 +10,7 @@ export default function TabLayout() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
-  const tabBarBottomOffset = Math.max(insets.bottom, 12);
+  const tabBarBottomOffset = insets.bottom;
   const tabBarHeight = 64;
 
   return (

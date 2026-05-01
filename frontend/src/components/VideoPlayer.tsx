@@ -1,28 +1,20 @@
-import React, { useState, useRef } from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  ActivityIndicator, 
-  TouchableOpacity, 
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
   Text,
-  Dimensions 
+  Dimensions,
 } from 'react-native';
-import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
+import { useEvent, useEventListener } from 'expo';
+import { VideoSource, VideoView, useVideoPlayer } from 'expo-video';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Asset } from 'expo-asset';
 
 interface VideoPlayerProps {
-  /** 
-   * URL видео (строка) ИЛИ require() модуль для локального видео
-   * Примеры:
-   * - Локальное: require('../../assets/videos/ohm-law.mp4')
-   * - Удаленное: "https://example.com/video.mp4"
-   */
   videoSource: string | number;
-  /** Цвет темы */
   color?: string;
-  /** Показывать ли нативные контролы */
   useNativeControls?: boolean;
 }
 
@@ -35,55 +27,61 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   color = '#6C63FF',
   useNativeControls = true,
 }) => {
-  const [status, setStatus] = useState<AVPlaybackStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [videoUri, setVideoUri] = useState<string | null>(null);
-  const videoRef = useRef<Video>(null);
+  const [resolvedSource, setResolvedSource] = useState<VideoSource>(null);
 
-  // Обработка локальных видео через Asset
+  const player = useVideoPlayer(null, (videoPlayer) => {
+    videoPlayer.loop = false;
+  });
+  const { isPlaying } = useEvent(player, 'playingChange', {
+    isPlaying: player.playing,
+  });
+  const { status: playerStatus } = useEvent(player, 'statusChange', {
+    status: player.status,
+  });
+
   React.useEffect(() => {
-    const loadVideo = async () => {
-      try {
-        // Если это require() модуль (number)
-        if (typeof videoSource === 'number') {
-          const asset = Asset.fromModule(videoSource);
-          await asset.downloadAsync();
-          setVideoUri(asset.localUri || asset.uri);
-        } else {
-          // Если это строка URL
-          setVideoUri(videoSource);
-        }
-        setIsLoading(false);
-      } catch {
-        setError('Не удалось загрузить видео');
-        setIsLoading(false);
-      }
-    };
-
-    loadVideo();
+    setError(null);
+    setIsLoading(true);
+    setResolvedSource(
+      typeof videoSource === 'number'
+        ? { assetId: videoSource }
+        : { uri: videoSource }
+    );
   }, [videoSource]);
 
-  const handlePlaybackStatusUpdate = (playbackStatus: AVPlaybackStatus) => {
-    setStatus(playbackStatus);
-    
-    if (playbackStatus.isLoaded) {
+  React.useEffect(() => {
+    if (!resolvedSource) {
+      return;
+    }
+
+    player.replaceAsync(resolvedSource).catch((loadError: Error) => {
+      setError(loadError.message || 'Ошибка воспроизведения');
       setIsLoading(false);
-      setIsPlaying(playbackStatus.isPlaying);
-    } else if (playbackStatus.error) {
-      setError(playbackStatus.error);
+    });
+  }, [player, resolvedSource]);
+
+  React.useEffect(() => {
+    if (playerStatus === 'readyToPlay') {
+      setIsLoading(false);
+    } else if (playerStatus === 'loading') {
+      setIsLoading(true);
+    }
+  }, [playerStatus]);
+
+  useEventListener(player, 'statusChange', ({ status, error: playerError }) => {
+    if (status === 'error') {
+      setError(playerError?.message || 'Ошибка воспроизведения');
       setIsLoading(false);
     }
-  };
+  });
 
-  const handlePlayPause = async () => {
-    if (videoRef.current && status?.isLoaded) {
-      if (status.isPlaying) {
-        await videoRef.current.pauseAsync();
-      } else {
-        await videoRef.current.playAsync();
-      }
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      player.pause();
+    } else {
+      player.play();
     }
   };
 
@@ -108,7 +106,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     );
   }
 
-  if (!videoUri) {
+  if (!resolvedSource) {
     return (
       <View style={styles.container}>
         <View style={styles.loader}>
@@ -139,25 +137,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               </LinearGradient>
             </View>
           )}
-          
-          <Video
-            ref={videoRef}
-            source={{ uri: videoUri }}
+
+          <VideoView
+            player={player}
             style={styles.video}
-            useNativeControls={useNativeControls}
-            resizeMode={ResizeMode.CONTAIN}
-            onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
-            onError={(error) => {
-              setError(typeof error === 'string' ? error : 'Ошибка воспроизведения');
-              setIsLoading(false);
-            }}
-            onLoadStart={() => setIsLoading(true)}
-            onLoad={() => setIsLoading(false)}
-            shouldPlay={false}
-            isLooping={false}
+            nativeControls={useNativeControls}
+            contentFit="contain"
           />
 
-          {(!useNativeControls || isLoading) && status?.isLoaded && (
+          {(!useNativeControls || isLoading) && playerStatus === 'readyToPlay' && (
             <TouchableOpacity
               style={styles.playButton}
               onPress={handlePlayPause}
@@ -289,15 +277,3 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 });
-
-
-
-
-
-
-
-
-
-
-
-
