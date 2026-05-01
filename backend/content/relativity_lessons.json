@@ -1,0 +1,139 @@
+{
+  "section": {
+    "id": "relativity",
+    "name": "Специальная теория относительности",
+    "icon": "infinite",
+    "color": "#E67E22",
+    "order_index": 5
+  },
+  "subsections": [
+    {
+      "id": "special-relativity",
+      "section_id": "relativity",
+      "name": "СТО",
+      "order_index": 0
+    }
+  ],
+  "topics": [
+    {
+      "id": "einstein-postulates",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Постулаты Эйнштейна",
+      "brief_info": "1) Все инерциальные системы отсчёта равноправны (законы физики одинаковы). 2) Скорость света в вакууме c одинакова для всех наблюдателей, независимо от движения источника.",
+      "example_problem": "Почему постулат о постоянстве c противоречит сложению скоростей Галилея?\n\nОтвет: требуется пересмотр преобразований координат и времени (преобразования Лоренца).",
+      "formulas": [
+        "c = 299 792 458 м/с"
+      ],
+      "video": null,
+      "order_index": 0
+    },
+    {
+      "id": "lorentz-transformations",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Преобразования Лоренца",
+      "brief_info": "Связь координат и времени между ИСО, движущимися со скоростью v: x' = γ(x - vt), t' = γ(t - vx/c²), где γ = 1/√(1 - v²/c²). При v ≪ c переходят к преобразованиям Галилея.",
+      "example_problem": "При какой скорости γ = 2?\n\n1 - v²/c² = 1/4 → v = (√3/2)c ≈ 0,866c\n\nОтвет: ≈ 0,866c.",
+      "formulas": [
+        "γ = 1/√(1 - v²/c²)",
+        "x' = γ(x - vt)"
+      ],
+      "video": null,
+      "order_index": 1
+    },
+    {
+      "id": "time-dilation",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Замедление времени",
+      "brief_info": "Собственное время Δt₀ в системе покоя тела; для наблюдателя, относительно которого часы движутся, Δt = γ·Δt₀ > Δt₀ — «движущиеся часы идут медленнее».",
+      "example_problem": "Мюон живёт собственное время 2 мкс. На какое расстояние он успеет при γ = 10?\n\nL ≈ v·Δt ≈ c·γ·Δt₀ ≈ 3×10⁸×10×2×10⁻⁶ = 6000 м\n\nОтвет: порядка 6 км (оценка при v≈c).",
+      "formulas": [
+        "Δt = γ·Δt₀"
+      ],
+      "video": null,
+      "order_index": 2
+    },
+    {
+      "id": "length-contraction",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Сокращение длины",
+      "brief_info": "Длина стержня вдоль движения в лабораторной системе L = L₀/γ, где L₀ — собственная длина. Поперёк скорости размеры не сокращаются.",
+      "example_problem": "Собственная длина 1 м, γ = 2. Какова длина для наблюдателя, относительно которого стержень летит вдоль себя?\n\nL = 1/2 = 0,5 м\n\nОтвет: 0,5 м.",
+      "formulas": [
+        "L = L₀/γ"
+      ],
+      "video": null,
+      "order_index": 3
+    },
+    {
+      "id": "invariant-interval",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Инвариантность интервала",
+      "brief_info": "Величина s² = (cΔt)² - (Δx)² - (Δy)² - (Δz)² одинакова во всех ИСО. Для светового луча s = 0.",
+      "example_problem": "Для событий на световом конусе (связанных светом) каков интервал?\n\nОтвет: s = 0.",
+      "formulas": [
+        "s² = (cΔt)² - Δr²"
+      ],
+      "video": null,
+      "order_index": 4
+    },
+    {
+      "id": "mass-energy-emc2",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Связь массы и энергии E = mc²",
+      "brief_info": "Покойная энергия тела E₀ = mc². В релятивистской механике масса и энергия эквивалентны; при реакциях изменение массы связано с выделением/поглощением энергии.",
+      "example_problem": "На сколько уменьшится масса, если выделилось 9×10¹³ Дж?\n\nΔm = E/c² = 9×10¹³ / 9×10¹⁶ = 0,001 кг\n\nОтвет: 1 г.",
+      "formulas": [
+        "E₀ = mc²",
+        "ΔE = Δm·c²"
+      ],
+      "video": null,
+      "order_index": 5
+    },
+    {
+      "id": "relativistic-momentum",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Релятивистский импульс",
+      "brief_info": "p = γmv. При v → c импульс растёт быстрее, чем в классике; ускорение перестаёт следовать простому F = ma.",
+      "example_problem": "При v = 0,6c каково отношение p/(mv)?\n\nγ = 1/√(1-0,36) = 1/0,8 = 1,25\n\nОтвет: 1,25.",
+      "formulas": [
+        "p = γmv"
+      ],
+      "video": null,
+      "order_index": 6
+    },
+    {
+      "id": "relativistic-energy",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Релятивистская энергия",
+      "brief_info": "Полная энергия E = γmc² = E₀ + K. Кинетическая K = (γ - 1)mc². Связь E, p и m: E² = (pc)² + (mc²)².",
+      "example_problem": "Частица с m₀; при γ = 2 какова кинетическая энергия?\n\nK = (γ-1)m₀c² = m₀c²\n\nОтвет: равна энергии покоя.",
+      "formulas": [
+        "E = γmc²",
+        "E² = p²c² + m²c⁴"
+      ],
+      "video": null,
+      "order_index": 7
+    },
+    {
+      "id": "lightspeed-limit",
+      "section_id": "relativity",
+      "subsection_id": "special-relativity",
+      "title": "Недостижимость скорости света",
+      "brief_info": "При разгоне материальной частицы γ → ∞ при v → c, требуется неограниченная энергия. Свет и частицы без массы движутся ровно со скоростью c.",
+      "example_problem": "Почему нельзя ускорить тело с массой покоя до c конечной работой?\n\nОтвет: рост γ и энергии без ограничения при v → c.",
+      "formulas": [
+        "v < c для m₀ > 0"
+      ],
+      "video": null,
+      "order_index": 8
+    }
+  ]
+}
