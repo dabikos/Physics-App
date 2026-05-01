@@ -161,11 +161,55 @@ async def init_postgres_schema() -> None:
 
             CREATE INDEX IF NOT EXISTS idx_lesson_topics_section_subsection_order
                 ON lesson_topics(section_id, subsection_id, order_index);
+
+            CREATE TABLE IF NOT EXISTS practice_tests (
+                id TEXT PRIMARY KEY,
+                section_id TEXT NOT NULL REFERENCES lesson_sections(id) ON DELETE CASCADE,
+                subsection_id TEXT NOT NULL REFERENCES lesson_subsections(id) ON DELETE CASCADE,
+                topic_id TEXT,
+                title TEXT NOT NULL,
+                difficulty TEXT NOT NULL DEFAULT 'basic',
+                questions JSONB NOT NULL DEFAULT '[]'::jsonb,
+                time_limit INTEGER NOT NULL DEFAULT 300,
+                order_index INTEGER NOT NULL DEFAULT 0,
+                is_published BOOLEAN NOT NULL DEFAULT TRUE,
+                source TEXT NOT NULL DEFAULT 'seed',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+
+            CREATE TABLE IF NOT EXISTS practice_tasks (
+                id TEXT PRIMARY KEY,
+                section_id TEXT NOT NULL REFERENCES lesson_sections(id) ON DELETE CASCADE,
+                subsection_id TEXT NOT NULL REFERENCES lesson_subsections(id) ON DELETE CASCADE,
+                topic_id TEXT,
+                topic_title TEXT,
+                title TEXT NOT NULL,
+                problem_text TEXT NOT NULL,
+                given_data TEXT NOT NULL DEFAULT '',
+                find_text TEXT NOT NULL DEFAULT '',
+                solution TEXT NOT NULL DEFAULT '',
+                answer TEXT NOT NULL DEFAULT '',
+                difficulty TEXT NOT NULL DEFAULT 'medium',
+                raw_text TEXT NOT NULL DEFAULT '',
+                order_index INTEGER NOT NULL DEFAULT 0,
+                is_published BOOLEAN NOT NULL DEFAULT TRUE,
+                source TEXT NOT NULL DEFAULT 'seed',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_practice_tests_section_subsection_order
+                ON practice_tests(section_id, subsection_id, order_index);
+
+            CREATE INDEX IF NOT EXISTS idx_practice_tasks_section_subsection_order
+                ON practice_tasks(section_id, subsection_id, order_index);
             """
         )
         await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
         await seed_default_ai_prompts(conn)
         await seed_lesson_content(conn)
+        await seed_practice_content(conn)
 
 
 async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
@@ -359,6 +403,97 @@ async def seed_lesson_file(conn: asyncpg.Connection, seed_path: Path) -> None:
         )
 
 
+async def seed_practice_content(conn: asyncpg.Connection) -> None:
+    content_dir = ROOT_DIR / "content"
+
+    for seed_path in sorted(content_dir.glob("*_tests.json")):
+        await seed_practice_tests_file(conn, seed_path)
+
+    for seed_path in sorted(content_dir.glob("*_tasks.json")):
+        await seed_practice_tasks_file(conn, seed_path)
+
+
+async def seed_practice_tests_file(conn: asyncpg.Connection, seed_path: Path) -> None:
+    payload = json.loads(seed_path.read_text(encoding="utf-8"))
+
+    for test in payload.get("tests", []):
+        await conn.execute(
+            """
+            INSERT INTO practice_tests (
+                id, section_id, subsection_id, topic_id, title, difficulty,
+                questions, time_limit, order_index, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8, $9, 'seed')
+            ON CONFLICT (id) DO UPDATE SET
+                section_id = EXCLUDED.section_id,
+                subsection_id = EXCLUDED.subsection_id,
+                topic_id = EXCLUDED.topic_id,
+                title = EXCLUDED.title,
+                difficulty = EXCLUDED.difficulty,
+                questions = EXCLUDED.questions,
+                time_limit = EXCLUDED.time_limit,
+                order_index = EXCLUDED.order_index,
+                updated_at = NOW()
+            WHERE practice_tests.source = 'seed'
+            """,
+            test["id"],
+            test["section_id"],
+            test["subsection_id"],
+            test.get("topic_id"),
+            test["title"],
+            test.get("difficulty", "basic"),
+            json.dumps(test.get("questions") or []),
+            test.get("time_limit", 300),
+            test["order_index"],
+        )
+
+
+async def seed_practice_tasks_file(conn: asyncpg.Connection, seed_path: Path) -> None:
+    payload = json.loads(seed_path.read_text(encoding="utf-8"))
+
+    for task in payload.get("tasks", []):
+        await conn.execute(
+            """
+            INSERT INTO practice_tasks (
+                id, section_id, subsection_id, topic_id, topic_title, title,
+                problem_text, given_data, find_text, solution, answer,
+                difficulty, raw_text, order_index, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'seed')
+            ON CONFLICT (id) DO UPDATE SET
+                section_id = EXCLUDED.section_id,
+                subsection_id = EXCLUDED.subsection_id,
+                topic_id = EXCLUDED.topic_id,
+                topic_title = EXCLUDED.topic_title,
+                title = EXCLUDED.title,
+                problem_text = EXCLUDED.problem_text,
+                given_data = EXCLUDED.given_data,
+                find_text = EXCLUDED.find_text,
+                solution = EXCLUDED.solution,
+                answer = EXCLUDED.answer,
+                difficulty = EXCLUDED.difficulty,
+                raw_text = EXCLUDED.raw_text,
+                order_index = EXCLUDED.order_index,
+                updated_at = NOW()
+            WHERE practice_tasks.source = 'seed'
+            """,
+            task["id"],
+            task["section_id"],
+            task["subsection_id"],
+            task.get("topic_id"),
+            task.get("topic_title"),
+            task["title"],
+            task["problem_text"],
+            task.get("given_data", ""),
+            task.get("find_text", ""),
+            task.get("solution", ""),
+            task.get("answer", ""),
+            task.get("difficulty", "medium"),
+            task.get("raw_text", ""),
+            task["order_index"],
+        )
+
+
 def render_prompt_template(template: str, variables: dict[str, Any]) -> str:
     allowed = {name for _, name, _, _ in Formatter().parse(template) if name}
     values = {key: variables.get(key, "") for key in allowed}
@@ -405,6 +540,14 @@ async def postgres_health() -> dict[str, Any]:
                 (SELECT COUNT(*) FROM lesson_topics) AS topics
             """
         )
+        practice_counts = await conn.fetchrow(
+            """
+            SELECT
+                (SELECT COUNT(*) FROM practice_tests) AS tests,
+                (SELECT COALESCE(SUM(jsonb_array_length(questions)), 0) FROM practice_tests) AS test_questions,
+                (SELECT COUNT(*) FROM practice_tasks) AS tasks
+            """
+        )
         return {
             "configured": True,
             "ok": True,
@@ -414,6 +557,11 @@ async def postgres_health() -> dict[str, Any]:
                 "sections": lesson_counts["sections"],
                 "subsections": lesson_counts["subsections"],
                 "topics": lesson_counts["topics"],
+            },
+            "practice": {
+                "tests": practice_counts["tests"],
+                "test_questions": practice_counts["test_questions"],
+                "tasks": practice_counts["tasks"],
             },
         }
 
