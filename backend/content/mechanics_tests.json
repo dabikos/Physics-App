@@ -872,7 +872,7 @@
     {
       "id": "mechanics-work-test",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "work",
       "title": "Тест: Работа",
       "difficulty": "basic",
@@ -934,7 +934,7 @@
     {
       "id": "mechanics-kinetic-energy-test",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "kinetic-energy",
       "title": "Тест: Кинетическая энергия",
       "difficulty": "basic",
@@ -996,7 +996,7 @@
     {
       "id": "mechanics-potential-energy-test",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "potential-energy",
       "title": "Тест: Потенциальная энергия",
       "difficulty": "basic",
@@ -1058,7 +1058,7 @@
     {
       "id": "mechanics-energy-conservation-test",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "energy-conservation",
       "title": "Тест: Закон сохранения энергии",
       "difficulty": "basic",
@@ -1120,7 +1120,7 @@
     {
       "id": "mechanics-liquid-pressure-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "liquid-pressure",
       "title": "Тест: Давление в жидкостях",
       "difficulty": "basic",
@@ -1182,7 +1182,7 @@
     {
       "id": "mechanics-pascal-law-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "pascal-law",
       "title": "Тест: Закон Паскаля",
       "difficulty": "basic",
@@ -1244,7 +1244,7 @@
     {
       "id": "mechanics-archimedes-principle-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "archimedes-principle",
       "title": "Тест: Закон Архимеда",
       "difficulty": "basic",
@@ -1306,7 +1306,7 @@
     {
       "id": "mechanics-floating-bodies-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "floating-bodies",
       "title": "Тест: Плавание и погружение тел",
       "difficulty": "basic",
@@ -1368,7 +1368,7 @@
     {
       "id": "mechanics-atmospheric-pressure-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "atmospheric-pressure",
       "title": "Тест: Атмосферное давление",
       "difficulty": "basic",
@@ -1430,7 +1430,7 @@
     {
       "id": "mechanics-barometer-manometer-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "barometer-manometer",
       "title": "Тест: Барометр и манометр",
       "difficulty": "basic",
@@ -1492,7 +1492,7 @@
     {
       "id": "mechanics-hydraulic-machines-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "hydraulic-machines",
       "title": "Тест: Гидравлические машины",
       "difficulty": "basic",
@@ -1554,7 +1554,7 @@
     {
       "id": "mechanics-continuity-equation-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "continuity-equation",
       "title": "Тест: Уравнение неразрывности",
       "difficulty": "basic",
@@ -1616,7 +1616,7 @@
     {
       "id": "mechanics-bernoulli-equation-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "bernoulli-equation",
       "title": "Тест: Уравнение Бернулли",
       "difficulty": "basic",
@@ -1678,7 +1678,7 @@
     {
       "id": "mechanics-fluid-viscosity-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "fluid-viscosity",
       "title": "Тест: Вязкость жидкостей",
       "difficulty": "basic",
@@ -1740,7 +1740,7 @@
     {
       "id": "mechanics-stokes-law-test",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "stokes-law",
       "title": "Тест: Закон Стокса (сила сопротивления)",
       "difficulty": "basic",
@@ -2236,7 +2236,7 @@
     {
       "id": "mechanics-harmonic-oscillations-test",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "harmonic-oscillations",
       "title": "Тест: Гармонические колебания",
       "difficulty": "basic",
@@ -2298,7 +2298,7 @@
     {
       "id": "mechanics-pendulums-test",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "pendulums",
       "title": "Тест: Маятники",
       "difficulty": "basic",
@@ -2360,7 +2360,7 @@
     {
       "id": "mechanics-mechanical-waves-test",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "mechanical-waves",
       "title": "Тест: Механические волны",
       "difficulty": "basic",
@@ -2422,7 +2422,7 @@
     {
       "id": "mechanics-resonance-test",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "resonance",
       "title": "Тест: Резонанс",
       "difficulty": "basic",

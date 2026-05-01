@@ -1124,7 +1124,7 @@
     {
       "id": "mechanics-work-task-1",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "work",
       "topic_title": "Работа",
       "title": "Автомобиль движется прямолинейно. Сила тяги двигателя 2000 Н. Какую работу совершает двигатель при перемещении автомобил",
@@ -1140,7 +1140,7 @@
     {
       "id": "mechanics-work-task-2",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "work",
       "topic_title": "Работа",
       "title": "Мальчик тянет санки с силой 50 Н под углом 60° к горизонту. Расстояние равно 20 м. Вычислите работу силы.",
@@ -1156,7 +1156,7 @@
     {
       "id": "mechanics-work-task-3",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "work",
       "topic_title": "Работа",
       "title": "Грузчик поднимает ящик массой 20 кг на высоту 1.5 м. Какую работу совершает грузчик, если он поднимает груз равномерно? ",
@@ -1172,7 +1172,7 @@
     {
       "id": "mechanics-work-task-4",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "work",
       "topic_title": "Работа",
       "title": "Камень массой 3 кг падает в шахту. Какую работу совершит сила тяжести за первые 2 секунды свободного падения без начальн",
@@ -1188,7 +1188,7 @@
     {
       "id": "mechanics-work-task-5",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "work",
       "topic_title": "Работа",
       "title": "Кран поднял груз весом 5000 Н на высоту 10 м за 20 секунд. Определите мощность подъемного механизма крана.",
@@ -1204,7 +1204,7 @@
     {
       "id": "mechanics-kinetic-energy-task-1",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "kinetic-energy",
       "topic_title": "Кинетическая энергия",
       "title": "Автомобиль массой 1200 кг движется со скоростью 15 м/с. Чему равна его кинетическая энергия?",
@@ -1220,7 +1220,7 @@
     {
       "id": "mechanics-kinetic-energy-task-2",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "kinetic-energy",
       "topic_title": "Кинетическая энергия",
       "title": "Пуля массой 9 г пробивает доску. Ее скорость при входе 800 м/с, а при выходе 400 м/с. Какую работу совершили силы сопрот",
@@ -1236,7 +1236,7 @@
     {
       "id": "mechanics-kinetic-energy-task-3",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "kinetic-energy",
       "topic_title": "Кинетическая энергия",
       "title": "Для разгона машины массой 1000 кг из состояния покоя совершили работу в 200 кДж (пренебрегая потерями). Какую скорость п",
@@ -1252,7 +1252,7 @@
     {
       "id": "mechanics-kinetic-energy-task-4",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "kinetic-energy",
       "topic_title": "Кинетическая энергия",
       "title": "Камень брошен вертикально вверх со скоростью 10 м/с. На какой высоте кинетическая энергия камня станет равной нулю? (g=1",
@@ -1268,7 +1268,7 @@
     {
       "id": "mechanics-kinetic-energy-task-5",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "kinetic-energy",
       "topic_title": "Кинетическая энергия",
       "title": "Если импульс тела увеличить в 2 раза, оставив массу постоянной, во сколько раз изменится его кинетическая энергия?",
@@ -1284,7 +1284,7 @@
     {
       "id": "mechanics-potential-energy-task-1",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "potential-energy",
       "topic_title": "Потенциальная энергия",
       "title": "Какова потенциальная энергия ястреба массой 500 г, летящего на высоте 100 метров? (g=10)",
@@ -1300,7 +1300,7 @@
     {
       "id": "mechanics-potential-energy-task-2",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "potential-energy",
       "topic_title": "Потенциальная энергия",
       "title": "Пружину с жесткостью 200 Н/м растянули на 10 см. Какова ее потенциальная энергия?",
@@ -1316,7 +1316,7 @@
     {
       "id": "mechanics-potential-energy-task-3",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "potential-energy",
       "topic_title": "Потенциальная энергия",
       "title": "Тело массой 2 кг падает с высоты 10 м на высоту 4 м. Какое количество работы совершает сила тяжести на этом участке? (g=",
@@ -1332,7 +1332,7 @@
     {
       "id": "mechanics-potential-energy-task-4",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "potential-energy",
       "topic_title": "Потенциальная энергия",
       "title": "Чтобы растянуть пружину эспандера на 5 см от недеформированного состояния, была совершена работа 5 Дж. Найдите жесткость",
@@ -1348,7 +1348,7 @@
     {
       "id": "mechanics-potential-energy-task-5",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "potential-energy",
       "topic_title": "Потенциальная энергия",
       "title": "Камень массой 10 кг лежал на земле в яме глубиной 2 м. Вычислите его потенциальную энергию 1) относительно дна ямы; 2) о",
@@ -1364,7 +1364,7 @@
     {
       "id": "mechanics-energy-conservation-task-1",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "energy-conservation",
       "topic_title": "Закон сохранения энергии",
       "title": "Мяч массой 100 г бросили вертикально вверх со скоростью 20 м/с. На какую максимальную высоту поднимется мяч? Трение не у",
@@ -1380,7 +1380,7 @@
     {
       "id": "mechanics-energy-conservation-task-2",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "energy-conservation",
       "topic_title": "Закон сохранения энергии",
       "title": "Камешек свободно падает с высоты 45 м. Какой скорости он достигнет у поверхности земли? (g=10)",
@@ -1396,7 +1396,7 @@
     {
       "id": "mechanics-energy-conservation-task-3",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "energy-conservation",
       "topic_title": "Закон сохранения энергии",
       "title": "Пружинный пистолет заряжается. Пружину с жесткостью 1000 Н/м сжали на 5 см. Пуля массой 10 г вылетает горизонтально. Опр",
@@ -1412,7 +1412,7 @@
     {
       "id": "mechanics-energy-conservation-task-4",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "energy-conservation",
       "topic_title": "Закон сохранения энергии",
       "title": "Мальчик съезжает на санках с горы высотой 5 м. У основания горы скорость санок равна 6 м/с. Масса мальчика с санками 50 ",
@@ -1428,7 +1428,7 @@
     {
       "id": "mechanics-energy-conservation-task-5",
       "section_id": "mechanics",
-      "subsection_id": "conservation",
+      "subsection_id": "conservation-laws",
       "topic_id": "energy-conservation",
       "topic_title": "Закон сохранения энергии",
       "title": "Шарик массой m привязан к нити длиной L = 1 м. Его отвели на угол 90° к вертикали (горизонтальное положение) и отпустили",
@@ -1444,7 +1444,7 @@
     {
       "id": "mechanics-liquid-pressure-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "liquid-pressure",
       "topic_title": "Давление в жидкостях",
       "title": "Какое давление оказывает вода на дно бассейна, если глубина воды равна 2.5 м? (Плотность воды 1000 кг/м³, g = 10 м/с²).",
@@ -1460,7 +1460,7 @@
     {
       "id": "mechanics-liquid-pressure-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "liquid-pressure",
       "topic_title": "Давление в жидкостях",
       "title": "В аквариум налита вода (ρ=1000 кг/м³). На какой глубине давление воды составит 15000 Па? (g=10 м/с²).",
@@ -1476,7 +1476,7 @@
     {
       "id": "mechanics-liquid-pressure-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "liquid-pressure",
       "topic_title": "Давление в жидкостях",
       "title": "В цилиндрический сосуд налиты равные объемы воды (ρ=1000 кг/м³) и масла (ρ=800 кг/м³). Общая высота слоя жидкостей соста",
@@ -1492,7 +1492,7 @@
     {
       "id": "mechanics-liquid-pressure-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "liquid-pressure",
       "topic_title": "Давление в жидкостях",
       "title": "Какова сила давления воды на дно бака площадью 2 м², если высота уровня воды в баке равна 3 м? (g = 10 м/с², атмосферное",
@@ -1508,7 +1508,7 @@
     {
       "id": "mechanics-liquid-pressure-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "liquid-pressure",
       "topic_title": "Давление в жидкостях",
       "title": "В левом колене U-образной трубки находится вода, в правом — налито масло (ρ = 800 кг/м³). Высота столба воды над уровнем",
@@ -1524,7 +1524,7 @@
     {
       "id": "mechanics-pascal-law-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "pascal-law",
       "topic_title": "Закон Паскаля",
       "title": "На малый поршень гидравлического пресса площадью 10 см² действует сила 50 Н. Какая сила действует со стороны жидкости на",
@@ -1540,7 +1540,7 @@
     {
       "id": "mechanics-pascal-law-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "pascal-law",
       "topic_title": "Закон Паскаля",
       "title": "С помощью гидравлического домкрата поднимают автомобиль массой 1.5 тонны. Площадь большого поршня равна 600 см², а площа",
@@ -1556,7 +1556,7 @@
     {
       "id": "mechanics-pascal-law-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "pascal-law",
       "topic_title": "Закон Паскаля",
       "title": "Воздушный шар плотно завязан. На него наступили с силой 20 Н. Площадь соприкосновения ботинка с шаром равна 100 см². На ",
@@ -1572,7 +1572,7 @@
     {
       "id": "mechanics-pascal-law-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "pascal-law",
       "topic_title": "Закон Паскаля",
       "title": "В гидравлической машине малый поршень под действием силы опустился на 20 см. При этом большой поршень поднялся на 1 см. ",
@@ -1588,7 +1588,7 @@
     {
       "id": "mechanics-pascal-law-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "pascal-law",
       "topic_title": "Закон Паскаля",
       "title": "Площадь большего поршня гидравлического пресса в 25 раз больше площади меньшего поршня. Давление под поршнями равно 400 ",
@@ -1604,7 +1604,7 @@
     {
       "id": "mechanics-archimedes-principle-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "archimedes-principle",
       "topic_title": "Закон Архимеда",
       "title": "На полностью погруженный в воду медный брусок действует архимедова сила 40 Н. Каков объем этого бруска? (Плотность воды ",
@@ -1620,7 +1620,7 @@
     {
       "id": "mechanics-archimedes-principle-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "archimedes-principle",
       "topic_title": "Закон Архимеда",
       "title": "Камень весит в воздухе 120 Н, а при полном погружении в воду (ρ=1000 кг/м³) динамометр показывает вес 80 Н. Какова вытал",
@@ -1636,7 +1636,7 @@
     {
       "id": "mechanics-archimedes-principle-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "archimedes-principle",
       "topic_title": "Закон Архимеда",
       "title": "Алюминиевый шар (ρ_ал = 2700 кг/м³) массой 5.4 кг полностью опущен в керосин (ρ_к = 800 кг/м³). Чему равна архимедова си",
@@ -1652,7 +1652,7 @@
     {
       "id": "mechanics-archimedes-principle-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "archimedes-principle",
       "topic_title": "Закон Архимеда",
       "title": "Какую минимальную силу нужно приложить, чтобы удержать под водой бетонный блок размерами 2х1х0.5 м? (Плотность бетона 24",
@@ -1668,7 +1668,7 @@
     {
       "id": "mechanics-archimedes-principle-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "archimedes-principle",
       "topic_title": "Закон Архимеда",
       "title": "Утонет ли деревянный брусок (ρ_д = 600 кг/м³), если его опустить в масло (ρ_м = 900 кг/м³)?",
@@ -1684,7 +1684,7 @@
     {
       "id": "mechanics-floating-bodies-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "floating-bodies",
       "topic_title": "Плавание и погружение тел",
       "title": "Плавающее на поверхности воды деревянное тело вытесняет 400 см³ воды. Какова масса тела? (Плотность воды 1000 кг/м³, g =",
@@ -1700,7 +1700,7 @@
     {
       "id": "mechanics-floating-bodies-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "floating-bodies",
       "topic_title": "Плавание и погружение тел",
       "title": "Кубик льда (ρ = 900 кг/м³) плавает в воде (ρ = 1000 кг/м³). Какая часть объема кубика находится над водой?",
@@ -1716,7 +1716,7 @@
     {
       "id": "mechanics-floating-bodies-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "floating-bodies",
       "topic_title": "Плавание и погружение тел",
       "title": "Плот массой 120 кг равномерно распределен по площади. Объем плота 0.5 м³. Сколько груза он может выдержать (оставаясь на",
@@ -1732,7 +1732,7 @@
     {
       "id": "mechanics-floating-bodies-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "floating-bodies",
       "topic_title": "Плавание и погружение тел",
       "title": "Корабль при переходе из реки в море (из менее соленой в более соленую воду) изменил осадку так, что объем вытесненной во",
@@ -1748,7 +1748,7 @@
     {
       "id": "mechanics-floating-bodies-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "floating-bodies",
       "topic_title": "Плавание и погружение тел",
       "title": "Алюминиевая деталь внутри имеет полость. Масса детали 540 г (0.54 кг). При погружении в воду динамометр показывает её ве",
@@ -1764,7 +1764,7 @@
     {
       "id": "mechanics-atmospheric-pressure-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "atmospheric-pressure",
       "topic_title": "Атмосферное давление",
       "title": "Выразите атмосферное давление 100 кПа в миллиметрах ртутного столба (плотность ртути 13600 кг/м³, g = 9.8 м/с²).",
@@ -1780,7 +1780,7 @@
     {
       "id": "mechanics-atmospheric-pressure-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "atmospheric-pressure",
       "topic_title": "Атмосферное давление",
       "title": "Какая сила действует на столешницу размером 1 м × 1.2 м со стороны атмосферы, если нормальное атмосферное давление равно",
@@ -1796,7 +1796,7 @@
     {
       "id": "mechanics-atmospheric-pressure-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "atmospheric-pressure",
       "topic_title": "Атмосферное давление",
       "title": "У подножия горы барометр показывает 760 мм рт. ст., а на вершине — 720 мм рт. ст. Считая, что при подъеме на каждые 12 м",
@@ -1812,7 +1812,7 @@
     {
       "id": "mechanics-atmospheric-pressure-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "atmospheric-pressure",
       "topic_title": "Атмосферное давление",
       "title": "Почему магдебургские полушария (с радиусом 20 см каждое) было так трудно оторвать друг от друга, когда из них откачали в",
@@ -1828,7 +1828,7 @@
     {
       "id": "mechanics-atmospheric-pressure-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "atmospheric-pressure",
       "topic_title": "Атмосферное давление",
       "title": "Каким должно быть минимальное давление воздуха в скафандре космонавта, если внешнее давление в космосе равно 0, а космон",
@@ -1844,7 +1844,7 @@
     {
       "id": "mechanics-barometer-manometer-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "barometer-manometer",
       "topic_title": "Барометр и манометр",
       "title": "Ртутный барометр показывает давление 750 мм рт. ст. Сколько это в Паскалях? (Плотность ртути 13600 кг/м³, g = 10 м/с² - ",
@@ -1860,7 +1860,7 @@
     {
       "id": "mechanics-barometer-manometer-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "barometer-manometer",
       "topic_title": "Барометр и манометр",
       "title": "Открытый жидкостный манометр, заполненный водой, подсоединен к газовому баллону. Уровень воды в открытом колене на 40 см",
@@ -1876,7 +1876,7 @@
     {
       "id": "mechanics-barometer-manometer-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "barometer-manometer",
       "topic_title": "Барометр и манометр",
       "title": "Манометр на трубе с газом показывает давление 1.5 МПа (это избыточное давление). Каково абсолютное давление газа? (p_атм",
@@ -1892,7 +1892,7 @@
     {
       "id": "mechanics-barometer-manometer-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "barometer-manometer",
       "topic_title": "Барометр и манометр",
       "title": "В U-образном открытом манометре налита ртуть. В одном колене, соединенном с сосудом, уровень ртути на 150 мм НИЖЕ, чем в",
@@ -1908,7 +1908,7 @@
     {
       "id": "mechanics-barometer-manometer-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "barometer-manometer",
       "topic_title": "Барометр и манометр",
       "title": "Чтобы измерить небольшое давление в легких человека во время выдоха, используется водяной манометр. Человек выдыхает в т",
@@ -1924,7 +1924,7 @@
     {
       "id": "mechanics-hydraulic-machines-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "hydraulic-machines",
       "topic_title": "Гидравлические машины",
       "title": "Поршень насоса имеет площадь сечения 20 см². Достижимое разрежение под поршнем — 0.2 атм (то есть давление 0.8 атм, атмо",
@@ -1940,7 +1940,7 @@
     {
       "id": "mechanics-hydraulic-machines-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "hydraulic-machines",
       "topic_title": "Гидравлические машины",
       "title": "В гидравлический пресс залито масло. Отношение площадей поршней S2/S1 = 100. На малый поршень действуют силой 200 Н, пер",
@@ -1956,7 +1956,7 @@
     {
       "id": "mechanics-hydraulic-machines-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "hydraulic-machines",
       "topic_title": "Гидравлические машины",
       "title": "КПД реального гидравлического пресса равен 80%. Площади поршней 5 см² и 500 см². Какую работу совершили над малым поршне",
@@ -1972,7 +1972,7 @@
     {
       "id": "mechanics-hydraulic-machines-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "hydraulic-machines",
       "topic_title": "Гидравлические машины",
       "title": "Какова максимальная теоретическая высота всасывания воды поршневым насосом при нормальном атмосферном давлении 101325 Па",
@@ -1988,7 +1988,7 @@
     {
       "id": "mechanics-hydraulic-machines-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "hydraulic-machines",
       "topic_title": "Гидравлические машины",
       "title": "К рычагу гидравлического домкрата с плечами 5 см и 40 см (сила человека прикладывается к длинному плечу, малый поршень п",
@@ -2004,7 +2004,7 @@
     {
       "id": "mechanics-continuity-equation-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "continuity-equation",
       "topic_title": "Уравнение неразрывности",
       "title": "Вода течет по трубе с площадью поперечного сечения 50 см² со скоростью 2 м/с. Какова будет скорость течения в узкой част",
@@ -2020,7 +2020,7 @@
     {
       "id": "mechanics-continuity-equation-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "continuity-equation",
       "topic_title": "Уравнение неразрывности",
       "title": "Каков объемный расход(Q) воды из водопроводного крана диаметром 2 см, если вода вытекает со скоростью 0.5 м/с?",
@@ -2036,7 +2036,7 @@
     {
       "id": "mechanics-continuity-equation-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "continuity-equation",
       "topic_title": "Уравнение неразрывности",
       "title": "Кровь течет в аорте площадью сечения 3 см² со скоростью 30 см/с. Сечение всех капилляров человека в сумме составляет 300",
@@ -2052,7 +2052,7 @@
     {
       "id": "mechanics-continuity-equation-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "continuity-equation",
       "topic_title": "Уравнение неразрывности",
       "title": "Пожарный шланг имеет диаметр 6 см, скорость воды в нем 1 м/с. Шланг оканчивается брандспойтом с диаметром отверстия 2 см",
@@ -2068,7 +2068,7 @@
     {
       "id": "mechanics-continuity-equation-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "continuity-equation",
       "topic_title": "Уравнение неразрывности",
       "title": "За 1 минуту через трубу сечением 20 см² выливается 120 литров воды. Найдите среднюю скорость течения воды в трубе.",
@@ -2084,7 +2084,7 @@
     {
       "id": "mechanics-bernoulli-equation-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "bernoulli-equation",
       "topic_title": "Уравнение Бернулли",
       "title": "Вода течет по горизонтальной трубе. В широком сечении скорость равна 1 м/с, а гидростатическое давление 1.2 * 10^5 Па. В",
@@ -2100,7 +2100,7 @@
     {
       "id": "mechanics-bernoulli-equation-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "bernoulli-equation",
       "topic_title": "Уравнение Бернулли",
       "title": "Из большого открытого бака через маленькое отверстие на глубине H=5 метров вытекает вода (ρ=1000 кг/м³). Найдите скорост",
@@ -2116,7 +2116,7 @@
     {
       "id": "mechanics-bernoulli-equation-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "bernoulli-equation",
       "topic_title": "Уравнение Бернулли",
       "title": "Для измерения скорости потока газа используется трубка Пито. Измеренная разность давлений (динамическое давление) состав",
@@ -2132,7 +2132,7 @@
     {
       "id": "mechanics-bernoulli-equation-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "bernoulli-equation",
       "topic_title": "Уравнение Бернулли",
       "title": "Карбюратор и распылитель работают по принципу снижения давления в суженой струе воздуха. Если скорость воздуха над трубк",
@@ -2148,7 +2148,7 @@
     {
       "id": "mechanics-bernoulli-equation-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "bernoulli-equation",
       "topic_title": "Уравнение Бернулли",
       "title": "Самолет летит горизонтально. Скорость потока воздуха над крылом 120 м/с, а под крылом 100 м/с. Площадь поверхности крыла",
@@ -2164,7 +2164,7 @@
     {
       "id": "mechanics-fluid-viscosity-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "fluid-viscosity",
       "topic_title": "Вязкость жидкостей",
       "title": "Между двумя параллельными слоями смазочного масла площадью 100 см² (0.01 м²) градиент скорости составляет 50 с⁻¹. Динами",
@@ -2180,7 +2180,7 @@
     {
       "id": "mechanics-fluid-viscosity-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "fluid-viscosity",
       "topic_title": "Вязкость жидкостей",
       "title": "В трубке пуазейлева течения вязкой жидкости перепад давления увеличили в 2 раза, оставив остальные параметры постоянными",
@@ -2196,7 +2196,7 @@
     {
       "id": "mechanics-fluid-viscosity-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "fluid-viscosity",
       "topic_title": "Вязкость жидкостей",
       "title": "Динамическая вязкость воды при 20°С (η) равна 1.0 * 10⁻³ Па*с. Плотность воды 1000 кг/м³. Вычислите кинематическую вязко",
@@ -2212,7 +2212,7 @@
     {
       "id": "mechanics-fluid-viscosity-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "fluid-viscosity",
       "topic_title": "Вязкость жидкостей",
       "title": "Капля воды течет по вертикальной стеклянной пластине. Если слой воды имеет толщину 1 мм, а скорость внешнего слоя 2 см/с",
@@ -2228,7 +2228,7 @@
     {
       "id": "mechanics-fluid-viscosity-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "fluid-viscosity",
       "topic_title": "Вязкость жидкостей",
       "title": "Кровь является жидкостью, но её поведение:",
@@ -2244,7 +2244,7 @@
     {
       "id": "mechanics-stokes-law-task-1",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "stokes-law",
       "topic_title": "Закон Стокса (сила сопротивления)",
       "title": "Какая сила сопротивления действует на стеклянный шарик радиусом 1 мм, падающий в глицерине (вязкость η = 1.5 Па*с) со ск",
@@ -2260,7 +2260,7 @@
     {
       "id": "mechanics-stokes-law-task-2",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "stokes-law",
       "topic_title": "Закон Стокса (сила сопротивления)",
       "title": "Шарик радиусом 2 мм падает в очень вязком масле с установившейся скоростью v1. Какова будет установившаяся скорость паде",
@@ -2276,7 +2276,7 @@
     {
       "id": "mechanics-stokes-law-task-3",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "stokes-law",
       "topic_title": "Закон Стокса (сила сопротивления)",
       "title": "Пузырек воздуха радиусом 0.1 мм всплывает в воде (вязкость η = 10⁻³ Па*с). Сила Архимеда, поднимающая его, значительно п",
@@ -2292,7 +2292,7 @@
     {
       "id": "mechanics-stokes-law-task-4",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "stokes-law",
       "topic_title": "Закон Стокса (сила сопротивления)",
       "title": "Капля дождя (r = 0.5 мм) падает в воздухе (η = 1.8 * 10⁻⁵ Па*с). Из-за турбулентности закон Стокса не полностью применим",
@@ -2308,7 +2308,7 @@
     {
       "id": "mechanics-stokes-law-task-5",
       "section_id": "mechanics",
-      "subsection_id": "hydrostatics",
+      "subsection_id": "fluid-mechanics",
       "topic_id": "stokes-law",
       "topic_title": "Закон Стокса (сила сопротивления)",
       "title": "Металлический шарик радиусом r падает в жидкости с вязкостью η1 со скоростью 5 см/с. Тот же шарик в другой жидкости пада",
@@ -2884,7 +2884,7 @@
     {
       "id": "mechanics-harmonic-oscillations-task-1",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "harmonic-oscillations",
       "topic_title": "Гармонические колебания",
       "title": "Уравнение колебаний материальной точки задано в виде: x(t) = 0.5 * cos(4π * t) [метры, секунды]. Найдите амплитуду, цикл",
@@ -2900,7 +2900,7 @@
     {
       "id": "mechanics-harmonic-oscillations-task-2",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "harmonic-oscillations",
       "topic_title": "Гармонические колебания",
       "title": "Материальная точка совершает колебания по закону косинуса. Максимальная скорость точки равна 2 м/с, а амплитуда 0.1 м. Н",
@@ -2916,7 +2916,7 @@
     {
       "id": "mechanics-harmonic-oscillations-task-3",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "harmonic-oscillations",
       "topic_title": "Гармонические колебания",
       "title": "Тело совершает гармонические колебания с частотой 5 Гц и амплитудой 2 см. Вычислите максимальное ускорение этого тела.",
@@ -2932,7 +2932,7 @@
     {
       "id": "mechanics-harmonic-oscillations-task-4",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "harmonic-oscillations",
       "topic_title": "Гармонические колебания",
       "title": "Уравнение смещения имеет вид x(t) = 0.2 * sin(πt). Чему равна координата точки через t = 0.5 с от начала отсчета?",
@@ -2948,7 +2948,7 @@
     {
       "id": "mechanics-harmonic-oscillations-task-5",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "harmonic-oscillations",
       "topic_title": "Гармонические колебания",
       "title": "Пружинный маятник с пружиной жесткостью 40 Н/м и грузом массой 0.1 кг вывели из положения равновесия на 5 см и отпустили",
@@ -2964,7 +2964,7 @@
     {
       "id": "mechanics-pendulums-task-1",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "pendulums",
       "topic_title": "Маятники",
       "title": "Какова длина математического маятника, если период его колебаний равен 2 с (секундный маятник)? Принять g = π^2 м/с^2.",
@@ -2980,7 +2980,7 @@
     {
       "id": "mechanics-pendulums-task-2",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "pendulums",
       "topic_title": "Маятники",
       "title": "Пружинный маятник совершает 20 колебаний за 10 секунд. Жесткость пружины равна 160 Н/м. Найдите массу груза маятника (π^",
@@ -2996,7 +2996,7 @@
     {
       "id": "mechanics-pendulums-task-3",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "pendulums",
       "topic_title": "Маятники",
       "title": "На Луне ускорение свободного падения в 6 раз меньше, чем на Земле. Как изменится период одного и того же математического",
@@ -3012,7 +3012,7 @@
     {
       "id": "mechanics-pendulums-task-4",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "pendulums",
       "topic_title": "Маятники",
       "title": "Два математических маятника совершают за одинаковое время разное число колебаний: первый - 10, второй - 20. Каково отнош",
@@ -3028,7 +3028,7 @@
     {
       "id": "mechanics-pendulums-task-5",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "pendulums",
       "topic_title": "Маятники",
       "title": "К пружине подвешен груз массой m. За период времени он проходит путь 16 см. Найти амплитуду колебаний.",
@@ -3044,7 +3044,7 @@
     {
       "id": "mechanics-mechanical-waves-task-1",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "mechanical-waves",
       "topic_title": "Механические волны",
       "title": "Скорость распространения волны равна 340 м/с, а частота колебаний 170 Гц. Какова длина этой волны?",
@@ -3060,7 +3060,7 @@
     {
       "id": "mechanics-mechanical-waves-task-2",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "mechanical-waves",
       "topic_title": "Механические волны",
       "title": "Рыболов заметил, что поплавок совершает 20 колебаний за 10 секунд на волнах воды. Расстояние между соседними гребнями во",
@@ -3076,7 +3076,7 @@
     {
       "id": "mechanics-mechanical-waves-task-3",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "mechanical-waves",
       "topic_title": "Механические волны",
       "title": "Ультразвуковой дефектоскоп излучает волны частотой 2 * 10^6 Гц. Длина волны в стали составляет 2.5 мм. Найдите скорость ",
@@ -3092,7 +3092,7 @@
     {
       "id": "mechanics-mechanical-waves-task-4",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "mechanical-waves",
       "topic_title": "Механические волны",
       "title": "Лодка качается на морских волнах так, что за 1 мин она поднимается на гребень волны 15 раз. Скорость распространения вол",
@@ -3108,7 +3108,7 @@
     {
       "id": "mechanics-mechanical-waves-task-5",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "mechanical-waves",
       "topic_title": "Механические волны",
       "title": "При переходе волны из одной среды в другую скорость волны увеличилась в 2 раза. Как изменились частота и длина волны?",
@@ -3124,7 +3124,7 @@
     {
       "id": "mechanics-resonance-task-1",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "resonance",
       "topic_title": "Резонанс",
       "title": "Собственная частота колебаний подвесного моста 0.5 Гц. При какой скорости пехоты, идущей строевым шагом (длина шага 80 с",
@@ -3140,7 +3140,7 @@
     {
       "id": "mechanics-resonance-task-2",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "resonance",
       "topic_title": "Резонанс",
       "title": "Груз висит на пружине жесткостью 40 Н/м и имеет массу 1 кг. Подвес пружины начинают раскачивать с помощью механизма. При",
@@ -3156,7 +3156,7 @@
     {
       "id": "mechanics-resonance-task-3",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "resonance",
       "topic_title": "Резонанс",
       "title": "Вагон массой 10 тонн движется по рельсам. Стыки рельсов находятся на расстоянии 15 м. Вагон качается на рессорах. При ка",
@@ -3172,7 +3172,7 @@
     {
       "id": "mechanics-resonance-task-4",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "resonance",
       "topic_title": "Резонанс",
       "title": "Качели-балансир имеют период собственных свободных колебаний 4 с. Раскачивающий человек толкает качели один раз за прохо",
@@ -3188,7 +3188,7 @@
     {
       "id": "mechanics-resonance-task-5",
       "section_id": "mechanics",
-      "subsection_id": "oscillations",
+      "subsection_id": "oscillations-waves",
       "topic_id": "resonance",
       "topic_title": "Резонанс",
       "title": "Акустический резонатор представляет собой трубу, закрытую с одного конца. Длина трубы 0.17 м. При какой минимальной част",
