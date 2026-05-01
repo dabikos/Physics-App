@@ -313,9 +313,11 @@ export interface GeneratedTestQuestion {
 }
 
 export interface GeneratedTest {
+  id?: string;
   title: string;
   section: string;
   difficulty: string;
+  source?: string;
   questions: GeneratedTestQuestion[];
 }
 

@@ -314,6 +314,14 @@
     "generateError": "Не удалось сгенерировать тест",
     "generateButton": "Сгенерировать тест",
     "generateSubtitle": "AI создаст уникальный тест для вас",
+    "randomButton": "Случайный тест",
+    "randomSubtitle": "Вопросы из базы по выбранным разделам",
+    "randomSettingsTitle": "🎲 Случайный тест",
+    "randomSectionsLabel": "📚 Разделы для вопросов",
+    "selectRandomSection": "Выберите хотя бы один раздел",
+    "randomizing": "Собираем тест...",
+    "startRandomTest": "Начать случайный тест",
+    "randomLoadError": "Не удалось собрать случайный тест",
     "readyTests": "Готовые тесты",
     "checkKnowledge": "Проверьте знания",
     "settingsTitle": "🧪 Настройка теста",
@@ -414,7 +422,8 @@
     "siLabel": "СИ",
     "formulasLabel": "Формулы",
     "solutionLabel": "Решение",
-    "answerLabel": "Ответ:"
+    "answerLabel": "Ответ:",
+    "showSolution": "Показать решение"
   },
   "formulas": {
     "title": "Формулы",

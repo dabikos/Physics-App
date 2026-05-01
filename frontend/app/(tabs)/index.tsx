@@ -42,6 +42,22 @@ interface ProfileBannerData {
   section_progress: { section: string; name: string; percentage: number }[];
 }
 
+const DAILY_CHALLENGE_GRADIENTS: [string, string][] = [
+  ['#F59E0B', '#D97706'],
+  ['#3B82F6', '#1D4ED8'],
+  ['#8B5CF6', '#6D28D9'],
+  ['#14B8A6', '#0F766E'],
+  ['#EC4899', '#BE185D'],
+  ['#F97316', '#C2410C'],
+  ['#6366F1', '#4338CA'],
+];
+
+const getDailyChallengeGradient = (date: string): [string, string] => {
+  const dayKey = date || new Date().toISOString().slice(0, 10);
+  const hash = dayKey.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return DAILY_CHALLENGE_GRADIENTS[hash % DAILY_CHALLENGE_GRADIENTS.length];
+};
+
 // ==================== Menu Card ====================
 interface MenuCardProps {
   title: string;
@@ -239,11 +255,14 @@ const DailyChallengeCard: React.FC<{ challenge: DailyChallenge | null }> = ({ ch
     section: t(`physics.${challenge.section}`, { defaultValue: challenge.section }),
     defaultValue: challenge.title,
   });
+  const gradientColors: [string, string] = challenge.completed
+    ? ['#10B981', '#059669']
+    : getDailyChallengeGradient(challenge.date);
 
   return (
     <View style={dcStyles.container}>
       <LinearGradient
-        colors={challenge.completed ? ['#10B981', '#059669'] : ['#F59E0B', '#D97706']}
+        colors={gradientColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={dcStyles.gradient}
@@ -300,7 +319,25 @@ export default function HomeScreen() {
         api.get('/daily-challenge'),
       ]);
       if (statsRes.status === 'fulfilled') setBannerData(statsRes.value.data);
-      if (challengeRes.status === 'fulfilled') setDailyChallenge(challengeRes.value.data);
+      if (challengeRes.status === 'fulfilled') {
+        const challenge = challengeRes.value.data as DailyChallenge;
+        if (challenge && !challenge.completed && challenge.progress >= challenge.target) {
+          try {
+            const completeRes = await api.post('/daily-challenge/complete');
+            setDailyChallenge({
+              ...challenge,
+              completed: true,
+              xp_reward: completeRes.data?.xp_awarded ?? challenge.xp_reward,
+            });
+            const refreshedStats = await api.get('/profile/stats');
+            setBannerData(refreshedStats.data);
+          } catch {
+            setDailyChallenge(challenge);
+          }
+        } else {
+          setDailyChallenge(challenge);
+        }
+      }
     } catch {}
   }, []);
 

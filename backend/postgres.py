@@ -615,6 +615,74 @@ def _formula_row(row: asyncpg.Record) -> dict[str, Any]:
     }
 
 
+async def list_lesson_sections() -> dict[str, Any]:
+    pool = await get_postgres_pool()
+    rows = await pool.fetch(
+        """
+        SELECT
+            s.id AS section_id,
+            s.name AS section_name,
+            s.icon AS section_icon,
+            s.color AS section_color,
+            s.order_index AS section_order,
+            ss.id AS subsection_id,
+            ss.name AS subsection_name,
+            ss.order_index AS subsection_order,
+            t.id AS topic_id,
+            t.title AS topic_title,
+            t.order_index AS topic_order
+        FROM lesson_sections s
+        LEFT JOIN lesson_subsections ss
+            ON ss.section_id = s.id AND ss.is_published = TRUE
+        LEFT JOIN lesson_topics t
+            ON t.subsection_id = ss.id AND t.is_published = TRUE
+        WHERE s.is_published = TRUE
+        ORDER BY s.order_index, s.id, ss.order_index, ss.id, t.order_index, t.id
+        """
+    )
+
+    sections: dict[str, Any] = {}
+    subsection_indexes: dict[str, dict[str, int]] = {}
+
+    for row in rows:
+        section_id = row["section_id"]
+        if section_id not in sections:
+            sections[section_id] = {
+                "name": row["section_name"],
+                "icon": row["section_icon"] or "book",
+                "color": row["section_color"] or "#6366F1",
+                "subsections": [],
+            }
+            subsection_indexes[section_id] = {}
+
+        subsection_id = row["subsection_id"]
+        if not subsection_id:
+            continue
+
+        sub_index = subsection_indexes[section_id].get(subsection_id)
+        if sub_index is None:
+            sub_index = len(sections[section_id]["subsections"])
+            subsection_indexes[section_id][subsection_id] = sub_index
+            sections[section_id]["subsections"].append(
+                {
+                    "id": subsection_id,
+                    "name": row["subsection_name"],
+                    "topics": [],
+                }
+            )
+
+        topic_id = row["topic_id"]
+        if topic_id:
+            sections[section_id]["subsections"][sub_index]["topics"].append(
+                {
+                    "id": topic_id,
+                    "name": row["topic_title"],
+                }
+            )
+
+    return sections
+
+
 async def list_physics_formulas(section_id: str | None = None) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
@@ -664,6 +732,59 @@ async def list_practice_tests(
         topic_id,
     )
     return [_practice_test_row(row) for row in rows]
+
+
+async def list_random_practice_questions(
+    section_ids: list[str] | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    rows = await pool.fetch(
+        """
+        SELECT
+            pt.id AS source_test_id,
+            pt.title AS source_test_title,
+            pt.section_id,
+            pt.subsection_id,
+            pt.topic_id,
+            pt.difficulty,
+            q.question AS question
+        FROM practice_tests pt
+        CROSS JOIN LATERAL jsonb_array_elements(pt.questions) AS q(question)
+        WHERE pt.is_published = TRUE
+            AND jsonb_typeof(q.question) = 'object'
+            AND (
+                COALESCE(array_length($1::text[], 1), 0) = 0
+                OR pt.section_id = ANY($1::text[])
+            )
+        ORDER BY random()
+        LIMIT $2
+        """,
+        section_ids or [],
+        limit,
+    )
+
+    questions: list[dict[str, Any]] = []
+    for row in rows:
+        question = _decode_jsonb(row["question"]) or {}
+        options = question.get("options") or []
+        if not question.get("question") or len(options) < 2:
+            continue
+
+        questions.append({
+            "question": question.get("question", ""),
+            "options": options,
+            "correct": int(question.get("correct", 0) or 0),
+            "explanation": question.get("explanation", ""),
+            "source_test_id": row["source_test_id"],
+            "source_test_title": row["source_test_title"],
+            "section_id": row["section_id"],
+            "subsection_id": row["subsection_id"],
+            "topic_id": row["topic_id"],
+            "difficulty": row["difficulty"],
+        })
+
+    return questions
 
 
 async def get_practice_test(test_id: str) -> Optional[dict[str, Any]]:

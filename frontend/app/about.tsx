@@ -80,9 +80,9 @@ export default function AboutScreen() {
       >
         {/* Logo & Name */}
         <View style={styles.logoSection}>
-          <View style={[styles.logoContainer, { backgroundColor: colors.accent + '15' }]}>
+          <View style={styles.logoContainer}>
             <Image
-              source={require('../assets/images/adaptive-icon.png')}
+              source={require('../assets/images/splash-logo.png')}
               style={styles.logoImage}
               resizeMode="contain"
             />
@@ -197,10 +197,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
     overflow: 'hidden',
+    backgroundColor: '#10172F',
   },
   logoImage: {
-    width: 76,
-    height: 76,
+    width: 82,
+    height: 82,
   },
   appName: {
     fontSize: 26,

@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -37,6 +38,10 @@ export default function PracticeTaskDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+  const [userAnswer, setUserAnswer] = useState('');
+  const [answerChecked, setAnswerChecked] = useState(false);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+  const [checkingAnswer, setCheckingAnswer] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,6 +49,12 @@ export default function PracticeTaskDetailScreen() {
     const loadTask = async () => {
       if (!taskId) return;
       setLoading(true);
+      setUserAnswer('');
+      setAnswerChecked(false);
+      setIsAnswerCorrect(false);
+      setCheckingAnswer(false);
+      setShowHint(false);
+      setShowSolution(false);
       try {
         const response = await api.get(`/practice/tasks/${taskId}`);
         const item = response.data?.item || null;
@@ -69,6 +80,45 @@ export default function PracticeTaskDetailScreen() {
       .map((line) => line.trim())
       .filter(Boolean);
   }, [task?.solution]);
+
+  const normalizeAnswer = (value: string) => {
+    return value
+      .toLowerCase()
+      .replace(/ответ\s*:?/gi, '')
+      .replace(/[^0-9a-zа-яё.,\-+*/^]/gi, '')
+      .replace(/,/g, '.')
+      .trim();
+  };
+
+  const extractNumbers = (value: string): string[] => {
+    return value
+      .replace(/,/g, '.')
+      .match(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/gi) || [];
+  };
+
+  const checkUserAnswer = async () => {
+    if (!task?.answer || !userAnswer.trim() || checkingAnswer) return;
+
+    const expected = normalizeAnswer(task.answer);
+    const actual = normalizeAnswer(userAnswer);
+    const expectedNumbers = extractNumbers(task.answer);
+    const actualNumbers = extractNumbers(userAnswer);
+    const hasMatchingNumber = actualNumbers.some((num) => expectedNumbers.includes(num));
+    const textMatches = actual.length >= 2 && (expected.includes(actual) || actual.includes(expected));
+    const localCorrect = textMatches || hasMatchingNumber;
+
+    setCheckingAnswer(true);
+    try {
+      const response = await api.post(`/practice/tasks/${task.id}/submit`, { answer: userAnswer });
+      setIsAnswerCorrect(Boolean(response.data?.correct));
+    } catch (error) {
+      console.log('Practice task submit error:', error);
+      setIsAnswerCorrect(localCorrect);
+    } finally {
+      setAnswerChecked(true);
+      setCheckingAnswer(false);
+    }
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -126,6 +176,53 @@ export default function PracticeTaskDetailScreen() {
               colors={colors}
               accent="#10B981"
             />
+          )}
+
+          {!!task.answer && (
+            <View style={[styles.answerInputCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <View style={styles.infoHeader}>
+                <Ionicons name="create-outline" size={18} color={colors.accent} />
+                <Text style={[styles.infoTitle, { color: colors.accent }]}>Ваш ответ</Text>
+              </View>
+              <TextInput
+                style={[styles.answerInput, { color: colors.text, backgroundColor: colors.inputBg, borderColor: colors.border }]}
+                value={userAnswer}
+                onChangeText={(value) => {
+                  setUserAnswer(value);
+                  setAnswerChecked(false);
+                }}
+                placeholder="Напишите ответ перед просмотром решения"
+                placeholderTextColor={colors.textMuted}
+                multiline
+              />
+              <TouchableOpacity
+                style={[
+                  styles.checkAnswerButton,
+                  { backgroundColor: userAnswer.trim() ? colors.accent : colors.border },
+                ]}
+                onPress={checkUserAnswer}
+                disabled={!userAnswer.trim() || checkingAnswer}
+              >
+                <Text style={styles.checkAnswerText}>{checkingAnswer ? t('common.loading') : t('tasks.checkAnswer')}</Text>
+              </TouchableOpacity>
+              {answerChecked && (
+                <View style={[
+                  styles.answerFeedback,
+                  { backgroundColor: isAnswerCorrect ? '#ECFDF5' : '#FEF3C7' },
+                ]}>
+                  <Ionicons
+                    name={isAnswerCorrect ? 'checkmark-circle' : 'alert-circle'}
+                    size={18}
+                    color={isAnswerCorrect ? '#047857' : '#B45309'}
+                  />
+                  <Text style={[styles.answerFeedbackText, { color: isAnswerCorrect ? '#047857' : '#92400E' }]}>
+                    {isAnswerCorrect
+                      ? 'Похоже, ответ совпадает. Можно открыть решение и сверить ход рассуждений.'
+                      : 'Ответ не совпал автоматически. Откройте решение и сравните единицы, округление и смысл.'}
+                  </Text>
+                </View>
+              )}
+            </View>
           )}
 
           <View style={styles.actionsRow}>
@@ -305,6 +402,47 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 14,
     fontWeight: '800',
+  },
+  answerInputCard: {
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+  },
+  answerInput: {
+    minHeight: 72,
+    borderRadius: 14,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 15,
+    lineHeight: 21,
+    textAlignVertical: 'top',
+    marginBottom: 10,
+  },
+  checkAnswerButton: {
+    minHeight: 44,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkAnswerText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  answerFeedback: {
+    flexDirection: 'row',
+    gap: 8,
+    borderRadius: 14,
+    padding: 12,
+    marginTop: 10,
+  },
+  answerFeedbackText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '600',
   },
   actionsRow: {
     flexDirection: 'row',

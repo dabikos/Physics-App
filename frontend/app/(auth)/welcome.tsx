@@ -7,6 +7,7 @@ import {
   Animated,
   Dimensions,
   StatusBar,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -160,31 +161,6 @@ export default function WelcomeScreen() {
       <FloatingAtom delay={200} size={45} top={height * 0.75} left={width * 0.75} />
 
       <SafeAreaView style={styles.content}>
-        {/* Селектор языка */}
-        <Animated.View style={[styles.languageSelector, { opacity: buttonsOpacity }]}>
-          {availableLanguages.map((lang) => (
-            <TouchableOpacity
-              key={lang.code}
-              style={[
-                styles.langButton,
-                currentLanguage === lang.code && styles.langButtonActive,
-              ]}
-              onPress={() => changeLanguage(lang.code)}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.langFlag}>{lang.flag}</Text>
-              <Text
-                style={[
-                  styles.langText,
-                  currentLanguage === lang.code && styles.langTextActive,
-                ]}
-              >
-                {lang.nativeName}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </Animated.View>
-
         {/* Логотип */}
         <Animated.View 
           style={[
@@ -193,12 +169,16 @@ export default function WelcomeScreen() {
           ]}
         >
           <LinearGradient
-            colors={['#667EEA', '#764BA2']}
+            colors={['#10172F', '#172554']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.logoGradient}
           >
-            <Ionicons name="planet" size={60} color="#FFFFFF" />
+            <Image
+              source={require('../../assets/images/splash-logo.png')}
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
           </LinearGradient>
           <View style={styles.logoOrbit} />
           <View style={[styles.logoOrbit, styles.logoOrbit2]} />
@@ -214,7 +194,7 @@ export default function WelcomeScreen() {
             },
           ]}
         >
-          <Text style={styles.title}>Physics App</Text>
+          <Text style={styles.title}>Physics AI</Text>
           <View style={styles.titleUnderline} />
         </Animated.View>
 
@@ -225,28 +205,6 @@ export default function WelcomeScreen() {
             : t('auth.welcomeGuest')
           }
         </Animated.Text>
-
-        {/* Фичи */}
-        <Animated.View style={[styles.features, { opacity: subtitleOpacity }]}>
-          <View style={styles.featureItem}>
-            <View style={styles.featureIcon}>
-              <Ionicons name="book" size={20} color="#667EEA" />
-            </View>
-            <Text style={styles.featureText}>{t('auth.welcomeFeature1')}</Text>
-          </View>
-          <View style={styles.featureItem}>
-            <View style={styles.featureIcon}>
-              <Ionicons name="flask" size={20} color="#764BA2" />
-            </View>
-            <Text style={styles.featureText}>{t('auth.welcomeFeature2')}</Text>
-          </View>
-          <View style={styles.featureItem}>
-            <View style={styles.featureIcon}>
-              <Ionicons name="sparkles" size={20} color="#F59E0B" />
-            </View>
-            <Text style={styles.featureText}>{t('auth.welcomeFeature3')}</Text>
-          </View>
-        </Animated.View>
 
         {/* Кнопки */}
         <Animated.View
@@ -312,6 +270,31 @@ export default function WelcomeScreen() {
               </TouchableOpacity>
             </>
           )}
+
+          {/* Селектор языка */}
+          <View style={styles.languageSelector}>
+            {availableLanguages.map((lang) => (
+              <TouchableOpacity
+                key={lang.code}
+                style={[
+                  styles.langButton,
+                  currentLanguage === lang.code && styles.langButtonActive,
+                ]}
+                onPress={() => changeLanguage(lang.code)}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.langFlag}>{lang.flag}</Text>
+                <Text
+                  style={[
+                    styles.langText,
+                    currentLanguage === lang.code && styles.langTextActive,
+                  ]}
+                >
+                  {lang.nativeName}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </Animated.View>
       </SafeAreaView>
     </View>
@@ -345,9 +328,9 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   logoGradient: {
-    width: 100,
-    height: 100,
-    borderRadius: 30,
+    width: 108,
+    height: 108,
+    borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#667EEA',
@@ -355,6 +338,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 20,
     elevation: 10,
+  },
+  logoImage: {
+    width: 86,
+    height: 86,
   },
   logoOrbit: {
     position: 'absolute',
@@ -396,36 +383,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
     lineHeight: 26,
-    marginBottom: 32,
-  },
-  features: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 48,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    gap: 8,
-  },
-  featureIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  featureText: {
-    fontSize: 13,
-    color: 'rgba(255, 255, 255, 0.9)',
-    fontWeight: '500',
+    marginBottom: 44,
   },
   buttonsContainer: {
     width: '100%',
@@ -477,8 +435,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 8,
-    marginBottom: 24,
-    paddingTop: 8,
+    marginTop: 8,
+    paddingTop: 4,
   },
   langButton: {
     flexDirection: 'row',

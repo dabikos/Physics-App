@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  SectionList,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
@@ -13,7 +14,6 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import type { Formula } from '../../src/data/physicsData';
-import { MathText } from '../../src/components/MathText';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
 import api from '../../src/services/api';
@@ -161,20 +161,9 @@ const FormulaDisplay: React.FC<{ formula: string; color?: string }> = ({
   formula,
   color = '#4338CA',
 }) => {
-  if (!formula || !formula.trim()) {
-    return (
-      <View style={{ minHeight: 40, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color, fontSize: 18, fontWeight: '600' }}>{formula || ''}</Text>
-      </View>
-    );
-  }
-
-  const latexFormula = convertToLatex(formula);
-  const content = latexFormula.includes('$') ? latexFormula : `$$${latexFormula}$$`;
-
   return (
-    <View style={{ width: '100%' }}>
-      <MathText content={content} textColor={color} fontSize={20} backgroundColor="transparent" />
+    <View style={{ minHeight: 40, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color, fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{formula || ''}</Text>
     </View>
   );
 };
@@ -217,13 +206,63 @@ export default function FormulasScreen() {
     return matchesSearch && matchesSection;
   }), [formulasData, searchQuery, selectedSection]);
 
-  const groupedFormulas = filteredFormulas.reduce((acc, formula) => {
+  const groupedFormulas = useMemo(() => filteredFormulas.reduce((acc, formula) => {
     if (!acc[formula.section]) {
       acc[formula.section] = [];
     }
     acc[formula.section].push(formula);
     return acc;
-  }, {} as Record<string, Formula[]>);
+  }, {} as Record<string, Formula[]>), [filteredFormulas]);
+
+  const formulaSections = useMemo(() => (
+    Object.entries(groupedFormulas).map(([sectionKey, sectionFormulas]) => ({
+      title: PHYSICS_SECTIONS[sectionKey]?.name || sectionKey,
+      sectionKey,
+      color: PHYSICS_SECTIONS[sectionKey]?.color || '#6C63FF',
+      data: sectionFormulas,
+    }))
+  ), [PHYSICS_SECTIONS, groupedFormulas]);
+
+  const renderFormulaCard = ({ item: formula }: { item: Formula }) => {
+    const sectionColor = PHYSICS_SECTIONS[formula.section]?.color || '#4338CA';
+
+    return (
+      <TouchableOpacity
+        style={[styles.formulaCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+        onPress={() => router.push(`/formulas/${formula.id}`)}
+        activeOpacity={0.82}
+      >
+        <View style={styles.formulaCardHeader}>
+          <View style={styles.formulaTitleBlock}>
+            <Text style={[styles.formulaName, { color: colors.text }]} numberOfLines={1}>
+              {formula.name}
+            </Text>
+            {!!formula.description && (
+              <Text style={[styles.formulaDescription, { color: colors.textTertiary }]} numberOfLines={2}>
+                {formula.description}
+              </Text>
+            )}
+          </View>
+          <TouchableOpacity
+            onPress={() => toggleFavorite(formula.id, 'formula')}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Ionicons
+              name={isFavorite(formula.id, 'formula') ? 'heart' : 'heart-outline'}
+              size={20}
+              color={isFavorite(formula.id, 'formula') ? '#EF4444' : '#D1D5DB'}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.formulaPreviewBox, { backgroundColor: sectionColor + '12' }]}>
+          <Text style={[styles.formulaPreviewText, { color: sectionColor }]} numberOfLines={1}>
+            {formula.formula}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -290,62 +329,31 @@ export default function FormulasScreen() {
         ))}
       </ScrollView>
 
-      <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
-        {Object.entries(groupedFormulas).map(([sectionKey, sectionFormulas]) => (
-          <View key={sectionKey} style={styles.sectionGroup}>
-            <View style={styles.sectionHeader}>
-              <View style={[styles.sectionDot, { backgroundColor: PHYSICS_SECTIONS[sectionKey]?.color || '#6C63FF' }]} />
-              <Text style={[styles.sectionName, { color: colors.textTertiary }]}>{PHYSICS_SECTIONS[sectionKey]?.name || sectionKey}</Text>
-            </View>
-            {sectionFormulas.map((formula) => (
-              <TouchableOpacity
-                key={formula.id}
-                style={[styles.formulaCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                onPress={() => router.push(`/formulas/${formula.id}`)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.formulaCardHeader}>
-                  <Text style={[styles.formulaName, { color: colors.text }]}>{formula.name}</Text>
-                  <TouchableOpacity
-                    onPress={() => toggleFavorite(formula.id, 'formula')}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  >
-                    <Ionicons
-                      name={isFavorite(formula.id, 'formula') ? 'heart' : 'heart-outline'}
-                      size={20}
-                      color={isFavorite(formula.id, 'formula') ? '#EF4444' : '#D1D5DB'}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={[
-                  styles.formulaBox, 
-                  { borderLeftColor: PHYSICS_SECTIONS[formula.section]?.color || '#6C63FF', backgroundColor: colors.cardAlt }
-                ]}>
-                  <FormulaDisplay 
-                    formula={formula.formula} 
-                    color={PHYSICS_SECTIONS[formula.section]?.color || '#4338CA'}
-                  />
-                </View>
-                {formula.description && (
-                  <Text style={[styles.formulaDescription, { color: colors.textTertiary }]} numberOfLines={2}>
-                    {formula.description}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            ))}
+      <SectionList
+        sections={formulaSections}
+        keyExtractor={(item) => item.id}
+        renderItem={renderFormulaCard}
+        renderSectionHeader={({ section }) => (
+          <View style={[styles.sectionHeader, { backgroundColor: colors.background }]}>
+            <View style={[styles.sectionDot, { backgroundColor: section.color }]} />
+            <Text style={[styles.sectionName, { color: colors.textTertiary }]}>{section.title}</Text>
+            <Text style={[styles.sectionCount, { color: colors.textMuted }]}>{section.data.length}</Text>
           </View>
-        ))}
-
-        {filteredFormulas.length === 0 && (
+        )}
+        style={styles.content}
+        contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 20 }]}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        maxToRenderPerBatch={8}
+        windowSize={7}
+        stickySectionHeadersEnabled={false}
+        ListEmptyComponent={
           <View style={styles.emptyState}>
             <Ionicons name="search" size={48} color={colors.border} />
             <Text style={[styles.emptyText, { color: colors.textTertiary }]}>{t('formulas.notFound')}</Text>
           </View>
-        )}
-
-        <View style={styles.bottomPadding} />
-      </ScrollView>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -433,7 +441,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 16,
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
   },
   sectionGroup: {
     marginBottom: 24,
@@ -441,7 +452,8 @@ const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    paddingTop: 14,
+    paddingBottom: 10,
     gap: 8,
   },
   sectionDot: {
@@ -454,27 +466,41 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#6B7280',
   },
+  sectionCount: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
   formulaCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    borderRadius: 14,
+    padding: 13,
+    marginBottom: 9,
+    borderWidth: 1,
   },
   formulaCardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  formulaTitleBlock: {
+    flex: 1,
   },
   formulaName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     color: '#1F2937',
+  },
+  formulaPreviewBox: {
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginTop: 10,
+  },
+  formulaPreviewText: {
+    fontSize: 16,
+    fontWeight: '800',
+    textAlign: 'center',
   },
   formulaBox: {
     backgroundColor: '#F8FAFC',
@@ -489,10 +515,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   formulaDescription: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#6B7280',
-    marginTop: 10,
-    lineHeight: 18,
+    marginTop: 4,
+    lineHeight: 17,
   },
   emptyState: {
     alignItems: 'center',

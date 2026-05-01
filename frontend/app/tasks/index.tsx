@@ -9,9 +9,7 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
-import { INTERACTIVE_TASKS } from '../../src/data/interactiveTasks';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 export default function TasksScreen() {
@@ -49,58 +47,6 @@ export default function TasksScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
-        {/* Интерактивные задачи - Featured Card */}
-        <TouchableOpacity
-          style={styles.featuredCard}
-          onPress={() => router.push('/tasks/interactive')}
-          activeOpacity={0.9}
-        >
-          <LinearGradient
-            colors={['#6C63FF', '#8B5CF6', '#A855F7']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.featuredGradient}
-          >
-            <View style={styles.featuredContent}>
-              <View style={styles.featuredIconWrap}>
-                <View style={styles.featuredIcon}>
-                  <Ionicons name="sparkles" size={28} color="#FFFFFF" />
-                </View>
-              </View>
-              <View style={styles.featuredTextContent}>
-                <View style={styles.featuredBadge}>
-                  <Text style={styles.featuredBadgeText}>{t('common.new')}</Text>
-                </View>
-                <Text style={styles.featuredTitle}>{t('tasks.interactiveTasks')}</Text>
-                <Text style={styles.featuredDescription}>
-                  {t('tasks.interactiveSubtitle')}
-                </Text>
-              </View>
-              <View style={styles.featuredStats}>
-                <Text style={styles.featuredStatsNumber}>{INTERACTIVE_TASKS.length}</Text>
-                <Text style={styles.featuredStatsLabel}>{t('tasks.tasksCount')}</Text>
-              </View>
-            </View>
-            <View style={styles.featuredFeatures}>
-              <View style={styles.featureItem}>
-                <Ionicons name="bulb-outline" size={14} color="rgba(255,255,255,0.9)" />
-                <Text style={styles.featureText}>{t('tasks.hints')}</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <Ionicons name="layers-outline" size={14} color="rgba(255,255,255,0.9)" />
-                <Text style={styles.featureText}>{t('tasks.stepByStep')}</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <Ionicons name="keypad-outline" size={14} color="rgba(255,255,255,0.9)" />
-                <Text style={styles.featureText}>{t('tasks.numericInput')}</Text>
-              </View>
-            </View>
-            <View style={styles.featuredArrow}>
-              <Ionicons name="arrow-forward" size={20} color="rgba(255,255,255,0.7)" />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('tasks.quickTasks')}</Text>
         <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>{t('tasks.quickSubtitle')}</Text>
         
@@ -160,103 +106,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
-  },
-  featuredCard: {
-    borderRadius: 20,
-    overflow: 'hidden',
-    marginBottom: 24,
-    shadowColor: '#6C63FF',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.35,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  featuredGradient: {
-    padding: 20,
-    position: 'relative',
-  },
-  featuredContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  featuredIconWrap: {
-    marginRight: 14,
-  },
-  featuredIcon: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  featuredTextContent: {
-    flex: 1,
-  },
-  featuredBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    marginBottom: 6,
-  },
-  featuredBadgeText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: 0.5,
-  },
-  featuredTitle: {
-    fontSize: 19,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 2,
-  },
-  featuredDescription: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.85)',
-  },
-  featuredStats: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 12,
-  },
-  featuredStatsNumber: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  featuredStatsLabel: {
-    fontSize: 11,
-    color: 'rgba(255,255,255,0.8)',
-    marginTop: -2,
-  },
-  featuredFeatures: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    gap: 5,
-  },
-  featureText: {
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
-  },
-  featuredArrow: {
-    position: 'absolute',
-    right: 16,
-    bottom: 20,
   },
   sectionTitle: {
     fontSize: 20,

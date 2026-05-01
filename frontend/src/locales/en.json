@@ -314,6 +314,14 @@
     "generateError": "Failed to generate test",
     "generateButton": "Generate test",
     "generateSubtitle": "AI will create a unique test for you",
+    "randomButton": "Random test",
+    "randomSubtitle": "Questions from the database by selected sections",
+    "randomSettingsTitle": "🎲 Random test",
+    "randomSectionsLabel": "📚 Sections for questions",
+    "selectRandomSection": "Select at least one section",
+    "randomizing": "Building test...",
+    "startRandomTest": "Start random test",
+    "randomLoadError": "Failed to build random test",
     "readyTests": "Ready-made tests",
     "checkKnowledge": "Check your knowledge",
     "settingsTitle": "🧪 Test settings",
@@ -414,7 +422,8 @@
     "siLabel": "SI",
     "formulasLabel": "Formulas",
     "solutionLabel": "Solution",
-    "answerLabel": "Answer:"
+    "answerLabel": "Answer:",
+    "showSolution": "Show solution"
   },
   "formulas": {
     "title": "Formulas",

@@ -16,6 +16,7 @@ import { GeneratedTest } from '../../src/services/aiService';
 import { MathContent } from '../../src/components/MathContent';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
+import api from '../../src/services/api';
 
 const DIFFICULTY_COLORS = {
   basic: '#10B981',
@@ -36,6 +37,7 @@ export default function AITestScreen() {
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const submittedResultRef = useRef(false);
   
   // Анимации
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -54,6 +56,26 @@ export default function AITestScreen() {
       }
     }
   }, [params.testData, router, t]);
+
+  useEffect(() => {
+    const submitRandomPracticeResult = async () => {
+      if (!showResults || !test?.id || test.source !== 'practice_random' || submittedResultRef.current) {
+        return;
+      }
+
+      submittedResultRef.current = true;
+      try {
+        await api.post(`/tests/${test.id}/submit`, {
+          answers: selectedAnswers.map((answer) => answer ?? -1),
+          source: 'practice_random',
+        });
+      } catch (error) {
+        console.log('Random practice test submit error:', error);
+      }
+    };
+
+    submitRandomPracticeResult();
+  }, [selectedAnswers, showResults, test]);
 
   if (!test) {
     return (

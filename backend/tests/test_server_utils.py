@@ -38,7 +38,7 @@ def test_compute_streak_returns_current_and_max_streaks():
     assert streak["last_active"] == str(today)
 
 
-def test_compute_xp_and_level_include_perfect_test_bonus():
+def test_compute_xp_counts_only_perfect_tests_without_bonus():
     user = {
       "progress": {
         "completed_tests": ["t1", "t2"],
@@ -47,14 +47,14 @@ def test_compute_xp_and_level_include_perfect_test_bonus():
       }
     }
     test_results = [
-      {"score": 100},
-      {"score_final": 75},
+      {"test_id": "t1", "score": 100},
+      {"test_id": "t2", "score_final": 75},
     ]
 
     xp = compute_xp(user, test_results)
     level = get_level(xp, lang="en")
 
-    assert xp > 0
+    assert xp == 140
     assert level["name"] in {"Beginner", "Student", "Explorer", "Expert", "Master", "Physicist"}
     assert 0 <= level["progress"] <= 100
 

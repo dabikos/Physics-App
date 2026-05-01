@@ -7,6 +7,15 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
+import Animated, {
+  Easing,
+  FadeInUp,
+  ZoomIn,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,6 +42,88 @@ const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => strin
       return { label: t('difficulty.basic'), color: '#10B981', emoji: '🟢' };
   }
 };
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+const AnimatedScoreRing = ({
+  score,
+  color,
+  trackColor,
+  backgroundColor,
+}: {
+  score: number;
+  color: string;
+  trackColor: string;
+  backgroundColor: string;
+}) => {
+  const [displayScore, setDisplayScore] = useState(0);
+  const progress = useSharedValue(0);
+  const size = 132;
+  const strokeWidth = 10;
+  const radius = (size - strokeWidth) / 2;
+  const center = size / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  useEffect(() => {
+    progress.value = 0;
+    progress.value = withTiming(score / 100, {
+      duration: 1100,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    const duration = 900;
+    const startedAt = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      const nextValue = Math.min(score, Math.round((elapsed / duration) * score));
+      setDisplayScore(nextValue);
+      if (elapsed >= duration) {
+        setDisplayScore(score);
+        clearInterval(timer);
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [progress, score]);
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - progress.value),
+  }));
+
+  return (
+    <View style={[styles.scoreRingContainer, { backgroundColor }]}>
+      <Svg width={size} height={size} style={styles.scoreRingSvg}>
+        <Circle
+          cx={center}
+          cy={center}
+          r={radius}
+          stroke={trackColor}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          opacity={0.45}
+        />
+        <AnimatedCircle
+          cx={center}
+          cy={center}
+          r={radius}
+          stroke={color}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          strokeLinecap="round"
+          strokeDasharray={`${circumference} ${circumference}`}
+          animatedProps={animatedProps}
+          originX={center}
+          originY={center}
+          rotation="-90"
+        />
+      </Svg>
+      <View style={styles.scoreRingCenter}>
+        <Text style={[styles.scoreText, { color }]}>{displayScore}%</Text>
+      </View>
+    </View>
+  );
+};
+
 export default function TestsSectionScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -257,6 +348,8 @@ export default function TestsSectionScreen() {
   // Test results screen
   if (testFinished && results) {
     const difficultyInfo = selectedTest ? getDifficultyInfo(selectedTest.difficulty, t) : null;
+    const resultColor = results.score >= 70 ? colors.success : results.score >= 50 ? colors.warning : colors.error;
+    const resultBg = results.score >= 70 ? colors.successBg : results.score >= 50 ? colors.warningBg : colors.errorBg;
     
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -270,18 +363,16 @@ export default function TestsSectionScreen() {
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
-          <View style={[styles.resultsCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-            <View style={[
-              styles.scoreCircle,
-              { backgroundColor: results.score >= 70 ? colors.successBg : results.score >= 50 ? colors.warningBg : colors.errorBg }
-            ]}>
-              <Text style={[
-                styles.scoreText,
-                { color: results.score >= 70 ? colors.success : results.score >= 50 ? colors.warning : colors.error }
-              ]}>
-                {results.score}%
-              </Text>
-            </View>
+          <Animated.View
+            entering={ZoomIn.duration(420).springify().damping(14)}
+            style={[styles.resultsCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+          >
+            <AnimatedScoreRing
+              score={results.score}
+              color={resultColor}
+              trackColor={colors.border}
+              backgroundColor={resultBg}
+            />
             <Text style={[styles.scoreLabel, { color: colors.textTertiary }]}>
               {t('tests.correctAnswers')}: {results.correct_count} {t('tests.of')} {results.total}
             </Text>
@@ -296,11 +387,19 @@ export default function TestsSectionScreen() {
             <Text style={[styles.scoreMessage, { color: colors.text }]}>
               {results.score >= 70 ? t('tests.passed') : t('tests.failed')}
             </Text>
-          </View>
+          </Animated.View>
 
-          <Text style={[styles.detailsTitle, { color: colors.text }]}>{t('tests.results')}</Text>
+          <Animated.Text
+            entering={FadeInUp.delay(220).duration(360)}
+            style={[styles.detailsTitle, { color: colors.text }]}
+          >
+            {t('tests.results')}
+          </Animated.Text>
           {results.results?.map((r: any, i: number) => (
-            <View key={i} style={[
+            <Animated.View
+              key={i}
+              entering={FadeInUp.delay(280 + Math.min(i, 8) * 45).duration(340)}
+              style={[
               styles.resultItem,
               { backgroundColor: colors.card, borderLeftColor: r.correct ? colors.success : colors.error }
             ]}>
@@ -314,7 +413,7 @@ export default function TestsSectionScreen() {
                   {r.question}
                 </Text>
               </View>
-            </View>
+            </Animated.View>
           ))}
 
           <TouchableOpacity style={[styles.retryButton, { backgroundColor: colors.accent }]} onPress={resetTest}>
@@ -448,8 +547,6 @@ export default function TestsSectionScreen() {
   }
 
   const assignedForSection = assignedTests.filter(t => !t.section || t.section === section);
-
-  // Group tests by difficulty
   const testsByDifficulty = {
     basic: tests.filter(t => t.difficulty === 'basic'),
     standard: tests.filter(t => t.difficulty === 'standard'),
@@ -485,17 +582,21 @@ export default function TestsSectionScreen() {
             {assignedForSection.length > 0 && (
               <View style={styles.difficultySection}>
                 <View style={styles.difficultySectionHeader}>
-                  <Text style={styles.difficultyEmoji}>??</Text>
+                  <Ionicons name="person-circle-outline" size={20} color="#6366F1" />
                   <Text style={[styles.difficultySectionTitle, { color: '#6366F1' }]}>
-                    ??????????? ({assignedForSection.length})
+                    Назначенные тесты ({assignedForSection.length})
                   </Text>
                 </View>
                 {assignedForSection.map((test) => renderTestCard(test))}
               </View>
             )}
 
+            <View style={styles.testsList}>
+              {tests.map((test) => renderTestCard(test))}
+            </View>
+
             {/* Basic tests */}
-            {testsByDifficulty.basic.length > 0 && (
+            {false && testsByDifficulty.basic.length > 0 && (
               <View style={styles.difficultySection}>
                 <View style={styles.difficultySectionHeader}>
                   <Text style={styles.difficultyEmoji}>🟢</Text>
@@ -508,7 +609,7 @@ export default function TestsSectionScreen() {
             )}
 
             {/* Standard tests */}
-            {testsByDifficulty.standard.length > 0 && (
+            {false && testsByDifficulty.standard.length > 0 && (
               <View style={styles.difficultySection}>
                 <View style={styles.difficultySectionHeader}>
                   <Text style={styles.difficultyEmoji}>🟡</Text>
@@ -521,7 +622,7 @@ export default function TestsSectionScreen() {
             )}
 
             {/* Advanced tests */}
-            {testsByDifficulty.advanced.length > 0 && (
+            {false && testsByDifficulty.advanced.length > 0 && (
               <View style={styles.difficultySection}>
                 <View style={styles.difficultySectionHeader}>
                   <Text style={styles.difficultyEmoji}>🟠</Text>
@@ -534,7 +635,7 @@ export default function TestsSectionScreen() {
             )}
 
             {/* Olympiad tests */}
-            {testsByDifficulty.olympiad.length > 0 && (
+            {false && testsByDifficulty.olympiad.length > 0 && (
               <View style={styles.difficultySection}>
                 <View style={styles.difficultySectionHeader}>
                   <Text style={styles.difficultyEmoji}>🔴</Text>
@@ -567,6 +668,11 @@ export default function TestsSectionScreen() {
           <View style={styles.testMainInfo}>
             <Text style={[styles.testTitle, { color: colors.text }]}>{test.title}</Text>
             <View style={styles.testMeta}>
+              <View style={[styles.testDifficultyBadge, { backgroundColor: difficultyInfo.color + '18' }]}>
+                <Text style={[styles.testDifficultyText, { color: difficultyInfo.color }]}>
+                  {difficultyInfo.label}
+                </Text>
+              </View>
               <View style={styles.testMetaItem}>
                 <Ionicons name="help-circle-outline" size={14} color={colors.textTertiary} />
                 <Text style={[styles.testMetaText, { color: colors.textTertiary }]}>{test.questions.length} {t('tests.questions')}</Text>
@@ -677,6 +783,9 @@ const styles = StyleSheet.create({
   difficultyEmoji: {
     fontSize: 18,
   },
+  testsList: {
+    gap: 10,
+  },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
@@ -722,7 +831,17 @@ const styles = StyleSheet.create({
   },
   testMeta: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 16,
+  },
+  testDifficultyBadge: {
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  testDifficultyText: {
+    fontSize: 11,
+    fontWeight: '800',
   },
   testMetaItem: {
     flexDirection: 'row',
@@ -865,6 +984,24 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 3,
     marginBottom: 24,
+  },
+  scoreRingContainer: {
+    width: 148,
+    height: 148,
+    borderRadius: 74,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  scoreRingSvg: {
+    position: 'absolute',
+  },
+  scoreRingCenter: {
+    width: 108,
+    height: 108,
+    borderRadius: 54,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scoreCircle: {
     width: 120,

@@ -17,6 +17,7 @@ import { generateTest } from '../../src/services/aiService';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useLanguage } from '../../src/context/LanguageContext';
+import api from '../../src/services/api';
 
 type Difficulty = 'basic' | 'standard' | 'advanced' | 'olympiad';
 
@@ -28,6 +29,7 @@ const DIFFICULTY_DATA: { key: Difficulty; color: string; emoji: string }[] = [
 ];
 
 const QUESTION_COUNTS = [5, 10, 15, 20];
+const RANDOM_QUESTION_COUNTS = [5, 10, 15, 20, 30];
 export default function TestsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -42,6 +44,11 @@ export default function TestsScreen() {
   const [selectedCount, setSelectedCount] = useState(10);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showRandomModal, setShowRandomModal] = useState(false);
+  const [selectedRandomSections, setSelectedRandomSections] = useState<string[]>([]);
+  const [selectedRandomCount, setSelectedRandomCount] = useState(10);
+  const [isRandomizing, setIsRandomizing] = useState(false);
+  const [randomError, setRandomError] = useState<string | null>(null);
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
     const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -96,6 +103,47 @@ export default function TestsScreen() {
     setShowModal(true);
   };
 
+  const openRandomModal = () => {
+    setSelectedRandomSections([]);
+    setSelectedRandomCount(10);
+    setRandomError(null);
+    setShowRandomModal(true);
+  };
+
+  const toggleRandomSection = (sectionKey: string) => {
+    setSelectedRandomSections((current) => (
+      current.includes(sectionKey)
+        ? current.filter((key) => key !== sectionKey)
+        : [...current, sectionKey]
+    ));
+  };
+
+  const handleRandomTest = async () => {
+    if (selectedRandomSections.length === 0) {
+      setRandomError(t('tests.selectRandomSection'));
+      return;
+    }
+
+    setRandomError(null);
+    setIsRandomizing(true);
+    try {
+      const response = await api.post('/practice/tests/random', {
+        section_ids: selectedRandomSections,
+        question_count: selectedRandomCount,
+      });
+      const test = response.data?.item;
+      setShowRandomModal(false);
+      router.push({
+        pathname: '/tests/ai-test',
+        params: { testData: JSON.stringify(test) },
+      });
+    } catch (error: any) {
+      setRandomError(error.response?.data?.detail || t('tests.randomLoadError'));
+    } finally {
+      setIsRandomizing(false);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
@@ -134,6 +182,32 @@ export default function TestsScreen() {
                 </Text>
               </View>
               <Ionicons name="add-circle" size={32} color="rgba(255,255,255,0.9)" />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.generateButton, styles.randomButton]}
+          onPress={openRandomModal}
+          activeOpacity={0.9}
+        >
+          <LinearGradient
+            colors={['#0EA5E9', '#14B8A6']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.generateButtonGradient}
+          >
+            <View style={styles.generateButtonContent}>
+              <View style={styles.generateIconContainer}>
+                <Ionicons name="shuffle" size={28} color="#FFFFFF" />
+              </View>
+              <View style={styles.generateTextContainer}>
+                <Text style={styles.generateTitle}>{t('tests.randomButton')}</Text>
+                <Text style={styles.generateSubtitle}>
+                  {t('tests.randomSubtitle')}
+                </Text>
+              </View>
+              <Ionicons name="dice" size={32} color="rgba(255,255,255,0.9)" />
             </View>
           </LinearGradient>
         </TouchableOpacity>
@@ -304,6 +378,115 @@ export default function TestsScreen() {
           </View>
         </View>
       </Modal>
+
+      <Modal
+        visible={showRandomModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowRandomModal(false)}
+      >
+        <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
+          <View style={[styles.modalContainer, { backgroundColor: colors.modalBg }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('tests.randomSettingsTitle')}</Text>
+              <TouchableOpacity
+                style={[styles.modalCloseButton, { backgroundColor: colors.inputBg }]}
+                onPress={() => setShowRandomModal(false)}
+              >
+                <Ionicons name="close" size={24} color={colors.textTertiary} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
+              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.randomSectionsLabel')}</Text>
+              <View style={styles.optionsGrid}>
+                {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
+                  const selected = selectedRandomSections.includes(key);
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      style={[
+                        styles.optionChip,
+                        { backgroundColor: colors.inputBg, borderColor: colors.border },
+                        selected && {
+                          backgroundColor: section.color,
+                          borderColor: section.color,
+                        },
+                      ]}
+                      onPress={() => toggleRandomSection(key)}
+                    >
+                      <Text style={[
+                        styles.optionChipText,
+                        { color: colors.textSecondary },
+                        selected && styles.optionChipTextSelected,
+                      ]}>
+                        {section.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.questionCountLabel')}</Text>
+              <View style={styles.countOptionsWrap}>
+                {RANDOM_QUESTION_COUNTS.map((count) => (
+                  <TouchableOpacity
+                    key={count}
+                    style={[
+                      styles.countOption,
+                      { backgroundColor: colors.inputBg, borderColor: colors.border },
+                      selectedRandomCount === count && styles.randomCountOptionSelected,
+                    ]}
+                    onPress={() => setSelectedRandomCount(count)}
+                  >
+                    <Text style={[
+                      styles.countText,
+                      { color: colors.textSecondary },
+                      selectedRandomCount === count && styles.countTextSelected,
+                    ]}>
+                      {count}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {randomError && (
+                <View style={[styles.errorContainer, { backgroundColor: colors.errorBg }]}>
+                  <Ionicons name="alert-circle" size={20} color={colors.error} />
+                  <Text style={[styles.errorText, { color: colors.error }]}>{randomError}</Text>
+                </View>
+              )}
+
+              <TouchableOpacity
+                style={[
+                  styles.generateTestButton,
+                  styles.randomTestButton,
+                  (selectedRandomSections.length === 0 || isRandomizing) && styles.generateTestButtonDisabled,
+                ]}
+                onPress={handleRandomTest}
+                disabled={selectedRandomSections.length === 0 || isRandomizing}
+              >
+                {isRandomizing ? (
+                  <>
+                    <ActivityIndicator color="#FFFFFF" size="small" />
+                    <Text style={styles.generateTestButtonText}>
+                      {t('tests.randomizing')}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Ionicons name="shuffle" size={20} color="#FFFFFF" />
+                    <Text style={styles.generateTestButtonText}>
+                      {t('tests.startRandomTest')}
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -350,6 +533,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 6,
+  },
+  randomButton: {
+    marginTop: -12,
+    shadowColor: '#0EA5E9',
   },
   generateButtonGradient: {
     borderRadius: 20,
@@ -512,6 +699,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
+  countOptionsWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
   countOption: {
     width: 56,
     height: 56,
@@ -525,6 +717,10 @@ const styles = StyleSheet.create({
   countOptionSelected: {
     backgroundColor: '#6366F1',
     borderColor: '#6366F1',
+  },
+  randomCountOptionSelected: {
+    backgroundColor: '#0EA5E9',
+    borderColor: '#0EA5E9',
   },
   countText: {
     fontSize: 18,
@@ -560,6 +756,9 @@ const styles = StyleSheet.create({
   },
   generateTestButtonDisabled: {
     backgroundColor: '#D1D5DB',
+  },
+  randomTestButton: {
+    backgroundColor: '#0EA5E9',
   },
   generateTestButtonText: {
     fontSize: 17,

@@ -467,6 +467,46 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+
+async def resolve_topic_section(topic_id: str) -> str | None:
+    sections = PHYSICS_SECTIONS
+    if is_postgres_configured():
+        try:
+            postgres_sections = await list_lesson_sections()
+            if postgres_sections:
+                sections = postgres_sections
+        except Exception as exc:
+            logger.warning("Failed to resolve topic section from PostgreSQL: %s", exc)
+
+    for section_id, section_data in sections.items():
+        for subsection in section_data.get("subsections", []):
+            for topic in subsection.get("topics", []):
+                if topic.get("id") == topic_id:
+                    return section_id
+    return None
+
+
+async def record_daily_activity(user_id: str, activity_type: str, item_id: str, section: str | None) -> None:
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    await db.daily_activity.update_one(
+        {
+            "user_id": user_id,
+            "date": today,
+            "type": activity_type,
+            "item_id": item_id,
+        },
+        {
+            "$set": {
+                "section": section,
+                "updated_at": datetime.utcnow(),
+            },
+            "$setOnInsert": {
+                "created_at": datetime.utcnow(),
+            },
+        },
+        upsert=True,
+    )
+
 # ==================== Physics Data ====================
 
 PHYSICS_SECTIONS = {
@@ -1448,6 +1488,7 @@ async def submit_task_answer(task_id: str, answer: Dict[str, int], current_user:
             {"id": current_user["id"]},
             {"$addToSet": {"progress.completed_tasks": task_id}}
         )
+        await record_daily_activity(current_user["id"], "solve", task_id, task.get("section"))
     
     return {
         "correct": is_correct,
@@ -1694,6 +1735,12 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
         if gen_test:
             test = gen_test
 
+    if not test and is_postgres_configured():
+        try:
+            test = await get_practice_test(test_id)
+        except Exception as exc:
+            logger.warning("Failed to load practice test '%s' from PostgreSQL: %s", test_id, exc)
+
     # If test is still not found, save the result anyway with the answers
     # (the frontend has the test data locally and validates there)
     if not test:
@@ -1715,11 +1762,6 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
             "created_at": datetime.utcnow()
         }
         await db.test_results.insert_one(result_doc)
-
-        await db.users.update_one(
-            {"id": current_user["id"]},
-            {"$addToSet": {"progress.completed_tests": test_id}}
-        )
 
         return {
             "score": 0,
@@ -1765,14 +1807,14 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
     }
     await db.test_results.insert_one(result_doc)
 
-    # Update user progress
-    await db.users.update_one(
-        {"id": current_user["id"]},
-        {
-            "$addToSet": {"progress.completed_tests": test_id},
-            "$set": {f"progress.scores.{test_id}": score}
-        }
-    )
+    # A test is considered completed for XP/progress only after a perfect result.
+    user_progress_update = {"$set": {f"progress.scores.{test_id}": score}}
+    if score == 100:
+        user_progress_update["$addToSet"] = {"progress.completed_tests": test_id}
+
+    await db.users.update_one({"id": current_user["id"]}, user_progress_update)
+    if score == 100:
+        await record_daily_activity(current_user["id"], "test", test_id, test.get("section"))
 
     # Push-уведомление учителю, если это назначенный тест
     if assigned_test and assigned_test.get("created_by"):
@@ -1987,6 +2029,8 @@ async def mark_lesson_complete(topic_id: str, current_user: dict = Depends(get_c
         {"id": current_user["id"]},
         {"$addToSet": {"progress.completed_lessons": topic_id}}
     )
+    section = await resolve_topic_section(topic_id)
+    await record_daily_activity(current_user["id"], "study", topic_id, section)
     return {"success": True}
 
 # ==================== Profile / Stats Routes ====================
@@ -1994,7 +2038,6 @@ async def mark_lesson_complete(topic_id: str, current_user: dict = Depends(get_c
 XP_PER_TEST = 50
 XP_PER_TASK = 20
 XP_PER_LESSON = 30
-XP_BONUS_PERFECT_TEST = 30
 
 LEVELS = [
     {"name": "Новичок", "min_xp": 0, "icon": "🌱"},
@@ -2118,6 +2161,8 @@ DAILY_CHALLENGE_SECTION_NAMES_I18N = {
         "electromagnetism": "electricity",
         "optics": "optics",
         "atomic": "atomic physics",
+        "relativity": "special relativity",
+        "astronomy": "astronomy",
     },
     "kk": {
         "mechanics": "механика",
@@ -2125,6 +2170,8 @@ DAILY_CHALLENGE_SECTION_NAMES_I18N = {
         "electromagnetism": "электр",
         "optics": "оптика",
         "atomic": "атом физикасы",
+        "relativity": "арнайы салыстырмалылық",
+        "astronomy": "астрономия",
     },
 }
 
@@ -2188,19 +2235,25 @@ def compute_streak(user: dict) -> dict:
         "last_active": sorted_dates[-1] if sorted_dates else None
     }
 
-def compute_xp(user: dict, test_results: list) -> int:
+def compute_xp(user: dict, test_results: list, daily_challenges: list | None = None) -> int:
     """Compute total XP from user activity."""
     progress = user.get("progress", {})
-    tests = len(progress.get("completed_tests", []))
+    perfect_test_ids = set()
+    for result in test_results:
+        score = result.get("score_final")
+        if score is None:
+            score = result.get("score", 0)
+        if score == 100 and result.get("test_id"):
+            perfect_test_ids.add(result["test_id"])
+
+    tests = len(perfect_test_ids)
     tasks = len(progress.get("completed_tasks", []))
     lessons = len(progress.get("completed_lessons", []))
     
     xp = tests * XP_PER_TEST + tasks * XP_PER_TASK + lessons * XP_PER_LESSON
-    
-    # Bonus for perfect tests
-    for r in test_results:
-        if r.get("score", 0) == 100 or r.get("score_final", 0) == 100:
-            xp += XP_BONUS_PERFECT_TEST
+
+    for challenge in daily_challenges or []:
+        xp += int(challenge.get("xp_awarded", 0) or 0)
     
     return xp
 
@@ -2313,23 +2366,34 @@ def compute_achievements(user: dict, test_results: list, xp: int, streak: dict, 
     
     return earned
 
-def compute_section_progress(user: dict) -> list:
+async def compute_section_progress(user: dict) -> list:
     """Compute progress per physics section."""
     progress = user.get("progress", {})
     completed = set(progress.get("completed_lessons", []))
     completed_tests = set(progress.get("completed_tests", []))
     completed_tasks = set(progress.get("completed_tasks", []))
-    
+
     section_colors = {
         "mechanics": "#4A90D9",
         "thermodynamics": "#E74C3C",
         "electromagnetism": "#F39C12",
         "optics": "#9B59B6",
         "atomic": "#1ABC9C",
+        "relativity": "#8B5CF6",
+        "astronomy": "#0EA5E9",
     }
-    
+
+    sections = PHYSICS_SECTIONS
+    if is_postgres_configured():
+        try:
+            postgres_sections = await list_lesson_sections()
+            if postgres_sections:
+                sections = postgres_sections
+        except Exception as exc:
+            logger.warning("Failed to load lesson sections for profile progress from PostgreSQL: %s", exc)
+
     result = []
-    for sec_key, sec_data in PHYSICS_SECTIONS.items():
+    for sec_key, sec_data in sections.items():
         total_topics = 0
         completed_topics = 0
         for sub in sec_data.get("subsections", []):
@@ -2343,7 +2407,7 @@ def compute_section_progress(user: dict) -> list:
             "section": sec_key,
             "name": sec_data["name"],
             "icon": sec_data.get("icon", "book"),
-            "color": section_colors.get(sec_key, "#6366F1"),
+            "color": sec_data.get("color") or section_colors.get(sec_key, "#6366F1"),
             "completed": completed_topics,
             "total": total_topics,
             "percentage": percentage,
@@ -2387,8 +2451,13 @@ async def get_profile_stats(
     # Streak
     streak = compute_streak(current_user)
     
+    daily_challenges = await db.daily_challenges.find({
+        "user_id": user_id,
+        "completed": True,
+    }).to_list(1000)
+
     # XP & Level
-    xp = compute_xp(current_user, test_results)
+    xp = compute_xp(current_user, test_results, daily_challenges)
     level = get_level(xp, lang)
     
     # Achievements
@@ -2403,7 +2472,7 @@ async def get_profile_stats(
         )
     
     # Section progress
-    section_progress = compute_section_progress(current_user)
+    section_progress = await compute_section_progress(current_user)
     
     # Activity history (last 10)
     history = []
@@ -2558,7 +2627,54 @@ async def save_note(payload: NoteUpsert, current_user: dict = Depends(get_curren
 
 # ==================== Daily Challenge ====================
 
-DAILY_CHALLENGE_SECTIONS = ["mechanics", "thermodynamics", "electromagnetism", "optics", "atomic"]
+DAILY_CHALLENGE_SECTIONS = [
+    "mechanics",
+    "thermodynamics",
+    "electromagnetism",
+    "optics",
+    "atomic",
+    "relativity",
+    "astronomy",
+]
+
+
+def build_daily_challenge(today: str, lang: str) -> tuple[str, dict]:
+    day_hash = int(hashlib.md5(today.encode()).hexdigest(), 16)
+    section_idx = day_hash % len(DAILY_CHALLENGE_SECTIONS)
+    section = DAILY_CHALLENGE_SECTIONS[section_idx]
+
+    section_names_ru = {
+        "mechanics": "механике",
+        "thermodynamics": "термодинамике",
+        "electromagnetism": "электричеству",
+        "optics": "оптике",
+        "atomic": "атомной физике",
+        "relativity": "СТО",
+        "astronomy": "астрономии",
+    }
+
+    challenge_types_ru = [
+        {"type": "solve", "target": 3, "title": f"Реши 3 задачи по {section_names_ru[section]}", "xp": 50},
+        {"type": "test", "target": 1, "title": f"Пройди тест по {section_names_ru[section]}", "xp": 40},
+        {"type": "study", "target": 2, "title": f"Изучи 2 темы по {section_names_ru[section]}", "xp": 30},
+    ]
+    challenge_idx = (day_hash // len(DAILY_CHALLENGE_SECTIONS)) % len(challenge_types_ru)
+    challenge = challenge_types_ru[challenge_idx]
+
+    if lang != "ru" and lang in DAILY_CHALLENGE_SECTION_NAMES_I18N and lang in DAILY_CHALLENGE_TEMPLATES_I18N:
+        sec_name = DAILY_CHALLENGE_SECTION_NAMES_I18N[lang].get(section, section)
+        templates = DAILY_CHALLENGE_TEMPLATES_I18N[lang]
+        if challenge_idx < len(templates):
+            tmpl = templates[challenge_idx]
+            challenge = {
+                "type": tmpl["type"],
+                "target": tmpl["target"],
+                "title": tmpl["template"].format(section=sec_name),
+                "xp": tmpl["xp"],
+            }
+
+    return section, challenge
+
 
 @api_router.get("/daily-challenge")
 async def get_daily_challenge(
@@ -2576,55 +2692,16 @@ async def get_daily_challenge(
         "completed": True,
     })
     
-    # Generate deterministic challenge based on date hash
-    day_hash = int(hashlib.md5(today.encode()).hexdigest(), 16)
-    section_idx = day_hash % len(DAILY_CHALLENGE_SECTIONS)
-    section = DAILY_CHALLENGE_SECTIONS[section_idx]
+    section, challenge = build_daily_challenge(today, lang)
     
-    section_names_ru = {
-        "mechanics": "механике",
-        "thermodynamics": "термодинамике",
-        "electromagnetism": "электричеству",
-        "optics": "оптике",
-        "atomic": "атомной физике",
-    }
-    
-    challenge_types_ru = [
-        {"type": "solve", "target": 3, "title": f"Реши 3 задачи по {section_names_ru[section]}", "xp": 50},
-        {"type": "test", "target": 1, "title": f"Пройди тест по {section_names_ru[section]}", "xp": 40},
-        {"type": "study", "target": 2, "title": f"Изучи 2 темы по {section_names_ru[section]}", "xp": 30},
-    ]
-    challenge_idx = (day_hash // len(DAILY_CHALLENGE_SECTIONS)) % len(challenge_types_ru)
-    challenge = challenge_types_ru[challenge_idx]
-    
-    # Apply i18n if not Russian
-    if lang != "ru" and lang in DAILY_CHALLENGE_SECTION_NAMES_I18N and lang in DAILY_CHALLENGE_TEMPLATES_I18N:
-        sec_name = DAILY_CHALLENGE_SECTION_NAMES_I18N[lang].get(section, section)
-        templates = DAILY_CHALLENGE_TEMPLATES_I18N[lang]
-        if challenge_idx < len(templates):
-            tmpl = templates[challenge_idx]
-            challenge = {
-                "type": tmpl["type"],
-                "target": tmpl["target"],
-                "title": tmpl["template"].format(section=sec_name),
-                "xp": tmpl["xp"],
-            }
-    
-    # Count user's progress for today
-    if challenge["type"] == "solve":
-        today_tasks = await db.test_results.count_documents({
-            "user_id": current_user["id"],
-            "created_at": {"$gte": datetime.strptime(today, "%Y-%m-%d")},
-        })
-        progress = min(today_tasks, challenge["target"])
-    elif challenge["type"] == "test":
-        today_tests = await db.test_results.count_documents({
-            "user_id": current_user["id"],
-            "created_at": {"$gte": datetime.strptime(today, "%Y-%m-%d")},
-        })
-        progress = min(today_tests, challenge["target"])
-    else:
-        progress = 0
+    # Count today's actions for the selected section.
+    today_actions = await db.daily_activity.count_documents({
+        "user_id": current_user["id"],
+        "date": today,
+        "type": challenge["type"],
+        "section": section,
+    })
+    progress = min(today_actions, challenge["target"])
     
     return {
         "date": today,
@@ -2638,8 +2715,12 @@ async def get_daily_challenge(
     }
 
 @api_router.post("/daily-challenge/complete")
-async def complete_daily_challenge(current_user: dict = Depends(get_current_user)):
+async def complete_daily_challenge(
+    current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     """Mark daily challenge as completed and award XP."""
+    lang = parse_accept_language(accept_language)
     today = datetime.utcnow().strftime("%Y-%m-%d")
     
     existing = await db.daily_challenges.find_one({
@@ -2649,10 +2730,24 @@ async def complete_daily_challenge(current_user: dict = Depends(get_current_user
     })
     if existing:
         return {"already_completed": True, "xp_awarded": 0}
+
+    section, challenge = build_daily_challenge(today, lang)
+    today_actions = await db.daily_activity.count_documents({
+        "user_id": current_user["id"],
+        "date": today,
+        "type": challenge["type"],
+        "section": section,
+    })
+    if today_actions < challenge["target"]:
+        raise HTTPException(status_code=400, detail="Daily challenge target is not reached")
     
     await db.daily_challenges.insert_one({
         "user_id": current_user["id"],
         "date": today,
+        "section": section,
+        "type": challenge["type"],
+        "target": challenge["target"],
+        "xp_awarded": challenge["xp"],
         "completed": True,
         "completed_at": datetime.utcnow(),
     })
@@ -2663,7 +2758,7 @@ async def complete_daily_challenge(current_user: dict = Depends(get_current_user
         {"$addToSet": {"activity_dates": today}}
     )
     
-    return {"completed": True, "xp_awarded": 50}
+    return {"completed": True, "xp_awarded": challenge["xp"]}
 
 # ==================== Search ====================
 
@@ -2954,8 +3049,10 @@ from routes.practice import router as practice_router
 from postgres import (
     close_postgres_pool,
     get_physics_formula,
+    get_practice_test,
     init_postgres_schema,
     is_postgres_configured,
+    list_lesson_sections,
     list_physics_formulas,
 )
 

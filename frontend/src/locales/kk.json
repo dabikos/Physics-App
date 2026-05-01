@@ -314,6 +314,14 @@
     "generateError": "Тест жасау мүмкін болмады",
     "generateButton": "Тест жасау",
     "generateSubtitle": "AI сіз үшін бірегей тест жасайды",
+    "randomButton": "Кездейсоқ тест",
+    "randomSubtitle": "Таңдалған бөлімдер бойынша базадағы сұрақтар",
+    "randomSettingsTitle": "🎲 Кездейсоқ тест",
+    "randomSectionsLabel": "📚 Сұрақтарға арналған бөлімдер",
+    "selectRandomSection": "Кемінде бір бөлімді таңдаңыз",
+    "randomizing": "Тест жиналуда...",
+    "startRandomTest": "Кездейсоқ тестті бастау",
+    "randomLoadError": "Кездейсоқ тестті жинау мүмкін болмады",
     "readyTests": "Дайын тесттер",
     "checkKnowledge": "Білімді тексеріңіз",
     "settingsTitle": "🧪 Тест баптаулары",
@@ -414,7 +422,8 @@
     "siLabel": "ХЖ",
     "formulasLabel": "Формулалар",
     "solutionLabel": "Шешім",
-    "answerLabel": "Жауап:"
+    "answerLabel": "Жауап:",
+    "showSolution": "Шешімді көрсету"
   },
   "formulas": {
     "title": "Формулалар",
