@@ -204,6 +204,7 @@
     "collapse": "Collapse",
     "sectionProgress": "Section progress",
     "topicsOf": "{{completed}} of {{total}} topics",
+    "progressItemsOf": "{{completed}} of {{total}} items",
     "lastActivity": "Recent activity",
     "today": "Today",
     "yesterday": "Yesterday",

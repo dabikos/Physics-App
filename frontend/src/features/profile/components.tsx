@@ -153,7 +153,11 @@ export const SectionProgressCard: React.FC<{ section: any; index: number }> = ({
       </View>
       <AnimatedProgressBar progress={section.percentage} color={section.color} delay={index * 100} />
       <Text style={[styles.sectionSubtext, { color: colors.textMuted }]}>
-        {t('profile.topicsOf', { completed: section.completed, total: section.total })}
+        {t('profile.progressItemsOf', {
+          completed: section.completed,
+          total: section.total,
+          defaultValue: t('profile.topicsOf', { completed: section.completed, total: section.total }),
+        })}
       </Text>
     </View>
   )

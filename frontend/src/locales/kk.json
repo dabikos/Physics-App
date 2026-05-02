@@ -204,6 +204,7 @@
     "collapse": "Жию",
     "sectionProgress": "Бөлімдер бойынша прогресс",
     "topicsOf": "{{completed}} / {{total}} тақырып",
+    "progressItemsOf": "{{completed}} / {{total}} элемент",
     "lastActivity": "Соңғы белсенділік",
     "today": "Бүгін",
     "yesterday": "Кеше",

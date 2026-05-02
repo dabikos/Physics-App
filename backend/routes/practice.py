@@ -1,4 +1,5 @@
 import re
+import random
 import uuid
 from datetime import datetime
 
@@ -17,6 +18,7 @@ from postgres import (
 )
 
 router = APIRouter()
+_rng = random.SystemRandom()
 
 
 class PracticeTaskSubmit(BaseModel):
@@ -50,6 +52,26 @@ def is_answer_correct(user_answer: str, expected_answer: str) -> bool:
     if actual and len(actual) >= 2 and (expected in actual or actual in expected):
         return True
     return any(num in expected_numbers for num in actual_numbers)
+
+
+def shuffle_question_options(question: dict) -> dict:
+    options = list(question.get("options") or [])
+    correct_index = int(question.get("correct", 0) or 0)
+    if not options or correct_index < 0 or correct_index >= len(options):
+        return question
+
+    correct_value = options[correct_index]
+    indexed_options = list(enumerate(options))
+    _rng.shuffle(indexed_options)
+
+    shuffled_options = [option for _, option in indexed_options]
+    shuffled_correct_index = shuffled_options.index(correct_value)
+
+    return {
+        **question,
+        "options": shuffled_options,
+        "correct": shuffled_correct_index,
+    }
 
 
 @router.get("/practice/tests")
@@ -97,21 +119,23 @@ async def create_random_practice_test(
 
     test_id = f"random-practice-{uuid.uuid4().hex[:12]}"
     section = section_ids[0] if len(section_ids) == 1 else "mixed"
+    shuffled_questions = [
+        shuffle_question_options({
+            "question": item["question"],
+            "options": item["options"],
+            "correct": item["correct"],
+            "explanation": item.get("explanation") or "",
+        })
+        for item in questions
+    ]
+
     test = {
         "id": test_id,
         "title": "Случайный тест",
         "section": section,
         "section_ids": section_ids,
         "difficulty": "standard",
-        "questions": [
-            {
-                "question": item["question"],
-                "options": item["options"],
-                "correct": item["correct"],
-                "explanation": item.get("explanation") or "",
-            }
-            for item in questions
-        ],
+        "questions": shuffled_questions,
         "time_limit": max(300, payload.question_count * 60),
         "generated": True,
         "source": "practice_random",

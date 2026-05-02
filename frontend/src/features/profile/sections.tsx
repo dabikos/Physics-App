@@ -156,9 +156,27 @@ export function StudentProfileSection({
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile.statistics')}</Text>
         <View style={styles.statsGrid}>
           {[
-            { icon: 'book', value: stats.lessons_completed || 0, label: t('profile.lessons'), bg: colors.infoBg, color: colors.accentText },
-            { icon: 'calculator', value: stats.tasks_completed || 0, label: t('profile.tasks'), bg: colors.warningBg, color: colors.warning },
-            { icon: 'checkbox', value: stats.tests_completed || 0, label: t('profile.tests'), bg: colors.successBg, color: colors.success },
+            {
+              icon: 'book',
+              value: stats.lessons_total ? `${stats.lessons_completed || 0}/${stats.lessons_total}` : stats.lessons_completed || 0,
+              label: t('profile.lessons'),
+              bg: colors.infoBg,
+              color: colors.accentText,
+            },
+            {
+              icon: 'calculator',
+              value: stats.tasks_total ? `${stats.tasks_completed || 0}/${stats.tasks_total}` : stats.tasks_completed || 0,
+              label: t('profile.tasks'),
+              bg: colors.warningBg,
+              color: colors.warning,
+            },
+            {
+              icon: 'checkbox',
+              value: stats.tests_total ? `${stats.tests_completed || 0}/${stats.tests_total}` : stats.tests_completed || 0,
+              label: t('profile.tests'),
+              bg: colors.successBg,
+              color: colors.success,
+            },
             { icon: 'star', value: `${stats.avg_score || 0}%`, label: t('profile.avgScore'), bg: colors.errorBg, color: colors.error },
           ].map((item) => (
             <View key={`${item.icon}-${item.label}`} style={[styles.statCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>

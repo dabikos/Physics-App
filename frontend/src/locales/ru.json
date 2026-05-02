@@ -204,6 +204,7 @@
     "collapse": "Свернуть",
     "sectionProgress": "Прогресс по разделам",
     "topicsOf": "{{completed}} из {{total}} тем",
+    "progressItemsOf": "{{completed}} из {{total}} элементов",
     "lastActivity": "Последняя активность",
     "today": "Сегодня",
     "yesterday": "Вчера",

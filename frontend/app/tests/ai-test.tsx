@@ -8,10 +8,18 @@ import {
   Animated,
   Alert,
 } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
+import Reanimated, {
+  Easing,
+  FadeInUp,
+  ZoomIn,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { GeneratedTest } from '../../src/services/aiService';
 import { MathContent } from '../../src/components/MathContent';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +32,120 @@ const DIFFICULTY_COLORS = {
   advanced: '#F97316',
   olympiad: '#EF4444',
 };
+
+const AnimatedCircle = Reanimated.createAnimatedComponent(Circle);
+
+const prepareMathContent = (value: string): string => {
+  if (!value || /\$[^$]+\$|\\[a-zA-Z]+/.test(value)) {
+    return value;
+  }
+
+  const normalizeFormula = (formula: string) => formula
+    .replace(/×/g, '\\times ')
+    .replace(/·/g, '\\cdot ')
+    .replace(/÷/g, '\\div ')
+    .replace(/²/g, '^2')
+    .replace(/³/g, '^3')
+    .replace(/⁴/g, '^4')
+    .replace(/₀/g, '_0')
+    .replace(/₁/g, '_1')
+    .replace(/₂/g, '_2')
+    .replace(/₃/g, '_3')
+    .replace(/π/g, '\\pi ')
+    .replace(/ρ/g, '\\rho ')
+    .replace(/ν/g, '\\nu ')
+    .replace(/λ/g, '\\lambda ')
+    .replace(/α/g, '\\alpha ')
+    .replace(/μ/g, '\\mu ')
+    .replace(/ω/g, '\\omega ')
+    .replace(/γ/g, '\\gamma ')
+    .replace(/Δ/g, '\\Delta ');
+
+  return value.replace(
+    /([A-Za-zαβγδεπθλμρσωνΔ][A-Za-z0-9_₀₁₂₃αβγδεπθλμρσωνΔ]*\s*[=≈]\s*[^,.!?;\n]+)/g,
+    (match) => `$${normalizeFormula(match.trim())}$`
+  );
+};
+
+const AnimatedScoreRing = ({
+  score,
+  color,
+  trackColor,
+  backgroundColor,
+}: {
+  score: number;
+  color: string;
+  trackColor: string;
+  backgroundColor: string;
+}) => {
+  const [displayScore, setDisplayScore] = useState(0);
+  const progressValue = useSharedValue(0);
+  const size = 132;
+  const strokeWidth = 10;
+  const radius = (size - strokeWidth) / 2;
+  const center = size / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  useEffect(() => {
+    progressValue.value = 0;
+    progressValue.value = withTiming(score / 100, {
+      duration: 1100,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    const duration = 900;
+    const startedAt = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startedAt;
+      const nextValue = Math.min(score, Math.round((elapsed / duration) * score));
+      setDisplayScore(nextValue);
+      if (elapsed >= duration) {
+        setDisplayScore(score);
+        clearInterval(timer);
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [progressValue, score]);
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: circumference * (1 - progressValue.value),
+  }));
+
+  return (
+    <View style={[styles.scoreRingContainer, { backgroundColor }]}>
+      <Svg width={size} height={size} style={styles.scoreRingSvg}>
+        <Circle
+          cx={center}
+          cy={center}
+          r={radius}
+          stroke={trackColor}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          opacity={0.45}
+        />
+        <AnimatedCircle
+          cx={center}
+          cy={center}
+          r={radius}
+          stroke={color}
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          strokeLinecap="round"
+          strokeDasharray={`${circumference} ${circumference}`}
+          animatedProps={animatedProps}
+          originX={center}
+          originY={center}
+          rotation="-90"
+        />
+      </Svg>
+      <View style={styles.scoreRingCenter}>
+        <Text style={[styles.scoreRingText, { color }]}>{displayScore}%</Text>
+      </View>
+    </View>
+  );
+};
+
 export default function AITestScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -36,7 +158,6 @@ export default function AITestScreen() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>([]);
   const [showResults, setShowResults] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
   const submittedResultRef = useRef(false);
   
   // Анимации
@@ -89,13 +210,10 @@ export default function AITestScreen() {
 
   const question = test.questions[currentQuestion];
   const isAnswered = selectedAnswers[currentQuestion] !== null;
-  const isCorrect = selectedAnswers[currentQuestion] === question.correct;
   const totalCorrect = selectedAnswers.filter((ans, idx) => ans === test.questions[idx].correct).length;
   const progress = ((currentQuestion + 1) / test.questions.length) * 100;
 
   const handleSelectAnswer = (answerIndex: number) => {
-    if (isAnswered) return;
-    
     const newAnswers = [...selectedAnswers];
     newAnswers[currentQuestion] = answerIndex;
     setSelectedAnswers(newAnswers);
@@ -117,7 +235,6 @@ export default function AITestScreen() {
 
   const handleNext = () => {
     if (currentQuestion < test.questions.length - 1) {
-      setShowExplanation(false);
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 150,
@@ -137,7 +254,6 @@ export default function AITestScreen() {
 
   const handlePrev = () => {
     if (currentQuestion > 0) {
-      setShowExplanation(false);
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 150,
@@ -169,35 +285,34 @@ export default function AITestScreen() {
   if (showResults) {
     const scoreInfo = getScoreMessage();
     const percentage = Math.round((totalCorrect / test.questions.length) * 100);
+    const resultColor = percentage >= 70 ? colors.success : percentage >= 50 ? colors.warning : colors.error;
+    const resultBg = percentage >= 70 ? colors.successBg : percentage >= 50 ? colors.warningBg : colors.errorBg;
 
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
         <ScrollView contentContainerStyle={[styles.resultsContainer, { paddingBottom: insets.bottom + 20 }]}>
-          <View style={styles.resultsHeader}>
-            <Text style={styles.resultsEmoji}>
-              {percentage >= 70 ? '🎉' : percentage >= 50 ? '👍' : '📖'}
-            </Text>
+          <Reanimated.View
+            entering={ZoomIn.duration(420).springify().damping(14)}
+            style={[styles.resultsCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+          >
+            <AnimatedScoreRing
+              score={percentage}
+              color={resultColor}
+              trackColor={colors.border}
+              backgroundColor={resultBg}
+            />
             <Text style={[styles.resultsMessage, { color: scoreInfo.color }]}>
               {scoreInfo.text}
             </Text>
-          </View>
+            <Text style={[styles.scoreLabel, { color: colors.textTertiary }]}>
+              {t('tests.correctAnswers')}: {totalCorrect} {t('tests.of')} {test.questions.length}
+            </Text>
+          </Reanimated.View>
 
-          <View style={styles.scoreCard}>
-            <LinearGradient
-              colors={['#8B5CF6', '#6366F1']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.scoreGradient}
-            >
-              <Text style={styles.scoreNumber}>{totalCorrect}/{test.questions.length}</Text>
-              <Text style={styles.scoreLabel}>{t('tests.correctAnswers')}</Text>
-              <View style={styles.scorePercentage}>
-                <Text style={styles.percentageText}>{percentage}%</Text>
-              </View>
-            </LinearGradient>
-          </View>
-
-          <View style={[styles.resultsSummary, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+          <Reanimated.View
+            entering={FadeInUp.delay(220).duration(360)}
+            style={[styles.resultsSummary, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+          >
             <View style={styles.summaryItem}>
               <Ionicons name="checkmark-circle" size={24} color={colors.success} />
               <Text style={[styles.summaryValue, { color: colors.text }]}>{totalCorrect}</Text>
@@ -209,16 +324,25 @@ export default function AITestScreen() {
               <Text style={[styles.summaryValue, { color: colors.text }]}>{test.questions.length - totalCorrect}</Text>
               <Text style={[styles.summaryLabel, { color: colors.textTertiary }]}>{t('tests.incorrect')}</Text>
             </View>
-          </View>
+          </Reanimated.View>
 
-          <Text style={[styles.reviewTitle, { color: colors.text }]}>{t('tests.yourAnswers')}</Text>
+          <Reanimated.Text
+            entering={FadeInUp.delay(280).duration(360)}
+            style={[styles.reviewTitle, { color: colors.text }]}
+          >
+            {t('tests.yourAnswers')}
+          </Reanimated.Text>
 
           {test.questions.map((q, idx) => {
             const userAnswer = selectedAnswers[idx];
             const isQuestionCorrect = userAnswer === q.correct;
             
             return (
-              <View key={idx} style={[styles.reviewCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+              <Reanimated.View
+                key={idx}
+                entering={FadeInUp.delay(320 + Math.min(idx, 8) * 45).duration(340)}
+                style={[styles.reviewCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+              >
                 <View style={styles.reviewHeader}>
                   <View style={[
                     styles.reviewBadge,
@@ -230,41 +354,48 @@ export default function AITestScreen() {
                       color={isQuestionCorrect ? colors.success : colors.error} 
                     />
                   </View>
-                  <Text style={[styles.reviewQuestionNumber, { color: colors.textSecondary }]}>{t('tests.question')} {idx + 1}</Text>
+                  <Text style={[styles.reviewQuestionNumber, { color: colors.textSecondary }]}>
+                    {t('tests.question', { num: idx + 1 })}
+                  </Text>
                 </View>
                 
                 <MathContent 
-                  content={q.question} 
+                  content={prepareMathContent(q.question)} 
                   fontSize={15} 
                   textColor={colors.textSecondary}
                 />
                 
                 <View style={[styles.reviewAnswers, { borderTopColor: colors.border }]}>
                   <Text style={[styles.reviewAnswerLabel, { color: colors.textTertiary }]}>{t('tests.yourAnswer')}:</Text>
-                  <Text style={[
-                    styles.reviewAnswerText,
-                    { color: isQuestionCorrect ? colors.success : colors.error }
-                  ]}>
-                    {userAnswer !== null ? q.options[userAnswer] : t('tests.notAnswered')}
-                  </Text>
+                  <View style={styles.reviewAnswerMath}>
+                    <MathContent
+                      content={userAnswer !== null ? prepareMathContent(q.options[userAnswer]) : t('tests.notAnswered')}
+                      fontSize={15}
+                      textColor={isQuestionCorrect ? colors.success : colors.error}
+                    />
+                  </View>
                   
                   {!isQuestionCorrect && (
                     <>
                       <Text style={[styles.reviewAnswerLabel, { color: colors.textTertiary }]}>{t('tests.correctAnswer')}:</Text>
-                      <Text style={[styles.reviewAnswerText, { color: colors.success }]}>
-                        {q.options[q.correct]}
-                      </Text>
+                      <View style={styles.reviewAnswerMath}>
+                        <MathContent
+                          content={prepareMathContent(q.options[q.correct])}
+                          fontSize={15}
+                          textColor={colors.success}
+                        />
+                      </View>
                     </>
                   )}
                   
                   {q.explanation && (
                     <View style={[styles.explanationBox, { backgroundColor: isDark ? '#78350F' : '#FEF3C7' }]}>
                       <Text style={[styles.explanationLabel, { color: isDark ? '#FBBF24' : '#92400E' }]}>{'💡 ' + t('tests.explanation') + ':'}</Text>
-                      <MathContent content={q.explanation} fontSize={14} textColor={isDark ? '#FDE68A' : '#4B5563'} />
+                      <MathContent content={prepareMathContent(q.explanation)} fontSize={14} textColor={isDark ? '#FDE68A' : '#4B5563'} />
                     </View>
                   )}
                 </View>
-              </View>
+              </Reanimated.View>
             );
           })}
 
@@ -347,27 +478,13 @@ export default function AITestScreen() {
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
           {question.options.map((option, idx) => {
             const isSelected = selectedAnswers[currentQuestion] === idx;
-            const isCorrectOption = idx === question.correct;
-            const showCorrectness = isAnswered;
             
             let optionBgColor = colors.card;
             let optionBorderColor = colors.optionBorder;
             let iconName: keyof typeof Ionicons.glyphMap = 'ellipse-outline';
             let iconColor = colors.textMuted;
 
-            if (showCorrectness) {
-              if (isCorrectOption) {
-                optionBgColor = colors.successBg;
-                optionBorderColor = colors.success;
-                iconName = 'checkmark-circle';
-                iconColor = colors.success;
-              } else if (isSelected && !isCorrectOption) {
-                optionBgColor = colors.errorBg;
-                optionBorderColor = colors.error;
-                iconName = 'close-circle';
-                iconColor = colors.error;
-              }
-            } else if (isSelected) {
+            if (isSelected) {
               optionBgColor = colors.optionSelectedBg;
               optionBorderColor = colors.accent;
               iconName = 'ellipse';
@@ -379,64 +496,16 @@ export default function AITestScreen() {
                 key={idx}
                 style={[styles.option, { backgroundColor: optionBgColor, borderColor: optionBorderColor }]}
                 onPress={() => handleSelectAnswer(idx)}
-                disabled={isAnswered}
                 activeOpacity={0.7}
               >
                 <Ionicons name={iconName} size={24} color={iconColor} />
                 <View style={styles.optionContent}>
-                  <MathContent content={option} fontSize={15} textColor={colors.textSecondary} />
+                  <MathContent content={prepareMathContent(option)} fontSize={15} textColor={colors.textSecondary} />
                 </View>
               </TouchableOpacity>
             );
           })}
         </Animated.View>
-
-        {/* Explanation */}
-        {isAnswered && question.explanation && (
-          <TouchableOpacity 
-            style={styles.explanationToggle}
-            onPress={() => setShowExplanation(!showExplanation)}
-          >
-            <Ionicons 
-              name={showExplanation ? 'chevron-up' : 'information-circle'} 
-              size={20} 
-              color={colors.accentText} 
-            />
-            <Text style={[styles.explanationToggleText, { color: colors.accentText }]}>
-              {showExplanation ? t('tests.hideExplanation') : t('tests.showExplanation')}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {showExplanation && question.explanation && (
-          <View style={[styles.explanationCard, { backgroundColor: isDark ? '#78350F' : '#FFFBEB', borderColor: isDark ? '#92400E' : '#FDE68A' }]}>
-            <View style={styles.explanationHeader}>
-              <Ionicons name="bulb" size={20} color={colors.warning} />
-              <Text style={[styles.explanationTitle, { color: isDark ? '#FBBF24' : '#92400E' }]}>{t('tests.explanation')}</Text>
-            </View>
-            <MathContent content={question.explanation} fontSize={14} textColor={isDark ? '#FDE68A' : '#4B5563'} />
-          </View>
-        )}
-
-        {/* Feedback */}
-        {isAnswered && (
-          <View style={[
-            styles.feedbackCard,
-            { backgroundColor: isCorrect ? colors.successBg : colors.errorBg }
-          ]}>
-            <Ionicons 
-              name={isCorrect ? 'checkmark-circle' : 'close-circle'} 
-              size={24} 
-              color={isCorrect ? colors.success : colors.error} 
-            />
-            <Text style={[
-              styles.feedbackText,
-              { color: isCorrect ? (isDark ? '#34D399' : '#065F46') : (isDark ? '#F87171' : '#B91C1C') }
-            ]}>
-              {isCorrect ? t('tests.correct') : t('tests.incorrect')}
-            </Text>
-          </View>
-        )}
 
         <View style={styles.bottomPadding} />
       </Animated.ScrollView>
@@ -710,6 +779,38 @@ const styles = StyleSheet.create({
   resultsContainer: {
     padding: 20,
   },
+  resultsCard: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 18,
+    elevation: 6,
+  },
+  scoreRingContainer: {
+    width: 132,
+    height: 132,
+    borderRadius: 66,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  scoreRingSvg: {
+    position: 'absolute',
+  },
+  scoreRingCenter: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scoreRingText: {
+    fontSize: 32,
+    fontWeight: '800',
+  },
   resultsHeader: {
     alignItems: 'center',
     marginBottom: 24,
@@ -835,6 +936,9 @@ const styles = StyleSheet.create({
   reviewAnswerText: {
     fontSize: 15,
     fontWeight: '500',
+    marginBottom: 12,
+  },
+  reviewAnswerMath: {
     marginBottom: 12,
   },
   explanationBox: {

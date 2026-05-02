@@ -1986,15 +1986,21 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
 @api_router.get("/progress")
 async def get_progress(current_user: dict = Depends(get_current_user)):
     progress = current_user.get("progress", {})
-    
-    # Calculate overall progress
-    total_lessons = len(INITIAL_TOPICS)
-    total_tasks = len(INITIAL_TASKS)
-    total_tests = len(INITIAL_TESTS)
-    
+    catalog = await load_profile_content_catalog()
+    test_results = await db.test_results.find({"user_id": current_user["id"]}).to_list(500)
+    perfect_test_ids = compute_perfect_test_ids(test_results)
+
+    total_lessons = sum(
+        len(sub.get("topics", []))
+        for section in catalog["sections"].values()
+        for sub in section.get("subsections", [])
+    )
+    total_tasks = len(catalog["tasks"])
+    total_tests = len(catalog["tests"])
+
     completed_lessons = len(progress.get("completed_lessons", []))
     completed_tasks = len(progress.get("completed_tasks", []))
-    completed_tests = len(progress.get("completed_tests", []))
+    completed_tests = len(perfect_test_ids)
     
     overall_progress = 0
     if total_lessons + total_tasks + total_tests > 0:
@@ -2238,14 +2244,7 @@ def compute_streak(user: dict) -> dict:
 def compute_xp(user: dict, test_results: list, daily_challenges: list | None = None) -> int:
     """Compute total XP from user activity."""
     progress = user.get("progress", {})
-    perfect_test_ids = set()
-    for result in test_results:
-        score = result.get("score_final")
-        if score is None:
-            score = result.get("score", 0)
-        if score == 100 and result.get("test_id"):
-            perfect_test_ids.add(result["test_id"])
-
+    perfect_test_ids = compute_perfect_test_ids(test_results)
     tests = len(perfect_test_ids)
     tasks = len(progress.get("completed_tasks", []))
     lessons = len(progress.get("completed_lessons", []))
@@ -2256,6 +2255,18 @@ def compute_xp(user: dict, test_results: list, daily_challenges: list | None = N
         xp += int(challenge.get("xp_awarded", 0) or 0)
     
     return xp
+
+
+def compute_perfect_test_ids(test_results: list) -> set[str]:
+    perfect_test_ids = set()
+    for result in test_results:
+        score = result.get("score_final")
+        if score is None:
+            score = result.get("score", 0)
+        if score == 100 and result.get("test_id"):
+            perfect_test_ids.add(result["test_id"])
+    return perfect_test_ids
+
 
 def get_level(xp: int, lang: str = "ru") -> dict:
     """Get current level based on XP."""
@@ -2295,24 +2306,33 @@ def get_level(xp: int, lang: str = "ru") -> dict:
         "next_level": next_level_name,
     }
 
-def compute_achievements(user: dict, test_results: list, xp: int, streak: dict, lang: str = "ru") -> list:
+def compute_achievements(
+    user: dict,
+    test_results: list,
+    xp: int,
+    streak: dict,
+    lang: str = "ru",
+    section_completion: dict[str, bool] | None = None,
+) -> list:
     """Check which achievements the user has earned."""
     progress = user.get("progress", {})
-    tests_completed = len(progress.get("completed_tests", []))
+    perfect_test_ids = compute_perfect_test_ids(test_results)
+    tests_completed = len(perfect_test_ids)
     tasks_completed = len(progress.get("completed_tasks", []))
     lessons_completed = len(progress.get("completed_lessons", []))
-    has_perfect = any(r.get("score", 0) == 100 or r.get("score_final", 0) == 100 for r in test_results)
+    has_perfect = bool(perfect_test_ids)
     current_streak = streak.get("current", 0)
     max_streak = streak.get("max", 0)
     use_streak = max(current_streak, max_streak)
     
-    # Check section completion
+    # Fallback section completion for legacy/local content.
     sections_topics = {}
-    for t in INITIAL_TOPICS:
-        sec = t["section"]
-        if sec not in sections_topics:
-            sections_topics[sec] = set()
-        sections_topics[sec].add(t["id"])
+    if section_completion is None:
+        for t in INITIAL_TOPICS:
+            sec = t["section"]
+            if sec not in sections_topics:
+                sections_topics[sec] = set()
+            sections_topics[sec].add(t["id"])
     
     completed_lessons_set = set(progress.get("completed_lessons", []))
     
@@ -2342,9 +2362,12 @@ def compute_achievements(user: dict, test_results: list, xp: int, streak: dict, 
             unlocked = xp >= val
         elif cond.startswith("section_"):
             sec_name = cond.replace("section_", "").replace("_complete", "")
-            section_topics = sections_topics.get(sec_name, set())
-            if section_topics:
-                unlocked = section_topics.issubset(completed_lessons_set)
+            if section_completion is not None:
+                unlocked = bool(section_completion.get(sec_name))
+            else:
+                section_topics = sections_topics.get(sec_name, set())
+                if section_topics:
+                    unlocked = section_topics.issubset(completed_lessons_set)
         
         # Translate name/description if needed
         if lang != "ru" and lang in ACHIEVEMENTS_I18N and ach["id"] in ACHIEVEMENTS_I18N[lang]:
@@ -2366,11 +2389,29 @@ def compute_achievements(user: dict, test_results: list, xp: int, streak: dict, 
     
     return earned
 
-async def compute_section_progress(user: dict) -> list:
+async def load_profile_content_catalog() -> dict:
+    sections = PHYSICS_SECTIONS
+    tests = INITIAL_TESTS
+    tasks = INITIAL_TASKS
+
+    if is_postgres_configured():
+        try:
+            postgres_sections = await list_lesson_sections()
+            if postgres_sections:
+                sections = postgres_sections
+            tests = await list_practice_tests()
+            tasks = await list_practice_tasks()
+        except Exception as exc:
+            logger.warning("Failed to load profile content catalog from PostgreSQL: %s", exc)
+
+    return {"sections": sections, "tests": tests, "tasks": tasks}
+
+
+async def compute_section_progress(user: dict, test_results: list | None = None, catalog: dict | None = None) -> list:
     """Compute progress per physics section."""
     progress = user.get("progress", {})
-    completed = set(progress.get("completed_lessons", []))
-    completed_tests = set(progress.get("completed_tests", []))
+    completed_lessons = set(progress.get("completed_lessons", []))
+    completed_tests = compute_perfect_test_ids(test_results or [])
     completed_tasks = set(progress.get("completed_tasks", []))
 
     section_colors = {
@@ -2383,14 +2424,22 @@ async def compute_section_progress(user: dict) -> list:
         "astronomy": "#0EA5E9",
     }
 
-    sections = PHYSICS_SECTIONS
-    if is_postgres_configured():
-        try:
-            postgres_sections = await list_lesson_sections()
-            if postgres_sections:
-                sections = postgres_sections
-        except Exception as exc:
-            logger.warning("Failed to load lesson sections for profile progress from PostgreSQL: %s", exc)
+    catalog = catalog or await load_profile_content_catalog()
+    sections = catalog["sections"]
+    tests = catalog["tests"]
+    tasks = catalog["tasks"]
+
+    tests_by_section: dict[str, list] = {}
+    for item in tests:
+        section_id = item.get("section_id") or item.get("section")
+        if section_id:
+            tests_by_section.setdefault(section_id, []).append(item)
+
+    tasks_by_section: dict[str, list] = {}
+    for item in tasks:
+        section_id = item.get("section_id") or item.get("section")
+        if section_id:
+            tasks_by_section.setdefault(section_id, []).append(item)
 
     result = []
     for sec_key, sec_data in sections.items():
@@ -2399,18 +2448,30 @@ async def compute_section_progress(user: dict) -> list:
         for sub in sec_data.get("subsections", []):
             for topic in sub.get("topics", []):
                 total_topics += 1
-                if topic["id"] in completed:
+                if topic["id"] in completed_lessons:
                     completed_topics += 1
-        
-        percentage = int((completed_topics / total_topics) * 100) if total_topics > 0 else 0
+
+        section_tests = tests_by_section.get(sec_key, [])
+        section_tasks = tasks_by_section.get(sec_key, [])
+        total_tests = len(section_tests)
+        total_tasks = len(section_tasks)
+        completed_section_tests = sum(1 for item in section_tests if item.get("id") in completed_tests)
+        completed_section_tasks = sum(1 for item in section_tasks if item.get("id") in completed_tasks)
+
+        total_items = total_topics + total_tests + total_tasks
+        completed_items = completed_topics + completed_section_tests + completed_section_tasks
+        percentage = int((completed_items / total_items) * 100) if total_items > 0 else 0
         result.append({
             "section": sec_key,
             "name": sec_data["name"],
             "icon": sec_data.get("icon", "book"),
             "color": sec_data.get("color") or section_colors.get(sec_key, "#6366F1"),
-            "completed": completed_topics,
-            "total": total_topics,
+            "completed": completed_items,
+            "total": total_items,
             "percentage": percentage,
+            "lessons": {"completed": completed_topics, "total": total_topics},
+            "tests": {"completed": completed_section_tests, "total": total_tests},
+            "tasks": {"completed": completed_section_tasks, "total": total_tasks},
         })
     
     return result
@@ -2439,9 +2500,18 @@ async def get_profile_stats(
     worksheet_results = await db.worksheet_results.find({"student_id": user_id}).sort("created_at", -1).to_list(500)
     
     progress = current_user.get("progress", {})
-    tests_completed = len(progress.get("completed_tests", []))
+    perfect_test_ids = compute_perfect_test_ids(test_results)
+    tests_completed = len(perfect_test_ids)
     tasks_completed = len(progress.get("completed_tasks", []))
     lessons_completed = len(progress.get("completed_lessons", []))
+    catalog = await load_profile_content_catalog()
+    total_lessons = sum(
+        len(sub.get("topics", []))
+        for section in catalog["sections"].values()
+        for sub in section.get("subsections", [])
+    )
+    total_tests = len(catalog["tests"])
+    total_tasks = len(catalog["tasks"])
     
     # Average test score
     scores = [r.get("score_final") or r.get("score", 0) for r in test_results]
@@ -2460,8 +2530,13 @@ async def get_profile_stats(
     xp = compute_xp(current_user, test_results, daily_challenges)
     level = get_level(xp, lang)
     
-    # Achievements
-    achievements = compute_achievements(current_user, test_results, xp, streak, lang)
+    # Section progress and achievements
+    section_progress = await compute_section_progress(current_user, test_results, catalog)
+    section_completion = {
+        section["section"]: section["total"] > 0 and section["completed"] >= section["total"]
+        for section in section_progress
+    }
+    achievements = compute_achievements(current_user, test_results, xp, streak, lang, section_completion)
     
     # Save newly earned achievements
     earned_ids = [a["id"] for a in achievements if a["unlocked"]]
@@ -2470,9 +2545,6 @@ async def get_profile_stats(
             {"id": user_id},
             {"$set": {"earned_achievements": earned_ids}}
         )
-    
-    # Section progress
-    section_progress = await compute_section_progress(current_user)
     
     # Activity history (last 10)
     history = []
@@ -2521,6 +2593,9 @@ async def get_profile_stats(
             "tests_completed": tests_completed,
             "tasks_completed": tasks_completed,
             "lessons_completed": lessons_completed,
+            "tests_total": total_tests,
+            "tasks_total": total_tasks,
+            "lessons_total": total_lessons,
             "avg_score": avg_score,
             "best_score": best_score,
             "total_test_results": len(test_results),
@@ -3054,6 +3129,8 @@ from postgres import (
     is_postgres_configured,
     list_lesson_sections,
     list_physics_formulas,
+    list_practice_tasks,
+    list_practice_tests,
 )
 
 api_router.include_router(auth_router)
