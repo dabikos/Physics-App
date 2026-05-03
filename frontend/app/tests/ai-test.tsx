@@ -35,22 +35,51 @@ const DIFFICULTY_COLORS = {
 
 const AnimatedCircle = Reanimated.createAnimatedComponent(Circle);
 
+const SUPERSCRIPT_MAP: Record<string, string> = {
+  '⁰': '0',
+  '¹': '1',
+  '²': '2',
+  '³': '3',
+  '⁴': '4',
+  '⁵': '5',
+  '⁶': '6',
+  '⁷': '7',
+  '⁸': '8',
+  '⁹': '9',
+  '⁻': '-',
+};
+
+const SUBSCRIPT_MAP: Record<string, string> = {
+  '₀': '0',
+  '₁': '1',
+  '₂': '2',
+  '₃': '3',
+  '₄': '4',
+  '₅': '5',
+  '₆': '6',
+  '₇': '7',
+  '₈': '8',
+  '₉': '9',
+  'ₐ': 'a',
+  'ₑ': 'e',
+  'ₙ': 'n',
+};
+
+const normalizeScriptRuns = (value: string): string => {
+  return value
+    .replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (run) => `^{${[...run].map((char) => SUPERSCRIPT_MAP[char] || char).join('')}}`)
+    .replace(/[₀₁₂₃₄₅₆₇₈₉ₐₑₙ]+/g, (run) => `_{${[...run].map((char) => SUBSCRIPT_MAP[char] || char).join('')}}`);
+};
+
 const prepareMathContent = (value: string): string => {
   if (!value || /\$[^$]+\$|\\[a-zA-Z]+/.test(value)) {
     return value;
   }
 
-  const normalizeFormula = (formula: string) => formula
+  const normalizeFormula = (formula: string) => normalizeScriptRuns(formula)
     .replace(/×/g, '\\times ')
     .replace(/·/g, '\\cdot ')
     .replace(/÷/g, '\\div ')
-    .replace(/²/g, '^2')
-    .replace(/³/g, '^3')
-    .replace(/⁴/g, '^4')
-    .replace(/₀/g, '_0')
-    .replace(/₁/g, '_1')
-    .replace(/₂/g, '_2')
-    .replace(/₃/g, '_3')
     .replace(/π/g, '\\pi ')
     .replace(/ρ/g, '\\rho ')
     .replace(/ν/g, '\\nu ')
@@ -62,7 +91,7 @@ const prepareMathContent = (value: string): string => {
     .replace(/Δ/g, '\\Delta ');
 
   return value.replace(
-    /([A-Za-zαβγδεπθλμρσωνΔ][A-Za-z0-9_₀₁₂₃αβγδεπθλμρσωνΔ]*\s*[=≈]\s*[^,.!?;\n]+)/g,
+    /([A-Za-zαβγδεπθλμρσωνΔ][A-Za-z0-9_₀₁₂₃₄₅₆₇₈₉ₐₑₙαβγδεπθλμρσωνΔ]*\s*[=≈]\s*[^,.!?;\n]+)/g,
     (match) => `$${normalizeFormula(match.trim())}$`
   );
 };

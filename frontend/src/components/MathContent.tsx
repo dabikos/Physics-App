@@ -27,27 +27,53 @@ const hasFormulas = (text: string): boolean => {
   // Простые формулы без $...$: F = ma, v = s/t, p = rho gh
   if (/[A-Za-zА-Яа-яαβγδεπΔθλμρσωξνΣΩ][A-Za-zА-Яа-я0-9_αβγδεπΔθλμρσωξνΣΩ]*\s*[=≈]\s*[^.!?\n]+/.test(text)) return true;
   // Проверяем специальные символы
-  if (/[²³⁴⁵⁶⁻⁰¹₀₁₂₃αβγδεπΔ∑∫√×÷≈≠≤≥∞θλμρσωνΣΩ→←]/.test(text)) return true;
+  if (/[²³⁴⁵⁶⁷⁸⁹⁻⁰¹₀₁₂₃₄₅₆₇₈₉ₐₑₙαβγδεπΔ∑∫√×÷≈≠≤≥∞θλμρσωνΣΩ→←]/.test(text)) return true;
   return false;
 };
 
-const normalizeFormulaSymbols = (value: string): string => {
+const SUPERSCRIPT_MAP: Record<string, string> = {
+  '⁰': '0',
+  '¹': '1',
+  '²': '2',
+  '³': '3',
+  '⁴': '4',
+  '⁵': '5',
+  '⁶': '6',
+  '⁷': '7',
+  '⁸': '8',
+  '⁹': '9',
+  '⁻': '-',
+};
+
+const SUBSCRIPT_MAP: Record<string, string> = {
+  '₀': '0',
+  '₁': '1',
+  '₂': '2',
+  '₃': '3',
+  '₄': '4',
+  '₅': '5',
+  '₆': '6',
+  '₇': '7',
+  '₈': '8',
+  '₉': '9',
+  'ₐ': 'a',
+  'ₑ': 'e',
+  'ₙ': 'n',
+};
+
+const normalizeScriptRuns = (value: string): string => {
   return value
+    .replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, (run) => `^{${[...run].map((char) => SUPERSCRIPT_MAP[char] || char).join('')}}`)
+    .replace(/[₀₁₂₃₄₅₆₇₈₉ₐₑₙ]+/g, (run) => `_{${[...run].map((char) => SUBSCRIPT_MAP[char] || char).join('')}}`);
+};
+
+const normalizeFormulaSymbols = (value: string): string => {
+  return normalizeScriptRuns(value)
     .replace(/×/g, '\\times ')
     .replace(/·/g, '\\cdot ')
     .replace(/÷/g, '\\div ')
     .replace(/√\(([^)]+)\)/g, '\\sqrt{$1}')
     .replace(/√([A-Za-z0-9_]+)/g, '\\sqrt{$1}')
-    .replace(/²/g, '^2')
-    .replace(/³/g, '^3')
-    .replace(/⁴/g, '^4')
-    .replace(/⁵/g, '^5')
-    .replace(/⁶/g, '^6')
-    .replace(/⁻/g, '^-')
-    .replace(/₀/g, '_0')
-    .replace(/₁/g, '_1')
-    .replace(/₂/g, '_2')
-    .replace(/₃/g, '_3')
     .replace(/π/g, '\\pi ')
     .replace(/ρ/g, '\\rho ')
     .replace(/ν/g, '\\nu ')
@@ -73,7 +99,7 @@ const autoWrapInlineFormulas = (text: string): string => {
       }
 
       return line.replace(
-        /([A-Za-zαβγδεπΔθλμρσωξνΣΩ][A-Za-z0-9_αβγδεπΔθλμρσωξνΣΩ]*(?:\s*[=≈+\-*/^·×÷]\s*[\dA-Za-zαβγδεπΔθλμρσωξνΣΩ().,_⁰¹²³⁴⁵⁶⁷⁸⁹⁻]+)+)/g,
+        /([A-Za-zαβγδεπΔθλμρσωξνΣΩ][A-Za-z0-9_₀₁₂₃₄₅₆₇₈₉ₐₑₙαβγδεπΔθλμρσωξνΣΩ]*(?:\s*[=≈+\-*/^·×÷]\s*[\dA-Za-zαβγδεπΔθλμρσωξνΣΩ().,_⁰¹²³⁴⁵⁶⁷⁸⁹⁻₀₁₂₃₄₅₆₇₈₉ₐₑₙ]+)+)/g,
         (match) => `$${normalizeFormulaSymbols(match.trim())}$`
       );
     })
