@@ -137,47 +137,50 @@ async def get_admin_settings(_: dict = Depends(require_admin)):
 
 @router.get("/admin/content/overview")
 async def get_admin_content_overview(_: dict = Depends(require_admin)):
-    pool = await get_postgres_pool()
-    async with pool.acquire() as conn:
-        row = await conn.fetchrow(
-            """
-            SELECT
-                (SELECT COUNT(*) FROM lesson_sections) AS sections,
-                (SELECT COUNT(*) FROM lesson_subsections) AS subsections,
-                (SELECT COUNT(*) FROM lesson_topics) AS topics,
-                (SELECT COUNT(*) FROM practice_tests) AS tests,
-                (SELECT COALESCE(SUM(jsonb_array_length(questions)), 0) FROM practice_tests) AS test_questions,
-                (SELECT COUNT(*) FROM practice_tasks) AS tasks,
-                (SELECT COUNT(*) FROM physics_formulas) AS formulas,
-                (SELECT COUNT(*) FROM app_settings) AS settings,
-                (SELECT COUNT(*) FROM ai_prompts) AS ai_prompts,
-                (SELECT COUNT(*) FROM notification_campaigns) AS notification_campaigns
-            """
-        )
+    try:
+        pool = await get_postgres_pool()
+        async with pool.acquire() as conn:
+            row = await conn.fetchrow(
+                """
+                SELECT
+                    (SELECT COUNT(*) FROM lesson_sections) AS sections,
+                    (SELECT COUNT(*) FROM lesson_subsections) AS subsections,
+                    (SELECT COUNT(*) FROM lesson_topics) AS topics,
+                    (SELECT COUNT(*) FROM practice_tests) AS tests,
+                    (SELECT COALESCE(SUM(jsonb_array_length(questions)), 0) FROM practice_tests) AS test_questions,
+                    (SELECT COUNT(*) FROM practice_tasks) AS tasks,
+                    (SELECT COUNT(*) FROM physics_formulas) AS formulas,
+                    (SELECT COUNT(*) FROM app_settings) AS settings,
+                    (SELECT COUNT(*) FROM ai_prompts) AS ai_prompts,
+                    (SELECT COUNT(*) FROM notification_campaigns) AS notification_campaigns
+                """
+            )
 
-        sections = await conn.fetch(
-            """
-            SELECT
-                s.id,
-                s.name,
-                s.icon,
-                s.color,
-                s.is_published,
-                COUNT(DISTINCT ss.id) AS subsection_count,
-                COUNT(DISTINCT lt.id) AS topic_count,
-                COUNT(DISTINCT pt.id) AS test_count,
-                COUNT(DISTINCT ptask.id) AS task_count,
-                COUNT(DISTINCT pf.id) AS formula_count
-            FROM lesson_sections s
-            LEFT JOIN lesson_subsections ss ON ss.section_id = s.id
-            LEFT JOIN lesson_topics lt ON lt.section_id = s.id
-            LEFT JOIN practice_tests pt ON pt.section_id = s.id
-            LEFT JOIN practice_tasks ptask ON ptask.section_id = s.id
-            LEFT JOIN physics_formulas pf ON pf.section_id = s.id
-            GROUP BY s.id
-            ORDER BY s.order_index, s.id
-            """
-        )
+            sections = await conn.fetch(
+                """
+                SELECT
+                    s.id,
+                    s.name,
+                    s.icon,
+                    s.color,
+                    s.is_published,
+                    COUNT(DISTINCT ss.id) AS subsection_count,
+                    COUNT(DISTINCT lt.id) AS topic_count,
+                    COUNT(DISTINCT pt.id) AS test_count,
+                    COUNT(DISTINCT ptask.id) AS task_count,
+                    COUNT(DISTINCT pf.id) AS formula_count
+                FROM lesson_sections s
+                LEFT JOIN lesson_subsections ss ON ss.section_id = s.id
+                LEFT JOIN lesson_topics lt ON lt.section_id = s.id
+                LEFT JOIN practice_tests pt ON pt.section_id = s.id
+                LEFT JOIN practice_tasks ptask ON ptask.section_id = s.id
+                LEFT JOIN physics_formulas pf ON pf.section_id = s.id
+                GROUP BY s.id
+                ORDER BY s.order_index, s.id
+                """
+            )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Admin overview failed: {exc}") from exc
 
     return {
         "totals": _serialize_record(row),
