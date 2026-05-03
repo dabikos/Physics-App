@@ -390,7 +390,9 @@
     "standardCount": "Стандартты ({{count}})",
     "advancedCount": "Күрделі ({{count}})",
     "olympiadCount": "Олимпиадалық ({{count}})",
-    "loadError": "Тестті жүктеу мүмкін болмады"
+    "loadError": "Тестті жүктеу мүмкін болмады",
+    "selectSubsectionDescription": "Алдымен бөлімшені, содан кейін нақты тақырып бойынша тестті таңдаңыз.",
+    "subsectionCountSummary": "{{tests}} тест • {{questions}} сұрақ"
   },
   "tasks": {
     "title": "Есептер",
@@ -436,7 +438,15 @@
     "formulasLabel": "Формулалар",
     "solutionLabel": "Шешім",
     "answerLabel": "Жауап:",
-    "showSolution": "Шешімді көрсету"
+    "showSolution": "Шешімді көрсету",
+    "selectSubsectionDescription": "Алдымен бөлімшені, содан кейін толық шешімі бар есепті таңдаңыз.",
+    "countSummary": "{{count}} есеп",
+    "yourAnswerTitle": "Сіздің жауабыңыз",
+    "answerPlaceholder": "Шешімді көрмес бұрын жауабыңызды жазыңыз",
+    "answerMatchFeedback": "Жауап сәйкес сияқты. Шешімді ашып, ойлау барысын тексеруге болады.",
+    "answerMismatchFeedback": "Жауап автоматты түрде сәйкес келмеді. Шешімді ашып, бірліктерді, дөңгелектеуді және мағынасын салыстырыңыз.",
+    "hideHint": "Кеңесті жасыру",
+    "hideSolution": "Шешімді жасыру"
   },
   "formulas": {
     "title": "Формулалар",
@@ -571,7 +581,9 @@
     "quantumPhysics": "Кванттық физика",
     "nuclearPhysics": "Ядролық физика",
     "radioactivity": "Радиоактивтілік",
-    "nuclearReactions": "Ядролық реакциялар"
+    "nuclearReactions": "Ядролық реакциялар",
+    "relativity": "Арнайы салыстырмалылық теориясы",
+    "astronomy": "Астрономия"
   },
   "notifications": {
     "title": "Хабарландырулар",

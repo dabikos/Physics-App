@@ -390,7 +390,9 @@
     "standardCount": "Стандартные ({{count}})",
     "advancedCount": "Продвинутые ({{count}})",
     "olympiadCount": "Олимпиадные ({{count}})",
-    "loadError": "Не удалось загрузить тест"
+    "loadError": "Не удалось загрузить тест",
+    "selectSubsectionDescription": "Сначала выберите подраздел, затем тест по конкретной теме.",
+    "subsectionCountSummary": "{{tests}} тестов • {{questions}} вопросов"
   },
   "tasks": {
     "title": "Задачи",
@@ -436,7 +438,15 @@
     "formulasLabel": "Формулы",
     "solutionLabel": "Решение",
     "answerLabel": "Ответ:",
-    "showSolution": "Показать решение"
+    "showSolution": "Показать решение",
+    "selectSubsectionDescription": "Сначала выберите подраздел, затем задачу с полным решением.",
+    "countSummary": "{{count}} задач",
+    "yourAnswerTitle": "Ваш ответ",
+    "answerPlaceholder": "Напишите ответ перед просмотром решения",
+    "answerMatchFeedback": "Похоже, ответ совпадает. Можно открыть решение и сверить ход рассуждений.",
+    "answerMismatchFeedback": "Ответ не совпал автоматически. Откройте решение и сравните единицы, округление и смысл.",
+    "hideHint": "Скрыть подсказку",
+    "hideSolution": "Скрыть решение"
   },
   "formulas": {
     "title": "Формулы",
@@ -571,7 +581,9 @@
     "quantumPhysics": "Квантовая физика",
     "nuclearPhysics": "Ядерная физика",
     "radioactivity": "Радиоактивность",
-    "nuclearReactions": "Ядерные реакции"
+    "nuclearReactions": "Ядерные реакции",
+    "relativity": "СТО",
+    "astronomy": "Астрономия"
   },
   "notifications": {
     "title": "Уведомления",

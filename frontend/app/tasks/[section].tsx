@@ -83,7 +83,7 @@ export default function TasksSubsectionsScreen() {
       >
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('tasks.practicalTasks')}</Text>
         <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>
-          Сначала выберите подраздел, затем задачу с полным решением.
+          {t('tasks.selectSubsectionDescription')}
         </Text>
 
         {sectionData.subsections.map((subsection) => {
@@ -103,7 +103,7 @@ export default function TasksSubsectionsScreen() {
               <View style={styles.cardInfo}>
                 <Text style={[styles.cardTitle, { color: colors.text }]}>{subsection.name}</Text>
                 <Text style={[styles.cardSubtitle, { color: colors.textTertiary }]}>
-                  {taskCount} задач
+                  {t('tasks.countSummary', { count: taskCount })}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={22} color={colors.textMuted} />

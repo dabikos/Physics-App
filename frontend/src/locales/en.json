@@ -390,7 +390,9 @@
     "standardCount": "Standard ({{count}})",
     "advancedCount": "Advanced ({{count}})",
     "olympiadCount": "Olympiad ({{count}})",
-    "loadError": "Failed to load test"
+    "loadError": "Failed to load test",
+    "selectSubsectionDescription": "First choose a subsection, then choose a test for a specific topic.",
+    "subsectionCountSummary": "{{tests}} tests • {{questions}} questions"
   },
   "tasks": {
     "title": "Tasks",
@@ -436,7 +438,15 @@
     "formulasLabel": "Formulas",
     "solutionLabel": "Solution",
     "answerLabel": "Answer:",
-    "showSolution": "Show solution"
+    "showSolution": "Show solution",
+    "selectSubsectionDescription": "First choose a subsection, then choose a problem with a full solution.",
+    "countSummary": "{{count}} problems",
+    "yourAnswerTitle": "Your answer",
+    "answerPlaceholder": "Write your answer before viewing the solution",
+    "answerMatchFeedback": "The answer seems to match. You can open the solution and check the reasoning.",
+    "answerMismatchFeedback": "The answer did not match automatically. Open the solution and compare units, rounding, and meaning.",
+    "hideHint": "Hide hint",
+    "hideSolution": "Hide solution"
   },
   "formulas": {
     "title": "Formulas",
@@ -571,7 +581,9 @@
     "quantumPhysics": "Quantum Physics",
     "nuclearPhysics": "Nuclear Physics",
     "radioactivity": "Radioactivity",
-    "nuclearReactions": "Nuclear Reactions"
+    "nuclearReactions": "Nuclear Reactions",
+    "relativity": "Special Relativity",
+    "astronomy": "Astronomy"
   },
   "notifications": {
     "title": "Notifications",

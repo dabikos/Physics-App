@@ -69,12 +69,12 @@ export default function PracticeTasksListScreen() {
   const groupedTasks = useMemo(() => {
     const groups: Record<string, PracticeTask[]> = {};
     for (const task of tasks) {
-      const title = task.topic_title || 'Задачи';
+      const title = task.topic_title || t('tasks.title');
       groups[title] ||= [];
       groups[title].push(task);
     }
     return Object.entries(groups);
-  }, [tasks]);
+  }, [tasks, t]);
 
   if (!sectionData || !section || !subsection) {
     return (
@@ -98,7 +98,7 @@ export default function PracticeTasksListScreen() {
       >
         <View style={[styles.statsContainer, { backgroundColor: colors.card }]}>
           <Text style={[styles.statsText, { color: colors.textTertiary }]}>
-            {tasks.length} задач
+            {t('tasks.countSummary', { count: tasks.length })}
           </Text>
         </View>
 

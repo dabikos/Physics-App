@@ -468,7 +468,7 @@ export default function AITestScreen() {
           </View>
           
           <MathContent 
-            content={question.question} 
+            content={prepareMathContent(question.question)} 
             fontSize={17} 
             textColor={colors.text}
           />

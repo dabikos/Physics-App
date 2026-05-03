@@ -86,7 +86,7 @@ export default function TestsSubsectionsScreen() {
       >
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('tests.readyTests')}</Text>
         <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>
-          Сначала выберите подраздел, затем тест по конкретной теме.
+          {t('tests.selectSubsectionDescription')}
         </Text>
 
         {sectionData.subsections.map((subsection) => {
@@ -108,7 +108,7 @@ export default function TestsSubsectionsScreen() {
               <View style={styles.cardInfo}>
                 <Text style={[styles.cardTitle, { color: colors.text }]}>{subsection.name}</Text>
                 <Text style={[styles.cardSubtitle, { color: colors.textTertiary }]}>
-                  {testsCount} тестов • {questionsCount} вопросов
+                  {t('tests.subsectionCountSummary', { tests: testsCount, questions: questionsCount })}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={22} color={colors.textMuted} />

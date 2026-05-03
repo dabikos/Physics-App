@@ -182,7 +182,7 @@ export default function PracticeTaskDetailScreen() {
             <View style={[styles.answerInputCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <View style={styles.infoHeader}>
                 <Ionicons name="create-outline" size={18} color={colors.accent} />
-                <Text style={[styles.infoTitle, { color: colors.accent }]}>Ваш ответ</Text>
+                <Text style={[styles.infoTitle, { color: colors.accent }]}>{t('tasks.yourAnswerTitle')}</Text>
               </View>
               <TextInput
                 style={[styles.answerInput, { color: colors.text, backgroundColor: colors.inputBg, borderColor: colors.border }]}
@@ -191,7 +191,7 @@ export default function PracticeTaskDetailScreen() {
                   setUserAnswer(value);
                   setAnswerChecked(false);
                 }}
-                placeholder="Напишите ответ перед просмотром решения"
+                placeholder={t('tasks.answerPlaceholder')}
                 placeholderTextColor={colors.textMuted}
                 multiline
               />
@@ -217,8 +217,8 @@ export default function PracticeTaskDetailScreen() {
                   />
                   <Text style={[styles.answerFeedbackText, { color: isAnswerCorrect ? '#047857' : '#92400E' }]}>
                     {isAnswerCorrect
-                      ? 'Похоже, ответ совпадает. Можно открыть решение и сверить ход рассуждений.'
-                      : 'Ответ не совпал автоматически. Откройте решение и сравните единицы, округление и смысл.'}
+                      ? t('tasks.answerMatchFeedback')
+                      : t('tasks.answerMismatchFeedback')}
                   </Text>
                 </View>
               )}
@@ -232,7 +232,7 @@ export default function PracticeTaskDetailScreen() {
             >
               <Ionicons name="bulb-outline" size={18} color="#F59E0B" />
               <Text style={[styles.secondaryButtonText, { color: colors.text }]}>
-                {showHint ? 'Скрыть подсказку' : t('tasks.hint')}
+                {showHint ? t('tasks.hideHint') : t('tasks.hint')}
               </Text>
             </TouchableOpacity>
 
@@ -241,7 +241,7 @@ export default function PracticeTaskDetailScreen() {
               onPress={() => setShowSolution((value) => !value)}
             >
               <Text style={styles.primaryButtonText}>
-                {showSolution ? 'Скрыть решение' : t('tasks.showSolution')}
+                {showSolution ? t('tasks.hideSolution') : t('tasks.showSolution')}
               </Text>
               <Ionicons name={showSolution ? 'chevron-up' : 'chevron-down'} size={18} color="#FFFFFF" />
             </TouchableOpacity>
