@@ -1,0 +1,1814 @@
+{
+  "en": {
+    "tests": {
+      "relativity-einstein-postulates-test": {
+        "title": "Test: Einstein's Postulates",
+        "questions": [
+          {
+            "question": "Einstein's first postulate states that:",
+            "options": [
+              "time is absolute for all observers",
+              "accelerated frames are always equivalent to inertial frames",
+              "light propagates only in a resting frame",
+              "the laws of physics are the same in all inertial reference frames"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Einstein's second postulate states that the speed of light in vacuum:",
+            "options": [
+              "depends only on the observer's mass",
+              "is the same for all inertial observers",
+              "equals the speed of sound",
+              "adds to the source velocity according to Galilean mechanics"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The approximate value of the speed of light is:",
+            "options": [
+              "3×10⁶ m/s",
+              "3×10⁸ m/s",
+              "9.8 m/s²",
+              "340 m/s"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why does special relativity require revising ideas about time and length?",
+            "options": [
+              "inertial frames do not exist",
+              "the constancy of the speed of light is incompatible with classical velocity addition",
+              "all bodies move faster than light",
+              "light has no energy"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Which reference frame is called inertial?",
+            "options": [
+              "a frame where friction is always present",
+              "a frame where a free body moves uniformly in a straight line or remains at rest",
+              "a frame tied only to Earth",
+              "any rotating frame"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-lorentz-transformations-test": {
+        "title": "Test: Lorentz Transformations",
+        "questions": [
+          {
+            "question": "The Lorentz factor is:",
+            "options": [
+              "γ = v/c",
+              "γ = 1/√(1 - v²/c²)",
+              "γ = √(1 - v²/c²)",
+              "γ = 1 - v/c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "At v = 0, the Lorentz factor equals:",
+            "options": [
+              "0",
+              "c",
+              "1",
+              "infinity"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "As speed v approaches c, the Lorentz factor:",
+            "options": [
+              "becomes negative",
+              "increases",
+              "is always 1",
+              "decreases to zero"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Lorentz transformations replace Galilean transformations when:",
+            "options": [
+              "speeds are very small and there is no light",
+              "a body rests in water",
+              "only statics is considered",
+              "speeds are comparable to the speed of light"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The formula x' = γ(x - vt) shows that the coordinate of an event depends on:",
+            "options": [
+              "only charge",
+              "only body mass",
+              "only temperature",
+              "coordinate, time, and relative velocity of the frame"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "relativity-time-dilation-test": {
+        "title": "Test: Time Dilation",
+        "questions": [
+          {
+            "question": "The time dilation formula is:",
+            "options": [
+              "Δt = vΔt₀",
+              "Δt = γ·Δt₀",
+              "Δt = Δt₀ - γ",
+              "Δt = Δt₀/γ"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Proper time Δt₀ is measured in the frame where:",
+            "options": [
+              "there is no clock",
+              "the observer must be accelerated",
+              "the clock is at rest",
+              "the clock moves at the speed of light"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "For a moving clock, an external observer measures time that is:",
+            "options": [
+              "always zero",
+              "less than proper time",
+              "greater than proper time",
+              "negative"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If γ = 2, then the moving clock runs:",
+            "options": [
+              "2 times faster",
+              "backward in time",
+              "unchanged",
+              "2 times slower for an external observer"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Time dilation becomes significantly noticeable:",
+            "options": [
+              "only for sound",
+              "at speeds comparable to c",
+              "only in a stationary laboratory",
+              "only at 1 m/s"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-length-contraction-test": {
+        "title": "Test: Length Contraction",
+        "questions": [
+          {
+            "question": "The length contraction formula is:",
+            "options": [
+              "L = L₀ - c",
+              "L = γL₀",
+              "L = L₀/γ",
+              "L = L₀ + γ"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Proper length L₀ is measured in the frame where the object:",
+            "options": [
+              "has zero mass",
+              "is absent",
+              "is at rest",
+              "moves at the speed of light"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Only which size contracts?",
+            "options": [
+              "only perpendicular to motion",
+              "equally in all directions",
+              "only mass",
+              "along the direction of motion"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If γ = 2, a moving ruler has length along the motion:",
+            "options": [
+              "0",
+              "2L₀",
+              "L₀/2",
+              "L₀"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "At small speeds v << c, length contraction is:",
+            "options": [
+              "equal to 100%",
+              "infinite",
+              "practically unnoticeable",
+              "changes the sign of length"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "relativity-invariant-interval-test": {
+        "title": "Test: Invariance of the Interval",
+        "questions": [
+          {
+            "question": "The interval between events in special relativity is:",
+            "options": [
+              "s² = mv²/2",
+              "s² = (cΔt)² + Δr² always",
+              "s² = (cΔt)² - Δr²",
+              "s² = Δr/(cΔt)"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Invariance of the interval means that s²:",
+            "options": [
+              "is always zero",
+              "changes arbitrarily",
+              "is the same in all inertial frames",
+              "depends only on temperature"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "For a light signal, the interval:",
+            "options": [
+              "equals the photon mass",
+              "is always negative",
+              "is always positive",
+              "is zero"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If (cΔt)² > Δr², the interval is:",
+            "options": [
+              "necessarily lightlike",
+              "timelike",
+              "impossible",
+              "spacelike"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If Δr² > (cΔt)², the events:",
+            "options": [
+              "occur at one point",
+              "cannot be causally connected by a signal with speed no greater than c",
+              "have zero distance",
+              "necessarily one causes the other"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-mass-energy-emc2-test": {
+        "title": "Test: Mass-Energy Relation E = mc²",
+        "questions": [
+          {
+            "question": "Rest energy of a body is:",
+            "options": [
+              "E₀ = mv",
+              "E₀ = I²R",
+              "E₀ = m/c²",
+              "E₀ = mc²"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the mass of a system decreases by Δm, the released energy is:",
+            "options": [
+              "ΔE = Δm + c",
+              "ΔE = Δm·c²",
+              "ΔE = c²/Δm",
+              "ΔE = Δm/c²"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Even a body at rest has energy because:",
+            "options": [
+              "it has temperature 0 K",
+              "mass is equivalent to energy",
+              "light is always inside it",
+              "it must be moving"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "A small mass defect gives large energy because:",
+            "options": [
+              "c² is very small",
+              "energy is measured only in kilograms",
+              "mass is unrelated to energy",
+              "c² is very large"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The formula E = mc² is especially important for:",
+            "options": [
+              "Archimedes' law",
+              "nuclear reactions",
+              "the law of reflection of light",
+              "calculating wire resistance"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-relativistic-momentum-test": {
+        "title": "Test: Relativistic Momentum",
+        "questions": [
+          {
+            "question": "Relativistic momentum of a particle is:",
+            "options": [
+              "p = mv/γ",
+              "p = γm/c",
+              "p = m/v",
+              "p = γmv"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "At small speeds v << c, relativistic momentum:",
+            "options": [
+              "does not depend on mass",
+              "is always zero",
+              "becomes the classical p = mv",
+              "becomes infinite"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "As speed approaches c, the momentum of a massive particle:",
+            "options": [
+              "decreases to zero",
+              "becomes negative",
+              "increases without reaching the speed of light",
+              "stops depending on speed"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The Lorentz factor in the momentum formula accounts for:",
+            "options": [
+              "particle temperature",
+              "air friction",
+              "nuclear charge",
+              "relativistic increase of momentum at high speeds"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "For a photon, momentum is related to energy as:",
+            "options": [
+              "p = Ec",
+              "p = E/c",
+              "p = 0 always",
+              "p = c/E"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-relativistic-energy-test": {
+        "title": "Test: Relativistic Energy",
+        "questions": [
+          {
+            "question": "The total relativistic energy of a particle is:",
+            "options": [
+              "E = p/c",
+              "E = γmc²",
+              "E = mc²/γ",
+              "E = mv²/2"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The relation between energy, momentum, and mass is:",
+            "options": [
+              "E² = p²/c² - m²c⁴",
+              "E² = p²c² + m²c⁴",
+              "E = I²R",
+              "E = p²/2m only always"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "At v = 0, the total energy of a massive particle equals:",
+            "options": [
+              "pc",
+              "mv",
+              "mc²",
+              "0"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Kinetic energy in special relativity is:",
+            "options": [
+              "K = mc²/γ",
+              "K = (γ - 1)mc²",
+              "K = 0 for any v",
+              "K = γmc²"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "For a photon with m = 0:",
+            "options": [
+              "p = 0 at any energy",
+              "E = 0 always",
+              "E = pc",
+              "E = mc²"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "relativity-lightspeed-limit-test": {
+        "title": "Test: Impossibility of Reaching the Speed of Light",
+        "questions": [
+          {
+            "question": "A massive particle cannot reach the speed of light because as v → c:",
+            "options": [
+              "energy becomes negative",
+              "rest mass disappears",
+              "γ tends to zero",
+              "γ tends to infinity"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "For a body with nonzero rest mass in special relativity:",
+            "options": [
+              "v is unlimited",
+              "v < c",
+              "v = c always",
+              "v > c with enough force"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Particles with zero rest mass, for example photons, move in vacuum:",
+            "options": [
+              "at speed 0",
+              "at the speed of sound",
+              "at speed c",
+              "faster than c"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The closer the speed of a massive particle is to c, the more additional energy mainly:",
+            "options": [
+              "necessarily destroys the particle",
+              "increases γ and momentum, rather than bringing the speed to c",
+              "makes the speed greater than c",
+              "decreases rest energy"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Transmission of a signal faster than light in special relativity:",
+            "options": [
+              "is necessary for light",
+              "would violate causality",
+              "is ordinary mechanical motion",
+              "has nothing to do with time"
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "relativity-einstein-postulates-task-1": {
+        "topic_title": "Einstein's Postulates",
+        "title": "A spacecraft flies at speed 0.6c and emits a light pulse forward. What speed of light will an observer on Earth measure?",
+        "problem_text": "A spacecraft flies at speed 0.6c and emits a light pulse forward. What speed of light will an observer on Earth measure?",
+        "given_data": "vspacecraft = 0.6c\nlight emitted forward",
+        "find_text": "speed of light for Earth - ?",
+        "solution": "According to Einstein's second postulate, the speed of light in vacuum is the same for all inertial observers.\nIt does not add to the source speed as c + 0.6c.",
+        "answer": "c = 3×10⁸ m/s."
+      },
+      "relativity-einstein-postulates-task-2": {
+        "topic_title": "Einstein's Postulates",
+        "title": "Two inertial observers move uniformly relative to each other. Can one of them consider himself truly at rest according to special relativity?",
+        "problem_text": "Two inertial observers move uniformly relative to each other. Can one of them consider himself truly at rest according to special relativity?",
+        "given_data": "two inertial frames\nuniform relative motion",
+        "find_text": "is there a preferred frame - ?",
+        "solution": "The first postulate states that all inertial frames are equivalent.\nNo inertial frame is absolute or preferred.",
+        "answer": "No, there is no preferred inertial frame."
+      },
+      "relativity-einstein-postulates-task-3": {
+        "topic_title": "Einstein's Postulates",
+        "title": "Light travels a distance of 900000 km in vacuum. How long does this path take?",
+        "problem_text": "Light travels a distance of 900000 km in vacuum. How long does this path take?",
+        "given_data": "s = 900000 km = 9×10⁸ m\nc = 3×10⁸ m/s",
+        "find_text": "t - ?",
+        "solution": "t = s/c = 9×10⁸ / 3×10⁸ = 3 s.",
+        "answer": "3 s."
+      },
+      "relativity-einstein-postulates-task-4": {
+        "topic_title": "Einstein's Postulates",
+        "title": "Why did the Michelson-Morley experiment become important for special relativity?",
+        "problem_text": "Why did the Michelson-Morley experiment become important for special relativity?",
+        "given_data": "the speed of light did not depend on Earth's motion",
+        "find_text": "physical conclusion - ?",
+        "solution": "The experiment did not detect motion relative to the ether.\nThis agrees with the postulate of the constancy of the speed of light and with rejecting a preferred absolute reference frame.",
+        "answer": "The experiment supported the constancy of the speed of light and equivalence of inertial frames."
+      },
+      "relativity-einstein-postulates-task-5": {
+        "topic_title": "Einstein's Postulates",
+        "title": "In classical mechanics, light from a source moving toward an observer at 0.1c would be expected to have speed 1.1c. What answer does special relativity give?",
+        "problem_text": "In classical mechanics, light from a source moving toward an observer at 0.1c would be expected to have speed 1.1c. What answer does special relativity give?",
+        "given_data": "vsource = 0.1c\nclassically expected c + 0.1c",
+        "find_text": "speed of light by special relativity - ?",
+        "solution": "In special relativity, the speed of light in vacuum does not depend on the source speed.\nThe observer measures c, not 1.1c.",
+        "answer": "c."
+      },
+      "relativity-lorentz-transformations-task-1": {
+        "topic_title": "Lorentz Transformations",
+        "title": "Find γ for speed v = 0.6c.",
+        "problem_text": "Find γ for speed v = 0.6c.",
+        "given_data": "v = 0.6c\nγ = 1/√(1 - v²/c²)",
+        "find_text": "γ - ?",
+        "solution": "v²/c² = 0.36.\nγ = 1/√(1 - 0.36) = 1/√0.64 = 1/0.8 = 1.25.",
+        "answer": "γ = 1.25."
+      },
+      "relativity-lorentz-transformations-task-2": {
+        "topic_title": "Lorentz Transformations",
+        "title": "Find γ for speed v = 0.8c.",
+        "problem_text": "Find γ for speed v = 0.8c.",
+        "given_data": "v = 0.8c",
+        "find_text": "γ - ?",
+        "solution": "v²/c² = 0.64.\nγ = 1/√(1 - 0.64) = 1/√0.36 = 1/0.6 ≈ 1.67.",
+        "answer": "γ ≈ 1.67."
+      },
+      "relativity-lorentz-transformations-task-3": {
+        "topic_title": "Lorentz Transformations",
+        "title": "An event has coordinate x = 9×10⁸ m and time t = 2 s in frame S. Frame S' moves at speed 0.5c. Take γ ≈ 1.155. Find x'.",
+        "problem_text": "An event has coordinate x = 9×10⁸ m and time t = 2 s in frame S. Frame S' moves at speed 0.5c. Take γ ≈ 1.155. Find x'.",
+        "given_data": "x = 9×10⁸ m\nt = 2 s\nv = 0.5c = 1.5×10⁸ m/s\nγ = 1.155",
+        "find_text": "x' - ?",
+        "solution": "x' = γ(x - vt).\nvt = 1.5×10⁸ · 2 = 3×10⁸ m.\nx' = 1.155 · (9×10⁸ - 3×10⁸) = 1.155 · 6×10⁸ = 6.93×10⁸ m.",
+        "answer": "6.93×10⁸ m."
+      },
+      "relativity-lorentz-transformations-task-4": {
+        "topic_title": "Lorentz Transformations",
+        "title": "Why do Lorentz transformations become Galilean transformations at small speeds?",
+        "problem_text": "Why do Lorentz transformations become Galilean transformations at small speeds?",
+        "given_data": "v << c",
+        "find_text": "physical approximation - ?",
+        "solution": "If v²/c² is very small, then γ ≈ 1.\nThen x' = γ(x - vt) approximately becomes x' = x - vt, as in classical mechanics.",
+        "answer": "At v << c, the Lorentz factor is almost 1."
+      },
+      "relativity-lorentz-transformations-task-5": {
+        "topic_title": "Lorentz Transformations",
+        "title": "At v = 0.99c, γ is much greater than 1. What does this mean for measurements of time and length?",
+        "problem_text": "At v = 0.99c, γ is much greater than 1. What does this mean for measurements of time and length?",
+        "given_data": "v = 0.99c\nγ >> 1",
+        "find_text": "physical meaning of large γ - ?",
+        "solution": "A large γ means strong relativistic effects.\nMoving clocks slow down noticeably, and lengths along the direction of motion contract noticeably.",
+        "answer": "At speeds near c, special-relativistic effects become large."
+      },
+      "relativity-time-dilation-task-1": {
+        "topic_title": "Time Dilation",
+        "title": "On a spacecraft, 4 years of proper time passed. The spacecraft moves so that γ = 1.25. How much time passed on Earth?",
+        "problem_text": "On a spacecraft, 4 years of proper time passed. The spacecraft moves so that γ = 1.25. How much time passed on Earth?",
+        "given_data": "Δt₀ = 4 years\nγ = 1.25",
+        "find_text": "Δt - ?",
+        "solution": "Δt = γΔt₀ = 1.25 · 4 = 5 years.",
+        "answer": "5 years."
+      },
+      "relativity-time-dilation-task-2": {
+        "topic_title": "Time Dilation",
+        "title": "A muon lives 2 μs in its own frame. In the laboratory γ = 10. What lifetime will be measured in the laboratory?",
+        "problem_text": "A muon lives 2 μs in its own frame. In the laboratory γ = 10. What lifetime will be measured in the laboratory?",
+        "given_data": "Δt₀ = 2 μs\nγ = 10",
+        "find_text": "Δt - ?",
+        "solution": "Δt = γΔt₀ = 10 · 2 = 20 μs.",
+        "answer": "20 μs."
+      },
+      "relativity-time-dilation-task-3": {
+        "topic_title": "Time Dilation",
+        "title": "For a particle, the lifetime in the laboratory is 15 μs, and the proper time is 5 μs. Find γ.",
+        "problem_text": "For a particle, the lifetime in the laboratory is 15 μs, and the proper time is 5 μs. Find γ.",
+        "given_data": "Δt = 15 μs\nΔt₀ = 5 μs",
+        "find_text": "γ - ?",
+        "solution": "Δt = γΔt₀, so γ = Δt/Δt₀ = 15/5 = 3.",
+        "answer": "γ = 3."
+      },
+      "relativity-time-dilation-task-4": {
+        "topic_title": "Time Dilation",
+        "title": "At v = 0.8c, γ ≈ 1.67. How much time passes on a moving clock if 10 s passed in the laboratory?",
+        "problem_text": "At v = 0.8c, γ ≈ 1.67. How much time passes on a moving clock if 10 s passed in the laboratory?",
+        "given_data": "Δt = 10 s\nγ = 1.67",
+        "find_text": "Δt₀ - ?",
+        "solution": "Δt = γΔt₀, so Δt₀ = Δt/γ.\nΔt₀ = 10/1.67 ≈ 6 s.",
+        "answer": "about 6 s."
+      },
+      "relativity-time-dilation-task-5": {
+        "topic_title": "Time Dilation",
+        "title": "Why do fast muons from the upper atmosphere manage to reach Earth's surface?",
+        "problem_text": "Why do fast muons from the upper atmosphere manage to reach Earth's surface?",
+        "given_data": "muons move almost at the speed of light",
+        "find_text": "explanation - ?",
+        "solution": "In Earth's frame, the muon lifetime increases because of time dilation.\nTherefore, before decaying, they travel a longer distance than a classical estimate would predict.",
+        "answer": "Because of relativistic time dilation."
+      },
+      "relativity-length-contraction-task-1": {
+        "topic_title": "Length Contraction",
+        "title": "The proper length of a spacecraft is 100 m. It moves at a speed for which γ = 2. What length will an external observer measure along the motion?",
+        "problem_text": "The proper length of a spacecraft is 100 m. It moves at a speed for which γ = 2. What length will an external observer measure along the motion?",
+        "given_data": "L₀ = 100 m\nγ = 2",
+        "find_text": "L - ?",
+        "solution": "L = L₀/γ = 100/2 = 50 m.",
+        "answer": "50 m."
+      },
+      "relativity-length-contraction-task-2": {
+        "topic_title": "Length Contraction",
+        "title": "A rod has proper length 12 m and moves with γ = 1.5. Find the observed length.",
+        "problem_text": "A rod has proper length 12 m and moves with γ = 1.5. Find the observed length.",
+        "given_data": "L₀ = 12 m\nγ = 1.5",
+        "find_text": "L - ?",
+        "solution": "L = L₀/γ = 12/1.5 = 8 m.",
+        "answer": "8 m."
+      },
+      "relativity-length-contraction-task-3": {
+        "topic_title": "Length Contraction",
+        "title": "In the laboratory, the length of a moving particle track along the motion is 3 times smaller than its proper length. What is γ?",
+        "problem_text": "In the laboratory, the length of a moving particle track along the motion is 3 times smaller than its proper length. What is γ?",
+        "given_data": "L = L₀/3",
+        "find_text": "γ - ?",
+        "solution": "L = L₀/γ.\nIf L = L₀/3, then γ = 3.",
+        "answer": "γ = 3."
+      },
+      "relativity-length-contraction-task-4": {
+        "topic_title": "Length Contraction",
+        "title": "A spacecraft moves along its length. Its proper length is 80 m, γ = 1.25. By how many meters did its length contract for an external observer?",
+        "problem_text": "A spacecraft moves along its length. Its proper length is 80 m, γ = 1.25. By how many meters did its length contract for an external observer?",
+        "given_data": "L₀ = 80 m\nγ = 1.25",
+        "find_text": "ΔL - ?",
+        "solution": "L = 80/1.25 = 64 m.\nΔL = L₀ - L = 80 - 64 = 16 m.",
+        "answer": "by 16 m."
+      },
+      "relativity-length-contraction-task-5": {
+        "topic_title": "Length Contraction",
+        "title": "Why does the width of a spacecraft, perpendicular to the direction of motion, not contract in special relativity?",
+        "problem_text": "Why does the width of a spacecraft, perpendicular to the direction of motion, not contract in special relativity?",
+        "given_data": "motion along the x-axis\nwidth is perpendicular to x",
+        "find_text": "reason - ?",
+        "solution": "Lorentz transformations change the coordinate along the relative motion and time.\nTransverse coordinates do not receive such a contraction factor.",
+        "answer": "Lorentz contraction acts only along the direction of motion."
+      },
+      "relativity-invariant-interval-task-1": {
+        "topic_title": "Invariance of the Interval",
+        "title": "Between events, Δt = 2 s and Δr = 3×10⁸ m. Find s².",
+        "problem_text": "Between events, Δt = 2 s and Δr = 3×10⁸ m. Find s².",
+        "given_data": "Δt = 2 s\nΔr = 3×10⁸ m\nc = 3×10⁸ m/s",
+        "find_text": "s² - ?",
+        "solution": "cΔt = 3×10⁸ · 2 = 6×10⁸ m.\ns² = (6×10⁸)² - (3×10⁸)² = 36×10¹⁶ - 9×10¹⁶ = 27×10¹⁶ = 2.7×10¹⁷ m².",
+        "answer": "2.7×10¹⁷ m²."
+      },
+      "relativity-invariant-interval-task-2": {
+        "topic_title": "Invariance of the Interval",
+        "title": "Events are separated by distance 6×10⁸ m and time 2 s. What type of interval is it?",
+        "problem_text": "Events are separated by distance 6×10⁸ m and time 2 s. What type of interval is it?",
+        "given_data": "Δr = 6×10⁸ m\nΔt = 2 s\nc = 3×10⁸ m/s",
+        "find_text": "type of interval - ?",
+        "solution": "cΔt = 6×10⁸ m.\nSince Δr = cΔt, s² = 0.",
+        "answer": "lightlike interval."
+      },
+      "relativity-invariant-interval-task-3": {
+        "topic_title": "Invariance of the Interval",
+        "title": "Between events, Δt = 1 s and Δr = 6×10⁸ m. Can the first event causally affect the second?",
+        "problem_text": "Between events, Δt = 1 s and Δr = 6×10⁸ m. Can the first event causally affect the second?",
+        "given_data": "Δt = 1 s\nΔr = 6×10⁸ m\nc = 3×10⁸ m/s",
+        "find_text": "is causal connection possible - ?",
+        "solution": "In 1 s, light travels 3×10⁸ m.\nThe distance 6×10⁸ m is greater, so a signal with speed no greater than c cannot arrive in time.",
+        "answer": "No, causal connection is impossible."
+      },
+      "relativity-invariant-interval-task-4": {
+        "topic_title": "Invariance of the Interval",
+        "title": "Why is the interval called an invariant?",
+        "problem_text": "Why is the interval called an invariant?",
+        "given_data": "different inertial frames",
+        "find_text": "meaning of invariance - ?",
+        "solution": "Separately, distance and time between events may differ for different observers.\nBut the combination s² = (cΔt)² - Δr² remains the same.",
+        "answer": "The interval keeps the same value when changing between inertial frames."
+      },
+      "relativity-invariant-interval-task-5": {
+        "topic_title": "Invariance of the Interval",
+        "title": "For two events, Δr = 0 in some frame and Δt = 5 μs. Find s².",
+        "problem_text": "For two events, Δr = 0 in some frame and Δt = 5 μs. Find s².",
+        "given_data": "Δr = 0\nΔt = 5 μs = 5×10⁻⁶ s\nc = 3×10⁸ m/s",
+        "find_text": "s² - ?",
+        "solution": "cΔt = 3×10⁸ · 5×10⁻⁶ = 1500 m.\ns² = 1500² - 0 = 2.25×10⁶ m².",
+        "answer": "2.25×10⁶ m²."
+      },
+      "relativity-mass-energy-emc2-task-1": {
+        "topic_title": "Mass-Energy Relation E = mc²",
+        "title": "Find the rest energy of a body with mass 1 kg.",
+        "problem_text": "Find the rest energy of a body with mass 1 kg.",
+        "given_data": "m = 1 kg\nc = 3×10⁸ m/s",
+        "find_text": "E₀ - ?",
+        "solution": "E₀ = mc² = 1 · (3×10⁸)² = 9×10¹⁶ J.",
+        "answer": "9×10¹⁶ J."
+      },
+      "relativity-mass-energy-emc2-task-2": {
+        "topic_title": "Mass-Energy Relation E = mc²",
+        "title": "In a reaction, the mass defect is 2×10⁻⁶ kg. Find the released energy.",
+        "problem_text": "In a reaction, the mass defect is 2×10⁻⁶ kg. Find the released energy.",
+        "given_data": "Δm = 2×10⁻⁶ kg\nc = 3×10⁸ m/s",
+        "find_text": "ΔE - ?",
+        "solution": "ΔE = Δm·c² = 2×10⁻⁶ · 9×10¹⁶ = 1.8×10¹¹ J.",
+        "answer": "1.8×10¹¹ J."
+      },
+      "relativity-mass-energy-emc2-task-3": {
+        "topic_title": "Mass-Energy Relation E = mc²",
+        "title": "When 9×10¹³ J of energy was released, by how much did the system mass decrease?",
+        "problem_text": "When 9×10¹³ J of energy was released, by how much did the system mass decrease?",
+        "given_data": "ΔE = 9×10¹³ J\nc = 3×10⁸ m/s",
+        "find_text": "Δm - ?",
+        "solution": "Δm = ΔE/c² = 9×10¹³ / 9×10¹⁶ = 1×10⁻³ kg.",
+        "answer": "0.001 kg."
+      },
+      "relativity-mass-energy-emc2-task-4": {
+        "topic_title": "Mass-Energy Relation E = mc²",
+        "title": "Why is mass change in chemical reactions usually impossible to detect with ordinary scales?",
+        "problem_text": "Why is mass change in chemical reactions usually impossible to detect with ordinary scales?",
+        "given_data": "energies of chemical reactions are small compared with mc²",
+        "find_text": "reason for small Δm - ?",
+        "solution": "Δm = ΔE/c².\nSince c² is enormous, even noticeable chemical energy corresponds to an extremely small mass change.",
+        "answer": "The mass defect in chemical reactions is too small."
+      },
+      "relativity-mass-energy-emc2-task-5": {
+        "topic_title": "Mass-Energy Relation E = mc²",
+        "title": "The fuel mass in a nuclear reaction decreased by 0.5 g. Find the energy.",
+        "problem_text": "The fuel mass in a nuclear reaction decreased by 0.5 g. Find the energy.",
+        "given_data": "Δm = 0.5 g = 5×10⁻⁴ kg\nc = 3×10⁸ m/s",
+        "find_text": "ΔE - ?",
+        "solution": "ΔE = Δm·c² = 5×10⁻⁴ · 9×10¹⁶ = 4.5×10¹³ J.",
+        "answer": "4.5×10¹³ J."
+      },
+      "relativity-relativistic-momentum-task-1": {
+        "topic_title": "Relativistic Momentum",
+        "title": "A particle with mass 2 kg moves at speed 0.6c. γ = 1.25. Find the relativistic momentum.",
+        "problem_text": "A particle with mass 2 kg moves at speed 0.6c. γ = 1.25. Find the relativistic momentum.",
+        "given_data": "m = 2 kg\nv = 0.6c = 1.8×10⁸ m/s\nγ = 1.25",
+        "find_text": "p - ?",
+        "solution": "p = γmv = 1.25 · 2 · 1.8×10⁸ = 4.5×10⁸ kg·m/s.",
+        "answer": "4.5×10⁸ kg·m/s."
+      },
+      "relativity-relativistic-momentum-task-2": {
+        "topic_title": "Relativistic Momentum",
+        "title": "For a particle, γ = 3, m = 1×10⁻²⁷ kg, v = 2×10⁸ m/s. Find p.",
+        "problem_text": "For a particle, γ = 3, m = 1×10⁻²⁷ kg, v = 2×10⁸ m/s. Find p.",
+        "given_data": "γ = 3\nm = 1×10⁻²⁷ kg\nv = 2×10⁸ m/s",
+        "find_text": "p - ?",
+        "solution": "p = γmv = 3 · 1×10⁻²⁷ · 2×10⁸ = 6×10⁻¹⁹ kg·m/s.",
+        "answer": "6×10⁻¹⁹ kg·m/s."
+      },
+      "relativity-relativistic-momentum-task-3": {
+        "topic_title": "Relativistic Momentum",
+        "title": "The classical momentum of a particle is mv. At γ = 2, how many times greater is the relativistic momentum than the classical one?",
+        "problem_text": "The classical momentum of a particle is mv. At γ = 2, how many times greater is the relativistic momentum than the classical one?",
+        "given_data": "pclassical = mv\nprel = γmv\nγ = 2",
+        "find_text": "prel/pclassical - ?",
+        "solution": "prel/pclassical = γmv/(mv) = γ = 2.",
+        "answer": "2 times."
+      },
+      "relativity-relativistic-momentum-task-4": {
+        "topic_title": "Relativistic Momentum",
+        "title": "Why is it not enough to use only p = mv for particles in accelerators?",
+        "problem_text": "Why is it not enough to use only p = mv for particles in accelerators?",
+        "given_data": "particle speeds are close to c",
+        "find_text": "reason for using p = γmv - ?",
+        "solution": "At speeds comparable to the speed of light, γ is noticeably greater than 1.\nThe classical formula underestimates momentum because it ignores relativistic effects.",
+        "answer": "The Lorentz factor must be taken into account."
+      },
+      "relativity-relativistic-momentum-task-5": {
+        "topic_title": "Relativistic Momentum",
+        "title": "A photon has energy 3×10⁻¹⁹ J. Find its momentum.",
+        "problem_text": "A photon has energy 3×10⁻¹⁹ J. Find its momentum.",
+        "given_data": "E = 3×10⁻¹⁹ J\nc = 3×10⁸ m/s",
+        "find_text": "p - ?",
+        "solution": "p = E/c = 3×10⁻¹⁹ / 3×10⁸ = 1×10⁻²⁷ kg·m/s.",
+        "answer": "1×10⁻²⁷ kg·m/s."
+      },
+      "relativity-relativistic-energy-task-1": {
+        "topic_title": "Relativistic Energy",
+        "title": "A particle with mass 1 kg moves with γ = 2. Find its total energy.",
+        "problem_text": "A particle with mass 1 kg moves with γ = 2. Find its total energy.",
+        "given_data": "m = 1 kg\nγ = 2\nc = 3×10⁸ m/s",
+        "find_text": "E - ?",
+        "solution": "E = γmc² = 2 · 1 · 9×10¹⁶ = 1.8×10¹⁷ J.",
+        "answer": "1.8×10¹⁷ J."
+      },
+      "relativity-relativistic-energy-task-2": {
+        "topic_title": "Relativistic Energy",
+        "title": "Find the kinetic energy of a particle with mass 1×10⁻²⁷ kg at γ = 3.",
+        "problem_text": "Find the kinetic energy of a particle with mass 1×10⁻²⁷ kg at γ = 3.",
+        "given_data": "m = 1×10⁻²⁷ kg\nγ = 3\nc = 3×10⁸ m/s",
+        "find_text": "K - ?",
+        "solution": "K = (γ - 1)mc² = (3 - 1) · 1×10⁻²⁷ · 9×10¹⁶.\nK = 1.8×10⁻¹⁰ J.",
+        "answer": "1.8×10⁻¹⁰ J."
+      },
+      "relativity-relativistic-energy-task-3": {
+        "topic_title": "Relativistic Energy",
+        "title": "A particle is at rest and has rest energy 9×10⁻¹¹ J. Find its mass.",
+        "problem_text": "A particle is at rest and has rest energy 9×10⁻¹¹ J. Find its mass.",
+        "given_data": "E₀ = 9×10⁻¹¹ J\nc = 3×10⁸ m/s",
+        "find_text": "m - ?",
+        "solution": "E₀ = mc², so m = E₀/c².\nm = 9×10⁻¹¹ / 9×10¹⁶ = 1×10⁻²⁷ kg.",
+        "answer": "1×10⁻²⁷ kg."
+      },
+      "relativity-relativistic-energy-task-4": {
+        "topic_title": "Relativistic Energy",
+        "title": "For a particle, E = 5mc². Find γ and kinetic energy in units of mc².",
+        "problem_text": "For a particle, E = 5mc². Find γ and kinetic energy in units of mc².",
+        "given_data": "E = 5mc²",
+        "find_text": "γ, K - ?",
+        "solution": "E = γmc², so γ = 5.\nK = E - E₀ = 5mc² - mc² = 4mc².",
+        "answer": "γ = 5, K = 4mc²."
+      },
+      "relativity-relativistic-energy-task-5": {
+        "topic_title": "Relativistic Energy",
+        "title": "Why is the total energy of a particle not equal only to its kinetic energy?",
+        "problem_text": "Why is the total energy of a particle not equal only to its kinetic energy?",
+        "given_data": "particle has rest mass",
+        "find_text": "difference between E and K - ?",
+        "solution": "Total energy includes rest energy mc².\nKinetic energy is only the addition due to motion: K = E - mc².",
+        "answer": "Total energy contains both rest energy and energy of motion."
+      },
+      "relativity-lightspeed-limit-task-1": {
+        "topic_title": "Impossibility of Reaching the Speed of Light",
+        "title": "Why can an electron not be accelerated to speed c, even if energy is supplied for a long time?",
+        "problem_text": "Why can an electron not be accelerated to speed c, even if energy is supplied for a long time?",
+        "given_data": "electron has nonzero rest mass\nv → c",
+        "find_text": "reason for the limit - ?",
+        "solution": "For a massive particle, γ = 1/√(1 - v²/c²).\nAs v → c, the denominator tends to zero, and γ and energy E = γmc² tend to infinity.",
+        "answer": "Reaching c would require infinite energy."
+      },
+      "relativity-lightspeed-limit-task-2": {
+        "topic_title": "Impossibility of Reaching the Speed of Light",
+        "title": "A particle moves at speed 0.99c. Can it be considered to have reached the speed of light?",
+        "problem_text": "A particle moves at speed 0.99c. Can it be considered to have reached the speed of light?",
+        "given_data": "v = 0.99c",
+        "find_text": "has c been reached - ?",
+        "solution": "0.99c is less than c.\nEven a speed very close to c is not equal to the speed of light for a particle with rest mass.",
+        "answer": "No, the particle is still moving slower than light."
+      },
+      "relativity-lightspeed-limit-task-3": {
+        "topic_title": "Impossibility of Reaching the Speed of Light",
+        "title": "Why can a photon move at speed c, but a proton cannot?",
+        "problem_text": "Why can a photon move at speed c, but a proton cannot?",
+        "given_data": "photon has zero rest mass\nproton has nonzero rest mass",
+        "find_text": "difference - ?",
+        "solution": "Massless particles move at speed c in vacuum.\nFor a particle with nonzero rest mass, reaching c would require infinite energy.",
+        "answer": "The photon is massless, while the proton is massive."
+      },
+      "relativity-lightspeed-limit-task-4": {
+        "topic_title": "Impossibility of Reaching the Speed of Light",
+        "title": "At γ = 10, a particle is already very fast. Why does further energy increase change the speed only slightly?",
+        "problem_text": "At γ = 10, a particle is already very fast. Why does further energy increase change the speed only slightly?",
+        "given_data": "γ is large\nv is close to c",
+        "find_text": "reason for small speed gain - ?",
+        "solution": "At large γ, the speed is already very close to c.\nAdditional energy increases γ, total energy, and momentum, but the speed approaches c asymptotically and never reaches it.",
+        "answer": "The speed approaches c as a limiting value."
+      },
+      "relativity-lightspeed-limit-task-5": {
+        "topic_title": "Impossibility of Reaching the Speed of Light",
+        "title": "Why is the ban on faster-than-light signals related to causality?",
+        "problem_text": "Why is the ban on faster-than-light signals related to causality?",
+        "given_data": "signal faster than c\ndifferent inertial frames",
+        "find_text": "connection with event order - ?",
+        "solution": "In special relativity, the order of spacelike-separated events can depend on the reference frame.\nIf faster-than-light signals were allowed, a situation could occur where an effect arrives before its cause in another frame.",
+        "answer": "Faster-than-light transmission would violate the causal order of events."
+      }
+    }
+  },
+  "kk": {
+    "tests": {
+      "relativity-einstein-postulates-test": {
+        "title": "Тест: Эйнштейн постулаттары",
+        "questions": [
+          {
+            "question": "Эйнштейннің бірінші постулаты нені тұжырымдайды?",
+            "options": [
+              "уақыт барлық бақылаушылар үшін абсолют",
+              "үдемелі жүйелер әрқашан инерциялық жүйелермен тең",
+              "жарық тек тыныштықтағы жүйеде таралады",
+              "физика заңдары барлық инерциялық санақ жүйелерінде бірдей"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Эйнштейннің екінші постулаты бойынша вакуумдағы жарық жылдамдығы:",
+            "options": [
+              "тек бақылаушы массасына тәуелді",
+              "барлық инерциялық бақылаушылар үшін бірдей",
+              "дыбыс жылдамдығына тең",
+              "Галилейше көз жылдамдығымен қосылады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жарық жылдамдығының жуық мәні:",
+            "options": [
+              "3×10⁶ м/с",
+              "3×10⁸ м/с",
+              "9,8 м/с²",
+              "340 м/с"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Неге СТО уақыт пен ұзындық туралы түсініктерді қайта қарауды қажет етеді?",
+            "options": [
+              "инерциялық жүйелер жоқ",
+              "жарық жылдамдығының тұрақтылығы жылдамдықтарды классикалық қосумен үйлеспейді",
+              "барлық денелер жарықтан жылдам қозғалады",
+              "жарықтың энергиясы жоқ"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Қандай санақ жүйесі инерциялық деп аталады?",
+            "options": [
+              "әрқашан үйкеліс бар жүйе",
+              "еркін дене бірқалыпты түзу сызықты қозғалатын немесе тыныштықта болатын жүйе",
+              "тек Жермен байланысқан жүйе",
+              "кез келген айналмалы жүйе"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-lorentz-transformations-test": {
+        "title": "Тест: Лоренц түрлендірулері",
+        "questions": [
+          {
+            "question": "Лоренц-фактор:",
+            "options": [
+              "γ = v/c",
+              "γ = 1/√(1 - v²/c²)",
+              "γ = √(1 - v²/c²)",
+              "γ = 1 - v/c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "v = 0 кезінде Лоренц-фактор:",
+            "options": [
+              "0",
+              "c",
+              "1",
+              "шексіздік"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "v жылдамдығы c-ге жақындағанда Лоренц-фактор:",
+            "options": [
+              "теріс болады",
+              "артады",
+              "әрқашан 1-ге тең",
+              "нөлге дейін кемиді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Лоренц түрлендірулері Галилей түрлендірулерін қай кезде алмастырады?",
+            "options": [
+              "жылдамдықтар өте кіші және жарық жоқ болғанда",
+              "дене суда тыныш тұрғанда",
+              "тек статика қарастырылғанда",
+              "жылдамдықтар жарық жылдамдығымен салыстырмалы болғанда"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "x' = γ(x - vt) формуласы оқиға координатасы ненің тәуелді екенін көрсетеді?",
+            "options": [
+              "тек зарядқа",
+              "тек дене массасына",
+              "тек температураға",
+              "координатаға, уақытқа және жүйелердің салыстырмалы жылдамдығына"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "relativity-time-dilation-test": {
+        "title": "Тест: Уақыттың баяулауы",
+        "questions": [
+          {
+            "question": "Уақыттың баяулау формуласы:",
+            "options": [
+              "Δt = vΔt₀",
+              "Δt = γ·Δt₀",
+              "Δt = Δt₀ - γ",
+              "Δt = Δt₀/γ"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Меншікті уақыт Δt₀ қай жүйеде өлшенеді?",
+            "options": [
+              "сағат жоқ жүйеде",
+              "бақылаушы міндетті түрде үдемелі жүйеде",
+              "сағат тыныштықта тұрған жүйеде",
+              "сағат жарық жылдамдығымен қозғалған жүйеде"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Қозғалатын сағат үшін сыртқы бақылаушы өлшейтін уақыт:",
+            "options": [
+              "әрқашан нөлге тең",
+              "меншікті уақыттан кіші",
+              "меншікті уақыттан үлкен",
+              "теріс"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Егер γ = 2 болса, қозғалатын сағат сыртқы бақылаушы үшін:",
+            "options": [
+              "2 есе жылдам жүреді",
+              "уақыт бойынша кері жүреді",
+              "өзгеріссіз жүреді",
+              "2 есе баяу жүреді"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Уақыттың баяулауы айқын байқалады:",
+            "options": [
+              "тек дыбыс үшін",
+              "c-мен салыстырмалы жылдамдықтарда",
+              "тек тыныш зертханада",
+              "тек 1 м/с жылдамдықта"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-length-contraction-test": {
+        "title": "Тест: Ұзындықтың қысқаруы",
+        "questions": [
+          {
+            "question": "Ұзындықтың қысқару формуласы:",
+            "options": [
+              "L = L₀ - c",
+              "L = γL₀",
+              "L = L₀/γ",
+              "L = L₀ + γ"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Меншікті ұзындық L₀ объект қай жүйеде өлшенеді?",
+            "options": [
+              "нөлдік массасы бар",
+              "жоқ болған",
+              "тыныштықта тұрған",
+              "жарық жылдамдығымен қозғалған"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Тек қандай өлшем қысқарады?",
+            "options": [
+              "тек қозғалысқа перпендикуляр",
+              "барлық бағытта бірдей",
+              "тек масса",
+              "қозғалыс бағыты бойындағы"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Егер γ = 2 болса, қозғалыс бағыты бойындағы қозғалатын сызғыш ұзындығы:",
+            "options": [
+              "0",
+              "2L₀",
+              "L₀/2",
+              "L₀"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Кіші жылдамдықтарда v << c ұзындықтың қысқаруы:",
+            "options": [
+              "100%-ға тең",
+              "шексіз болады",
+              "іс жүзінде байқалмайды",
+              "ұзындық таңбасын өзгертеді"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "relativity-invariant-interval-test": {
+        "title": "Тест: Интервал инварианттылығы",
+        "questions": [
+          {
+            "question": "СТО-дағы оқиғалар арасындағы интервал:",
+            "options": [
+              "s² = mv²/2",
+              "s² = (cΔt)² + Δr² әрқашан",
+              "s² = (cΔt)² - Δr²",
+              "s² = Δr/(cΔt)"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Интервал инварианттылығы s² нені білдіреді?",
+            "options": [
+              "әрқашан нөлге тең",
+              "ерікті өзгереді",
+              "барлық инерциялық жүйелерде бірдей",
+              "тек температураға тәуелді"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Жарық сигналы үшін интервал:",
+            "options": [
+              "фотон массасына тең",
+              "әрқашан теріс",
+              "әрқашан оң",
+              "нөлге тең"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Егер (cΔt)² > Δr² болса, интервал:",
+            "options": [
+              "міндетті түрде жарықтәрізді",
+              "уақыттәрізді",
+              "мүмкін емес",
+              "кеңістіктәрізді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Егер Δr² > (cΔt)² болса, оқиғалар:",
+            "options": [
+              "бір нүктеде болады",
+              "жылдамдығы c-ден аспайтын сигналмен себептік байланыса алмайды",
+              "арақашықтығы нөл",
+              "міндетті түрде біреуі екіншісін тудырады"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-mass-energy-emc2-test": {
+        "title": "Тест: Масса мен энергия байланысы E = mc²",
+        "questions": [
+          {
+            "question": "Дененің тыныштық энергиясы:",
+            "options": [
+              "E₀ = mv",
+              "E₀ = I²R",
+              "E₀ = m/c²",
+              "E₀ = mc²"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жүйе массасы Δm-ге азайса, бөлінетін энергия:",
+            "options": [
+              "ΔE = Δm + c",
+              "ΔE = Δm·c²",
+              "ΔE = c²/Δm",
+              "ΔE = Δm/c²"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Тыныштықтағы дененің де энергиясы бар, себебі:",
+            "options": [
+              "оның температурасы 0 K",
+              "масса энергияға эквивалент",
+              "жарық әрқашан оның ішінде болады",
+              "ол міндетті түрде қозғалады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Кіші масса дефектісі үлкен энергия береді, себебі:",
+            "options": [
+              "c² өте кіші",
+              "энергия тек килограмммен өлшенеді",
+              "масса энергиямен байланыспаған",
+              "c² өте үлкен"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "E = mc² формуласы әсіресе не үшін маңызды?",
+            "options": [
+              "Архимед заңы үшін",
+              "ядролық реакциялар үшін",
+              "жарықтың шағылу заңы үшін",
+              "сым кедергісін есептеу үшін"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-relativistic-momentum-test": {
+        "title": "Тест: Релятивистік импульс",
+        "questions": [
+          {
+            "question": "Бөлшектің релятивистік импульсі:",
+            "options": [
+              "p = mv/γ",
+              "p = γm/c",
+              "p = m/v",
+              "p = γmv"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Кіші жылдамдықтарда v << c релятивистік импульс:",
+            "options": [
+              "массаға тәуелді емес",
+              "әрқашан нөлге тең",
+              "классикалық p = mv формуласына өтеді",
+              "шексіз болады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Жылдамдық c-ге жақындағанда массивті бөлшектің импульсі:",
+            "options": [
+              "нөлге дейін кемиді",
+              "теріс болады",
+              "жарық жылдамдығына жетпей артады",
+              "жылдамдыққа тәуелді болуын тоқтатады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Импульс формуласындағы Лоренц-фактор нені ескереді?",
+            "options": [
+              "бөлшек температурасын",
+              "ауа үйкелісін",
+              "ядро зарядын",
+              "үлкен жылдамдықтардағы импульстің релятивистік артуын"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Фотон үшін импульс энергиямен қалай байланысады?",
+            "options": [
+              "p = Ec",
+              "p = E/c",
+              "p әрқашан 0",
+              "p = c/E"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "relativity-relativistic-energy-test": {
+        "title": "Тест: Релятивистік энергия",
+        "questions": [
+          {
+            "question": "Бөлшектің толық релятивистік энергиясы:",
+            "options": [
+              "E = p/c",
+              "E = γmc²",
+              "E = mc²/γ",
+              "E = mv²/2"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Энергия, импульс және масса байланысы:",
+            "options": [
+              "E² = p²/c² - m²c⁴",
+              "E² = p²c² + m²c⁴",
+              "E = I²R",
+              "E = p²/2m әрқашан ғана"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "v = 0 кезінде массивті бөлшектің толық энергиясы:",
+            "options": [
+              "pc",
+              "mv",
+              "mc²",
+              "0"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "СТО-дағы кинетикалық энергия:",
+            "options": [
+              "K = mc²/γ",
+              "K = (γ - 1)mc²",
+              "K кез келген v үшін 0",
+              "K = γmc²"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "m = 0 фотон үшін:",
+            "options": [
+              "кез келген энергияда p = 0",
+              "E әрқашан 0",
+              "E = pc",
+              "E = mc²"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "relativity-lightspeed-limit-test": {
+        "title": "Тест: Жарық жылдамдығына жету мүмкін еместігі",
+        "questions": [
+          {
+            "question": "Массивті бөлшек жарық жылдамдығына жете алмайды, себебі v → c кезінде:",
+            "options": [
+              "энергия теріс болады",
+              "тыныштық массасы жоғалады",
+              "γ нөлге ұмтылады",
+              "γ шексіздікке ұмтылады"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Тыныштық массасы нөлден өзгеше дене үшін СТО-да:",
+            "options": [
+              "v шектелмеген",
+              "v < c",
+              "v = c әрқашан",
+              "жеткілікті күш болса v > c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Тыныштық массасы нөл бөлшектер, мысалы фотондар, вакуумда қозғалады:",
+            "options": [
+              "0 жылдамдықпен",
+              "дыбыс жылдамдығымен",
+              "c жылдамдықпен",
+              "c-ден жылдам"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Массивті бөлшек жылдамдығы c-ге жақындаған сайын қосымша энергия негізінен:",
+            "options": [
+              "бөлшекті міндетті түрде жояды",
+              "γ мен импульсті арттырады, жылдамдықты c-ге жеткізбейді",
+              "жылдамдықты c-ден үлкен етеді",
+              "тыныштық энергиясын азайтады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "СТО-да жарықтан жылдам сигнал беру:",
+            "options": [
+              "жарық үшін міндетті",
+              "себептілікті бұзар еді",
+              "кәдімгі механикалық қозғалыс",
+              "уақытқа қатысы жоқ"
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "relativity-einstein-postulates-task-1": {
+        "topic_title": "Эйнштейн постулаттары",
+        "title": "Ғарыш кемесі 0,6c жылдамдықпен ұшып, алға жарық импульсін шығарады. Жердегі бақылаушы жарықтың қандай жылдамдығын өлшейді?",
+        "problem_text": "Ғарыш кемесі 0,6c жылдамдықпен ұшып, алға жарық импульсін шығарады. Жердегі бақылаушы жарықтың қандай жылдамдығын өлшейді?",
+        "given_data": "vкеме = 0,6c\nжарық алға шығарылды",
+        "find_text": "Жер үшін жарық жылдамдығы - ?",
+        "solution": "Эйнштейннің екінші постулаты бойынша вакуумдағы жарық жылдамдығы барлық инерциялық бақылаушылар үшін бірдей.\nОл көз жылдамдығымен c + 0,6c түрінде қосылмайды.",
+        "answer": "c = 3×10⁸ м/с."
+      },
+      "relativity-einstein-postulates-task-2": {
+        "topic_title": "Эйнштейн постулаттары",
+        "title": "Екі инерциялық бақылаушы бір-біріне қатысты бірқалыпты қозғалады. СТО бойынша олардың бірі өзін «шын тыныштықта» деп санай ала ма?",
+        "problem_text": "Екі инерциялық бақылаушы бір-біріне қатысты бірқалыпты қозғалады. СТО бойынша олардың бірі өзін «шын тыныштықта» деп санай ала ма?",
+        "given_data": "екі инерциялық жүйе\nбірқалыпты салыстырмалы қозғалыс",
+        "find_text": "ерекше жүйе бар ма - ?",
+        "solution": "Бірінші постулат барлық инерциялық жүйелердің тең құқылы екенін айтады.\nЕшбір инерциялық жүйе абсолют немесе ерекше емес.",
+        "answer": "Жоқ, ерекше инерциялық жүйе жоқ."
+      },
+      "relativity-einstein-postulates-task-3": {
+        "topic_title": "Эйнштейн постулаттары",
+        "title": "Жарық вакуумда 900000 км қашықтық өтеді. Бұл жолды қанша уақытта өтеді?",
+        "problem_text": "Жарық вакуумда 900000 км қашықтық өтеді. Бұл жолды қанша уақытта өтеді?",
+        "given_data": "s = 900000 км = 9×10⁸ м\nc = 3×10⁸ м/с",
+        "find_text": "t - ?",
+        "solution": "t = s/c = 9×10⁸ / 3×10⁸ = 3 с.",
+        "answer": "3 с."
+      },
+      "relativity-einstein-postulates-task-4": {
+        "topic_title": "Эйнштейн постулаттары",
+        "title": "Майкельсон-Морли тәжірибесінің нәтижесі СТО үшін неге маңызды болды?",
+        "problem_text": "Майкельсон-Морли тәжірибесінің нәтижесі СТО үшін неге маңызды болды?",
+        "given_data": "жарық жылдамдығы Жер қозғалысына тәуелді болмады",
+        "find_text": "физикалық қорытынды - ?",
+        "solution": "Тәжірибе эфирге қатысты қозғалысты анықтамады.\nБұл жарық жылдамдығының тұрақтылығы постулатына және ерекше абсолют санақ жүйесінен бас тартуға сәйкес келеді.",
+        "answer": "Тәжірибе жарық жылдамдығының тұрақтылығы мен инерциялық жүйелердің теңдігін қолдады."
+      },
+      "relativity-einstein-postulates-task-5": {
+        "topic_title": "Эйнштейн постулаттары",
+        "title": "Классикалық механикада бақылаушыға қарай 0,1c жылдамдықпен ұшатын көзден шыққан жарық жылдамдығы 1,1c деп күтілер еді. СТО қандай жауап береді?",
+        "problem_text": "Классикалық механикада бақылаушыға қарай 0,1c жылдамдықпен ұшатын көзден шыққан жарық жылдамдығы 1,1c деп күтілер еді. СТО қандай жауап береді?",
+        "given_data": "vкөз = 0,1c\nклассикалық күтілім c + 0,1c",
+        "find_text": "СТО бойынша жарық жылдамдығы - ?",
+        "solution": "СТО-да вакуумдағы жарық жылдамдығы көз жылдамдығына тәуелді емес.\nБақылаушы 1,1c емес, c өлшейді.",
+        "answer": "c."
+      },
+      "relativity-lorentz-transformations-task-1": {
+        "topic_title": "Лоренц түрлендірулері",
+        "title": "v = 0,6c жылдамдық үшін γ табыңыз.",
+        "problem_text": "v = 0,6c жылдамдық үшін γ табыңыз.",
+        "given_data": "v = 0,6c\nγ = 1/√(1 - v²/c²)",
+        "find_text": "γ - ?",
+        "solution": "v²/c² = 0,36.\nγ = 1/√(1 - 0,36) = 1/√0,64 = 1/0,8 = 1,25.",
+        "answer": "γ = 1,25."
+      },
+      "relativity-lorentz-transformations-task-2": {
+        "topic_title": "Лоренц түрлендірулері",
+        "title": "v = 0,8c жылдамдық үшін γ табыңыз.",
+        "problem_text": "v = 0,8c жылдамдық үшін γ табыңыз.",
+        "given_data": "v = 0,8c",
+        "find_text": "γ - ?",
+        "solution": "v²/c² = 0,64.\nγ = 1/√(1 - 0,64) = 1/√0,36 = 1/0,6 ≈ 1,67.",
+        "answer": "γ ≈ 1,67."
+      },
+      "relativity-lorentz-transformations-task-3": {
+        "topic_title": "Лоренц түрлендірулері",
+        "title": "S жүйесінде оқиғаның координатасы x = 9×10⁸ м және уақыты t = 2 с. S' жүйесі 0,5c жылдамдықпен қозғалады. γ ≈ 1,155 деп алыңыз. x' табыңыз.",
+        "problem_text": "S жүйесінде оқиғаның координатасы x = 9×10⁸ м және уақыты t = 2 с. S' жүйесі 0,5c жылдамдықпен қозғалады. γ ≈ 1,155 деп алыңыз. x' табыңыз.",
+        "given_data": "x = 9×10⁸ м\nt = 2 с\nv = 0,5c = 1,5×10⁸ м/с\nγ = 1,155",
+        "find_text": "x' - ?",
+        "solution": "x' = γ(x - vt).\nvt = 1,5×10⁸ · 2 = 3×10⁸ м.\nx' = 1,155 · (9×10⁸ - 3×10⁸) = 1,155 · 6×10⁸ = 6,93×10⁸ м.",
+        "answer": "6,93×10⁸ м."
+      },
+      "relativity-lorentz-transformations-task-4": {
+        "topic_title": "Лоренц түрлендірулері",
+        "title": "Неге кіші жылдамдықтарда Лоренц түрлендірулері Галилей түрлендірулеріне өтеді?",
+        "problem_text": "Неге кіші жылдамдықтарда Лоренц түрлендірулері Галилей түрлендірулеріне өтеді?",
+        "given_data": "v << c",
+        "find_text": "физикалық жуықтау - ?",
+        "solution": "Егер v²/c² өте кіші болса, γ ≈ 1.\nСонда x' = γ(x - vt) жуықтап x' = x - vt болады, бұл классикалық механикадағыдай.",
+        "answer": "v << c кезінде Лоренц-фактор шамамен 1-ге тең."
+      },
+      "relativity-lorentz-transformations-task-5": {
+        "topic_title": "Лоренц түрлендірулері",
+        "title": "v = 0,99c кезінде γ 1-ден әлдеқайда үлкен. Бұл уақыт пен ұзындық өлшеулеріне нені білдіреді?",
+        "problem_text": "v = 0,99c кезінде γ 1-ден әлдеқайда үлкен. Бұл уақыт пен ұзындық өлшеулеріне нені білдіреді?",
+        "given_data": "v = 0,99c\nγ >> 1",
+        "find_text": "үлкен γ физикалық мағынасы - ?",
+        "solution": "Үлкен γ күшті релятивистік әсерлерді білдіреді.\nҚозғалатын сағаттар айқын баяулайды, ал қозғалыс бағыты бойындағы ұзындықтар айқын қысқарады.",
+        "answer": "c маңындағы жылдамдықтарда СТО әсерлері үлкен болады."
+      },
+      "relativity-time-dilation-task-1": {
+        "topic_title": "Уақыттың баяулауы",
+        "title": "Кемеде 4 жыл меншікті уақыт өтті. Кеме γ = 1,25 болатындай қозғалады. Жерде қанша уақыт өтті?",
+        "problem_text": "Кемеде 4 жыл меншікті уақыт өтті. Кеме γ = 1,25 болатындай қозғалады. Жерде қанша уақыт өтті?",
+        "given_data": "Δt₀ = 4 жыл\nγ = 1,25",
+        "find_text": "Δt - ?",
+        "solution": "Δt = γΔt₀ = 1,25 · 4 = 5 жыл.",
+        "answer": "5 жыл."
+      },
+      "relativity-time-dilation-task-2": {
+        "topic_title": "Уақыттың баяулауы",
+        "title": "Мюон өз жүйесінде 2 мкс өмір сүреді. Зертханада γ = 10. Зертханада қандай өмір сүру уақыты өлшенеді?",
+        "problem_text": "Мюон өз жүйесінде 2 мкс өмір сүреді. Зертханада γ = 10. Зертханада қандай өмір сүру уақыты өлшенеді?",
+        "given_data": "Δt₀ = 2 мкс\nγ = 10",
+        "find_text": "Δt - ?",
+        "solution": "Δt = γΔt₀ = 10 · 2 = 20 мкс.",
+        "answer": "20 мкс."
+      },
+      "relativity-time-dilation-task-3": {
+        "topic_title": "Уақыттың баяулауы",
+        "title": "Бөлшектің зертханадағы өмір сүру уақыты 15 мкс, ал меншікті уақыты 5 мкс. γ табыңыз.",
+        "problem_text": "Бөлшектің зертханадағы өмір сүру уақыты 15 мкс, ал меншікті уақыты 5 мкс. γ табыңыз.",
+        "given_data": "Δt = 15 мкс\nΔt₀ = 5 мкс",
+        "find_text": "γ - ?",
+        "solution": "Δt = γΔt₀, демек γ = Δt/Δt₀ = 15/5 = 3.",
+        "answer": "γ = 3."
+      },
+      "relativity-time-dilation-task-4": {
+        "topic_title": "Уақыттың баяулауы",
+        "title": "v = 0,8c кезінде γ ≈ 1,67. Зертханада 10 с өтсе, қозғалатын сағатта қанша уақыт өтеді?",
+        "problem_text": "v = 0,8c кезінде γ ≈ 1,67. Зертханада 10 с өтсе, қозғалатын сағатта қанша уақыт өтеді?",
+        "given_data": "Δt = 10 с\nγ = 1,67",
+        "find_text": "Δt₀ - ?",
+        "solution": "Δt = γΔt₀, сондықтан Δt₀ = Δt/γ.\nΔt₀ = 10/1,67 ≈ 6 с.",
+        "answer": "шамамен 6 с."
+      },
+      "relativity-time-dilation-task-5": {
+        "topic_title": "Уақыттың баяулауы",
+        "title": "Атмосфераның жоғарғы қабаттарынан шыққан жылдам мюондар Жер бетіне қалай жетіп үлгереді?",
+        "problem_text": "Атмосфераның жоғарғы қабаттарынан шыққан жылдам мюондар Жер бетіне қалай жетіп үлгереді?",
+        "given_data": "мюондар жарық жылдамдығына жуық қозғалады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Жер жүйесінде мюондардың өмір сүру уақыты уақыттың баяулауы салдарынан артады.\nСондықтан олар ыдырағанға дейін классикалық бағалаудан ұзақ жол өтеді.",
+        "answer": "релятивистік уақыттың баяулауы салдарынан."
+      },
+      "relativity-length-contraction-task-1": {
+        "topic_title": "Ұзындықтың қысқаруы",
+        "title": "Кеменің меншікті ұзындығы 100 м. Ол γ = 2 болатын жылдамдықпен қозғалады. Сыртқы бақылаушы қозғалыс бағыты бойымен қандай ұзындық өлшейді?",
+        "problem_text": "Кеменің меншікті ұзындығы 100 м. Ол γ = 2 болатын жылдамдықпен қозғалады. Сыртқы бақылаушы қозғалыс бағыты бойымен қандай ұзындық өлшейді?",
+        "given_data": "L₀ = 100 м\nγ = 2",
+        "find_text": "L - ?",
+        "solution": "L = L₀/γ = 100/2 = 50 м.",
+        "answer": "50 м."
+      },
+      "relativity-length-contraction-task-2": {
+        "topic_title": "Ұзындықтың қысқаруы",
+        "title": "Стерженьнің меншікті ұзындығы 12 м, ол γ = 1,5 кезінде қозғалады. Бақыланатын ұзындықты табыңыз.",
+        "problem_text": "Стерженьнің меншікті ұзындығы 12 м, ол γ = 1,5 кезінде қозғалады. Бақыланатын ұзындықты табыңыз.",
+        "given_data": "L₀ = 12 м\nγ = 1,5",
+        "find_text": "L - ?",
+        "solution": "L = L₀/γ = 12/1,5 = 8 м.",
+        "answer": "8 м."
+      },
+      "relativity-length-contraction-task-3": {
+        "topic_title": "Ұзындықтың қысқаруы",
+        "title": "Зертханада қозғалатын бөлшек трегінің қозғалыс бағыты бойындағы ұзындығы меншікті ұзындығынан 3 есе кіші. γ неге тең?",
+        "problem_text": "Зертханада қозғалатын бөлшек трегінің қозғалыс бағыты бойындағы ұзындығы меншікті ұзындығынан 3 есе кіші. γ неге тең?",
+        "given_data": "L = L₀/3",
+        "find_text": "γ - ?",
+        "solution": "L = L₀/γ.\nЕгер L = L₀/3 болса, γ = 3.",
+        "answer": "γ = 3."
+      },
+      "relativity-length-contraction-task-4": {
+        "topic_title": "Ұзындықтың қысқаруы",
+        "title": "Кеме өз ұзындығы бойымен қозғалады. Меншікті ұзындығы 80 м, γ = 1,25. Сыртқы бақылаушы үшін ұзындық қанша метрге қысқарды?",
+        "problem_text": "Кеме өз ұзындығы бойымен қозғалады. Меншікті ұзындығы 80 м, γ = 1,25. Сыртқы бақылаушы үшін ұзындық қанша метрге қысқарды?",
+        "given_data": "L₀ = 80 м\nγ = 1,25",
+        "find_text": "ΔL - ?",
+        "solution": "L = 80/1,25 = 64 м.\nΔL = L₀ - L = 80 - 64 = 16 м.",
+        "answer": "16 м-ге."
+      },
+      "relativity-length-contraction-task-5": {
+        "topic_title": "Ұзындықтың қысқаруы",
+        "title": "Қозғалыс бағытына перпендикуляр кеменің ені СТО-да неге қысқармайды?",
+        "problem_text": "Қозғалыс бағытына перпендикуляр кеменің ені СТО-да неге қысқармайды?",
+        "given_data": "қозғалыс x осі бойымен\nені x-ке перпендикуляр",
+        "find_text": "себебі - ?",
+        "solution": "Лоренц түрлендірулері салыстырмалы қозғалыс бағыты бойындағы координата мен уақытты өзгертеді.\nКөлденең координаталар мұндай қысқару көбейткішін алмайды.",
+        "answer": "Лоренцтік қысқару тек қозғалыс бағыты бойымен әсер етеді."
+      },
+      "relativity-invariant-interval-task-1": {
+        "topic_title": "Интервал инварианттылығы",
+        "title": "Оқиғалар арасында Δt = 2 с, Δr = 3×10⁸ м. s² табыңыз.",
+        "problem_text": "Оқиғалар арасында Δt = 2 с, Δr = 3×10⁸ м. s² табыңыз.",
+        "given_data": "Δt = 2 с\nΔr = 3×10⁸ м\nc = 3×10⁸ м/с",
+        "find_text": "s² - ?",
+        "solution": "cΔt = 3×10⁸ · 2 = 6×10⁸ м.\ns² = (6×10⁸)² - (3×10⁸)² = 36×10¹⁶ - 9×10¹⁶ = 27×10¹⁶ = 2,7×10¹⁷ м².",
+        "answer": "2,7×10¹⁷ м²."
+      },
+      "relativity-invariant-interval-task-2": {
+        "topic_title": "Интервал инварианттылығы",
+        "title": "Оқиғалар 6×10⁸ м қашықтықпен және 2 с уақытпен бөлінген. Интервал түрі қандай?",
+        "problem_text": "Оқиғалар 6×10⁸ м қашықтықпен және 2 с уақытпен бөлінген. Интервал түрі қандай?",
+        "given_data": "Δr = 6×10⁸ м\nΔt = 2 с\nc = 3×10⁸ м/с",
+        "find_text": "интервал түрі - ?",
+        "solution": "cΔt = 6×10⁸ м.\nΔr = cΔt болғандықтан, s² = 0.",
+        "answer": "жарықтәрізді интервал."
+      },
+      "relativity-invariant-interval-task-3": {
+        "topic_title": "Интервал инварианттылығы",
+        "title": "Оқиғалар арасында Δt = 1 с, Δr = 6×10⁸ м. Бірінші оқиға екіншісіне себептік әсер ете ала ма?",
+        "problem_text": "Оқиғалар арасында Δt = 1 с, Δr = 6×10⁸ м. Бірінші оқиға екіншісіне себептік әсер ете ала ма?",
+        "given_data": "Δt = 1 с\nΔr = 6×10⁸ м\nc = 3×10⁸ м/с",
+        "find_text": "себептік байланыс мүмкін бе - ?",
+        "solution": "1 с ішінде жарық 3×10⁸ м өтеді.\n6×10⁸ м қашықтық үлкен, сондықтан c-ден аспайтын сигнал үлгермейді.",
+        "answer": "Жоқ, себептік байланыс мүмкін емес."
+      },
+      "relativity-invariant-interval-task-4": {
+        "topic_title": "Интервал инварианттылығы",
+        "title": "Неге интервал инвариант деп аталады?",
+        "problem_text": "Неге интервал инвариант деп аталады?",
+        "given_data": "әртүрлі инерциялық жүйелер",
+        "find_text": "инварианттылық мағынасы - ?",
+        "solution": "Оқиғалар арасындағы қашықтық пен уақыт жеке-жеке әр бақылаушыда әртүрлі болуы мүмкін.\nБірақ s² = (cΔt)² - Δr² комбинациясы бірдей болып қалады.",
+        "answer": "Интервал инерциялық жүйелер арасында өткенде бір мәнін сақтайды."
+      },
+      "relativity-invariant-interval-task-5": {
+        "topic_title": "Интервал инварианттылығы",
+        "title": "Екі оқиға үшін кейбір жүйеде Δr = 0, Δt = 5 мкс. s² табыңыз.",
+        "problem_text": "Екі оқиға үшін кейбір жүйеде Δr = 0, Δt = 5 мкс. s² табыңыз.",
+        "given_data": "Δr = 0\nΔt = 5 мкс = 5×10⁻⁶ с\nc = 3×10⁸ м/с",
+        "find_text": "s² - ?",
+        "solution": "cΔt = 3×10⁸ · 5×10⁻⁶ = 1500 м.\ns² = 1500² - 0 = 2,25×10⁶ м².",
+        "answer": "2,25×10⁶ м²."
+      },
+      "relativity-mass-energy-emc2-task-1": {
+        "topic_title": "Масса мен энергия байланысы E = mc²",
+        "title": "Массасы 1 кг дененің тыныштық энергиясын табыңыз.",
+        "problem_text": "Массасы 1 кг дененің тыныштық энергиясын табыңыз.",
+        "given_data": "m = 1 кг\nc = 3×10⁸ м/с",
+        "find_text": "E₀ - ?",
+        "solution": "E₀ = mc² = 1 · (3×10⁸)² = 9×10¹⁶ Дж.",
+        "answer": "9×10¹⁶ Дж."
+      },
+      "relativity-mass-energy-emc2-task-2": {
+        "topic_title": "Масса мен энергия байланысы E = mc²",
+        "title": "Реакцияда масса дефектісі 2×10⁻⁶ кг. Бөлінген энергияны табыңыз.",
+        "problem_text": "Реакцияда масса дефектісі 2×10⁻⁶ кг. Бөлінген энергияны табыңыз.",
+        "given_data": "Δm = 2×10⁻⁶ кг\nc = 3×10⁸ м/с",
+        "find_text": "ΔE - ?",
+        "solution": "ΔE = Δm·c² = 2×10⁻⁶ · 9×10¹⁶ = 1,8×10¹¹ Дж.",
+        "answer": "1,8×10¹¹ Дж."
+      },
+      "relativity-mass-energy-emc2-task-3": {
+        "topic_title": "Масса мен энергия байланысы E = mc²",
+        "title": "9×10¹³ Дж энергия бөлінгенде жүйе массасы қаншаға азайды?",
+        "problem_text": "9×10¹³ Дж энергия бөлінгенде жүйе массасы қаншаға азайды?",
+        "given_data": "ΔE = 9×10¹³ Дж\nc = 3×10⁸ м/с",
+        "find_text": "Δm - ?",
+        "solution": "Δm = ΔE/c² = 9×10¹³ / 9×10¹⁶ = 1×10⁻³ кг.",
+        "answer": "0,001 кг."
+      },
+      "relativity-mass-energy-emc2-task-4": {
+        "topic_title": "Масса мен энергия байланысы E = mc²",
+        "title": "Химиялық реакцияларда масса өзгерісін әдеттегі таразымен неге байқау мүмкін емес?",
+        "problem_text": "Химиялық реакцияларда масса өзгерісін әдеттегі таразымен неге байқау мүмкін емес?",
+        "given_data": "химиялық реакция энергиялары mc²-пен салыстырғанда аз",
+        "find_text": "Δm аз болуының себебі - ?",
+        "solution": "Δm = ΔE/c².\nc² өте үлкен болғандықтан, байқалатын химиялық энергияның өзі өте кіші масса өзгерісіне сәйкес келеді.",
+        "answer": "Химиялық реакциялардағы масса дефектісі тым аз."
+      },
+      "relativity-mass-energy-emc2-task-5": {
+        "topic_title": "Масса мен энергия байланысы E = mc²",
+        "title": "Ядролық реакцияда отын массасы 0,5 г-ға азайды. Энергияны табыңыз.",
+        "problem_text": "Ядролық реакцияда отын массасы 0,5 г-ға азайды. Энергияны табыңыз.",
+        "given_data": "Δm = 0,5 г = 5×10⁻⁴ кг\nc = 3×10⁸ м/с",
+        "find_text": "ΔE - ?",
+        "solution": "ΔE = Δm·c² = 5×10⁻⁴ · 9×10¹⁶ = 4,5×10¹³ Дж.",
+        "answer": "4,5×10¹³ Дж."
+      },
+      "relativity-relativistic-momentum-task-1": {
+        "topic_title": "Релятивистік импульс",
+        "title": "Массасы 2 кг бөлшек 0,6c жылдамдықпен қозғалады. γ = 1,25. Релятивистік импульсті табыңыз.",
+        "problem_text": "Массасы 2 кг бөлшек 0,6c жылдамдықпен қозғалады. γ = 1,25. Релятивистік импульсті табыңыз.",
+        "given_data": "m = 2 кг\nv = 0,6c = 1,8×10⁸ м/с\nγ = 1,25",
+        "find_text": "p - ?",
+        "solution": "p = γmv = 1,25 · 2 · 1,8×10⁸ = 4,5×10⁸ кг·м/с.",
+        "answer": "4,5×10⁸ кг·м/с."
+      },
+      "relativity-relativistic-momentum-task-2": {
+        "topic_title": "Релятивистік импульс",
+        "title": "Бөлшек үшін γ = 3, m = 1×10⁻²⁷ кг, v = 2×10⁸ м/с. p табыңыз.",
+        "problem_text": "Бөлшек үшін γ = 3, m = 1×10⁻²⁷ кг, v = 2×10⁸ м/с. p табыңыз.",
+        "given_data": "γ = 3\nm = 1×10⁻²⁷ кг\nv = 2×10⁸ м/с",
+        "find_text": "p - ?",
+        "solution": "p = γmv = 3 · 1×10⁻²⁷ · 2×10⁸ = 6×10⁻¹⁹ кг·м/с.",
+        "answer": "6×10⁻¹⁹ кг·м/с."
+      },
+      "relativity-relativistic-momentum-task-3": {
+        "topic_title": "Релятивистік импульс",
+        "title": "Бөлшектің классикалық импульсі mv-ге тең. γ = 2 кезінде релятивистік импульс классикалықтан неше есе үлкен?",
+        "problem_text": "Бөлшектің классикалық импульсі mv-ге тең. γ = 2 кезінде релятивистік импульс классикалықтан неше есе үлкен?",
+        "given_data": "pкласс = mv\npрел = γmv\nγ = 2",
+        "find_text": "pрел/pкласс - ?",
+        "solution": "pрел/pкласс = γmv/(mv) = γ = 2.",
+        "answer": "2 есе."
+      },
+      "relativity-relativistic-momentum-task-4": {
+        "topic_title": "Релятивистік импульс",
+        "title": "Үдеткіштердегі бөлшектер үшін тек p = mv формуласын қолдануға неге болмайды?",
+        "problem_text": "Үдеткіштердегі бөлшектер үшін тек p = mv формуласын қолдануға неге болмайды?",
+        "given_data": "бөлшек жылдамдықтары c-ге жақын",
+        "find_text": "p = γmv қолдану себебі - ?",
+        "solution": "Жарық жылдамдығымен салыстырмалы жылдамдықтарда γ 1-ден айқын үлкен болады.\nКлассикалық формула релятивистік әсерлерді ескермегендіктен импульсті кем бағалайды.",
+        "answer": "Лоренц-факторды ескеру керек."
+      },
+      "relativity-relativistic-momentum-task-5": {
+        "topic_title": "Релятивистік импульс",
+        "title": "Фотон энергиясы 3×10⁻¹⁹ Дж. Оның импульсін табыңыз.",
+        "problem_text": "Фотон энергиясы 3×10⁻¹⁹ Дж. Оның импульсін табыңыз.",
+        "given_data": "E = 3×10⁻¹⁹ Дж\nc = 3×10⁸ м/с",
+        "find_text": "p - ?",
+        "solution": "p = E/c = 3×10⁻¹⁹ / 3×10⁸ = 1×10⁻²⁷ кг·м/с.",
+        "answer": "1×10⁻²⁷ кг·м/с."
+      },
+      "relativity-relativistic-energy-task-1": {
+        "topic_title": "Релятивистік энергия",
+        "title": "Массасы 1 кг бөлшек γ = 2 кезінде қозғалады. Оның толық энергиясын табыңыз.",
+        "problem_text": "Массасы 1 кг бөлшек γ = 2 кезінде қозғалады. Оның толық энергиясын табыңыз.",
+        "given_data": "m = 1 кг\nγ = 2\nc = 3×10⁸ м/с",
+        "find_text": "E - ?",
+        "solution": "E = γmc² = 2 · 1 · 9×10¹⁶ = 1,8×10¹⁷ Дж.",
+        "answer": "1,8×10¹⁷ Дж."
+      },
+      "relativity-relativistic-energy-task-2": {
+        "topic_title": "Релятивистік энергия",
+        "title": "γ = 3 кезінде массасы 1×10⁻²⁷ кг бөлшектің кинетикалық энергиясын табыңыз.",
+        "problem_text": "γ = 3 кезінде массасы 1×10⁻²⁷ кг бөлшектің кинетикалық энергиясын табыңыз.",
+        "given_data": "m = 1×10⁻²⁷ кг\nγ = 3\nc = 3×10⁸ м/с",
+        "find_text": "K - ?",
+        "solution": "K = (γ - 1)mc² = (3 - 1) · 1×10⁻²⁷ · 9×10¹⁶.\nK = 1,8×10⁻¹⁰ Дж.",
+        "answer": "1,8×10⁻¹⁰ Дж."
+      },
+      "relativity-relativistic-energy-task-3": {
+        "topic_title": "Релятивистік энергия",
+        "title": "Бөлшек тыныштықта және оның тыныштық энергиясы 9×10⁻¹¹ Дж. Массасын табыңыз.",
+        "problem_text": "Бөлшек тыныштықта және оның тыныштық энергиясы 9×10⁻¹¹ Дж. Массасын табыңыз.",
+        "given_data": "E₀ = 9×10⁻¹¹ Дж\nc = 3×10⁸ м/с",
+        "find_text": "m - ?",
+        "solution": "E₀ = mc², демек m = E₀/c².\nm = 9×10⁻¹¹ / 9×10¹⁶ = 1×10⁻²⁷ кг.",
+        "answer": "1×10⁻²⁷ кг."
+      },
+      "relativity-relativistic-energy-task-4": {
+        "topic_title": "Релятивистік энергия",
+        "title": "Бөлшек үшін E = 5mc². γ және кинетикалық энергияны mc² бірлігінде табыңыз.",
+        "problem_text": "Бөлшек үшін E = 5mc². γ және кинетикалық энергияны mc² бірлігінде табыңыз.",
+        "given_data": "E = 5mc²",
+        "find_text": "γ, K - ?",
+        "solution": "E = γmc², демек γ = 5.\nK = E - E₀ = 5mc² - mc² = 4mc².",
+        "answer": "γ = 5, K = 4mc²."
+      },
+      "relativity-relativistic-energy-task-5": {
+        "topic_title": "Релятивистік энергия",
+        "title": "Бөлшектің толық энергиясы неге тек оның кинетикалық энергиясына тең емес?",
+        "problem_text": "Бөлшектің толық энергиясы неге тек оның кинетикалық энергиясына тең емес?",
+        "given_data": "бөлшектің тыныштық массасы бар",
+        "find_text": "E және K айырмасы - ?",
+        "solution": "Толық энергия тыныштық энергиясы mc²-ті қамтиды.\nКинетикалық энергия — қозғалысқа байланысты қосымша ғана: K = E - mc².",
+        "answer": "Толық энергия тыныштық энергиясын да, қозғалыс энергиясын да қамтиды."
+      },
+      "relativity-lightspeed-limit-task-1": {
+        "topic_title": "Жарық жылдамдығына жету мүмкін еместігі",
+        "title": "Электронға ұзақ уақыт энергия берсе де, оны c жылдамдыққа неге жеткізуге болмайды?",
+        "problem_text": "Электронға ұзақ уақыт энергия берсе де, оны c жылдамдыққа неге жеткізуге болмайды?",
+        "given_data": "электронның тыныштық массасы нөлден өзгеше\nv → c",
+        "find_text": "шектеу себебі - ?",
+        "solution": "Массивті бөлшек үшін γ = 1/√(1 - v²/c²).\nv → c кезінде бөлім нөлге ұмтылады, γ және E = γmc² энергиясы шексіздікке ұмтылады.",
+        "answer": "c-ге жету үшін шексіз энергия қажет болар еді."
+      },
+      "relativity-lightspeed-limit-task-2": {
+        "topic_title": "Жарық жылдамдығына жету мүмкін еместігі",
+        "title": "Бөлшек 0,99c жылдамдықпен қозғалады. Оны жарық жылдамдығына жетті деп санауға бола ма?",
+        "problem_text": "Бөлшек 0,99c жылдамдықпен қозғалады. Оны жарық жылдамдығына жетті деп санауға бола ма?",
+        "given_data": "v = 0,99c",
+        "find_text": "c-ге жетті ме - ?",
+        "solution": "0,99c c-ден кіші.\nТыныштық массасы бар бөлшек үшін c-ге өте жақын жылдамдықтың өзі жарық жылдамдығына тең емес.",
+        "answer": "Жоқ, бөлшек әлі де жарықтан баяу қозғалады."
+      },
+      "relativity-lightspeed-limit-task-3": {
+        "topic_title": "Жарық жылдамдығына жету мүмкін еместігі",
+        "title": "Фотон неге c жылдамдықпен қозғала алады, ал протон қозғала алмайды?",
+        "problem_text": "Фотон неге c жылдамдықпен қозғала алады, ал протон қозғала алмайды?",
+        "given_data": "фотонның тыныштық массасы нөл\nпротонның тыныштық массасы нөлден өзгеше",
+        "find_text": "айырмашылық - ?",
+        "solution": "Массасыз бөлшектер вакуумда c жылдамдықпен қозғалады.\nТыныштық массасы нөлден өзгеше бөлшекке c-ге жету үшін шексіз энергия қажет.",
+        "answer": "Фотон массасыз, ал протон массивті."
+      },
+      "relativity-lightspeed-limit-task-4": {
+        "topic_title": "Жарық жылдамдығына жету мүмкін еместігі",
+        "title": "γ = 10 кезінде бөлшек өте жылдам. Неге энергияны әрі қарай арттыру жылдамдықты аз ғана өзгертеді?",
+        "problem_text": "γ = 10 кезінде бөлшек өте жылдам. Неге энергияны әрі қарай арттыру жылдамдықты аз ғана өзгертеді?",
+        "given_data": "γ үлкен\nv c-ге жақын",
+        "find_text": "жылдамдық өсімінің аз болу себебі - ?",
+        "solution": "Үлкен γ кезінде жылдамдық c-ге өте жақын.\nҚосымша энергия γ, толық энергия және импульсті арттырады, бірақ жылдамдық c-ге асимптоталық жақындап, оған жетпейді.",
+        "answer": "Жылдамдық c-ге шек ретінде жақындайды."
+      },
+      "relativity-lightspeed-limit-task-5": {
+        "topic_title": "Жарық жылдамдығына жету мүмкін еместігі",
+        "title": "Жарықтан жылдам сигналдарға тыйым себептілікпен неге байланысты?",
+        "problem_text": "Жарықтан жылдам сигналдарға тыйым себептілікпен неге байланысты?",
+        "given_data": "c-ден жылдам сигнал\nәртүрлі инерциялық жүйелер",
+        "find_text": "оқиғалар ретімен байланыс - ?",
+        "solution": "СТО-да кеңістіктәрізді бөлінген оқиғалардың реті санақ жүйесіне тәуелді болуы мүмкін.\nЕгер жарықтан жылдам сигналдарға рұқсат берілсе, бір жүйеде салдар себептен бұрын келетін жағдай туады.",
+        "answer": "Жарықтан жылдам берілу оқиғалардың себептік ретін бұзар еді."
+      }
+    }
+  }
+}

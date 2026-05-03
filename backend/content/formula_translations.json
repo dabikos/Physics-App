@@ -1,0 +1,1272 @@
+{
+  "en": {
+    "formulas": {
+      "f-1": {
+        "name": "Velocity",
+        "description": "Velocity equals the ratio of distance to time",
+        "variables": {
+          "v": "velocity (m/s)",
+          "S": "distance (m)",
+          "t": "time (s)"
+        },
+        "unit": "m/s"
+      },
+      "f-2": {
+        "name": "Acceleration",
+        "description": "Acceleration equals the change in velocity per unit time",
+        "variables": {
+          "a": "acceleration (m/s²)",
+          "v": "final velocity",
+          "v₀": "initial velocity",
+          "t": "time"
+        },
+        "unit": "m/s²"
+      },
+      "f-3": {
+        "name": "Newton's Second Law",
+        "description": "Force equals mass times acceleration",
+        "variables": {
+          "F": "force (N)",
+          "m": "mass (kg)",
+          "a": "acceleration (m/s²)"
+        },
+        "unit": "N"
+      },
+      "f-4": {
+        "name": "Gravitational Force",
+        "description": "Gravitational force equals mass times gravitational acceleration",
+        "variables": {
+          "F": "force (N)",
+          "m": "mass (kg)",
+          "g": "gravitational acceleration (≈10 m/s²)"
+        },
+        "unit": "N"
+      },
+      "f-5": {
+        "name": "Momentum",
+        "description": "Momentum equals mass times velocity",
+        "variables": {
+          "p": "momentum (kg·m/s)",
+          "m": "mass (kg)",
+          "v": "velocity (m/s)"
+        },
+        "unit": "kg·m/s"
+      },
+      "f-6": {
+        "name": "Kinetic Energy",
+        "description": "Kinetic energy of a body",
+        "variables": {
+          "E": "energy (J)",
+          "m": "mass (kg)",
+          "v": "velocity (m/s)"
+        },
+        "unit": "J"
+      },
+      "f-7": {
+        "name": "Potential Energy",
+        "description": "Potential energy in gravitational field",
+        "variables": {
+          "E": "energy (J)",
+          "m": "mass (kg)",
+          "g": "gravitational acceleration",
+          "h": "height (m)"
+        },
+        "unit": "J"
+      },
+      "f-8": {
+        "name": "Work",
+        "description": "Mechanical work",
+        "variables": {
+          "A": "work (J)",
+          "F": "force (N)",
+          "S": "displacement (m)",
+          "α": "angle"
+        },
+        "unit": "J"
+      },
+      "f-9": {
+        "name": "Pendulum Period",
+        "description": "Period of a simple pendulum",
+        "variables": {
+          "T": "period (s)",
+          "l": "length (m)",
+          "g": "gravitational acceleration"
+        },
+        "unit": "s"
+      },
+      "f-10": {
+        "name": "Centripetal Acceleration",
+        "description": "Acceleration in circular motion",
+        "variables": {
+          "a": "acceleration (m/s²)",
+          "v": "velocity (m/s)",
+          "R": "radius (m)"
+        },
+        "unit": "m/s²"
+      },
+      "f-11": {
+        "name": "Quantity of Heat",
+        "description": "Heat needed for heating",
+        "variables": {
+          "Q": "heat (J)",
+          "c": "specific heat capacity",
+          "m": "mass (kg)",
+          "ΔT": "temperature change (K)"
+        },
+        "unit": "J"
+      },
+      "f-12": {
+        "name": "Ideal Gas Law",
+        "description": "Equation of state for an ideal gas",
+        "variables": {
+          "p": "pressure (Pa)",
+          "V": "volume (m³)",
+          "ν": "amount of substance (mol)",
+          "R": "gas constant",
+          "T": "temperature (K)"
+        },
+        "unit": "J"
+      },
+      "f-13": {
+        "name": "Average Kinetic Energy",
+        "description": "Average molecular energy",
+        "variables": {
+          "E": "energy (J)",
+          "k": "Boltzmann constant",
+          "T": "temperature (K)"
+        },
+        "unit": "J"
+      },
+      "f-14": {
+        "name": "First Law of Thermodynamics",
+        "description": "Energy conservation for thermal processes",
+        "variables": {
+          "Q": "heat (J)",
+          "ΔU": "internal energy change",
+          "A": "work (J)"
+        },
+        "unit": "J"
+      },
+      "f-15": {
+        "name": "Heat Engine Efficiency",
+        "description": "Maximum efficiency (Carnot cycle)",
+        "variables": {
+          "η": "efficiency",
+          "T₁": "heater temperature (K)",
+          "T₂": "cooler temperature (K)"
+        },
+        "unit": "%"
+      },
+      "f-16": {
+        "name": "Heat of Fusion",
+        "description": "Heat for melting",
+        "variables": {
+          "Q": "heat (J)",
+          "λ": "specific heat of fusion (J/kg)",
+          "m": "mass (kg)"
+        },
+        "unit": "J"
+      },
+      "f-17": {
+        "name": "Heat of Vaporization",
+        "description": "Heat for evaporation",
+        "variables": {
+          "Q": "heat (J)",
+          "L": "specific heat of vaporization",
+          "m": "mass (kg)"
+        },
+        "unit": "J"
+      },
+      "f-18": {
+        "name": "Coulomb's Law",
+        "description": "Force between charges",
+        "variables": {
+          "F": "force (N)",
+          "k": "coefficient (9×10⁹)",
+          "q": "charges (C)",
+          "r": "distance (m)"
+        },
+        "unit": "N"
+      },
+      "f-19": {
+        "name": "Electric Field Strength",
+        "description": "Electric field strength",
+        "variables": {
+          "E": "field strength (V/m)",
+          "F": "force (N)",
+          "q": "charge (C)"
+        },
+        "unit": "V/m"
+      },
+      "f-20": {
+        "name": "Ohm's Law",
+        "description": "Ohm's law for a circuit section",
+        "variables": {
+          "I": "current (A)",
+          "U": "voltage (V)",
+          "R": "resistance (Ω)"
+        },
+        "unit": "A"
+      },
+      "f-21": {
+        "name": "Electric Power",
+        "description": "Power of electric current",
+        "variables": {
+          "P": "power (W)",
+          "U": "voltage (V)",
+          "I": "current (A)"
+        },
+        "unit": "W"
+      },
+      "f-22": {
+        "name": "Capacitor Capacitance",
+        "description": "Electrical capacitance",
+        "variables": {
+          "C": "capacitance (F)",
+          "q": "charge (C)",
+          "U": "voltage (V)"
+        },
+        "unit": "F"
+      },
+      "f-23": {
+        "name": "Ampere's Force",
+        "description": "Force on a current-carrying conductor",
+        "variables": {
+          "F": "force (N)",
+          "B": "induction (T)",
+          "I": "current (A)",
+          "L": "length (m)"
+        },
+        "unit": "N"
+      },
+      "f-24": {
+        "name": "Lorentz Force",
+        "description": "Force on a moving charge",
+        "variables": {
+          "F": "force (N)",
+          "q": "charge (C)",
+          "v": "velocity (m/s)",
+          "B": "induction (T)"
+        },
+        "unit": "N"
+      },
+      "f-25": {
+        "name": "Induced EMF",
+        "description": "Law of electromagnetic induction",
+        "variables": {
+          "ε": "EMF (V)",
+          "Φ": "magnetic flux (Wb)",
+          "t": "time (s)"
+        },
+        "unit": "V"
+      },
+      "f-26": {
+        "name": "Capacitor Energy",
+        "description": "Energy of a charged capacitor",
+        "variables": {
+          "W": "energy (J)",
+          "C": "capacitance (F)",
+          "U": "voltage (V)"
+        },
+        "unit": "J"
+      },
+      "f-27": {
+        "name": "Law of Reflection",
+        "description": "Angle of incidence equals angle of reflection",
+        "variables": {
+          "α": "angle of incidence",
+          "β": "angle of reflection"
+        },
+        "unit": "°"
+      },
+      "f-28": {
+        "name": "Law of Refraction",
+        "description": "Snell's law",
+        "variables": {
+          "n": "refractive index",
+          "α": "angle of incidence",
+          "β": "angle of refraction"
+        },
+        "unit": "-"
+      },
+      "f-29": {
+        "name": "Lens Formula",
+        "description": "Thin lens formula",
+        "variables": {
+          "F": "focal length (m)",
+          "d": "object distance",
+          "f": "image distance"
+        },
+        "unit": "m"
+      },
+      "f-30": {
+        "name": "Optical Power",
+        "description": "Optical power of a lens",
+        "variables": {
+          "D": "optical power (dpt)",
+          "F": "focal length (m)"
+        },
+        "unit": "dpt"
+      },
+      "f-31": {
+        "name": "Diffraction Grating",
+        "description": "Condition for diffraction maxima",
+        "variables": {
+          "d": "grating period (m)",
+          "φ": "diffraction angle",
+          "k": "order",
+          "λ": "wavelength (m)"
+        },
+        "unit": "m"
+      },
+      "f-32": {
+        "name": "Photon Energy",
+        "description": "Energy of a light quantum",
+        "variables": {
+          "E": "energy (J)",
+          "h": "Planck's constant",
+          "ν": "frequency (Hz)"
+        },
+        "unit": "J"
+      },
+      "f-33": {
+        "name": "Photoelectric Equation",
+        "description": "Einstein's photoelectric equation",
+        "variables": {
+          "h": "Planck's constant",
+          "ν": "frequency",
+          "A": "work function",
+          "m": "electron mass",
+          "v": "velocity"
+        },
+        "unit": "J"
+      },
+      "f-34": {
+        "name": "De Broglie Wavelength",
+        "description": "Particle wave",
+        "variables": {
+          "λ": "wavelength (m)",
+          "h": "Planck's constant",
+          "p": "momentum (kg·m/s)"
+        },
+        "unit": "m"
+      },
+      "f-35": {
+        "name": "Binding Energy",
+        "description": "Nuclear binding energy",
+        "variables": {
+          "E": "energy (J)",
+          "Δm": "mass defect (kg)",
+          "c": "speed of light"
+        },
+        "unit": "J"
+      },
+      "f-36": {
+        "name": "Radioactive Decay Law",
+        "description": "Number of undecayed nuclei",
+        "variables": {
+          "N": "number of nuclei",
+          "N₀": "initial number",
+          "t": "time",
+          "T": "half-life"
+        },
+        "unit": "-"
+      },
+      "f-37": {
+        "name": "Einstein's Formula",
+        "description": "Mass-energy equivalence",
+        "variables": {
+          "E": "energy (J)",
+          "m": "mass (kg)",
+          "c": "speed of light (3×10⁸ m/s)"
+        },
+        "unit": "J"
+      },
+      "f-38": {
+        "name": "Lorentz Factor",
+        "description": "Shows how significant relativistic effects are at speed v.",
+        "variables": {
+          "γ": "Lorentz factor",
+          "v": "speed of the body or reference frame",
+          "c": "speed of light in vacuum"
+        },
+        "unit": "-"
+      },
+      "f-39": {
+        "name": "Time Dilation",
+        "description": "A moving clock runs slower relative to an observer.",
+        "variables": {
+          "Δt": "time interval in the observer frame",
+          "Δt₀": "proper time interval",
+          "γ": "Lorentz factor"
+        },
+        "unit": "s"
+      },
+      "f-40": {
+        "name": "Length Contraction",
+        "description": "The length of a body along the direction of motion is smaller in the observer frame.",
+        "variables": {
+          "L": "measured length",
+          "L₀": "proper length",
+          "γ": "Lorentz factor"
+        },
+        "unit": "m"
+      },
+      "f-41": {
+        "name": "Lorentz Time Transformation",
+        "description": "Relates the time coordinate of an event in two inertial reference frames.",
+        "variables": {
+          "t'": "time in the moving frame",
+          "t": "time in the original frame",
+          "x": "event coordinate",
+          "v": "relative speed of the frames"
+        },
+        "unit": "s"
+      },
+      "f-42": {
+        "name": "Lorentz Coordinate Transformation",
+        "description": "Relates the position coordinate of an event in two inertial reference frames.",
+        "variables": {
+          "x'": "coordinate in the moving frame",
+          "x": "coordinate in the original frame",
+          "v": "relative speed",
+          "t": "time"
+        },
+        "unit": "m"
+      },
+      "f-43": {
+        "name": "Relativistic Momentum",
+        "description": "Momentum of a particle moving at speeds comparable to the speed of light.",
+        "variables": {
+          "p": "momentum",
+          "m": "rest mass",
+          "v": "speed",
+          "γ": "Lorentz factor"
+        },
+        "unit": "kg·m/s"
+      },
+      "f-44": {
+        "name": "Rest Energy",
+        "description": "Energy associated with the rest mass of a body.",
+        "variables": {
+          "E₀": "rest energy",
+          "m": "rest mass",
+          "c": "speed of light"
+        },
+        "unit": "J"
+      },
+      "f-45": {
+        "name": "Total Relativistic Energy",
+        "description": "Total energy of a moving particle.",
+        "variables": {
+          "E": "total energy",
+          "γ": "Lorentz factor",
+          "m": "rest mass",
+          "c": "speed of light"
+        },
+        "unit": "J"
+      },
+      "f-46": {
+        "name": "Relativistic Kinetic Energy",
+        "description": "Kinetic energy of a particle in special relativity.",
+        "variables": {
+          "K": "kinetic energy",
+          "γ": "Lorentz factor",
+          "m": "rest mass",
+          "c": "speed of light"
+        },
+        "unit": "J"
+      },
+      "f-47": {
+        "name": "Energy-Momentum Relation",
+        "description": "Fundamental relation between total energy, momentum, and rest mass.",
+        "variables": {
+          "E": "total energy",
+          "p": "momentum",
+          "m": "rest mass",
+          "c": "speed of light"
+        },
+        "unit": "J²"
+      },
+      "f-48": {
+        "name": "Invariant Interval",
+        "description": "A spacetime quantity that has the same value in all inertial reference frames.",
+        "variables": {
+          "s": "spacetime interval",
+          "Δt": "time difference between events",
+          "Δx, Δy, Δz": "coordinate differences",
+          "c": "speed of light"
+        },
+        "unit": "m²"
+      },
+      "f-49": {
+        "name": "Law of Universal Gravitation",
+        "description": "Gravitational force between two bodies.",
+        "variables": {
+          "F": "gravitational force",
+          "G": "gravitational constant",
+          "m₁, m₂": "masses of the bodies",
+          "r": "distance between centers of mass"
+        },
+        "unit": "N"
+      },
+      "f-50": {
+        "name": "First Cosmic Velocity",
+        "description": "Circular orbital speed near the surface of a celestial body.",
+        "variables": {
+          "v₁": "first cosmic velocity",
+          "G": "gravitational constant",
+          "M": "mass of the central body",
+          "R": "orbital radius"
+        },
+        "unit": "m/s"
+      },
+      "f-51": {
+        "name": "Second Cosmic Velocity",
+        "description": "Minimum escape speed from a gravitational field without additional thrust.",
+        "variables": {
+          "v₂": "escape velocity",
+          "G": "gravitational constant",
+          "M": "mass of the central body",
+          "R": "distance from the center of the body"
+        },
+        "unit": "m/s"
+      },
+      "f-52": {
+        "name": "Kepler's Third Law",
+        "description": "For bodies orbiting the same center, the ratio of the square of the period to the cube of the semi-major axis is constant.",
+        "variables": {
+          "T": "orbital period",
+          "a": "semi-major axis of the orbit"
+        },
+        "unit": "s²/m³"
+      },
+      "f-53": {
+        "name": "Orbital Velocity",
+        "description": "Speed of a body in a circular orbit of radius r.",
+        "variables": {
+          "v": "orbital velocity",
+          "G": "gravitational constant",
+          "M": "mass of the central body",
+          "r": "orbital radius"
+        },
+        "unit": "m/s"
+      },
+      "f-54": {
+        "name": "Hubble's Law",
+        "description": "The recession velocity of a distant galaxy is proportional to its distance.",
+        "variables": {
+          "v": "recession velocity",
+          "H₀": "Hubble constant",
+          "d": "distance to the galaxy"
+        },
+        "unit": "m/s"
+      },
+      "f-55": {
+        "name": "Redshift",
+        "description": "Relative increase in the wavelength of radiation.",
+        "variables": {
+          "z": "redshift",
+          "λнабл": "observed wavelength",
+          "λ₀": "laboratory wavelength"
+        },
+        "unit": "-"
+      },
+      "f-56": {
+        "name": "Distance Modulus",
+        "description": "Relates apparent and absolute stellar magnitudes to distance.",
+        "variables": {
+          "m": "apparent magnitude",
+          "M": "absolute magnitude",
+          "d": "distance in parsecs"
+        },
+        "unit": "magnitude"
+      },
+      "f-57": {
+        "name": "Parallax",
+        "description": "Distance to a nearby star in parsecs from its annual parallax in arcseconds.",
+        "variables": {
+          "d": "distance (pc)",
+          "p": "parallax (arcseconds)"
+        },
+        "unit": "pc"
+      },
+      "f-58": {
+        "name": "Stellar Luminosity",
+        "description": "Luminosity of a star approximated as radiation from a blackbody.",
+        "variables": {
+          "L": "luminosity",
+          "R": "stellar radius",
+          "σ": "Stefan-Boltzmann constant",
+          "T": "effective temperature"
+        },
+        "unit": "W"
+      },
+      "f-59": {
+        "name": "Stefan-Boltzmann Law",
+        "description": "Radiant exitance of a blackbody surface.",
+        "variables": {
+          "j": "radiated power per unit area",
+          "σ": "Stefan-Boltzmann constant",
+          "T": "temperature"
+        },
+        "unit": "W/m²"
+      },
+      "f-60": {
+        "name": "Wien's Displacement Law",
+        "description": "The wavelength of maximum emission is inversely proportional to temperature.",
+        "variables": {
+          "λmax": "wavelength of maximum emission",
+          "T": "temperature",
+          "b": "Wien's displacement constant"
+        },
+        "unit": "m·K"
+      },
+      "f-61": {
+        "name": "Angular Resolution of a Telescope",
+        "description": "Diffraction limit of a circular aperture.",
+        "variables": {
+          "θ": "minimum angular size",
+          "λ": "wavelength",
+          "D": "diameter of the objective or mirror"
+        },
+        "unit": "rad"
+      }
+    }
+  },
+  "kk": {
+    "formulas": {
+      "f-1": {
+        "name": "Жылдамдық",
+        "description": "Жылдамдық — жол мен уақыттың қатынасы",
+        "variables": {
+          "v": "жылдамдық (м/с)",
+          "S": "жол (м)",
+          "t": "уақыт (с)"
+        },
+        "unit": "м/с"
+      },
+      "f-2": {
+        "name": "Үдеу",
+        "description": "Үдеу — уақыт бірлігіндегі жылдамдықтың өзгерісі",
+        "variables": {
+          "a": "үдеу (м/с²)",
+          "v": "соңғы жылдамдық",
+          "v₀": "бастапқы жылдамдық",
+          "t": "уақыт"
+        },
+        "unit": "м/с²"
+      },
+      "f-3": {
+        "name": "Ньютонның екінші заңы",
+        "description": "Күш — массаның үдеуге көбейтіндісі",
+        "variables": {
+          "F": "күш (Н)",
+          "m": "масса (кг)",
+          "a": "үдеу (м/с²)"
+        },
+        "unit": "Н"
+      },
+      "f-4": {
+        "name": "Ауырлық күші",
+        "description": "Ауырлық күші — массаның еркін түсу үдеуіне көбейтіндісі",
+        "variables": {
+          "F": "күш (Н)",
+          "m": "масса (кг)",
+          "g": "еркін түсу үдеуі (≈10 м/с²)"
+        },
+        "unit": "Н"
+      },
+      "f-5": {
+        "name": "Импульс",
+        "description": "Импульс — массаның жылдамдыққа көбейтіндісі",
+        "variables": {
+          "p": "импульс (кг·м/с)",
+          "m": "масса (кг)",
+          "v": "жылдамдық (м/с)"
+        },
+        "unit": "кг·м/с"
+      },
+      "f-6": {
+        "name": "Кинетикалық энергия",
+        "description": "Дененің кинетикалық энергиясы",
+        "variables": {
+          "E": "энергия (Дж)",
+          "m": "масса (кг)",
+          "v": "жылдамдық (м/с)"
+        },
+        "unit": "Дж"
+      },
+      "f-7": {
+        "name": "Потенциалдық энергия",
+        "description": "Ауырлық өрісіндегі потенциалдық энергия",
+        "variables": {
+          "E": "энергия (Дж)",
+          "m": "масса (кг)",
+          "g": "еркін түсу үдеуі",
+          "h": "биіктік (м)"
+        },
+        "unit": "Дж"
+      },
+      "f-8": {
+        "name": "Жұмыс",
+        "description": "Механикалық жұмыс",
+        "variables": {
+          "A": "жұмыс (Дж)",
+          "F": "күш (Н)",
+          "S": "орын ауыстыру (м)",
+          "α": "бұрыш"
+        },
+        "unit": "Дж"
+      },
+      "f-9": {
+        "name": "Маятник периоды",
+        "description": "Математикалық маятник периоды",
+        "variables": {
+          "T": "период (с)",
+          "l": "ұзындық (м)",
+          "g": "еркін түсу үдеуі"
+        },
+        "unit": "с"
+      },
+      "f-10": {
+        "name": "Центрге тартқыш үдеу",
+        "description": "Шеңбер бойымен қозғалыстағы үдеу",
+        "variables": {
+          "a": "үдеу (м/с²)",
+          "v": "жылдамдық (м/с)",
+          "R": "радиус (м)"
+        },
+        "unit": "м/с²"
+      },
+      "f-11": {
+        "name": "Жылу мөлшері",
+        "description": "Қыздыру үшін қажетті жылу",
+        "variables": {
+          "Q": "жылу (Дж)",
+          "c": "меншікті жылу сыйымдылық",
+          "m": "масса (кг)",
+          "ΔT": "температура өзгерісі (К)"
+        },
+        "unit": "Дж"
+      },
+      "f-12": {
+        "name": "Идеал газ теңдеуі",
+        "description": "Идеал газдың күй теңдеуі",
+        "variables": {
+          "p": "қысым (Па)",
+          "V": "көлем (м³)",
+          "ν": "зат мөлшері (моль)",
+          "R": "газ тұрақтысы",
+          "T": "температура (К)"
+        },
+        "unit": "Дж"
+      },
+      "f-13": {
+        "name": "Орташа кинетикалық энергия",
+        "description": "Молекуланың орташа энергиясы",
+        "variables": {
+          "E": "энергия (Дж)",
+          "k": "Больцман тұрақтысы",
+          "T": "температура (К)"
+        },
+        "unit": "Дж"
+      },
+      "f-14": {
+        "name": "Термодинамиканың бірінші заңы",
+        "description": "Жылу процестері үшін энергияның сақталуы",
+        "variables": {
+          "Q": "жылу (Дж)",
+          "ΔU": "ішкі энергия өзгерісі",
+          "A": "жұмыс (Дж)"
+        },
+        "unit": "Дж"
+      },
+      "f-15": {
+        "name": "Жылу қозғалтқышының ПӘК-і",
+        "description": "Ең жоғары ПӘК (Карно циклі)",
+        "variables": {
+          "η": "ПӘК",
+          "T₁": "қыздырғыш температурасы (К)",
+          "T₂": "тоңазытқыш температурасы (К)"
+        },
+        "unit": "%"
+      },
+      "f-16": {
+        "name": "Балқу жылуы",
+        "description": "Балқыту үшін жылу",
+        "variables": {
+          "Q": "жылу (Дж)",
+          "λ": "меншікті балқу жылуы (Дж/кг)",
+          "m": "масса (кг)"
+        },
+        "unit": "Дж"
+      },
+      "f-17": {
+        "name": "Булану жылуы",
+        "description": "Буландыру үшін жылу",
+        "variables": {
+          "Q": "жылу (Дж)",
+          "L": "меншікті булану жылуы",
+          "m": "масса (кг)"
+        },
+        "unit": "Дж"
+      },
+      "f-18": {
+        "name": "Кулон заңы",
+        "description": "Зарядтар арасындағы күш",
+        "variables": {
+          "F": "күш (Н)",
+          "k": "коэффициент (9×10⁹)",
+          "q": "зарядтар (Кл)",
+          "r": "қашықтық (м)"
+        },
+        "unit": "Н"
+      },
+      "f-19": {
+        "name": "Электр өрісінің кернеулігі",
+        "description": "Электр өрісінің кернеулігі",
+        "variables": {
+          "E": "кернеулік (В/м)",
+          "F": "күш (Н)",
+          "q": "заряд (Кл)"
+        },
+        "unit": "В/м"
+      },
+      "f-20": {
+        "name": "Ом заңы",
+        "description": "Тізбек бөлігі үшін Ом заңы",
+        "variables": {
+          "I": "ток (А)",
+          "U": "кернеу (В)",
+          "R": "кедергі (Ом)"
+        },
+        "unit": "А"
+      },
+      "f-21": {
+        "name": "Электр қуаты",
+        "description": "Электр тогының қуаты",
+        "variables": {
+          "P": "қуат (Вт)",
+          "U": "кернеу (В)",
+          "I": "ток (А)"
+        },
+        "unit": "Вт"
+      },
+      "f-22": {
+        "name": "Конденсатор сыйымдылығы",
+        "description": "Электр сыйымдылығы",
+        "variables": {
+          "C": "сыйымдылық (Ф)",
+          "q": "заряд (Кл)",
+          "U": "кернеу (В)"
+        },
+        "unit": "Ф"
+      },
+      "f-23": {
+        "name": "Ампер күші",
+        "description": "Тоқ өтетін өткізгішке әсер ететін күш",
+        "variables": {
+          "F": "күш (Н)",
+          "B": "индукция (Тл)",
+          "I": "ток (А)",
+          "L": "ұзындық (м)"
+        },
+        "unit": "Н"
+      },
+      "f-24": {
+        "name": "Лоренц күші",
+        "description": "Қозғалатын зарядқа әсер ететін күш",
+        "variables": {
+          "F": "күш (Н)",
+          "q": "заряд (Кл)",
+          "v": "жылдамдық (м/с)",
+          "B": "индукция (Тл)"
+        },
+        "unit": "Н"
+      },
+      "f-25": {
+        "name": "Индукция ЭҚК-і",
+        "description": "Электромагниттік индукция заңы",
+        "variables": {
+          "ε": "ЭҚК (В)",
+          "Φ": "магнит ағыны (Вб)",
+          "t": "уақыт (с)"
+        },
+        "unit": "В"
+      },
+      "f-26": {
+        "name": "Конденсатор энергиясы",
+        "description": "Зарядталған конденсатор энергиясы",
+        "variables": {
+          "W": "энергия (Дж)",
+          "C": "сыйымдылық (Ф)",
+          "U": "кернеу (В)"
+        },
+        "unit": "Дж"
+      },
+      "f-27": {
+        "name": "Шағылу заңы",
+        "description": "Түсу бұрышы шағылу бұрышына тең",
+        "variables": {
+          "α": "түсу бұрышы",
+          "β": "шағылу бұрышы"
+        },
+        "unit": "°"
+      },
+      "f-28": {
+        "name": "Сыну заңы",
+        "description": "Снелл заңы",
+        "variables": {
+          "n": "сыну көрсеткіші",
+          "α": "түсу бұрышы",
+          "β": "сыну бұрышы"
+        },
+        "unit": "-"
+      },
+      "f-29": {
+        "name": "Линза формуласы",
+        "description": "Жұқа линза формуласы",
+        "variables": {
+          "F": "фокус аралығы (м)",
+          "d": "зат қашықтығы",
+          "f": "кескін қашықтығы"
+        },
+        "unit": "м"
+      },
+      "f-30": {
+        "name": "Оптикалық күш",
+        "description": "Линзаның оптикалық күші",
+        "variables": {
+          "D": "оптикалық күш (дптр)",
+          "F": "фокус аралығы (м)"
+        },
+        "unit": "дптр"
+      },
+      "f-31": {
+        "name": "Дифракциялық тор",
+        "description": "Дифракциялық максимум шарты",
+        "variables": {
+          "d": "тор периоды (м)",
+          "φ": "дифракция бұрышы",
+          "k": "ретті",
+          "λ": "толқын ұзындығы (м)"
+        },
+        "unit": "м"
+      },
+      "f-32": {
+        "name": "Фотон энергиясы",
+        "description": "Жарық кванттық энергиясы",
+        "variables": {
+          "E": "энергия (Дж)",
+          "h": "Планк тұрақтысы",
+          "ν": "жиілік (Гц)"
+        },
+        "unit": "Дж"
+      },
+      "f-33": {
+        "name": "Фотоэффект теңдеуі",
+        "description": "Эйнштейн фотоэффект теңдеуі",
+        "variables": {
+          "h": "Планк тұрақтысы",
+          "ν": "жиілік",
+          "A": "шығу жұмысы",
+          "m": "электрон массасы",
+          "v": "жылдамдық"
+        },
+        "unit": "Дж"
+      },
+      "f-34": {
+        "name": "Де Бройль толқын ұзындығы",
+        "description": "Бөлшектің толқыны",
+        "variables": {
+          "λ": "толқын ұзындығы (м)",
+          "h": "Планк тұрақтысы",
+          "p": "импульс (кг·м/с)"
+        },
+        "unit": "м"
+      },
+      "f-35": {
+        "name": "Байланыс энергиясы",
+        "description": "Ядролық байланыс энергиясы",
+        "variables": {
+          "E": "энергия (Дж)",
+          "Δm": "масса ақауы (кг)",
+          "c": "жарық жылдамдығы"
+        },
+        "unit": "Дж"
+      },
+      "f-36": {
+        "name": "Радиоактивті ыдырау заңы",
+        "description": "Ыдырамаған ядролар саны",
+        "variables": {
+          "N": "ядролар саны",
+          "N₀": "бастапқы саны",
+          "t": "уақыт",
+          "T": "жартылай ыдырау периоды"
+        },
+        "unit": "-"
+      },
+      "f-37": {
+        "name": "Эйнштейн формуласы",
+        "description": "Масса мен энергияның эквиваленттігі",
+        "variables": {
+          "E": "энергия (Дж)",
+          "m": "масса (кг)",
+          "c": "жарық жылдамдығы (3×10⁸ м/с)"
+        },
+        "unit": "Дж"
+      },
+      "f-38": {
+        "name": "Лоренц факторы",
+        "description": "v жылдамдықта релятивистік әсерлердің қаншалықты байқалатынын көрсетеді.",
+        "variables": {
+          "γ": "Лоренц факторы",
+          "v": "дененің немесе санақ жүйесінің жылдамдығы",
+          "c": "вакуумдағы жарық жылдамдығы"
+        },
+        "unit": "-"
+      },
+      "f-39": {
+        "name": "Уақыттың баяулауы",
+        "description": "Қозғалып тұрған сағат бақылаушыға қатысты баяу жүреді.",
+        "variables": {
+          "Δt": "бақылаушы жүйесіндегі уақыт аралығы",
+          "Δt₀": "меншікті уақыт аралығы",
+          "γ": "Лоренц факторы"
+        },
+        "unit": "с"
+      },
+      "f-40": {
+        "name": "Ұзындықтың қысқаруы",
+        "description": "Қозғалыс бағыты бойындағы дене ұзындығы бақылаушы жүйесінде қысқарады.",
+        "variables": {
+          "L": "өлшенген ұзындық",
+          "L₀": "меншікті ұзындық",
+          "γ": "Лоренц факторы"
+        },
+        "unit": "м"
+      },
+      "f-41": {
+        "name": "Лоренцтің уақыт түрлендіруі",
+        "description": "Оқиғаның уақытын екі инерциялық санақ жүйесінде байланыстырады.",
+        "variables": {
+          "t'": "қозғалатын жүйедегі уақыт",
+          "t": "бастапқы жүйедегі уақыт",
+          "x": "оқиға координатасы",
+          "v": "жүйелердің салыстырмалы жылдамдығы"
+        },
+        "unit": "с"
+      },
+      "f-42": {
+        "name": "Лоренцтің координата түрлендіруі",
+        "description": "Оқиғаның координатасын екі инерциялық санақ жүйесінде байланыстырады.",
+        "variables": {
+          "x'": "қозғалатын жүйедегі координата",
+          "x": "бастапқы жүйедегі координата",
+          "v": "салыстырмалы жылдамдық",
+          "t": "уақыт"
+        },
+        "unit": "м"
+      },
+      "f-43": {
+        "name": "Релятивистік импульс",
+        "description": "Жарық жылдамдығымен салыстырмалы жылдамдықтағы бөлшектің импульсі.",
+        "variables": {
+          "p": "импульс",
+          "m": "тыныштық массасы",
+          "v": "жылдамдық",
+          "γ": "Лоренц факторы"
+        },
+        "unit": "кг·м/с"
+      },
+      "f-44": {
+        "name": "Тыныштық энергиясы",
+        "description": "Дененің тыныштық массасымен байланысты энергия.",
+        "variables": {
+          "E₀": "тыныштық энергиясы",
+          "m": "тыныштық массасы",
+          "c": "жарық жылдамдығы"
+        },
+        "unit": "Дж"
+      },
+      "f-45": {
+        "name": "Толық релятивистік энергия",
+        "description": "Қозғалып тұрған бөлшектің толық энергиясы.",
+        "variables": {
+          "E": "толық энергия",
+          "γ": "Лоренц факторы",
+          "m": "тыныштық массасы",
+          "c": "жарық жылдамдығы"
+        },
+        "unit": "Дж"
+      },
+      "f-46": {
+        "name": "Релятивистік кинетикалық энергия",
+        "description": "Арнайы салыстырмалылық теориясындағы бөлшектің кинетикалық энергиясы.",
+        "variables": {
+          "K": "кинетикалық энергия",
+          "γ": "Лоренц факторы",
+          "m": "тыныштық массасы",
+          "c": "жарық жылдамдығы"
+        },
+        "unit": "Дж"
+      },
+      "f-47": {
+        "name": "Энергия мен импульс байланысы",
+        "description": "Толық энергия, импульс және масса арасындағы негізгі қатынас.",
+        "variables": {
+          "E": "толық энергия",
+          "p": "импульс",
+          "m": "тыныштық массасы",
+          "c": "жарық жылдамдығы"
+        },
+        "unit": "Дж²"
+      },
+      "f-48": {
+        "name": "Инвариантты интервал",
+        "description": "Барлық инерциялық санақ жүйелерінде бірдей болатын кеңістік-уақыт шамасы.",
+        "variables": {
+          "s": "кеңістік-уақыт интервалы",
+          "Δt": "оқиғалар уақытының айырмасы",
+          "Δx, Δy, Δz": "координаталар айырмалары",
+          "c": "жарық жылдамдығы"
+        },
+        "unit": "м²"
+      },
+      "f-49": {
+        "name": "Бүкіләлемдік тартылыс заңы",
+        "description": "Екі дененің гравитациялық әсерлесу күші.",
+        "variables": {
+          "F": "тартылыс күші",
+          "G": "гравитациялық тұрақты",
+          "m₁, m₂": "денелер массалары",
+          "r": "массалар центрлері арасындағы қашықтық"
+        },
+        "unit": "Н"
+      },
+      "f-50": {
+        "name": "Бірінші ғарыштық жылдамдық",
+        "description": "Аспан денесінің бетіне жақын шеңберлік орбита жылдамдығы.",
+        "variables": {
+          "v₁": "бірінші ғарыштық жылдамдық",
+          "G": "гравитациялық тұрақты",
+          "M": "орталық дененің массасы",
+          "R": "орбита радиусы"
+        },
+        "unit": "м/с"
+      },
+      "f-51": {
+        "name": "Екінші ғарыштық жылдамдық",
+        "description": "Қосымша тартусыз гравитациялық өрістен шығуға қажет ең кіші жылдамдық.",
+        "variables": {
+          "v₂": "қашу жылдамдығы",
+          "G": "гравитациялық тұрақты",
+          "M": "орталық дененің массасы",
+          "R": "дене центрінен қашықтық"
+        },
+        "unit": "м/с"
+      },
+      "f-52": {
+        "name": "Кеплердің үшінші заңы",
+        "description": "Бір орталықты айналатын денелер үшін период квадратының үлкен жарты ось кубына қатынасы тұрақты.",
+        "variables": {
+          "T": "айналу периоды",
+          "a": "орбитаның үлкен жарты осі"
+        },
+        "unit": "с²/м³"
+      },
+      "f-53": {
+        "name": "Орбиталық жылдамдық",
+        "description": "r радиусты шеңберлік орбитадағы дененің жылдамдығы.",
+        "variables": {
+          "v": "орбиталық жылдамдық",
+          "G": "гравитациялық тұрақты",
+          "M": "орталық дененің массасы",
+          "r": "орбита радиусы"
+        },
+        "unit": "м/с"
+      },
+      "f-54": {
+        "name": "Хаббл заңы",
+        "description": "Алыс галактиканың алыстау жылдамдығы оған дейінгі қашықтыққа пропорционал.",
+        "variables": {
+          "v": "алыстау жылдамдығы",
+          "H₀": "Хаббл тұрақтысы",
+          "d": "галактикаға дейінгі қашықтық"
+        },
+        "unit": "м/с"
+      },
+      "f-55": {
+        "name": "Қызыл ығысу",
+        "description": "Сәулелену толқын ұзындығының салыстырмалы ұлғаюы.",
+        "variables": {
+          "z": "қызыл ығысу",
+          "λнабл": "бақыланатын толқын ұзындығы",
+          "λ₀": "зертханалық толқын ұзындығы"
+        },
+        "unit": "-"
+      },
+      "f-56": {
+        "name": "Қашықтық модулі",
+        "description": "Көрінерлік және абсолют жұлдыздық шамаларды қашықтықпен байланыстырады.",
+        "variables": {
+          "m": "көрінерлік жұлдыздық шама",
+          "M": "абсолют жұлдыздық шама",
+          "d": "парсекпен алынған қашықтық"
+        },
+        "unit": "жұлдыздық шама"
+      },
+      "f-57": {
+        "name": "Параллакс",
+        "description": "Жақын жұлдызға дейінгі қашықтықты жылдық параллакс арқылы парсекпен табу.",
+        "variables": {
+          "d": "қашықтық (пк)",
+          "p": "параллакс (бұрыштық секунд)"
+        },
+        "unit": "пк"
+      },
+      "f-58": {
+        "name": "Жұлдыз жарықтылығы",
+        "description": "Жұлдыздың жарықтылығы абсолют қара дене сәулеленуі ретінде жуықталады.",
+        "variables": {
+          "L": "жарықтылық",
+          "R": "жұлдыз радиусы",
+          "σ": "Стефан-Больцман тұрақтысы",
+          "T": "тиімді температура"
+        },
+        "unit": "Вт"
+      },
+      "f-59": {
+        "name": "Стефан-Больцман заңы",
+        "description": "Абсолют қара дене бетінің энергетикалық жарықтылығы.",
+        "variables": {
+          "j": "бірлік ауданнан сәулеленетін қуат",
+          "σ": "Стефан-Больцман тұрақтысы",
+          "T": "температура"
+        },
+        "unit": "Вт/м²"
+      },
+      "f-60": {
+        "name": "Виннің ығысу заңы",
+        "description": "Максимум сәулелену толқын ұзындығы температураға кері пропорционал.",
+        "variables": {
+          "λmax": "максимум сәулелену толқын ұзындығы",
+          "T": "температура",
+          "b": "Вин тұрақтысы"
+        },
+        "unit": "м·К"
+      },
+      "f-61": {
+        "name": "Телескоптың бұрыштық айыру қабілеті",
+        "description": "Дөңгелек апертураның дифракциялық айыру шегі.",
+        "variables": {
+          "θ": "ең кіші бұрыштық өлшем",
+          "λ": "толқын ұзындығы",
+          "D": "объектив немесе айна диаметрі"
+        },
+        "unit": "рад"
+      }
+    }
+  }
+}

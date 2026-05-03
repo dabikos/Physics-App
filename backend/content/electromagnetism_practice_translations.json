@@ -1,0 +1,4014 @@
+{
+  "en": {
+    "tests": {
+      "electromagnetism-electric-charge-test": {
+        "title": "Test: Electric Charge",
+        "questions": [
+          {
+            "question": "Which value is the smallest free electric charge by magnitude?",
+            "options": [
+              "6.02×10²³ C",
+              "1 C",
+              "9×10⁹ C",
+              "1.6×10⁻¹⁹ C"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "A body has an excess of electrons. What is the sign of its charge?",
+            "options": [
+              "Positive.",
+              "Charge has no sign.",
+              "Necessarily zero.",
+              "Negative."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "How is charge quantization written?",
+            "options": [
+              "q = U/R",
+              "q = ne",
+              "q = mv",
+              "q = It²"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If a neutral body lost electrons, it became:",
+            "options": [
+              "positively charged.",
+              "uncharged under all conditions.",
+              "magnetic, but not electric.",
+              "negatively charged."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "The law of conservation of electric charge means that:",
+            "options": [
+              "charge always disappears during friction.",
+              "any charge can have an arbitrary fractional value.",
+              "the total charge of a closed system does not change.",
+              "charge exists only in conductors."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-coulomb-law-test": {
+        "title": "Test: Coulomb's Law",
+        "questions": [
+          {
+            "question": "Coulomb's law describes the interaction force of:",
+            "options": [
+              "two magnets only while moving.",
+              "a conductor and a liquid.",
+              "two stationary point charges.",
+              "a body and Earth."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "How will the Coulomb force change if the distance between charges is increased 2 times?",
+            "options": [
+              "It will increase 2 times.",
+              "It will decrease 2 times.",
+              "It will increase 4 times.",
+              "It will decrease 4 times."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The formula of Coulomb's law is:",
+            "options": [
+              "F = qvB",
+              "F = ma",
+              "F = k|q₁q₂|/r²",
+              "F = BIL"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Two like charges:",
+            "options": [
+              "attract.",
+              "are always neutralized.",
+              "repel.",
+              "do not interact."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The coefficient k in vacuum is approximately:",
+            "options": [
+              "6.02×10²³ N·m²/C²",
+              "9×10⁹ N·m²/C²",
+              "8.31 N·m²/C²",
+              "1.6×10⁻¹⁹ N·m²/C²"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-electric-field-test": {
+        "title": "Test: Electric Field",
+        "questions": [
+          {
+            "question": "An electric field is detected by its action:",
+            "options": [
+              "only on sound.",
+              "on an electric charge.",
+              "only on a neutral gas.",
+              "only on light in vacuum."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Electric field strength is defined by the formula:",
+            "options": [
+              "E = mc²",
+              "E = q/F",
+              "E = IR",
+              "E = F/q"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The unit of electric field strength is:",
+            "options": [
+              "J·s",
+              "N/C",
+              "C/N",
+              "ohm"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The direction of vector E coincides with the direction of the force acting on:",
+            "options": [
+              "a magnetic pole.",
+              "a neutral molecule.",
+              "a positive test charge.",
+              "a negative charge."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The field strength of a point charge decreases with distance as:",
+            "options": [
+              "r²",
+              "r",
+              "1/r²",
+              "1/r"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-potential-voltage-test": {
+        "title": "Test: Potential and Voltage",
+        "questions": [
+          {
+            "question": "The voltage between two points is equal to:",
+            "options": [
+              "the sum of charges.",
+              "the potential difference of these points.",
+              "only the resistance of a conductor.",
+              "the product of force and mass."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The work of an electric field when moving charge q through voltage U is:",
+            "options": [
+              "A = U/q",
+              "A = IR",
+              "A = mv²/2",
+              "A = qU"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "In a uniform field, the relation between field strength and voltage is:",
+            "options": [
+              "E = q/U",
+              "E = U/d",
+              "E = d/U",
+              "E = Ud"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The unit of voltage is:",
+            "options": [
+              "tesla.",
+              "ohm.",
+              "coulomb.",
+              "volt."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If a charge moves between points with the same potential, the field work:",
+            "options": [
+              "is always negative.",
+              "is zero.",
+              "equals q/U.",
+              "is maximum."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-capacitors-test": {
+        "title": "Test: Capacitors",
+        "questions": [
+          {
+            "question": "A capacitor is designed for:",
+            "options": [
+              "measuring mass.",
+              "storing electric charge and electric-field energy.",
+              "turning current into a magnet.",
+              "creating gravity."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Capacitance is defined by the formula:",
+            "options": [
+              "C = qU",
+              "C = U/q",
+              "C = q/U",
+              "C = IR"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The unit of capacitance is:",
+            "options": [
+              "newton.",
+              "farad.",
+              "tesla.",
+              "ohm."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The energy of a charged capacitor is:",
+            "options": [
+              "W = mg",
+              "W = IR",
+              "W = q/t",
+              "W = CU²/2"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the voltage across a capacitor is increased 2 times at the same capacitance, the energy:",
+            "options": [
+              "increases 4 times.",
+              "does not change.",
+              "decreases 2 times.",
+              "increases 2 times."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "electromagnetism-current-strength-test": {
+        "title": "Test: Current",
+        "questions": [
+          {
+            "question": "A charge of 12 C passed through a conductor cross-section in 4 s. What is the current?",
+            "options": [
+              "16 A",
+              "3 A",
+              "48 A",
+              "0.33 A"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Which unit corresponds to electric current?",
+            "options": [
+              "coulomb",
+              "ohm",
+              "ampere",
+              "volt"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If the charge passing through a conductor in the same time is doubled, the current:",
+            "options": [
+              "becomes zero",
+              "decreases 2 times",
+              "increases 2 times",
+              "does not change"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "What does a current of 1 A mean?",
+            "options": [
+              "A force of 1 N acts on a charge",
+              "Resistance equals 1 ohm",
+              "A charge of 1 C passes through the cross-section in 1 s",
+              "Voltage equals 1 V"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "In a metal conductor, electric current is mainly associated with the directed motion of:",
+            "options": [
+              "air molecules",
+              "positive ions of the crystal lattice",
+              "free electrons",
+              "neutrons"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-ohm-law-test": {
+        "title": "Test: Ohm's Law",
+        "questions": [
+          {
+            "question": "At voltage 12 V, a current through a 6 ohm resistor is:",
+            "options": [
+              "72 A",
+              "0.5 A",
+              "18 A",
+              "2 A"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the voltage across a resistor is increased 3 times while resistance is unchanged, the current:",
+            "options": [
+              "becomes infinite",
+              "does not change",
+              "increases 3 times",
+              "decreases 3 times"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Which formula expresses Ohm's law for a circuit section?",
+            "options": [
+              "P = UI",
+              "I = U/R",
+              "q = It",
+              "F = qvB"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In a complete circuit with emf ε, external resistance R, and internal resistance r, the current is:",
+            "options": [
+              "I = R/(ε+r)",
+              "I = ε/(R+r)",
+              "I = ε/(R-r)",
+              "I = εR"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why can current become very large during a short circuit?",
+            "options": [
+              "charge disappears from the circuit",
+              "wire resistance sharply increases",
+              "voltage always becomes zero",
+              "the external resistance becomes small, so current is mainly limited by the source's internal resistance"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-work-power-test": {
+        "title": "Test: Work and Power of Current",
+        "questions": [
+          {
+            "question": "The power of electric current in a circuit section is:",
+            "options": [
+              "P = R/U",
+              "P = It",
+              "P = q/t",
+              "P = UI"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The work of current over time t is calculated by:",
+            "options": [
+              "A = q/t",
+              "A = UIt",
+              "A = I/R",
+              "A = U/I"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The heat released in a resistor is:",
+            "options": [
+              "Q = IR/t",
+              "Q = qE",
+              "Q = I²Rt",
+              "Q = U/R"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If the current through a resistor is increased 2 times at the same R and t, the heat amount:",
+            "options": [
+              "increases 4 times",
+              "decreases 2 times",
+              "increases 2 times",
+              "does not change"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "A 100 W device consumes energy in 10 s equal to:",
+            "options": [
+              "100 J",
+              "1000 J",
+              "10 J",
+              "10000 J"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-conductor-connections-test": {
+        "title": "Test: Conductor Connections",
+        "questions": [
+          {
+            "question": "For a series connection of two resistors, the total resistance is:",
+            "options": [
+              "R = R₁/R₂",
+              "R = R₁ + R₂",
+              "R = R₁ - R₂",
+              "R = R₁R₂"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "For a parallel connection of two identical 10 ohm resistors, the total resistance is:",
+            "options": [
+              "20 ohm",
+              "1 ohm",
+              "10 ohm",
+              "5 ohm"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "What is the same for all conductors connected in series?",
+            "options": [
+              "resistance",
+              "current",
+              "voltage",
+              "power"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "What is the same for parallel-connected branches?",
+            "options": [
+              "resistance",
+              "length of conductors",
+              "voltage",
+              "current"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If one lamp in a series circuit is unscrewed, the other lamps:",
+            "options": [
+              "go out because the circuit is broken",
+              "continue to glow brighter",
+              "glow unchanged",
+              "turn into a parallel connection"
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "electromagnetism-magnetic-field-test": {
+        "title": "Test: Magnetic Field",
+        "questions": [
+          {
+            "question": "A magnetic field is created by:",
+            "options": [
+              "only stationary charges",
+              "only an insulator without current",
+              "moving charges and electric current",
+              "only bodies with large mass"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The unit of magnetic induction B is:",
+            "options": [
+              "tesla",
+              "ohm",
+              "coulomb",
+              "volt"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "If current in a long straight conductor is increased 2 times, the magnetic induction at the same distance:",
+            "options": [
+              "increases 2 times",
+              "increases 4 times",
+              "does not change",
+              "decreases 2 times"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "The magnetic flux through a flat loop in a perpendicular field is:",
+            "options": [
+              "Φ = IR",
+              "Φ = S/B",
+              "Φ = BS",
+              "Φ = B/S"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The direction of magnetic field lines around a straight current-carrying conductor is determined by:",
+            "options": [
+              "the lever rule",
+              "Archimedes' formula",
+              "the right-hand rule",
+              "Ohm's law"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-ampere-force-test": {
+        "title": "Test: Ampere Force",
+        "questions": [
+          {
+            "question": "The Ampere force acts on:",
+            "options": [
+              "an uncharged capacitor",
+              "a current-carrying conductor in a magnetic field",
+              "a body in a gravitational field",
+              "a stationary uncharged sphere"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The formula for the Ampere force is:",
+            "options": [
+              "F = kq₁q₂/r²",
+              "F = qE",
+              "F = ma",
+              "F = BILsinα"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "When is the Ampere force zero?",
+            "options": [
+              "the conductor length is nonzero",
+              "the current is very large",
+              "the conductor is perpendicular to field lines",
+              "the conductor is parallel to magnetic field lines"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "At α = 90°, the Ampere force is:",
+            "options": [
+              "zero",
+              "negative",
+              "maximum",
+              "independent of current"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The direction of the Ampere force is determined by:",
+            "options": [
+              "the law of conservation of energy",
+              "the rule for adding resistances",
+              "the left-hand rule",
+              "Coulomb's law"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-lorentz-force-test": {
+        "title": "Test: Lorentz Force",
+        "questions": [
+          {
+            "question": "The Lorentz force acts on:",
+            "options": [
+              "a resistor without current",
+              "an uncharged molecule without a field",
+              "a moving charge in a magnetic field",
+              "only a stationary charge"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The formula for the magnetic component of the Lorentz force is:",
+            "options": [
+              "F = q/t",
+              "F = qvBsinα",
+              "F = UI",
+              "F = mg"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If a charge moves parallel to a magnetic field, the Lorentz force:",
+            "options": [
+              "equals qB/v",
+              "equals qvB",
+              "is zero",
+              "is maximum"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "In a uniform magnetic field with v ⟂ B, a charged particle moves in a circle because the Lorentz force:",
+            "options": [
+              "always increases speed",
+              "equals gravity",
+              "is directed along velocity",
+              "is directed perpendicular to velocity"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The radius of a charged particle's circular path in a magnetic field is:",
+            "options": [
+              "R = qvB",
+              "R = B/(qv)",
+              "R = mv/(qB)",
+              "R = qB/(mv)"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-faraday-law-test": {
+        "title": "Test: Faraday's Law",
+        "questions": [
+          {
+            "question": "Induced current appears when:",
+            "options": [
+              "the loop resistance is infinite",
+              "the magnetic flux through a loop changes",
+              "the loop is motionless in an unchanged field",
+              "a charge rests in vacuum"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The magnitude of induced emf for uniform flux change is:",
+            "options": [
+              "|ε| = I/R",
+              "|ε| = qU",
+              "|ε| = |ΔΦ|/Δt",
+              "|ε| = Φt"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If magnetic flux changes 2 times faster, the induced emf:",
+            "options": [
+              "increases 2 times",
+              "does not change",
+              "decreases 2 times",
+              "becomes zero"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "For a conductor of length L moving with speed v perpendicular to field B, the emf is:",
+            "options": [
+              "ε = B/(Lv)",
+              "ε = IRt",
+              "ε = BLv",
+              "ε = Lv/B"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The minus sign in Faraday's law shows:",
+            "options": [
+              "negative value of the magnetic field",
+              "that current is impossible",
+              "absence of energy in the circuit",
+              "the direction of induced current according to Lenz's rule"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-lenz-rule-test": {
+        "title": "Test: Lenz's Rule",
+        "questions": [
+          {
+            "question": "Lenz's rule determines:",
+            "options": [
+              "the resistance of a conductor",
+              "the force of gravity",
+              "the direction of induced current",
+              "gas temperature"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Induced current is always directed so that its magnetic field:",
+            "options": [
+              "creates no magnetic field",
+              "opposes the change in magnetic flux",
+              "amplifies any change without limits",
+              "eliminates resistance"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Lenz's rule is a manifestation of:",
+            "options": [
+              "the law of universal gravitation",
+              "the law of conservation of energy",
+              "Boyle-Mariotte's law",
+              "Archimedes' law"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the north pole of a magnet approaches a ring, the near side of the ring becomes:",
+            "options": [
+              "neutral forever",
+              "a north pole to repel the magnet",
+              "a source of direct current without a cause",
+              "a south pole to attract the magnet"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the magnetic flux through a loop does not change, induced current:",
+            "options": [
+              "depends only on the loop mass",
+              "is always clockwise",
+              "is necessarily maximum",
+              "does not appear"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-inductance-test": {
+        "title": "Test: Inductance",
+        "questions": [
+          {
+            "question": "The inductance of a coil shows:",
+            "options": [
+              "the insulation temperature",
+              "the color of the magnetic field",
+              "how strongly current in the coil creates magnetic flux",
+              "the mass of the wire"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The relation between flux linkage and current is:",
+            "options": [
+              "Φ = q/t",
+              "Φ = L/I",
+              "Φ = IR",
+              "Φ = LI"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The self-induction emf is:",
+            "options": [
+              "ε = LI²/2",
+              "ε = qvB",
+              "ε = -L(dI/dt)",
+              "ε = U/R"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The energy of the magnetic field of a coil is:",
+            "options": [
+              "W = L/I²",
+              "W = LI²/2",
+              "W = It",
+              "W = qU"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the current in a coil is increased 2 times, the magnetic-field energy:",
+            "options": [
+              "increases 2 times",
+              "decreases 2 times",
+              "does not change",
+              "increases 4 times"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-eddy-currents-test": {
+        "title": "Test: Eddy Currents",
+        "questions": [
+          {
+            "question": "Eddy currents arise in massive conductors when:",
+            "options": [
+              "temperature is constant without a field",
+              "there is no magnetic field",
+              "the magnetic flux inside them changes",
+              "there are no free charges at all"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Eddy currents often lead to:",
+            "options": [
+              "decrease in mass",
+              "disappearance of resistance",
+              "heating of the conductor",
+              "turning metal into an insulator"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Transformer cores are made of thin insulated sheets to:",
+            "options": [
+              "replace alternating current with direct current",
+              "reduce eddy currents",
+              "increase heating losses",
+              "remove the magnetic field"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Electromagnetic braking of a metal disk is based on:",
+            "options": [
+              "Archimedes' law",
+              "evaporation of metal",
+              "eddy currents and Lenz's rule",
+              "static electricity without motion"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The heat amount from an eddy current can be estimated by:",
+            "options": [
+              "Q = B/S",
+              "Q = mv²",
+              "Q = I²Rt",
+              "Q = q/t"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-sinusoidal-current-test": {
+        "title": "Test: Sinusoidal Current",
+        "questions": [
+          {
+            "question": "Alternating current i = I₀sin(ωt) has amplitude:",
+            "options": [
+              "I₀/ω",
+              "ω",
+              "t",
+              "I₀"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The rms value of sinusoidal current is:",
+            "options": [
+              "I = I₀√2",
+              "I = I₀/2",
+              "I = I₀/√2",
+              "I = 2I₀"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If the voltage amplitude is 311 V, the rms value is approximately:",
+            "options": [
+              "110 V",
+              "311 V",
+              "440 V",
+              "220 V"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The frequency of alternating current is 50 Hz. The period is:",
+            "options": [
+              "0.2 s",
+              "0.02 s",
+              "50 s",
+              "2 s"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "At phase ωt = π/2, the instantaneous current i = I₀sin(ωt) equals:",
+            "options": [
+              "I₀",
+              "0",
+              "I₀/2",
+              "-I₀"
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "electromagnetism-reactive-resistance-test": {
+        "title": "Test: Reactance",
+        "questions": [
+          {
+            "question": "The inductive reactance of a coil is:",
+            "options": [
+              "X_L = 1/(ωL)",
+              "X_L = ωL",
+              "X_L = R/ω",
+              "X_L = C/ω"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The capacitive reactance of a capacitor is:",
+            "options": [
+              "X_C = C/ω",
+              "X_C = 1/(ωC)",
+              "X_C = ωC",
+              "X_C = LC"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "When frequency increases, inductive reactance:",
+            "options": [
+              "becomes negative",
+              "does not change",
+              "decreases",
+              "increases"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "When frequency increases, capacitive reactance:",
+            "options": [
+              "increases",
+              "does not change",
+              "decreases",
+              "becomes equal to R"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The impedance of a series RLC circuit is:",
+            "options": [
+              "Z = R + X_L + X_C without phase",
+              "Z = √(R² + (X_L - X_C)²)",
+              "Z = R/(X_L - X_C)",
+              "Z = X_C - R"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-transformers-test": {
+        "title": "Test: Transformers",
+        "questions": [
+          {
+            "question": "A transformer works due to:",
+            "options": [
+              "electrolysis",
+              "electromagnetic induction",
+              "thermal expansion",
+              "friction force"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "For an ideal transformer:",
+            "options": [
+              "U₁/U₂ = n₂/n₁ always reversed",
+              "U₁/U₂ = n₁/n₂",
+              "U₁U₂ = n₁+n₂",
+              "U₂ = U₁ + n₁"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the secondary winding has more turns than the primary, the transformer is:",
+            "options": [
+              "step-down",
+              "step-up",
+              "converts AC to DC",
+              "not working"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In an ideal transformer, the powers are approximately equal:",
+            "options": [
+              "P₂ is always 10 times greater",
+              "P₂ does not depend on load",
+              "P₁ ≈ P₂",
+              "P₁ = 0"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Why does an ordinary transformer not work from direct current in steady state?",
+            "options": [
+              "turns disappear",
+              "resistance becomes negative",
+              "voltage is always zero",
+              "there is no changing magnetic flux"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-power-transmission-test": {
+        "title": "Test: Electric Power Transmission",
+        "questions": [
+          {
+            "question": "Power losses in transmission-line wires are:",
+            "options": [
+              "Ploss = BLv",
+              "Ploss = I²R",
+              "Ploss = q/t",
+              "Ploss = U/I"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "To transmit the same power at a higher voltage, the current:",
+            "options": [
+              "increases",
+              "decreases",
+              "does not change",
+              "becomes equal to resistance"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why is electric power transmitted at high voltage?",
+            "options": [
+              "to remove the need for transformers",
+              "to make current direct",
+              "to increase wire heating",
+              "to reduce current and I²R losses"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the line current is reduced 10 times, I²R losses:",
+            "options": [
+              "decrease 10 times",
+              "do not change",
+              "decrease 100 times",
+              "increase 10 times"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "For transmitting power P at voltage U, current equals:",
+            "options": [
+              "I = P + U",
+              "I = P/U",
+              "I = U/P",
+              "I = PU"
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "electromagnetism-electric-charge-task-1": {
+        "topic_title": "Electric Charge",
+        "title": "A body has charge -4.8×10⁻¹⁹ C. How many extra electrons are on the body?",
+        "problem_text": "A body has charge -4.8×10⁻¹⁹ C. How many extra electrons are on the body?",
+        "given_data": "q = -4.8×10⁻¹⁹ C\ne = 1.6×10⁻¹⁹ C",
+        "find_text": "n - ?",
+        "solution": "|q| = ne\nn = |q|/e = 4.8×10⁻¹⁹ / 1.6×10⁻¹⁹ = 3",
+        "answer": "there are 3 extra electrons on the body."
+      },
+      "electromagnetism-electric-charge-task-2": {
+        "topic_title": "Electric Charge",
+        "title": "How many electrons must be removed from a neutral body so that its charge becomes +8×10⁻¹⁹ C?",
+        "problem_text": "How many electrons must be removed from a neutral body so that its charge becomes +8×10⁻¹⁹ C?",
+        "given_data": "q = +8×10⁻¹⁹ C\ne = 1.6×10⁻¹⁹ C",
+        "find_text": "n - ?",
+        "solution": "n = q/e = 8×10⁻¹⁹ / 1.6×10⁻¹⁹ = 5",
+        "answer": "5 electrons must be removed."
+      },
+      "electromagnetism-electric-charge-task-3": {
+        "topic_title": "Electric Charge",
+        "title": "Two identical metal spheres had charges +6 nC and -2 nC. They were touched together and separated. Find the charge of each sphere.",
+        "problem_text": "Two identical metal spheres had charges +6 nC and -2 nC. They were touched together and separated. Find the charge of each sphere.",
+        "given_data": "q₁ = +6 nC\nq₂ = -2 nC\nthe spheres are identical",
+        "find_text": "q' - ?",
+        "solution": "Total charge is conserved:\nqtotal = q₁ + q₂ = 6 - 2 = 4 nC\nFor identical spheres the charge divides equally:\nq' = qtotal/2 = 4/2 = 2 nC",
+        "answer": "each sphere gets charge +2 nC."
+      },
+      "electromagnetism-electric-charge-task-4": {
+        "topic_title": "Electric Charge",
+        "title": "Why can a body's charge not be equal to 2.5e?",
+        "problem_text": "Why can a body's charge not be equal to 2.5e?",
+        "given_data": "q = ne\nn is an integer",
+        "find_text": "explanation - ?",
+        "solution": "Electric charge is quantized: it equals an integer number of elementary charges. The number of electrons or protons cannot be fractional, so 2.5e is impossible for an isolated body.",
+        "answer": "charge must be a multiple of e with an integer coefficient."
+      },
+      "electromagnetism-electric-charge-task-5": {
+        "topic_title": "Electric Charge",
+        "title": "10¹² electrons were transferred onto a body. Find the charge acquired by the body.",
+        "problem_text": "10¹² electrons were transferred onto a body. Find the charge acquired by the body.",
+        "given_data": "n = 10¹²\ne = 1.6×10⁻¹⁹ C\nelectrons were transferred onto the body",
+        "find_text": "q - ?",
+        "solution": "Since electrons were added, the charge is negative:\nq = -ne = -10¹² × 1.6×10⁻¹⁹ = -1.6×10⁻⁷ C",
+        "answer": "q = -1.6×10⁻⁷ C."
+      },
+      "electromagnetism-coulomb-law-task-1": {
+        "topic_title": "Coulomb's Law",
+        "title": "Two charges +2 μC and +3 μC are 0.3 m apart. Find the interaction force.",
+        "problem_text": "Two charges +2 μC and +3 μC are 0.3 m apart. Find the interaction force.",
+        "given_data": "q₁ = 2 μC = 2×10⁻⁶ C\nq₂ = 3 μC = 3×10⁻⁶ C\nr = 0.3 m\nk = 9×10⁹ N·m²/C²",
+        "find_text": "F - ?",
+        "solution": "F = k|q₁q₂|/r²\nF = 9×10⁹ × 2×10⁻⁶ × 3×10⁻⁶ / 0.3²\nF = 0.6 N",
+        "answer": "F = 0.6 N; the charges repel."
+      },
+      "electromagnetism-coulomb-law-task-2": {
+        "topic_title": "Coulomb's Law",
+        "title": "Two identical charges of 1 μC interact with force 0.09 N. Find the distance between them.",
+        "problem_text": "Two identical charges of 1 μC interact with force 0.09 N. Find the distance between them.",
+        "given_data": "q₁ = q₂ = 1 μC = 1×10⁻⁶ C\nF = 0.09 N\nk = 9×10⁹ N·m²/C²",
+        "find_text": "r - ?",
+        "solution": "F = kq²/r²\nr = √(kq²/F)\nr = √(9×10⁹ × 10⁻¹² / 0.09) = √0.1 ≈ 0.316 m",
+        "answer": "r ≈ 0.32 m."
+      },
+      "electromagnetism-coulomb-law-task-3": {
+        "topic_title": "Coulomb's Law",
+        "title": "By what factor will the interaction force change if one charge is increased 3 times and the distance is increased 2 times?",
+        "problem_text": "By what factor will the interaction force change if one charge is increased 3 times and the distance is increased 2 times?",
+        "given_data": "q₁ increased 3 times\nr increased 2 times\nF ∼ q₁/r²",
+        "find_text": "F₂/F₁ - ?",
+        "solution": "F₂/F₁ = 3 / 2² = 3/4 = 0.75",
+        "answer": "the force becomes 0.75 of the initial value, so it decreases by 1.33 times."
+      },
+      "electromagnetism-coulomb-law-task-4": {
+        "topic_title": "Coulomb's Law",
+        "title": "Charges -4 nC and +5 nC are 0.1 m apart. Find the magnitude of the force and the type of interaction.",
+        "problem_text": "Charges -4 nC and +5 nC are 0.1 m apart. Find the magnitude of the force and the type of interaction.",
+        "given_data": "q₁ = -4 nC = -4×10⁻⁹ C\nq₂ = +5 nC = 5×10⁻⁹ C\nr = 0.1 m\nk = 9×10⁹ N·m²/C²",
+        "find_text": "F - ?",
+        "solution": "F = k|q₁q₂|/r²\nF = 9×10⁹ × 4×10⁻⁹ × 5×10⁻⁹ / 0.1² = 1.8×10⁻⁵ N\nThe charges are unlike, so they attract.",
+        "answer": "F = 1.8×10⁻⁵ N, attraction."
+      },
+      "electromagnetism-coulomb-law-task-5": {
+        "topic_title": "Coulomb's Law",
+        "title": "Why is the school form of Coulomb's law applied only to point charges or bodies whose sizes are small compared with the distance?",
+        "problem_text": "Why is the school form of Coulomb's law applied only to point charges or bodies whose sizes are small compared with the distance?",
+        "given_data": "charges are distributed over bodies\nbody sizes may be comparable with distance",
+        "find_text": "explanation - ?",
+        "solution": "The formula F = k|q₁q₂|/r² assumes that distance r is defined between point charges. If bodies are large, different parts of the charges are at different distances, and the interaction must be calculated more carefully.",
+        "answer": "the formula works directly for point charges or small bodies."
+      },
+      "electromagnetism-electric-field-task-1": {
+        "topic_title": "Electric Field",
+        "title": "A force of 0.01 N acts on a charge of 2 μC in an electric field. Find the field strength.",
+        "problem_text": "A force of 0.01 N acts on a charge of 2 μC in an electric field. Find the field strength.",
+        "given_data": "q = 2 μC = 2×10⁻⁶ C\nF = 0.01 N",
+        "find_text": "E - ?",
+        "solution": "E = F/q\nE = 0.01 / 2×10⁻⁶ = 5000 N/C",
+        "answer": "E = 5×10³ N/C."
+      },
+      "electromagnetism-electric-field-task-2": {
+        "topic_title": "Electric Field",
+        "title": "The field strength is 2000 N/C. What force acts on a charge of 5 nC?",
+        "problem_text": "The field strength is 2000 N/C. What force acts on a charge of 5 nC?",
+        "given_data": "E = 2000 N/C\nq = 5 nC = 5×10⁻⁹ C",
+        "find_text": "F - ?",
+        "solution": "F = qE\nF = 5×10⁻⁹ × 2000 = 1×10⁻⁵ N",
+        "answer": "F = 1×10⁻⁵ N."
+      },
+      "electromagnetism-electric-field-task-3": {
+        "topic_title": "Electric Field",
+        "title": "Find the field strength of a point charge 4 nC at a distance of 0.2 m.",
+        "problem_text": "Find the field strength of a point charge 4 nC at a distance of 0.2 m.",
+        "given_data": "q = 4 nC = 4×10⁻⁹ C\nr = 0.2 m\nk = 9×10⁹ N·m²/C²",
+        "find_text": "E - ?",
+        "solution": "E = kq/r²\nE = 9×10⁹ × 4×10⁻⁹ / 0.2² = 900 N/C",
+        "answer": "E = 900 N/C."
+      },
+      "electromagnetism-electric-field-task-4": {
+        "topic_title": "Electric Field",
+        "title": "By what factor will the field strength of a point charge decrease if the distance is increased 3 times?",
+        "problem_text": "By what factor will the field strength of a point charge decrease if the distance is increased 3 times?",
+        "given_data": "E ∼ 1/r²\nr₂ = 3r₁",
+        "find_text": "E₂/E₁ - ?",
+        "solution": "E₂/E₁ = (r₁/r₂)² = 1/3² = 1/9",
+        "answer": "the field strength decreases 9 times."
+      },
+      "electromagnetism-electric-field-task-5": {
+        "topic_title": "Electric Field",
+        "title": "An electron is in a uniform electric field of strength 400 N/C. Find the magnitude of the force acting on the electron.",
+        "problem_text": "An electron is in a uniform electric field of strength 400 N/C. Find the magnitude of the force acting on the electron.",
+        "given_data": "E = 400 N/C\n|qₑ| = 1.6×10⁻¹⁹ C",
+        "find_text": "F - ?",
+        "solution": "F = |q|E\nF = 1.6×10⁻¹⁹ × 400 = 6.4×10⁻¹⁷ N",
+        "answer": "F = 6.4×10⁻¹⁷ N."
+      },
+      "electromagnetism-potential-voltage-task-1": {
+        "topic_title": "Potential and Voltage",
+        "title": "An electric field did 0.02 J of work moving a charge of 4 mC. Find the voltage.",
+        "problem_text": "An electric field did 0.02 J of work moving a charge of 4 mC. Find the voltage.",
+        "given_data": "A = 0.02 J\nq = 4 mC = 0.004 C",
+        "find_text": "U - ?",
+        "solution": "A = qU\nU = A/q = 0.02 / 0.004 = 5 V",
+        "answer": "U = 5 V."
+      },
+      "electromagnetism-potential-voltage-task-2": {
+        "topic_title": "Potential and Voltage",
+        "title": "A charge of 3 μC moves between points with voltage 200 V. Find the work of the field.",
+        "problem_text": "A charge of 3 μC moves between points with voltage 200 V. Find the work of the field.",
+        "given_data": "q = 3 μC = 3×10⁻⁶ C\nU = 200 V",
+        "find_text": "A - ?",
+        "solution": "A = qU\nA = 3×10⁻⁶ × 200 = 6×10⁻⁴ J",
+        "answer": "A = 6×10⁻⁴ J."
+      },
+      "electromagnetism-potential-voltage-task-3": {
+        "topic_title": "Potential and Voltage",
+        "title": "The distance between plates is 5 cm and the voltage is 1000 V. Find the field strength.",
+        "problem_text": "The distance between plates is 5 cm and the voltage is 1000 V. Find the field strength.",
+        "given_data": "U = 1000 V\nd = 5 cm = 0.05 m",
+        "find_text": "E - ?",
+        "solution": "E = U/d\nE = 1000/0.05 = 20000 V/m",
+        "answer": "E = 2×10⁴ V/m."
+      },
+      "electromagnetism-potential-voltage-task-4": {
+        "topic_title": "Potential and Voltage",
+        "title": "A uniform field has strength 3000 V/m and the plate distance is 2 cm. Find the voltage.",
+        "problem_text": "A uniform field has strength 3000 V/m and the plate distance is 2 cm. Find the voltage.",
+        "given_data": "E = 3000 V/m\nd = 2 cm = 0.02 m",
+        "find_text": "U - ?",
+        "solution": "U = Ed\nU = 3000 × 0.02 = 60 V",
+        "answer": "U = 60 V."
+      },
+      "electromagnetism-potential-voltage-task-5": {
+        "topic_title": "Potential and Voltage",
+        "title": "Why does a bird sitting on one power-line wire usually not get an electric shock?",
+        "problem_text": "Why does a bird sitting on one power-line wire usually not get an electric shock?",
+        "given_data": "the bird's feet are almost at points of the same potential\nvoltage between the feet is very small",
+        "find_text": "explanation - ?",
+        "solution": "Current through a body appears when there is a noticeable voltage between two points of the body. For a bird on one wire, the potential difference between its feet is small, so almost no current flows through the body.",
+        "answer": "there is almost no voltage between the feet, so the current through the bird is small."
+      },
+      "electromagnetism-capacitors-task-1": {
+        "topic_title": "Capacitors",
+        "title": "A capacitor has charge 20 μC at voltage 100 V. Find its capacitance.",
+        "problem_text": "A capacitor has charge 20 μC at voltage 100 V. Find its capacitance.",
+        "given_data": "q = 20 μC = 20×10⁻⁶ C\nU = 100 V",
+        "find_text": "C - ?",
+        "solution": "C = q/U\nC = 20×10⁻⁶ / 100 = 2×10⁻⁷ F",
+        "answer": "C = 0.2 μF."
+      },
+      "electromagnetism-capacitors-task-2": {
+        "topic_title": "Capacitors",
+        "title": "A capacitor has capacitance 5 μF and voltage 12 V. Find the capacitor charge.",
+        "problem_text": "A capacitor has capacitance 5 μF and voltage 12 V. Find the capacitor charge.",
+        "given_data": "C = 5 μF = 5×10⁻⁶ F\nU = 12 V",
+        "find_text": "q - ?",
+        "solution": "q = CU\nq = 5×10⁻⁶ × 12 = 60×10⁻⁶ C",
+        "answer": "q = 60 μC."
+      },
+      "electromagnetism-capacitors-task-3": {
+        "topic_title": "Capacitors",
+        "title": "Find the energy of a 10 μF capacitor charged to 100 V.",
+        "problem_text": "Find the energy of a 10 μF capacitor charged to 100 V.",
+        "given_data": "C = 10 μF = 10×10⁻⁶ F\nU = 100 V",
+        "find_text": "W - ?",
+        "solution": "W = CU²/2\nW = 10×10⁻⁶ × 100² / 2 = 0.05 J",
+        "answer": "W = 0.05 J."
+      },
+      "electromagnetism-capacitors-task-4": {
+        "topic_title": "Capacitors",
+        "title": "A capacitor was disconnected from the source. How will the voltage change if the plate distance is increased so that capacitance decreases 2 times?",
+        "problem_text": "A capacitor was disconnected from the source. How will the voltage change if the plate distance is increased so that capacitance decreases 2 times?",
+        "given_data": "q = const\nC₂ = C₁/2\nU = q/C",
+        "find_text": "U₂/U₁ - ?",
+        "solution": "With the source disconnected, charge is conserved. If capacitance decreased 2 times, voltage increases 2 times:\nU₂/U₁ = C₁/C₂ = 2",
+        "answer": "the voltage increases 2 times."
+      },
+      "electromagnetism-capacitors-task-5": {
+        "topic_title": "Capacitors",
+        "title": "A parallel-plate capacitor has plate area 0.01 m² and distance 1 mm. The dielectric is air. Estimate the capacitance. ε₀ = 8.85×10⁻¹² F/m.",
+        "problem_text": "A parallel-plate capacitor has plate area 0.01 m² and distance 1 mm. The dielectric is air. Estimate the capacitance. ε₀ = 8.85×10⁻¹² F/m.",
+        "given_data": "S = 0.01 m²\nd = 1 mm = 0.001 m\nε₀ = 8.85×10⁻¹² F/m\nε ≈ 1",
+        "find_text": "C - ?",
+        "solution": "C = ε₀εS/d\nC = 8.85×10⁻¹² × 1 × 0.01 / 0.001 = 8.85×10⁻¹¹ F",
+        "answer": "C ≈ 88.5 pF."
+      },
+      "electromagnetism-current-strength-task-1": {
+        "topic_title": "Current",
+        "title": "A charge of 180 C passes through a lamp in 2 min. Find the current.",
+        "problem_text": "A charge of 180 C passes through a lamp in 2 min. Find the current.",
+        "given_data": "t = 2 min = 120 s\nq = 180 C",
+        "find_text": "I - ?",
+        "solution": "I = q/t = 180/120 = 1.5 A.",
+        "answer": "1.5 A."
+      },
+      "electromagnetism-current-strength-task-2": {
+        "topic_title": "Current",
+        "title": "The current in a circuit is 0.8 A. What charge passes through the conductor cross-section in 5 min?",
+        "problem_text": "The current in a circuit is 0.8 A. What charge passes through the conductor cross-section in 5 min?",
+        "given_data": "I = 0.8 A\nt = 5 min = 300 s",
+        "find_text": "q - ?",
+        "solution": "q = It = 0.8 · 300 = 240 C.",
+        "answer": "240 C."
+      },
+      "electromagnetism-current-strength-task-3": {
+        "topic_title": "Current",
+        "title": "3.2×10²⁰ electrons pass through a conductor in 10 s. Find the current. Electron charge e = 1.6×10⁻¹⁹ C.",
+        "problem_text": "3.2×10²⁰ electrons pass through a conductor in 10 s. Find the current. Electron charge e = 1.6×10⁻¹⁹ C.",
+        "given_data": "N = 3.2×10²⁰\ne = 1.6×10⁻¹⁹ C\nt = 10 s",
+        "find_text": "I - ?",
+        "solution": "q = Ne = 3.2×10²⁰ · 1.6×10⁻¹⁹ = 51.2 C.\nI = q/t = 51.2/10 = 5.12 A.",
+        "answer": "5.12 A."
+      },
+      "electromagnetism-current-strength-task-4": {
+        "topic_title": "Current",
+        "title": "Charges 18 C and 30 C pass through two conductors in 6 s. How many times greater is the current in the second conductor?",
+        "problem_text": "Charges 18 C and 30 C pass through two conductors in 6 s. How many times greater is the current in the second conductor?",
+        "given_data": "t₁ = t₂ = 6 s\nq₁ = 18 C\nq₂ = 30 C",
+        "find_text": "I₂/I₁ - ?",
+        "solution": "For the same time, I is proportional to q.\nI₂/I₁ = q₂/q₁ = 30/18 = 5/3 ≈ 1.67.",
+        "answer": "the current in the second conductor is about 1.67 times greater."
+      },
+      "electromagnetism-current-strength-task-5": {
+        "topic_title": "Current",
+        "title": "A charge of 2 mC passed through a microchip in 1 ms. Find the current.",
+        "problem_text": "A charge of 2 mC passed through a microchip in 1 ms. Find the current.",
+        "given_data": "q = 2 mC = 2×10⁻³ C\nt = 1 ms = 1×10⁻³ s",
+        "find_text": "I - ?",
+        "solution": "I = q/t = 2×10⁻³ / 1×10⁻³ = 2 A.",
+        "answer": "2 A."
+      },
+      "electromagnetism-ohm-law-task-1": {
+        "topic_title": "Ohm's Law",
+        "title": "A voltage of 24 V is applied to an 8 ohm resistor. Find the current.",
+        "problem_text": "A voltage of 24 V is applied to an 8 ohm resistor. Find the current.",
+        "given_data": "R = 8 ohm\nU = 24 V",
+        "find_text": "I - ?",
+        "solution": "I = U/R = 24/8 = 3 A.",
+        "answer": "3 A."
+      },
+      "electromagnetism-ohm-law-task-2": {
+        "topic_title": "Ohm's Law",
+        "title": "A current of 0.4 A flows through a coil at voltage 220 V. Find the coil resistance.",
+        "problem_text": "A current of 0.4 A flows through a coil at voltage 220 V. Find the coil resistance.",
+        "given_data": "I = 0.4 A\nU = 220 V",
+        "find_text": "R - ?",
+        "solution": "R = U/I = 220/0.4 = 550 ohm.",
+        "answer": "550 ohm."
+      },
+      "electromagnetism-ohm-law-task-3": {
+        "topic_title": "Ohm's Law",
+        "title": "What voltage must be applied to a 15 ohm resistor so that the current is 0.2 A?",
+        "problem_text": "What voltage must be applied to a 15 ohm resistor so that the current is 0.2 A?",
+        "given_data": "R = 15 ohm\nI = 0.2 A",
+        "find_text": "U - ?",
+        "solution": "U = IR = 0.2 · 15 = 3 V.",
+        "answer": "3 V."
+      },
+      "electromagnetism-ohm-law-task-4": {
+        "topic_title": "Ohm's Law",
+        "title": "A source has emf 12 V and internal resistance 1 ohm. A 5 ohm resistor is connected to it. Find the circuit current.",
+        "problem_text": "A source has emf 12 V and internal resistance 1 ohm. A 5 ohm resistor is connected to it. Find the circuit current.",
+        "given_data": "ε = 12 V\nr = 1 ohm\nR = 5 ohm",
+        "find_text": "I - ?",
+        "solution": "I = ε/(R+r) = 12/(5+1) = 2 A.",
+        "answer": "2 A."
+      },
+      "electromagnetism-ohm-law-task-5": {
+        "topic_title": "Ohm's Law",
+        "title": "In a circuit with source ε = 9 V and r = 0.5 ohm, the external resistance was reduced from 8.5 ohm to 2.5 ohm. How did the current change?",
+        "problem_text": "In a circuit with source ε = 9 V and r = 0.5 ohm, the external resistance was reduced from 8.5 ohm to 2.5 ohm. How did the current change?",
+        "given_data": "ε = 9 V\nr = 0.5 ohm\nR₁ = 8.5 ohm\nR₂ = 2.5 ohm",
+        "find_text": "I₁, I₂ - ?",
+        "solution": "I₁ = 9/(8.5+0.5) = 1 A.\nI₂ = 9/(2.5+0.5) = 3 A.",
+        "answer": "the current increased from 1 A to 3 A, that is 3 times."
+      },
+      "electromagnetism-work-power-task-1": {
+        "topic_title": "Work and Power of Current",
+        "title": "A lamp works at voltage 12 V and current 0.5 A. Find the lamp power.",
+        "problem_text": "A lamp works at voltage 12 V and current 0.5 A. Find the lamp power.",
+        "given_data": "U = 12 V\nI = 0.5 A",
+        "find_text": "P - ?",
+        "solution": "P = UI = 12 · 0.5 = 6 W.",
+        "answer": "6 W."
+      },
+      "electromagnetism-work-power-task-2": {
+        "topic_title": "Work and Power of Current",
+        "title": "An 800 W electrical device worked for 15 min. How much energy did it consume?",
+        "problem_text": "An 800 W electrical device worked for 15 min. How much energy did it consume?",
+        "given_data": "P = 800 W\nt = 15 min = 900 s",
+        "find_text": "A - ?",
+        "solution": "A = Pt = 800 · 900 = 720000 J = 720 kJ.",
+        "answer": "720 kJ."
+      },
+      "electromagnetism-work-power-task-3": {
+        "topic_title": "Work and Power of Current",
+        "title": "A current of 2 A flows through a 10 ohm resistor for 30 s. How much heat is released?",
+        "problem_text": "A current of 2 A flows through a 10 ohm resistor for 30 s. How much heat is released?",
+        "given_data": "R = 10 ohm\nI = 2 A\nt = 30 s",
+        "find_text": "Q - ?",
+        "solution": "Q = I²Rt = 2² · 10 · 30 = 1200 J.",
+        "answer": "1200 J."
+      },
+      "electromagnetism-work-power-task-4": {
+        "topic_title": "Work and Power of Current",
+        "title": "The voltage across a resistor is 20 V and the current is 0.25 A. Find the work of current in 2 min.",
+        "problem_text": "The voltage across a resistor is 20 V and the current is 0.25 A. Find the work of current in 2 min.",
+        "given_data": "U = 20 V\nI = 0.25 A\nt = 2 min = 120 s",
+        "find_text": "A - ?",
+        "solution": "A = UIt = 20 · 0.25 · 120 = 600 J.",
+        "answer": "600 J."
+      },
+      "electromagnetism-work-power-task-5": {
+        "topic_title": "Work and Power of Current",
+        "title": "Two heaters have the same resistance and work for the same time. The first carries 1 A, the second 3 A. How many times more heat will the second release?",
+        "problem_text": "Two heaters have the same resistance and work for the same time. The first carries 1 A, the second 3 A. How many times more heat will the second release?",
+        "given_data": "I₁ = 1 A\nI₂ = 3 A\nR₁ = R₂\nt₁ = t₂",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q = I²Rt, so Q₂/Q₁ = I₂²/I₁² = 3²/1² = 9.",
+        "answer": "9 times."
+      },
+      "electromagnetism-conductor-connections-task-1": {
+        "topic_title": "Conductor Connections",
+        "title": "Resistors 4 ohm and 6 ohm are connected in series. Find the total resistance.",
+        "problem_text": "Resistors 4 ohm and 6 ohm are connected in series. Find the total resistance.",
+        "given_data": "R₁ = 4 ohm\nR₂ = 6 ohm",
+        "find_text": "R - ?",
+        "solution": "R = R₁ + R₂ = 4 + 6 = 10 ohm.",
+        "answer": "10 ohm."
+      },
+      "electromagnetism-conductor-connections-task-2": {
+        "topic_title": "Conductor Connections",
+        "title": "Resistors 6 ohm and 3 ohm are connected in parallel. Find the total resistance.",
+        "problem_text": "Resistors 6 ohm and 3 ohm are connected in parallel. Find the total resistance.",
+        "given_data": "R₁ = 6 ohm\nR₂ = 3 ohm",
+        "find_text": "R - ?",
+        "solution": "1/R = 1/6 + 1/3 = 1/6 + 2/6 = 3/6 = 1/2.\nR = 2 ohm.",
+        "answer": "2 ohm."
+      },
+      "electromagnetism-conductor-connections-task-3": {
+        "topic_title": "Conductor Connections",
+        "title": "Two resistors 5 ohm and 15 ohm are connected in series to 40 V. Find the circuit current and voltage across each resistor.",
+        "problem_text": "Two resistors 5 ohm and 15 ohm are connected in series to 40 V. Find the circuit current and voltage across each resistor.",
+        "given_data": "R₁ = 5 ohm\nR₂ = 15 ohm\nU = 40 V",
+        "find_text": "I, U₁, U₂ - ?",
+        "solution": "R = 5 + 15 = 20 ohm.\nI = U/R = 40/20 = 2 A.\nU₁ = IR₁ = 2 · 5 = 10 V.\nU₂ = IR₂ = 2 · 15 = 30 V.",
+        "answer": "I = 2 A, U₁ = 10 V, U₂ = 30 V."
+      },
+      "electromagnetism-conductor-connections-task-4": {
+        "topic_title": "Conductor Connections",
+        "title": "Two resistors 12 ohm and 6 ohm are connected in parallel to 24 V. Find the current in each branch and the total current.",
+        "problem_text": "Two resistors 12 ohm and 6 ohm are connected in parallel to 24 V. Find the current in each branch and the total current.",
+        "given_data": "R₁ = 12 ohm\nR₂ = 6 ohm\nU = 24 V",
+        "find_text": "I₁, I₂, I - ?",
+        "solution": "I₁ = U/R₁ = 24/12 = 2 A.\nI₂ = U/R₂ = 24/6 = 4 A.\nI = I₁ + I₂ = 6 A.",
+        "answer": "2 A, 4 A, total current 6 A."
+      },
+      "electromagnetism-conductor-connections-task-5": {
+        "topic_title": "Conductor Connections",
+        "title": "In a mixed circuit, a 2 ohm resistor is connected in series with a parallel group of 6 ohm and 3 ohm. Find the total resistance.",
+        "problem_text": "In a mixed circuit, a 2 ohm resistor is connected in series with a parallel group of 6 ohm and 3 ohm. Find the total resistance.",
+        "given_data": "R₁ = 2 ohm\nR₂ = 6 ohm\nR₃ = 3 ohm",
+        "find_text": "Rtotal - ?",
+        "solution": "First find the parallel group:\n1/R₂₃ = 1/6 + 1/3 = 1/2, so R₂₃ = 2 ohm.\nIn series with R₁: Rtotal = 2 + 2 = 4 ohm.",
+        "answer": "4 ohm."
+      },
+      "electromagnetism-magnetic-field-task-1": {
+        "topic_title": "Magnetic Field",
+        "title": "Find the magnetic induction 0.20 m from a long straight conductor carrying current 10 A. Use μ₀ = 4π×10⁻⁷ N/A².",
+        "problem_text": "Find the magnetic induction 0.20 m from a long straight conductor carrying current 10 A. Use μ₀ = 4π×10⁻⁷ N/A².",
+        "given_data": "I = 10 A\nr = 0.20 m\nμ₀ = 4π×10⁻⁷ N/A²",
+        "find_text": "B - ?",
+        "solution": "B = μ₀I/(2πr) = 4π×10⁻⁷ · 10 / (2π · 0.20).\nB = 2×10⁻⁷ · 10 / 0.20 = 1×10⁻⁵ T.",
+        "answer": "1×10⁻⁵ T."
+      },
+      "electromagnetism-magnetic-field-task-2": {
+        "topic_title": "Magnetic Field",
+        "title": "A uniform magnetic field of 0.4 T passes through a loop of area 0.03 m² perpendicular to the loop plane. Find the magnetic flux.",
+        "problem_text": "A uniform magnetic field of 0.4 T passes through a loop of area 0.03 m² perpendicular to the loop plane. Find the magnetic flux.",
+        "given_data": "B = 0.4 T\nS = 0.03 m²",
+        "find_text": "Φ - ?",
+        "solution": "Φ = BS = 0.4 · 0.03 = 0.012 Wb.",
+        "answer": "0.012 Wb."
+      },
+      "electromagnetism-magnetic-field-task-3": {
+        "topic_title": "Magnetic Field",
+        "title": "At a distance of 5 cm from a conductor, magnetic induction is 8 μT. What will it be at 10 cm with the same current?",
+        "problem_text": "At a distance of 5 cm from a conductor, magnetic induction is 8 μT. What will it be at 10 cm with the same current?",
+        "given_data": "B₁ = 8 μT\nr₁ = 5 cm\nr₂ = 10 cm",
+        "find_text": "B₂ - ?",
+        "solution": "For a straight conductor, B is inversely proportional to r.\nB₂ = B₁r₁/r₂ = 8 · 5/10 = 4 μT.",
+        "answer": "4 μT."
+      },
+      "electromagnetism-magnetic-field-task-4": {
+        "topic_title": "Magnetic Field",
+        "title": "A magnetic field of 0.2 T passes through a 50-turn coil of area 0.01 m². The field is perpendicular to the turns. Find the total flux linkage NΦ.",
+        "problem_text": "A magnetic field of 0.2 T passes through a 50-turn coil of area 0.01 m². The field is perpendicular to the turns. Find the total flux linkage NΦ.",
+        "given_data": "B = 0.2 T\nS = 0.01 m²\nN = 50",
+        "find_text": "NΦ - ?",
+        "solution": "Φ = BS = 0.2 · 0.01 = 0.002 Wb.\nNΦ = 50 · 0.002 = 0.1 Wb.",
+        "answer": "0.1 Wb."
+      },
+      "electromagnetism-magnetic-field-task-5": {
+        "topic_title": "Magnetic Field",
+        "title": "Around a straight conductor, current is directed upward. Describe the direction of magnetic lines if viewed from above along the current direction.",
+        "problem_text": "Around a straight conductor, current is directed upward. Describe the direction of magnetic lines if viewed from above along the current direction.",
+        "given_data": "current is directed upward",
+        "find_text": "direction of B lines - ?",
+        "solution": "By the right-hand rule, point the thumb along the current; the curled fingers show the direction of magnetic field lines.\nIf viewed along the current direction, the lines go counterclockwise.",
+        "answer": "counterclockwise."
+      },
+      "electromagnetism-ampere-force-task-1": {
+        "topic_title": "Ampere Force",
+        "title": "A conductor 0.5 m long with current 4 A is perpendicular to a 0.2 T magnetic field. Find the Ampere force.",
+        "problem_text": "A conductor 0.5 m long with current 4 A is perpendicular to a 0.2 T magnetic field. Find the Ampere force.",
+        "given_data": "B = 0.2 T\nI = 4 A\nL = 0.5 m\nα = 90°",
+        "find_text": "F - ?",
+        "solution": "F = BILsinα = 0.2 · 4 · 0.5 · 1 = 0.4 N.",
+        "answer": "0.4 N."
+      },
+      "electromagnetism-ampere-force-task-2": {
+        "topic_title": "Ampere Force",
+        "title": "A force of 0.6 N acts on a 0.25 m conductor carrying current 8 A. The conductor is perpendicular to the field. Find B.",
+        "problem_text": "A force of 0.6 N acts on a 0.25 m conductor carrying current 8 A. The conductor is perpendicular to the field. Find B.",
+        "given_data": "F = 0.6 N\nL = 0.25 m\nI = 8 A\nα = 90°",
+        "find_text": "B - ?",
+        "solution": "B = F/(IL) = 0.6/(8 · 0.25) = 0.3 T.",
+        "answer": "0.3 T."
+      },
+      "electromagnetism-ampere-force-task-3": {
+        "topic_title": "Ampere Force",
+        "title": "A conductor 0.4 m long with current 5 A is at an angle of 30° to a 0.5 T field. Find the Ampere force.",
+        "problem_text": "A conductor 0.4 m long with current 5 A is at an angle of 30° to a 0.5 T field. Find the Ampere force.",
+        "given_data": "B = 0.5 T\nI = 5 A\nL = 0.4 m\nα = 30°",
+        "find_text": "F - ?",
+        "solution": "F = BILsin30° = 0.5 · 5 · 0.4 · 0.5 = 0.5 N.",
+        "answer": "0.5 N."
+      },
+      "electromagnetism-ampere-force-task-4": {
+        "topic_title": "Ampere Force",
+        "title": "With unchanged B and L, the current in a conductor was increased from 2 A to 6 A. How did the Ampere force change?",
+        "problem_text": "With unchanged B and L, the current in a conductor was increased from 2 A to 6 A. How did the Ampere force change?",
+        "given_data": "I₁ = 2 A\nI₂ = 6 A\nB, L, α are constant",
+        "find_text": "F₂/F₁ - ?",
+        "solution": "F = BILsinα, so the force is proportional to current.\nF₂/F₁ = 6/2 = 3.",
+        "answer": "it increased 3 times."
+      },
+      "electromagnetism-ampere-force-task-5": {
+        "topic_title": "Ampere Force",
+        "title": "In a magnetic field, a current-carrying conductor is placed along the field lines. Why does the Ampere force not deflect the conductor?",
+        "problem_text": "In a magnetic field, a current-carrying conductor is placed along the field lines. Why does the Ampere force not deflect the conductor?",
+        "given_data": "α = 0°",
+        "find_text": "reason for F = 0 - ?",
+        "solution": "F = BILsinα.\nAt α = 0°, sin0° = 0, so F = 0. The magnetic field creates no sideways action on a conductor directed along the field.",
+        "answer": "the force is zero because the conductor is parallel to the magnetic field lines."
+      },
+      "electromagnetism-lorentz-force-task-1": {
+        "topic_title": "Lorentz Force",
+        "title": "A proton with charge 1.6×10⁻¹⁹ C moves at 2×10⁶ m/s perpendicular to a 0.1 T field. Find the Lorentz force.",
+        "problem_text": "A proton with charge 1.6×10⁻¹⁹ C moves at 2×10⁶ m/s perpendicular to a 0.1 T field. Find the Lorentz force.",
+        "given_data": "q = 1.6×10⁻¹⁹ C\nv = 2×10⁶ m/s\nB = 0.1 T\nα = 90°",
+        "find_text": "F - ?",
+        "solution": "F = qvB = 1.6×10⁻¹⁹ · 2×10⁶ · 0.1 = 3.2×10⁻¹⁴ N.",
+        "answer": "3.2×10⁻¹⁴ N."
+      },
+      "electromagnetism-lorentz-force-task-2": {
+        "topic_title": "Lorentz Force",
+        "title": "A particle with charge 3 μC moves at 400 m/s at an angle of 30° to a 0.5 T field. Find the Lorentz force.",
+        "problem_text": "A particle with charge 3 μC moves at 400 m/s at an angle of 30° to a 0.5 T field. Find the Lorentz force.",
+        "given_data": "q = 3 μC = 3×10⁻⁶ C\nv = 400 m/s\nB = 0.5 T\nα = 30°",
+        "find_text": "F - ?",
+        "solution": "F = qvBsin30° = 3×10⁻⁶ · 400 · 0.5 · 0.5 = 3×10⁻⁴ N.",
+        "answer": "3×10⁻⁴ N."
+      },
+      "electromagnetism-lorentz-force-task-3": {
+        "topic_title": "Lorentz Force",
+        "title": "An electron moves perpendicular to a magnetic field. How will the Lorentz force change if the speed is increased 4 times?",
+        "problem_text": "An electron moves perpendicular to a magnetic field. How will the Lorentz force change if the speed is increased 4 times?",
+        "given_data": "v₂ = 4v₁\nq, B, α are constant",
+        "find_text": "F₂/F₁ - ?",
+        "solution": "F = qvBsinα, so the force is proportional to speed.\nF₂/F₁ = 4.",
+        "answer": "it increases 4 times."
+      },
+      "electromagnetism-lorentz-force-task-4": {
+        "topic_title": "Lorentz Force",
+        "title": "A particle of mass 2×10⁻²⁷ kg and charge 1.6×10⁻¹⁹ C moves at 8×10⁵ m/s perpendicular to a 0.2 T field. Find the trajectory radius.",
+        "problem_text": "A particle of mass 2×10⁻²⁷ kg and charge 1.6×10⁻¹⁹ C moves at 8×10⁵ m/s perpendicular to a 0.2 T field. Find the trajectory radius.",
+        "given_data": "m = 2×10⁻²⁷ kg\nq = 1.6×10⁻¹⁹ C\nv = 8×10⁵ m/s\nB = 0.2 T",
+        "find_text": "R - ?",
+        "solution": "R = mv/(qB) = 2×10⁻²⁷ · 8×10⁵ / (1.6×10⁻¹⁹ · 0.2).\nR = 1.6×10⁻²¹ / 3.2×10⁻²⁰ = 0.05 m.",
+        "answer": "0.05 m."
+      },
+      "electromagnetism-lorentz-force-task-5": {
+        "topic_title": "Lorentz Force",
+        "title": "A positive charge flies to the right, and the magnetic field is directed away from the observer into the screen. Where is the Lorentz force directed?",
+        "problem_text": "A positive charge flies to the right, and the magnetic field is directed away from the observer into the screen. Where is the Lorentz force directed?",
+        "given_data": "q > 0\nv is directed right\nB is directed into the screen",
+        "find_text": "direction of F - ?",
+        "solution": "For a positive charge, use the left-hand rule or the vector product v × B.\nRight × into the screen gives the upward direction.",
+        "answer": "upward."
+      },
+      "electromagnetism-faraday-law-task-1": {
+        "topic_title": "Faraday's Law",
+        "title": "The magnetic flux through a loop changed from 0.12 Wb to 0.02 Wb in 0.05 s. Find the magnitude of induced emf.",
+        "problem_text": "The magnetic flux through a loop changed from 0.12 Wb to 0.02 Wb in 0.05 s. Find the magnitude of induced emf.",
+        "given_data": "Φ₁ = 0.12 Wb\nΦ₂ = 0.02 Wb\nΔt = 0.05 s",
+        "find_text": "|ε| - ?",
+        "solution": "|ΔΦ| = |0.02 - 0.12| = 0.10 Wb.\n|ε| = |ΔΦ|/Δt = 0.10/0.05 = 2 V.",
+        "answer": "2 V."
+      },
+      "electromagnetism-faraday-law-task-2": {
+        "topic_title": "Faraday's Law",
+        "title": "A straight conductor 0.4 m long moves perpendicular to a 0.3 T magnetic field at speed 5 m/s. Find the induced emf.",
+        "problem_text": "A straight conductor 0.4 m long moves perpendicular to a 0.3 T magnetic field at speed 5 m/s. Find the induced emf.",
+        "given_data": "B = 0.3 T\nL = 0.4 m\nv = 5 m/s",
+        "find_text": "ε - ?",
+        "solution": "ε = BLv = 0.3 · 0.4 · 5 = 0.6 V.",
+        "answer": "0.6 V."
+      },
+      "electromagnetism-faraday-law-task-3": {
+        "topic_title": "Faraday's Law",
+        "title": "In a 200-turn coil, the magnetic flux through one turn changed by 0.003 Wb in 0.02 s. Find the magnitude of emf.",
+        "problem_text": "In a 200-turn coil, the magnetic flux through one turn changed by 0.003 Wb in 0.02 s. Find the magnitude of emf.",
+        "given_data": "N = 200\n|ΔΦ| = 0.003 Wb\nΔt = 0.02 s",
+        "find_text": "|ε| - ?",
+        "solution": "For a coil, |ε| = N|ΔΦ|/Δt.\n|ε| = 200 · 0.003 / 0.02 = 30 V.",
+        "answer": "30 V."
+      },
+      "electromagnetism-faraday-law-task-4": {
+        "topic_title": "Faraday's Law",
+        "title": "A conductor 0.25 m long must produce emf 1 V while moving in a 0.8 T field. Find its speed.",
+        "problem_text": "A conductor 0.25 m long must produce emf 1 V while moving in a 0.8 T field. Find its speed.",
+        "given_data": "ε = 1 V\nB = 0.8 T\nL = 0.25 m",
+        "find_text": "v - ?",
+        "solution": "v = ε/(BL) = 1/(0.8 · 0.25) = 5 m/s.",
+        "answer": "5 m/s."
+      },
+      "electromagnetism-faraday-law-task-5": {
+        "topic_title": "Faraday's Law",
+        "title": "The magnetic flux through a loop increases uniformly. What happens to the induced-current direction if the flux starts decreasing at the same rate?",
+        "problem_text": "The magnetic flux through a loop increases uniformly. What happens to the induced-current direction if the flux starts decreasing at the same rate?",
+        "given_data": "|dΦ/dt| is the same\nthe direction of flux change is opposite",
+        "find_text": "change in current direction - ?",
+        "solution": "According to Faraday's law and Lenz's rule, the emf direction depends on the sign of the flux change.\nIf flux growth is replaced by decrease at the same rate, the emf magnitude remains the same, but the current direction becomes opposite.",
+        "answer": "the induced-current direction changes to the opposite."
+      },
+      "electromagnetism-lenz-rule-task-1": {
+        "topic_title": "Lenz's Rule",
+        "title": "The north pole of a magnet approaches a metal ring. What pole will the near side of the ring become?",
+        "problem_text": "The north pole of a magnet approaches a metal ring. What pole will the near side of the ring become?",
+        "given_data": "north pole approaches the ring",
+        "find_text": "pole of the near side of the ring - ?",
+        "solution": "The magnetic flux through the ring increases.\nBy Lenz's rule, the ring creates a field that opposes the magnet's approach, so the near side must repel the north pole.",
+        "answer": "the near side becomes a north pole."
+      },
+      "electromagnetism-lenz-rule-task-2": {
+        "topic_title": "Lenz's Rule",
+        "title": "The north pole of a magnet moves away from a ring. What pole will the near side of the ring become?",
+        "problem_text": "The north pole of a magnet moves away from a ring. What pole will the near side of the ring become?",
+        "given_data": "north pole moves away from the ring",
+        "find_text": "pole of the near side of the ring - ?",
+        "solution": "The magnetic flux decreases.\nThe ring tends to preserve the flux, so it attracts the receding north pole.",
+        "answer": "the near side becomes a south pole."
+      },
+      "electromagnetism-lenz-rule-task-3": {
+        "topic_title": "Lenz's Rule",
+        "title": "Why is resistance to motion felt when a magnet moves quickly near an aluminum ring?",
+        "problem_text": "Why is resistance to motion felt when a magnet moves quickly near an aluminum ring?",
+        "given_data": "magnet moves\nflux through the ring changes",
+        "find_text": "cause of resistance - ?",
+        "solution": "The flux change creates induced current in the ring.\nBy Lenz's rule, the magnetic field of this current opposes the cause that produced it, so the magnet's motion is slowed.",
+        "answer": "the resistance appears because of induced current whose field opposes the flux change."
+      },
+      "electromagnetism-lenz-rule-task-4": {
+        "topic_title": "Lenz's Rule",
+        "title": "In a neighboring coil, current sharply increases. How is the magnetic action of induced current in the second coil directed?",
+        "problem_text": "In a neighboring coil, current sharply increases. How is the magnetic action of induced current in the second coil directed?",
+        "given_data": "current in the first coil increases\nflux through the second coil grows",
+        "find_text": "action of the induced field - ?",
+        "solution": "By Lenz's rule, the induced field of the second coil must oppose the growth of flux.\nTherefore it is directed opposite to the increasing field of the first coil.",
+        "answer": "the induced field is directed against the increasing external field."
+      },
+      "electromagnetism-lenz-rule-task-5": {
+        "topic_title": "Lenz's Rule",
+        "title": "Why can induced current not be directed so as to strengthen the flux change that caused it?",
+        "problem_text": "Why can induced current not be directed so as to strengthen the flux change that caused it?",
+        "given_data": "magnetic flux changes",
+        "find_text": "physical reason for Lenz's rule - ?",
+        "solution": "If induced current strengthened the change, energy would arise spontaneously.\nLenz's rule preserves energy balance: work must be done against the magnetic action of induced current to change the flux.",
+        "answer": "otherwise the law of conservation of energy would be violated."
+      },
+      "electromagnetism-inductance-task-1": {
+        "topic_title": "Inductance",
+        "title": "A coil has inductance 0.4 H and current 3 A. Find the flux linkage.",
+        "problem_text": "A coil has inductance 0.4 H and current 3 A. Find the flux linkage.",
+        "given_data": "L = 0.4 H\nI = 3 A",
+        "find_text": "Φ - ?",
+        "solution": "Φ = LI = 0.4 · 3 = 1.2 Wb.",
+        "answer": "1.2 Wb."
+      },
+      "electromagnetism-inductance-task-2": {
+        "topic_title": "Inductance",
+        "title": "The current in a coil with inductance 0.2 H changed from 1 A to 5 A in 0.04 s. Find the magnitude of self-induction emf.",
+        "problem_text": "The current in a coil with inductance 0.2 H changed from 1 A to 5 A in 0.04 s. Find the magnitude of self-induction emf.",
+        "given_data": "L = 0.2 H\nI₁ = 1 A\nI₂ = 5 A\nΔt = 0.04 s",
+        "find_text": "|ε| - ?",
+        "solution": "|dI/dt| = |5 - 1|/0.04 = 100 A/s.\n|ε| = L|dI/dt| = 0.2 · 100 = 20 V.",
+        "answer": "20 V."
+      },
+      "electromagnetism-inductance-task-3": {
+        "topic_title": "Inductance",
+        "title": "Find the magnetic-field energy of a coil with L = 0.5 H at current 4 A.",
+        "problem_text": "Find the magnetic-field energy of a coil with L = 0.5 H at current 4 A.",
+        "given_data": "L = 0.5 H\nI = 4 A",
+        "find_text": "W - ?",
+        "solution": "W = LI²/2 = 0.5 · 4² / 2 = 4 J.",
+        "answer": "4 J."
+      },
+      "electromagnetism-inductance-task-4": {
+        "topic_title": "Inductance",
+        "title": "At current 2 A, the magnetic-field energy of a coil is 3 J. Find the inductance.",
+        "problem_text": "At current 2 A, the magnetic-field energy of a coil is 3 J. Find the inductance.",
+        "given_data": "I = 2 A\nW = 3 J",
+        "find_text": "L - ?",
+        "solution": "W = LI²/2, so L = 2W/I².\nL = 2 · 3 / 2² = 1.5 H.",
+        "answer": "1.5 H."
+      },
+      "electromagnetism-inductance-task-5": {
+        "topic_title": "Inductance",
+        "title": "A coil resists a sudden switch-off of current. Why can a spark appear when the circuit is opened?",
+        "problem_text": "A coil resists a sudden switch-off of current. Why can a spark appear when the circuit is opened?",
+        "given_data": "current decreases quickly\nthe coil inductance is nonzero",
+        "find_text": "cause of the spark - ?",
+        "solution": "When current decreases quickly, a large self-induction emf appears: |ε| = L|dI/dt|.\nThis emf tends to maintain the previous current and can break through the air gap in the switch.",
+        "answer": "the spark appears because of a large self-induction emf during a sharp current change."
+      },
+      "electromagnetism-eddy-currents-task-1": {
+        "topic_title": "Eddy Currents",
+        "title": "In a metal plate, an eddy current of 5 A flows along a closed path of resistance 0.2 ohm for 10 s. Estimate the released heat.",
+        "problem_text": "In a metal plate, an eddy current of 5 A flows along a closed path of resistance 0.2 ohm for 10 s. Estimate the released heat.",
+        "given_data": "I = 5 A\nR = 0.2 ohm\nt = 10 s",
+        "find_text": "Q - ?",
+        "solution": "Q = I²Rt = 5² · 0.2 · 10 = 50 J.",
+        "answer": "50 J."
+      },
+      "electromagnetism-eddy-currents-task-2": {
+        "topic_title": "Eddy Currents",
+        "title": "Why does a solid iron transformer core heat up more strongly than a laminated one?",
+        "problem_text": "Why does a solid iron transformer core heat up more strongly than a laminated one?",
+        "given_data": "alternating magnetic flux\nsolid conducting core",
+        "find_text": "cause of heating - ?",
+        "solution": "An alternating flux induces eddy currents in the core.\nIn solid metal, closed current loops have a large area, so I²R losses are greater.\nIn a laminated core, insulation breaks large loops and reduces currents.",
+        "answer": "a solid core heats more strongly because of larger eddy currents."
+      },
+      "electromagnetism-eddy-currents-task-3": {
+        "topic_title": "Eddy Currents",
+        "title": "A metal disk rotates between magnet poles and quickly stops. Explain the cause of braking.",
+        "problem_text": "A metal disk rotates between magnet poles and quickly stops. Explain the cause of braking.",
+        "given_data": "the disk moves in a magnetic field\nflux through parts of the disk changes",
+        "find_text": "cause of braking - ?",
+        "solution": "Eddy currents arise in the disk.\nBy Lenz's rule, their magnetic field opposes the motion that caused the flux change.",
+        "answer": "the disk is braked by eddy currents that create an opposing magnetic action."
+      },
+      "electromagnetism-eddy-currents-task-4": {
+        "topic_title": "Eddy Currents",
+        "title": "In an induction cooktop, an alternating magnetic field creates currents in the bottom of a pot. Why does the metal bottom heat up?",
+        "problem_text": "In an induction cooktop, an alternating magnetic field creates currents in the bottom of a pot. Why does the metal bottom heat up?",
+        "given_data": "alternating magnetic field\nmetal pot bottom",
+        "find_text": "heating mechanism - ?",
+        "solution": "The alternating field creates eddy currents in the conducting bottom.\nBecause of metal resistance, current energy turns into heat by the Joule-Lenz law.",
+        "answer": "the metal bottom heats because of eddy currents and I²R heat losses."
+      },
+      "electromagnetism-eddy-currents-task-5": {
+        "topic_title": "Eddy Currents",
+        "title": "In a plate, the eddy current was reduced from 6 A to 3 A with the same R and t. By what factor did heat losses decrease?",
+        "problem_text": "In a plate, the eddy current was reduced from 6 A to 3 A with the same R and t. By what factor did heat losses decrease?",
+        "given_data": "I₁ = 6 A\nI₂ = 3 A\nR, t are constant",
+        "find_text": "Q₁/Q₂ - ?",
+        "solution": "Q = I²Rt.\nQ₁/Q₂ = I₁²/I₂² = 6²/3² = 4.",
+        "answer": "heat losses decreased 4 times."
+      },
+      "electromagnetism-sinusoidal-current-task-1": {
+        "topic_title": "Sinusoidal Current",
+        "title": "The amplitude of alternating current is 14.1 A. Find the rms value.",
+        "problem_text": "The amplitude of alternating current is 14.1 A. Find the rms value.",
+        "given_data": "I₀ = 14.1 A",
+        "find_text": "I - ?",
+        "solution": "I = I₀/√2 ≈ 14.1/1.41 = 10 A.",
+        "answer": "10 A."
+      },
+      "electromagnetism-sinusoidal-current-task-2": {
+        "topic_title": "Sinusoidal Current",
+        "title": "The rms mains voltage is 220 V. Find the amplitude value.",
+        "problem_text": "The rms mains voltage is 220 V. Find the amplitude value.",
+        "given_data": "U = 220 V",
+        "find_text": "U₀ - ?",
+        "solution": "U₀ = U√2 ≈ 220 · 1.41 ≈ 310 V.",
+        "answer": "approximately 310 V."
+      },
+      "electromagnetism-sinusoidal-current-task-3": {
+        "topic_title": "Sinusoidal Current",
+        "title": "The frequency of alternating current is 400 Hz. Find the period.",
+        "problem_text": "The frequency of alternating current is 400 Hz. Find the period.",
+        "given_data": "f = 400 Hz",
+        "find_text": "T - ?",
+        "solution": "T = 1/f = 1/400 = 0.0025 s.",
+        "answer": "0.0025 s."
+      },
+      "electromagnetism-sinusoidal-current-task-4": {
+        "topic_title": "Sinusoidal Current",
+        "title": "Current is given by i = 6sin(ωt) A. Find the instantaneous value at ωt = π/6.",
+        "problem_text": "Current is given by i = 6sin(ωt) A. Find the instantaneous value at ωt = π/6.",
+        "given_data": "I₀ = 6 A\nωt = π/6",
+        "find_text": "i - ?",
+        "solution": "i = I₀sin(π/6) = 6 · 0.5 = 3 A.",
+        "answer": "3 A."
+      },
+      "electromagnetism-sinusoidal-current-task-5": {
+        "topic_title": "Sinusoidal Current",
+        "title": "A sinusoidal current with rms value 2 A flows through a 20 ohm resistor. Find the average power.",
+        "problem_text": "A sinusoidal current with rms value 2 A flows through a 20 ohm resistor. Find the average power.",
+        "given_data": "I = 2 A\nR = 20 ohm",
+        "find_text": "P - ?",
+        "solution": "For a resistor, P = I²R, where I is the rms value.\nP = 2² · 20 = 80 W.",
+        "answer": "80 W."
+      },
+      "electromagnetism-reactive-resistance-task-1": {
+        "topic_title": "Reactance",
+        "title": "A coil L = 0.2 H is connected to alternating current with angular frequency 100 rad/s. Find the inductive reactance.",
+        "problem_text": "A coil L = 0.2 H is connected to alternating current with angular frequency 100 rad/s. Find the inductive reactance.",
+        "given_data": "L = 0.2 H\nω = 100 rad/s",
+        "find_text": "X_L - ?",
+        "solution": "X_L = ωL = 100 · 0.2 = 20 ohm.",
+        "answer": "20 ohm."
+      },
+      "electromagnetism-reactive-resistance-task-2": {
+        "topic_title": "Reactance",
+        "title": "A capacitor C = 50 μF is connected to a circuit with ω = 1000 rad/s. Find the capacitive reactance.",
+        "problem_text": "A capacitor C = 50 μF is connected to a circuit with ω = 1000 rad/s. Find the capacitive reactance.",
+        "given_data": "C = 50 μF = 50×10⁻⁶ F\nω = 1000 rad/s",
+        "find_text": "X_C - ?",
+        "solution": "X_C = 1/(ωC) = 1/(1000 · 50×10⁻⁶) = 1/0.05 = 20 ohm.",
+        "answer": "20 ohm."
+      },
+      "electromagnetism-reactive-resistance-task-3": {
+        "topic_title": "Reactance",
+        "title": "In a series circuit, R = 30 ohm, X_L = 50 ohm, X_C = 10 ohm. Find the impedance.",
+        "problem_text": "In a series circuit, R = 30 ohm, X_L = 50 ohm, X_C = 10 ohm. Find the impedance.",
+        "given_data": "R = 30 ohm\nX_L = 50 ohm\nX_C = 10 ohm",
+        "find_text": "Z - ?",
+        "solution": "Z = √(R² + (X_L - X_C)²) = √(30² + 40²) = √2500 = 50 ohm.",
+        "answer": "50 ohm."
+      },
+      "electromagnetism-reactive-resistance-task-4": {
+        "topic_title": "Reactance",
+        "title": "At frequency f₁, the inductive reactance of a coil is 15 ohm. What will it become when frequency is increased 3 times?",
+        "problem_text": "At frequency f₁, the inductive reactance of a coil is 15 ohm. What will it become when frequency is increased 3 times?",
+        "given_data": "X_L₁ = 15 ohm\nf₂ = 3f₁",
+        "find_text": "X_L₂ - ?",
+        "solution": "X_L = ωL, so X_L is proportional to frequency.\nX_L₂ = 3 · 15 = 45 ohm.",
+        "answer": "45 ohm."
+      },
+      "electromagnetism-reactive-resistance-task-5": {
+        "topic_title": "Reactance",
+        "title": "In an RLC circuit, X_L = X_C. What is the circuit impedance?",
+        "problem_text": "In an RLC circuit, X_L = X_C. What is the circuit impedance?",
+        "given_data": "X_L = X_C\nR = R",
+        "find_text": "Z - ?",
+        "solution": "Z = √(R² + (X_L - X_C)²).\nSince X_L - X_C = 0, Z = R.",
+        "answer": "Z = R; this is the voltage resonance condition."
+      },
+      "electromagnetism-transformers-task-1": {
+        "topic_title": "Transformers",
+        "title": "The primary winding has 1000 turns and the secondary has 200 turns. 220 V is applied to the primary. Find the secondary voltage.",
+        "problem_text": "The primary winding has 1000 turns and the secondary has 200 turns. 220 V is applied to the primary. Find the secondary voltage.",
+        "given_data": "n₁ = 1000\nn₂ = 200\nU₁ = 220 V",
+        "find_text": "U₂ - ?",
+        "solution": "U₁/U₂ = n₁/n₂, so U₂ = U₁n₂/n₁.\nU₂ = 220 · 200/1000 = 44 V.",
+        "answer": "44 V."
+      },
+      "electromagnetism-transformers-task-2": {
+        "topic_title": "Transformers",
+        "title": "A transformer increases voltage from 110 V to 1100 V. How many times more turns does the secondary winding have than the primary?",
+        "problem_text": "A transformer increases voltage from 110 V to 1100 V. How many times more turns does the secondary winding have than the primary?",
+        "given_data": "U₁ = 110 V\nU₂ = 1100 V",
+        "find_text": "n₂/n₁ - ?",
+        "solution": "U₂/U₁ = n₂/n₁.\nn₂/n₁ = 1100/110 = 10.",
+        "answer": "10 times."
+      },
+      "electromagnetism-transformers-task-3": {
+        "topic_title": "Transformers",
+        "title": "An ideal transformer gives 24 V and 5 A in the secondary circuit. Find the secondary power and the primary current at U₁ = 120 V.",
+        "problem_text": "An ideal transformer gives 24 V and 5 A in the secondary circuit. Find the secondary power and the primary current at U₁ = 120 V.",
+        "given_data": "U₂ = 24 V\nI₂ = 5 A\nU₁ = 120 V",
+        "find_text": "P₂, I₁ - ?",
+        "solution": "P₂ = U₂I₂ = 24 · 5 = 120 W.\nFor an ideal transformer, P₁ ≈ P₂, so I₁ = P₁/U₁ = 120/120 = 1 A.",
+        "answer": "P₂ = 120 W, I₁ = 1 A."
+      },
+      "electromagnetism-transformers-task-4": {
+        "topic_title": "Transformers",
+        "title": "The primary winding has 500 turns. How many turns are needed in the secondary to obtain 12 V from 220 V?",
+        "problem_text": "The primary winding has 500 turns. How many turns are needed in the secondary to obtain 12 V from 220 V?",
+        "given_data": "n₁ = 500\nU₁ = 220 V\nU₂ = 12 V",
+        "find_text": "n₂ - ?",
+        "solution": "n₂ = n₁U₂/U₁ = 500 · 12/220 ≈ 27.3.\nIn practice, the nearest integer number of turns is chosen with design constraints considered.",
+        "answer": "approximately 27 turns."
+      },
+      "electromagnetism-transformers-task-5": {
+        "topic_title": "Transformers",
+        "title": "Why is alternating current used to transmit power through a transformer?",
+        "problem_text": "Why is alternating current used to transmit power through a transformer?",
+        "given_data": "transformer\nenergy transfer between windings",
+        "find_text": "reason for using AC - ?",
+        "solution": "Alternating current creates alternating magnetic flux in the core.\nThis flux induces emf in the secondary winding. After the transient process, direct current does not change the flux, so emf is not maintained.",
+        "answer": "a changing magnetic flux is needed, so a transformer works with alternating current."
+      },
+      "electromagnetism-power-transmission-task-1": {
+        "topic_title": "Electric Power Transmission",
+        "title": "A power of 100 kW must be transmitted through a line at voltage 10 kV. Find the line current.",
+        "problem_text": "A power of 100 kW must be transmitted through a line at voltage 10 kV. Find the line current.",
+        "given_data": "P = 100 kW = 100000 W\nU = 10 kV = 10000 V",
+        "find_text": "I - ?",
+        "solution": "I = P/U = 100000/10000 = 10 A.",
+        "answer": "10 A."
+      },
+      "electromagnetism-power-transmission-task-2": {
+        "topic_title": "Electric Power Transmission",
+        "title": "Line resistance is 4 ohm and current is 15 A. Find the power loss.",
+        "problem_text": "Line resistance is 4 ohm and current is 15 A. Find the power loss.",
+        "given_data": "R = 4 ohm\nI = 15 A",
+        "find_text": "Ploss - ?",
+        "solution": "Ploss = I²R = 15² · 4 = 900 W.",
+        "answer": "900 W."
+      },
+      "electromagnetism-power-transmission-task-3": {
+        "topic_title": "Electric Power Transmission",
+        "title": "The same power is transmitted first at 1 kV, then at 10 kV. By what factor will wire losses decrease?",
+        "problem_text": "The same power is transmitted first at 1 kV, then at 10 kV. By what factor will wire losses decrease?",
+        "given_data": "P is the same\nU₂ = 10U₁\nR is the same",
+        "find_text": "Ploss₁/Ploss₂ - ?",
+        "solution": "I = P/U, so increasing voltage 10 times decreases current 10 times.\nLosses Ploss = I²R decrease by 10² = 100 times.",
+        "answer": "losses decrease 100 times."
+      },
+      "electromagnetism-power-transmission-task-4": {
+        "topic_title": "Electric Power Transmission",
+        "title": "A line transmits 50 kW at current 20 A. Find the transmission voltage.",
+        "problem_text": "A line transmits 50 kW at current 20 A. Find the transmission voltage.",
+        "given_data": "P = 50 kW = 50000 W\nI = 20 A",
+        "find_text": "U - ?",
+        "solution": "P = UI, so U = P/I = 50000/20 = 2500 V.",
+        "answer": "2500 V."
+      },
+      "electromagnetism-power-transmission-task-5": {
+        "topic_title": "Electric Power Transmission",
+        "title": "In a line with resistance 2 ohm, power losses must not exceed 200 W. What maximum current is allowed?",
+        "problem_text": "In a line with resistance 2 ohm, power losses must not exceed 200 W. What maximum current is allowed?",
+        "given_data": "R = 2 ohm\nPloss = 200 W",
+        "find_text": "I - ?",
+        "solution": "Ploss = I²R, so I = √(Ploss/R).\nI = √(200/2) = √100 = 10 A.",
+        "answer": "10 A."
+      }
+    }
+  },
+  "kk": {
+    "tests": {
+      "electromagnetism-electric-charge-test": {
+        "title": "Тест: Электр заряды",
+        "questions": [
+          {
+            "question": "Модулі бойынша ең кіші еркін электр заряды қандай?",
+            "options": [
+              "6,02×10²³ Кл",
+              "1 Кл",
+              "9×10⁹ Кл",
+              "1,6×10⁻¹⁹ Кл"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Денеде электрондар артық. Оның зарядының таңбасы қандай?",
+            "options": [
+              "Оң.",
+              "Зарядтың таңбасы болмайды.",
+              "Міндетті түрде нөл.",
+              "Теріс."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Зарядтың квантталуы қалай жазылады?",
+            "options": [
+              "q = U/R",
+              "q = ne",
+              "q = mv",
+              "q = It²"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Егер бейтарап дене электрондарын жоғалтса, ол:",
+            "options": [
+              "оң зарядталған болады.",
+              "кез келген жағдайда зарядсыз қалады.",
+              "магниттік болады, бірақ электрлік емес.",
+              "теріс зарядталған болады."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Электр зарядының сақталу заңы нені білдіреді?",
+            "options": [
+              "үйкеліс кезінде заряд әрқашан жоғалады.",
+              "кез келген заряд еркін бөлшек мәнге ие болады.",
+              "тұйық жүйенің толық заряды өзгермейді.",
+              "заряд тек өткізгіштерде болады."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-coulomb-law-test": {
+        "title": "Тест: Кулон заңы",
+        "questions": [
+          {
+            "question": "Кулон заңы ненің әрекеттесу күшін сипаттайды?",
+            "options": [
+              "тек қозғалыстағы екі магниттің.",
+              "өткізгіш пен сұйықтың.",
+              "екі қозғалмайтын нүктелік зарядтың.",
+              "дене мен Жердің."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Зарядтар арақашықтығын 2 есе арттырса, Кулон күші қалай өзгереді?",
+            "options": [
+              "2 есе артады.",
+              "2 есе кемиді.",
+              "4 есе артады.",
+              "4 есе кемиді."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Кулон заңының формуласы:",
+            "options": [
+              "F = qvB",
+              "F = ma",
+              "F = k|q₁q₂|/r²",
+              "F = BIL"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Екі аттас заряд:",
+            "options": [
+              "тартылады.",
+              "әрқашан бейтараптанады.",
+              "тебіледі.",
+              "әрекеттеспейді."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Вакуумдағы k коэффициенті шамамен:",
+            "options": [
+              "6,02×10²³ Н·м²/Кл²",
+              "9×10⁹ Н·м²/Кл²",
+              "8,31 Н·м²/Кл²",
+              "1,6×10⁻¹⁹ Н·м²/Кл²"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-electric-field-test": {
+        "title": "Тест: Электр өрісі",
+        "questions": [
+          {
+            "question": "Электр өрісі оның әсері арқылы анықталады:",
+            "options": [
+              "тек дыбысқа.",
+              "электр зарядына.",
+              "тек бейтарап газға.",
+              "тек вакуумдағы жарыққа."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Электр өрісінің кернеулігі мына формуламен анықталады:",
+            "options": [
+              "E = mc²",
+              "E = q/F",
+              "E = IR",
+              "E = F/q"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Электр өрісі кернеулігінің бірлігі:",
+            "options": [
+              "Дж·с",
+              "Н/Кл",
+              "Кл/Н",
+              "Ом"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "E векторының бағыты қай зарядқа әсер ететін күш бағытымен сәйкес келеді?",
+            "options": [
+              "магнит полюсіне.",
+              "бейтарап молекулаға.",
+              "оң сынақ зарядына.",
+              "теріс зарядқа."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Нүктелік заряд өрісінің кернеулігі қашықтықпен қалай кемиді?",
+            "options": [
+              "r²",
+              "r",
+              "1/r²",
+              "1/r"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-potential-voltage-test": {
+        "title": "Тест: Потенциал және кернеу",
+        "questions": [
+          {
+            "question": "Екі нүкте арасындағы кернеу:",
+            "options": [
+              "зарядтар қосындысына тең.",
+              "осы нүктелердің потенциалдар айырмасына тең.",
+              "тек өткізгіш кедергісіне тең.",
+              "күш пен массаның көбейтіндісіне тең."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "q зарядын U кернеу арқылы тасымалдағанда электр өрісінің жұмысы:",
+            "options": [
+              "A = U/q",
+              "A = IR",
+              "A = mv²/2",
+              "A = qU"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Біртекті өрісте кернеулік пен кернеудің байланысы:",
+            "options": [
+              "E = q/U",
+              "E = U/d",
+              "E = d/U",
+              "E = Ud"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Кернеу бірлігі:",
+            "options": [
+              "тесла.",
+              "ом.",
+              "кулон.",
+              "вольт."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Заряд потенциалы бірдей нүктелер арасында орын ауыстырса, өрістің жұмысы:",
+            "options": [
+              "әрқашан теріс.",
+              "нөлге тең.",
+              "q/U-ға тең.",
+              "максимал."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-capacitors-test": {
+        "title": "Тест: Конденсаторлар",
+        "questions": [
+          {
+            "question": "Конденсатор не үшін арналған?",
+            "options": [
+              "массаны өлшеу үшін.",
+              "электр зарядын және электр өрісі энергиясын жинақтау үшін.",
+              "токты магнитке айналдыру үшін.",
+              "ауырлық күшін жасау үшін."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Электр сыйымдылығы мына формуламен анықталады:",
+            "options": [
+              "C = qU",
+              "C = U/q",
+              "C = q/U",
+              "C = IR"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Электр сыйымдылығының бірлігі:",
+            "options": [
+              "ньютон.",
+              "фарад.",
+              "тесла.",
+              "ом."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Зарядталған конденсатор энергиясы:",
+            "options": [
+              "W = mg",
+              "W = IR",
+              "W = q/t",
+              "W = CU²/2"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Сыйымдылығы өзгермегенде конденсатор кернеуін 2 есе арттырса, энергия:",
+            "options": [
+              "4 есе артады.",
+              "өзгермейді.",
+              "2 есе кемиді.",
+              "2 есе артады."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "electromagnetism-current-strength-test": {
+        "title": "Тест: Ток күші",
+        "questions": [
+          {
+            "question": "Өткізгіш қимасынан 4 с ішінде 12 Кл заряд өтті. Ток күші қандай?",
+            "options": [
+              "16 А",
+              "3 А",
+              "48 А",
+              "0,33 А"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ток күшінің өлшем бірлігі қайсы?",
+            "options": [
+              "кулон",
+              "ом",
+              "ампер",
+              "вольт"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Бірдей уақыт ішінде өткізгіштен өтетін зарядты 2 есе арттырса, ток күші:",
+            "options": [
+              "нөлге тең болады",
+              "2 есе кемиді",
+              "2 есе артады",
+              "өзгермейді"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "1 А ток күші нені білдіреді?",
+            "options": [
+              "зарядқа 1 Н күш әсер етеді",
+              "кедергі 1 Ом-ға тең",
+              "1 с ішінде қимадан 1 Кл заряд өтеді",
+              "кернеу 1 В-қа тең"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Металл өткізгіштегі электр тогы негізінен ненің бағытталған қозғалысымен байланысты?",
+            "options": [
+              "ауа молекулаларының",
+              "кристалл торының оң иондарының",
+              "еркін электрондардың",
+              "нейтрондардың"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-ohm-law-test": {
+        "title": "Тест: Ом заңы",
+        "questions": [
+          {
+            "question": "12 В кернеуде 6 Ом резистор арқылы өтетін ток:",
+            "options": [
+              "72 А",
+              "0,5 А",
+              "18 А",
+              "2 А"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Кедергі өзгермегенде резистордағы кернеуді 3 есе арттырса, ток:",
+            "options": [
+              "шексіз болады",
+              "өзгермейді",
+              "3 есе артады",
+              "3 есе кемиді"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Тізбек бөлігі үшін Ом заңын қай формула өрнектейді?",
+            "options": [
+              "P = UI",
+              "I = U/R",
+              "q = It",
+              "F = qvB"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "ЭҚК ε, сыртқы кедергі R және ішкі кедергі r бар толық тізбекте ток:",
+            "options": [
+              "I = R/(ε+r)",
+              "I = ε/(R+r)",
+              "I = ε/(R-r)",
+              "I = εR"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Қысқа тұйықталу кезінде ток неге өте үлкен болуы мүмкін?",
+            "options": [
+              "заряд тізбектен жоғалады",
+              "сымдардың кедергісі күрт өседі",
+              "кернеу әрқашан нөлге тең болады",
+              "сыртқы кедергі азайып, ток негізінен көздің ішкі кедергісімен шектеледі"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-work-power-test": {
+        "title": "Тест: Токтың жұмысы және қуаты",
+        "questions": [
+          {
+            "question": "Тізбек бөлігіндегі электр тогының қуаты:",
+            "options": [
+              "P = R/U",
+              "P = It",
+              "P = q/t",
+              "P = UI"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "t уақыт ішіндегі ток жұмысы мына формуламен есептеледі:",
+            "options": [
+              "A = q/t",
+              "A = UIt",
+              "A = I/R",
+              "A = U/I"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Резисторда бөлінетін жылу мөлшері:",
+            "options": [
+              "Q = IR/t",
+              "Q = qE",
+              "Q = I²Rt",
+              "Q = U/R"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "R және t бірдей болғанда резистордағы токты 2 есе арттырса, жылу мөлшері:",
+            "options": [
+              "4 есе артады",
+              "2 есе кемиді",
+              "2 есе артады",
+              "өзгермейді"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Қуаты 100 Вт құрылғы 10 с ішінде қанша энергия тұтынады?",
+            "options": [
+              "100 Дж",
+              "1000 Дж",
+              "10 Дж",
+              "10000 Дж"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-conductor-connections-test": {
+        "title": "Тест: Өткізгіштерді қосу",
+        "questions": [
+          {
+            "question": "Екі резистор тізбектей қосылғанда жалпы кедергі:",
+            "options": [
+              "R = R₁/R₂",
+              "R = R₁ + R₂",
+              "R = R₁ - R₂",
+              "R = R₁R₂"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Әрқайсысы 10 Ом екі бірдей резистор параллель қосылса, жалпы кедергі:",
+            "options": [
+              "20 Ом",
+              "1 Ом",
+              "10 Ом",
+              "5 Ом"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Тізбектей қосылған барлық өткізгіштер үшін не бірдей?",
+            "options": [
+              "кедергі",
+              "ток күші",
+              "кернеу",
+              "қуат"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Параллель қосылған тармақтар үшін не бірдей?",
+            "options": [
+              "кедергі",
+              "өткізгіштердің ұзындығы",
+              "кернеу",
+              "ток күші"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Тізбектей тізбектегі бір шамды бұрап алса, қалған шамдар:",
+            "options": [
+              "тізбек үзілгендіктен сөнеді",
+              "жарығырақ жана береді",
+              "өзгеріссіз жанады",
+              "параллельге айналады"
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "electromagnetism-magnetic-field-test": {
+        "title": "Тест: Магнит өрісі",
+        "questions": [
+          {
+            "question": "Магнит өрісін не тудырады?",
+            "options": [
+              "тек қозғалмайтын зарядтар",
+              "токсыз оқшаулағыш",
+              "қозғалатын зарядтар және электр тогы",
+              "тек массасы үлкен денелер"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Магнит индукциясы B бірлігі:",
+            "options": [
+              "тесла",
+              "ом",
+              "кулон",
+              "вольт"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Ұзын түзу өткізгіштегі токты 2 есе арттырса, сол қашықтықтағы магнит индукциясы:",
+            "options": [
+              "2 есе артады",
+              "4 есе артады",
+              "өзгермейді",
+              "2 есе кемиді"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Перпендикуляр өрістегі жазық контур арқылы магнит ағыны:",
+            "options": [
+              "Φ = IR",
+              "Φ = S/B",
+              "Φ = BS",
+              "Φ = B/S"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Ток жүретін түзу өткізгіш айналасындағы магнит өрісі сызықтарының бағыты немен анықталады?",
+            "options": [
+              "иінтірек ережесімен",
+              "Архимед формуласымен",
+              "оң қол ережесімен",
+              "Ом заңымен"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-ampere-force-test": {
+        "title": "Тест: Ампер күші",
+        "questions": [
+          {
+            "question": "Ампер күші неге әсер етеді?",
+            "options": [
+              "зарядсыз конденсаторға",
+              "магнит өрісіндегі тогы бар өткізгішке",
+              "ауырлық өрісіндегі денеге",
+              "қозғалмайтын зарядсыз шарға"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ампер күшінің формуласы:",
+            "options": [
+              "F = kq₁q₂/r²",
+              "F = qE",
+              "F = ma",
+              "F = BILsinα"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ампер күші қашан нөлге тең?",
+            "options": [
+              "өткізгіш ұзындығы нөл емес болса",
+              "ток өте үлкен болса",
+              "өткізгіш өріс сызықтарына перпендикуляр болса",
+              "өткізгіш магнит өрісі сызықтарына параллель болса"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "α = 90° кезінде Ампер күші:",
+            "options": [
+              "нөлге тең",
+              "теріс",
+              "максимал",
+              "токқа тәуелді емес"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Ампер күшінің бағыты немен анықталады?",
+            "options": [
+              "энергияның сақталу заңымен",
+              "кедергілерді қосу ережесімен",
+              "сол қол ережесімен",
+              "Кулон заңымен"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-lorentz-force-test": {
+        "title": "Тест: Лоренц күші",
+        "questions": [
+          {
+            "question": "Лоренц күші неге әсер етеді?",
+            "options": [
+              "токсыз резисторға",
+              "өріссіз зарядсыз молекулаға",
+              "магнит өрісіндегі қозғалатын зарядқа",
+              "тек қозғалмайтын зарядқа"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Лоренц күшінің магниттік құраушысының формуласы:",
+            "options": [
+              "F = q/t",
+              "F = qvBsinα",
+              "F = UI",
+              "F = mg"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Заряд магнит өрісіне параллель қозғалса, Лоренц күші:",
+            "options": [
+              "qB/v-ға тең",
+              "qvB-ға тең",
+              "нөлге тең",
+              "максимал"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Біртекті магнит өрісінде v ⟂ B болса, зарядталған бөлшек шеңбер бойымен қозғалады, себебі Лоренц күші:",
+            "options": [
+              "әрқашан жылдамдықты арттырады",
+              "ауырлық күшіне тең",
+              "жылдамдық бойымен бағытталған",
+              "жылдамдыққа перпендикуляр бағытталған"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Магнит өрісіндегі зарядталған бөлшек шеңберінің радиусы:",
+            "options": [
+              "R = qvB",
+              "R = B/(qv)",
+              "R = mv/(qB)",
+              "R = qB/(mv)"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-faraday-law-test": {
+        "title": "Тест: Фарадей заңы",
+        "questions": [
+          {
+            "question": "Индукциялық ток қашан пайда болады?",
+            "options": [
+              "контур кедергісі шексіз болғанда",
+              "контур арқылы магнит ағыны өзгергенде",
+              "контур өзгермейтін өрісте қозғалмай тұрғанда",
+              "заряд вакуумда тыныш тұрғанда"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ағын бірқалыпты өзгергенде индукция ЭҚК модулі:",
+            "options": [
+              "|ε| = I/R",
+              "|ε| = qU",
+              "|ε| = |ΔΦ|/Δt",
+              "|ε| = Φt"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Магнит ағыны 2 есе жылдамырақ өзгерсе, индукция ЭҚК:",
+            "options": [
+              "2 есе артады",
+              "өзгермейді",
+              "2 есе кемиді",
+              "нөлге тең болады"
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Ұзындығы L өткізгіш B өрісіне перпендикуляр v жылдамдықпен қозғалғанда ЭҚК:",
+            "options": [
+              "ε = B/(Lv)",
+              "ε = IRt",
+              "ε = BLv",
+              "ε = Lv/B"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Фарадей заңындағы минус таңбасы нені көрсетеді?",
+            "options": [
+              "магнит өрісінің теріс мәнін",
+              "токтың мүмкін еместігін",
+              "тізбекте энергия жоқ екенін",
+              "Ленц ережесі бойынша индукциялық ток бағытын"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-lenz-rule-test": {
+        "title": "Тест: Ленц ережесі",
+        "questions": [
+          {
+            "question": "Ленц ережесі нені анықтайды?",
+            "options": [
+              "өткізгіш кедергісін",
+              "ауырлық күшін",
+              "индукциялық ток бағытын",
+              "газ температурасын"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Индукциялық ток әрқашан оның магнит өрісі:",
+            "options": [
+              "магнит өрісін тудырмайды",
+              "магнит ағынының өзгерісіне қарсы әсер ететіндей бағытталады",
+              "кез келген өзгерісті шектеусіз күшейтетіндей бағытталады",
+              "кедергіні жоятындай болады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ленц ережесі ненің көрінісі?",
+            "options": [
+              "бүкіләлемдік тартылыс заңының",
+              "энергияның сақталу заңының",
+              "Бойль-Мариотт заңының",
+              "Архимед заңының"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Магниттің солтүстік полюсін сақинаға жақындатса, сақинаның жақын жағы:",
+            "options": [
+              "мәңгі бейтарап болады",
+              "магнитті тебу үшін солтүстік полюс болады",
+              "себепсіз тұрақты ток көзі болады",
+              "магнитті тарту үшін оңтүстік полюс болады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Контур арқылы магнит ағыны өзгермесе, индукциялық ток:",
+            "options": [
+              "тек контур массасына тәуелді",
+              "әрқашан сағат тілімен бағытталады",
+              "міндетті түрде максимал болады",
+              "пайда болмайды"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-inductance-test": {
+        "title": "Тест: Индуктивтік",
+        "questions": [
+          {
+            "question": "Катушка индуктивтігі нені көрсетеді?",
+            "options": [
+              "оқшаулағыш температурасын",
+              "магнит өрісінің түсін",
+              "катушкадағы ток магнит ағынын қаншалықты күшті тудыратынын",
+              "сым массасын"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Ағын ілінісуі мен токтың байланысы:",
+            "options": [
+              "Φ = q/t",
+              "Φ = L/I",
+              "Φ = IR",
+              "Φ = LI"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Өзіндік индукция ЭҚК:",
+            "options": [
+              "ε = LI²/2",
+              "ε = qvB",
+              "ε = -L(dI/dt)",
+              "ε = U/R"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Катушканың магнит өрісі энергиясы:",
+            "options": [
+              "W = L/I²",
+              "W = LI²/2",
+              "W = It",
+              "W = qU"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Катушкадағы токты 2 есе арттырса, магнит өрісі энергиясы:",
+            "options": [
+              "2 есе артады",
+              "2 есе кемиді",
+              "өзгермейді",
+              "4 есе артады"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-eddy-currents-test": {
+        "title": "Тест: Құйынды токтар",
+        "questions": [
+          {
+            "question": "Құйынды токтар массивті өткізгіштерде қашан пайда болады?",
+            "options": [
+              "өріссіз тұрақты температурада",
+              "магнит өрісі болмағанда",
+              "олардың ішіндегі магнит ағыны өзгергенде",
+              "еркін зарядтар мүлде болмағанда"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Құйынды токтар жиі неге әкеледі?",
+            "options": [
+              "массаның азаюына",
+              "кедергінің жоғалуына",
+              "өткізгіштің қызуына",
+              "металдың оқшаулағышқа айналуына"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Трансформатор өзекшелерін жұқа оқшауланған пластиналардан жасайды, себебі:",
+            "options": [
+              "айнымалы токты тұрақты токпен ауыстыру үшін",
+              "құйынды токтарды азайту үшін",
+              "қызу шығындарын арттыру үшін",
+              "магнит өрісін жою үшін"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Металл дискінің электромагниттік тежелуі неге негізделген?",
+            "options": [
+              "Архимед заңына",
+              "металдың булануына",
+              "құйынды токтарға және Ленц ережесіне",
+              "қозғалыссыз статикалық электрге"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Құйынды токтан бөлінетін жылуды қандай формуламен бағалауға болады?",
+            "options": [
+              "Q = B/S",
+              "Q = mv²",
+              "Q = I²Rt",
+              "Q = q/t"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "electromagnetism-sinusoidal-current-test": {
+        "title": "Тест: Синусоидалық ток",
+        "questions": [
+          {
+            "question": "i = I₀sin(ωt) айнымалы тогының амплитудасы:",
+            "options": [
+              "I₀/ω",
+              "ω",
+              "t",
+              "I₀"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Синусоидалық токтың әсерлік мәні:",
+            "options": [
+              "I = I₀√2",
+              "I = I₀/2",
+              "I = I₀/√2",
+              "I = 2I₀"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Кернеу амплитудасы 311 В болса, әсерлік мәні шамамен:",
+            "options": [
+              "110 В",
+              "311 В",
+              "440 В",
+              "220 В"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Айнымалы ток жиілігі 50 Гц. Периоды:",
+            "options": [
+              "0,2 с",
+              "0,02 с",
+              "50 с",
+              "2 с"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "ωt = π/2 фазасында i = I₀sin(ωt) лездік тогы:",
+            "options": [
+              "I₀",
+              "0",
+              "I₀/2",
+              "-I₀"
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "electromagnetism-reactive-resistance-test": {
+        "title": "Тест: Реактивті кедергі",
+        "questions": [
+          {
+            "question": "Катушканың индуктивті кедергісі:",
+            "options": [
+              "X_L = 1/(ωL)",
+              "X_L = ωL",
+              "X_L = R/ω",
+              "X_L = C/ω"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Конденсатордың сыйымдылық кедергісі:",
+            "options": [
+              "X_C = C/ω",
+              "X_C = 1/(ωC)",
+              "X_C = ωC",
+              "X_C = LC"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жиілік артқанда индуктивті кедергі:",
+            "options": [
+              "теріс болады",
+              "өзгермейді",
+              "кемиді",
+              "артады"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жиілік артқанда сыйымдылық кедергі:",
+            "options": [
+              "артады",
+              "өзгермейді",
+              "кемиді",
+              "R-ға тең болады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Тізбектей RLC-тізбектің толық кедергісі:",
+            "options": [
+              "Z = R + X_L + X_C фазаны ескермей",
+              "Z = √(R² + (X_L - X_C)²)",
+              "Z = R/(X_L - X_C)",
+              "Z = X_C - R"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "electromagnetism-transformers-test": {
+        "title": "Тест: Трансформаторлар",
+        "questions": [
+          {
+            "question": "Трансформатор ненің арқасында жұмыс істейді?",
+            "options": [
+              "электролиздің",
+              "электромагниттік индукцияның",
+              "жылулық ұлғаюдың",
+              "үйкеліс күшінің"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Идеал трансформатор үшін:",
+            "options": [
+              "U₁/U₂ = n₂/n₁ әрқашан керісінше",
+              "U₁/U₂ = n₁/n₂",
+              "U₁U₂ = n₁+n₂",
+              "U₂ = U₁ + n₁"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Екінші орамдағы орам саны бірінші орамнан көп болса, трансформатор:",
+            "options": [
+              "төмендеткіш",
+              "жоғарылатқыш",
+              "AC-ты DC-қа айналдырады",
+              "жұмыс істемейді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Идеал трансформаторда қуаттар шамамен тең:",
+            "options": [
+              "P₂ әрқашан 10 есе көп",
+              "P₂ жүктемеге тәуелді емес",
+              "P₁ ≈ P₂",
+              "P₁ = 0"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Неге кәдімгі трансформатор орныққан режимде тұрақты токпен жұмыс істемейді?",
+            "options": [
+              "орамдар жоғалады",
+              "кедергі теріс болады",
+              "кернеу әрқашан нөлге тең",
+              "өзгермелі магнит ағыны жоқ"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "electromagnetism-power-transmission-test": {
+        "title": "Тест: Электр энергиясын жеткізу",
+        "questions": [
+          {
+            "question": "Тасымалдау желісінің сымдарындағы қуат шығыны:",
+            "options": [
+              "Pшығын = BLv",
+              "Pшығын = I²R",
+              "Pшығын = q/t",
+              "Pшығын = U/I"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Сол қуатты үлкен кернеумен жеткізу үшін ток күші:",
+            "options": [
+              "артады",
+              "кемиді",
+              "өзгермейді",
+              "кедергіге тең болады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Электр энергиясын неге жоғары кернеумен жеткізеді?",
+            "options": [
+              "трансформаторларды қажетсіз ету үшін",
+              "токты тұрақты ету үшін",
+              "сымдардың қызуын арттыру үшін",
+              "токты және I²R шығындарын азайту үшін"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Желідегі токты 10 есе азайтса, I²R шығындары:",
+            "options": [
+              "10 есе азаяды",
+              "өзгермейді",
+              "100 есе азаяды",
+              "10 есе артады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "P қуатты U кернеумен жеткізу үшін ток:",
+            "options": [
+              "I = P + U",
+              "I = P/U",
+              "I = U/P",
+              "I = PU"
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "electromagnetism-electric-charge-task-1": {
+        "topic_title": "Электр заряды",
+        "title": "Дененің заряды -4,8×10⁻¹⁹ Кл. Денеде қанша артық электрон бар?",
+        "problem_text": "Дененің заряды -4,8×10⁻¹⁹ Кл. Денеде қанша артық электрон бар?",
+        "given_data": "q = -4,8×10⁻¹⁹ Кл\ne = 1,6×10⁻¹⁹ Кл",
+        "find_text": "n - ?",
+        "solution": "|q| = ne\nn = |q|/e = 4,8×10⁻¹⁹ / 1,6×10⁻¹⁹ = 3",
+        "answer": "денеде 3 артық электрон бар."
+      },
+      "electromagnetism-electric-charge-task-2": {
+        "topic_title": "Электр заряды",
+        "title": "Бейтарап дененің заряды +8×10⁻¹⁹ Кл болуы үшін одан қанша электронды алып тастау керек?",
+        "problem_text": "Бейтарап дененің заряды +8×10⁻¹⁹ Кл болуы үшін одан қанша электронды алып тастау керек?",
+        "given_data": "q = +8×10⁻¹⁹ Кл\ne = 1,6×10⁻¹⁹ Кл",
+        "find_text": "n - ?",
+        "solution": "n = q/e = 8×10⁻¹⁹ / 1,6×10⁻¹⁹ = 5",
+        "answer": "5 электронды алып тастау керек."
+      },
+      "electromagnetism-electric-charge-task-3": {
+        "topic_title": "Электр заряды",
+        "title": "Екі бірдей металл шардың зарядтары +6 нКл және -2 нКл болды. Оларды жанастырып, қайта ажыратты. Әр шардың зарядын табыңыз.",
+        "problem_text": "Екі бірдей металл шардың зарядтары +6 нКл және -2 нКл болды. Оларды жанастырып, қайта ажыратты. Әр шардың зарядын табыңыз.",
+        "given_data": "q₁ = +6 нКл\nq₂ = -2 нКл\nшарлар бірдей",
+        "find_text": "q' - ?",
+        "solution": "Толық заряд сақталады:\nqжалпы = q₁ + q₂ = 6 - 2 = 4 нКл\nБірдей шарларда заряд тең бөлінеді:\nq' = qжалпы/2 = 4/2 = 2 нКл",
+        "answer": "әр шар +2 нКл заряд алады."
+      },
+      "electromagnetism-electric-charge-task-4": {
+        "topic_title": "Электр заряды",
+        "title": "Неге дене заряды 2,5e бола алмайды?",
+        "problem_text": "Неге дене заряды 2,5e бола алмайды?",
+        "given_data": "q = ne\nn - бүтін сан",
+        "find_text": "түсіндіру - ?",
+        "solution": "Электр заряды квантталады: ол элементар зарядтардың бүтін санына тең. Электрондар немесе протондар саны бөлшек бола алмайды, сондықтан оқшауланған дене үшін 2,5e мүмкін емес.",
+        "answer": "заряд e-ге бүтін коэффициентпен еселі болуы керек."
+      },
+      "electromagnetism-electric-charge-task-5": {
+        "topic_title": "Электр заряды",
+        "title": "Денеге 10¹² электрон көшірілді. Дененің алған зарядын табыңыз.",
+        "problem_text": "Денеге 10¹² электрон көшірілді. Дененің алған зарядын табыңыз.",
+        "given_data": "n = 10¹²\ne = 1,6×10⁻¹⁹ Кл\nэлектрондар денеге көшірілді",
+        "find_text": "q - ?",
+        "solution": "Электрондар қосылғандықтан, заряд теріс болады:\nq = -ne = -10¹² × 1,6×10⁻¹⁹ = -1,6×10⁻⁷ Кл",
+        "answer": "q = -1,6×10⁻⁷ Кл."
+      },
+      "electromagnetism-coulomb-law-task-1": {
+        "topic_title": "Кулон заңы",
+        "title": "+2 мкКл және +3 мкКл зарядтар 0,3 м қашықтықта орналасқан. Әрекеттесу күшін табыңыз.",
+        "problem_text": "+2 мкКл және +3 мкКл зарядтар 0,3 м қашықтықта орналасқан. Әрекеттесу күшін табыңыз.",
+        "given_data": "q₁ = 2 мкКл = 2×10⁻⁶ Кл\nq₂ = 3 мкКл = 3×10⁻⁶ Кл\nr = 0,3 м\nk = 9×10⁹ Н·м²/Кл²",
+        "find_text": "F - ?",
+        "solution": "F = k|q₁q₂|/r²\nF = 9×10⁹ × 2×10⁻⁶ × 3×10⁻⁶ / 0,3²\nF = 0,6 Н",
+        "answer": "F = 0,6 Н, зарядтар тебіледі."
+      },
+      "electromagnetism-coulomb-law-task-2": {
+        "topic_title": "Кулон заңы",
+        "title": "Әрқайсысы 1 мкКл екі бірдей заряд 0,09 Н күшпен әрекеттеседі. Олардың арақашықтығын табыңыз.",
+        "problem_text": "Әрқайсысы 1 мкКл екі бірдей заряд 0,09 Н күшпен әрекеттеседі. Олардың арақашықтығын табыңыз.",
+        "given_data": "q₁ = q₂ = 1 мкКл = 1×10⁻⁶ Кл\nF = 0,09 Н\nk = 9×10⁹ Н·м²/Кл²",
+        "find_text": "r - ?",
+        "solution": "F = kq²/r²\nr = √(kq²/F)\nr = √(9×10⁹ × 10⁻¹² / 0,09) = √0,1 ≈ 0,316 м",
+        "answer": "r ≈ 0,32 м."
+      },
+      "electromagnetism-coulomb-law-task-3": {
+        "topic_title": "Кулон заңы",
+        "title": "Бір зарядты 3 есе арттырып, арақашықтықты 2 есе арттырса, зарядтардың әрекеттесу күші неше есе өзгереді?",
+        "problem_text": "Бір зарядты 3 есе арттырып, арақашықтықты 2 есе арттырса, зарядтардың әрекеттесу күші неше есе өзгереді?",
+        "given_data": "q₁ 3 есе артты\nr 2 есе артты\nF ∼ q₁/r²",
+        "find_text": "F₂/F₁ - ?",
+        "solution": "F₂/F₁ = 3 / 2² = 3/4 = 0,75",
+        "answer": "күш бастапқының 0,75 бөлігі болады, яғни 1,33 есе кемиді."
+      },
+      "electromagnetism-coulomb-law-task-4": {
+        "topic_title": "Кулон заңы",
+        "title": "-4 нКл және +5 нКл зарядтар 0,1 м қашықтықта орналасқан. Күш модулін және әрекеттесу сипатын табыңыз.",
+        "problem_text": "-4 нКл және +5 нКл зарядтар 0,1 м қашықтықта орналасқан. Күш модулін және әрекеттесу сипатын табыңыз.",
+        "given_data": "q₁ = -4 нКл = -4×10⁻⁹ Кл\nq₂ = +5 нКл = 5×10⁻⁹ Кл\nr = 0,1 м\nk = 9×10⁹ Н·м²/Кл²",
+        "find_text": "F - ?",
+        "solution": "F = k|q₁q₂|/r²\nF = 9×10⁹ × 4×10⁻⁹ × 5×10⁻⁹ / 0,1² = 1,8×10⁻⁵ Н\nЗарядтар әр аттас, сондықтан тартылады.",
+        "answer": "F = 1,8×10⁻⁵ Н, тартылыс."
+      },
+      "electromagnetism-coulomb-law-task-5": {
+        "topic_title": "Кулон заңы",
+        "title": "Неге Кулон заңының мектептік түрі тек нүктелік зарядтарға немесе өлшемдері арақашықтықпен салыстырғанда кіші денелерге қолданылады?",
+        "problem_text": "Неге Кулон заңының мектептік түрі тек нүктелік зарядтарға немесе өлшемдері арақашықтықпен салыстырғанда кіші денелерге қолданылады?",
+        "given_data": "зарядтар денелер бойымен таралған\nдене өлшемдері арақашықтықпен шамалас болуы мүмкін",
+        "find_text": "түсіндіру - ?",
+        "solution": "F = k|q₁q₂|/r² формуласы r қашықтығы нүктелік зарядтар арасында анықталған деп есептейді. Егер денелер үлкен болса, зарядтардың әр бөліктері әртүрлі қашықтықта орналасады, сондықтан әрекеттесуді күрделірек есептеу керек.",
+        "answer": "формула тікелей нүктелік зарядтар немесе кіші денелер үшін жұмыс істейді."
+      },
+      "electromagnetism-electric-field-task-1": {
+        "topic_title": "Электр өрісі",
+        "title": "Электр өрісінде 2 мкКл зарядқа 0,01 Н күш әсер етеді. Өріс кернеулігін табыңыз.",
+        "problem_text": "Электр өрісінде 2 мкКл зарядқа 0,01 Н күш әсер етеді. Өріс кернеулігін табыңыз.",
+        "given_data": "q = 2 мкКл = 2×10⁻⁶ Кл\nF = 0,01 Н",
+        "find_text": "E - ?",
+        "solution": "E = F/q\nE = 0,01 / 2×10⁻⁶ = 5000 Н/Кл",
+        "answer": "E = 5×10³ Н/Кл."
+      },
+      "electromagnetism-electric-field-task-2": {
+        "topic_title": "Электр өрісі",
+        "title": "Өріс кернеулігі 2000 Н/Кл. 5 нКл зарядқа қандай күш әсер етеді?",
+        "problem_text": "Өріс кернеулігі 2000 Н/Кл. 5 нКл зарядқа қандай күш әсер етеді?",
+        "given_data": "E = 2000 Н/Кл\nq = 5 нКл = 5×10⁻⁹ Кл",
+        "find_text": "F - ?",
+        "solution": "F = qE\nF = 5×10⁻⁹ × 2000 = 1×10⁻⁵ Н",
+        "answer": "F = 1×10⁻⁵ Н."
+      },
+      "electromagnetism-electric-field-task-3": {
+        "topic_title": "Электр өрісі",
+        "title": "4 нКл нүктелік заряд өрісінің 0,2 м қашықтықтағы кернеулігін табыңыз.",
+        "problem_text": "4 нКл нүктелік заряд өрісінің 0,2 м қашықтықтағы кернеулігін табыңыз.",
+        "given_data": "q = 4 нКл = 4×10⁻⁹ Кл\nr = 0,2 м\nk = 9×10⁹ Н·м²/Кл²",
+        "find_text": "E - ?",
+        "solution": "E = kq/r²\nE = 9×10⁹ × 4×10⁻⁹ / 0,2² = 900 Н/Кл",
+        "answer": "E = 900 Н/Кл."
+      },
+      "electromagnetism-electric-field-task-4": {
+        "topic_title": "Электр өрісі",
+        "title": "Арақашықтықты 3 есе арттырса, нүктелік заряд өрісінің кернеулігі неше есе кемиді?",
+        "problem_text": "Арақашықтықты 3 есе арттырса, нүктелік заряд өрісінің кернеулігі неше есе кемиді?",
+        "given_data": "E ∼ 1/r²\nr₂ = 3r₁",
+        "find_text": "E₂/E₁ - ?",
+        "solution": "E₂/E₁ = (r₁/r₂)² = 1/3² = 1/9",
+        "answer": "кернеулік 9 есе кемиді."
+      },
+      "electromagnetism-electric-field-task-5": {
+        "topic_title": "Электр өрісі",
+        "title": "Кернеулігі 400 Н/Кл біртекті электр өрісінде электрон тұр. Электронға әсер ететін күш модулін табыңыз.",
+        "problem_text": "Кернеулігі 400 Н/Кл біртекті электр өрісінде электрон тұр. Электронға әсер ететін күш модулін табыңыз.",
+        "given_data": "E = 400 Н/Кл\n|qₑ| = 1,6×10⁻¹⁹ Кл",
+        "find_text": "F - ?",
+        "solution": "F = |q|E\nF = 1,6×10⁻¹⁹ × 400 = 6,4×10⁻¹⁷ Н",
+        "answer": "F = 6,4×10⁻¹⁷ Н."
+      },
+      "electromagnetism-potential-voltage-task-1": {
+        "topic_title": "Потенциал және кернеу",
+        "title": "Электр өрісі 4 мКл зарядты тасымалдағанда 0,02 Дж жұмыс атқарды. Кернеуді табыңыз.",
+        "problem_text": "Электр өрісі 4 мКл зарядты тасымалдағанда 0,02 Дж жұмыс атқарды. Кернеуді табыңыз.",
+        "given_data": "A = 0,02 Дж\nq = 4 мКл = 0,004 Кл",
+        "find_text": "U - ?",
+        "solution": "A = qU\nU = A/q = 0,02 / 0,004 = 5 В",
+        "answer": "U = 5 В."
+      },
+      "electromagnetism-potential-voltage-task-2": {
+        "topic_title": "Потенциал және кернеу",
+        "title": "3 мкКл заряд 200 В кернеуі бар нүктелер арасында орын ауыстырады. Өріс жұмысын табыңыз.",
+        "problem_text": "3 мкКл заряд 200 В кернеуі бар нүктелер арасында орын ауыстырады. Өріс жұмысын табыңыз.",
+        "given_data": "q = 3 мкКл = 3×10⁻⁶ Кл\nU = 200 В",
+        "find_text": "A - ?",
+        "solution": "A = qU\nA = 3×10⁻⁶ × 200 = 6×10⁻⁴ Дж",
+        "answer": "A = 6×10⁻⁴ Дж."
+      },
+      "electromagnetism-potential-voltage-task-3": {
+        "topic_title": "Потенциал және кернеу",
+        "title": "Пластиналар арасы 5 см, кернеу 1000 В. Өріс кернеулігін табыңыз.",
+        "problem_text": "Пластиналар арасы 5 см, кернеу 1000 В. Өріс кернеулігін табыңыз.",
+        "given_data": "U = 1000 В\nd = 5 см = 0,05 м",
+        "find_text": "E - ?",
+        "solution": "E = U/d\nE = 1000/0,05 = 20000 В/м",
+        "answer": "E = 2×10⁴ В/м."
+      },
+      "electromagnetism-potential-voltage-task-4": {
+        "topic_title": "Потенциал және кернеу",
+        "title": "Біртекті өріс кернеулігі 3000 В/м, пластиналар арасы 2 см. Кернеуді табыңыз.",
+        "problem_text": "Біртекті өріс кернеулігі 3000 В/м, пластиналар арасы 2 см. Кернеуді табыңыз.",
+        "given_data": "E = 3000 В/м\nd = 2 см = 0,02 м",
+        "find_text": "U - ?",
+        "solution": "U = Ed\nU = 3000 × 0,02 = 60 В",
+        "answer": "U = 60 В."
+      },
+      "electromagnetism-potential-voltage-task-5": {
+        "topic_title": "Потенциал және кернеу",
+        "title": "Электр беру желісінің бір сымында отырған құс неге әдетте ток соқпайды?",
+        "problem_text": "Электр беру желісінің бір сымында отырған құс неге әдетте ток соқпайды?",
+        "given_data": "құстың аяқтары потенциалы дерлік бірдей нүктелерде\nаяқтар арасындағы U өте аз",
+        "find_text": "түсіндіру - ?",
+        "solution": "Дене арқылы ток өтуі үшін дененің екі нүктесі арасында елеулі кернеу болуы керек. Бір сымдағы құстың аяқтары арасындағы потенциалдар айырмасы аз, сондықтан денесі арқылы ток дерлік өтпейді.",
+        "answer": "аяқтары арасында кернеу дерлік жоқ, сондықтан құс арқылы ток аз."
+      },
+      "electromagnetism-capacitors-task-1": {
+        "topic_title": "Конденсаторлар",
+        "title": "Конденсатордың заряды 20 мкКл, кернеуі 100 В. Оның сыйымдылығын табыңыз.",
+        "problem_text": "Конденсатордың заряды 20 мкКл, кернеуі 100 В. Оның сыйымдылығын табыңыз.",
+        "given_data": "q = 20 мкКл = 20×10⁻⁶ Кл\nU = 100 В",
+        "find_text": "C - ?",
+        "solution": "C = q/U\nC = 20×10⁻⁶ / 100 = 2×10⁻⁷ Ф",
+        "answer": "C = 0,2 мкФ."
+      },
+      "electromagnetism-capacitors-task-2": {
+        "topic_title": "Конденсаторлар",
+        "title": "Конденсатор сыйымдылығы 5 мкФ, кернеуі 12 В. Конденсатор зарядын табыңыз.",
+        "problem_text": "Конденсатор сыйымдылығы 5 мкФ, кернеуі 12 В. Конденсатор зарядын табыңыз.",
+        "given_data": "C = 5 мкФ = 5×10⁻⁶ Ф\nU = 12 В",
+        "find_text": "q - ?",
+        "solution": "q = CU\nq = 5×10⁻⁶ × 12 = 60×10⁻⁶ Кл",
+        "answer": "q = 60 мкКл."
+      },
+      "electromagnetism-capacitors-task-3": {
+        "topic_title": "Конденсаторлар",
+        "title": "100 В-қа дейін зарядталған сыйымдылығы 10 мкФ конденсатордың энергиясын табыңыз.",
+        "problem_text": "100 В-қа дейін зарядталған сыйымдылығы 10 мкФ конденсатордың энергиясын табыңыз.",
+        "given_data": "C = 10 мкФ = 10×10⁻⁶ Ф\nU = 100 В",
+        "find_text": "W - ?",
+        "solution": "W = CU²/2\nW = 10×10⁻⁶ × 100² / 2 = 0,05 Дж",
+        "answer": "W = 0,05 Дж."
+      },
+      "electromagnetism-capacitors-task-4": {
+        "topic_title": "Конденсаторлар",
+        "title": "Конденсатор көзден ажыратылды. Пластиналар арақашықтығын арттырып, сыйымдылық 2 есе кемісе, кернеу қалай өзгереді?",
+        "problem_text": "Конденсатор көзден ажыратылды. Пластиналар арақашықтығын арттырып, сыйымдылық 2 есе кемісе, кернеу қалай өзгереді?",
+        "given_data": "q = const\nC₂ = C₁/2\nU = q/C",
+        "find_text": "U₂/U₁ - ?",
+        "solution": "Көзден ажыратылғанда заряд сақталады. Егер сыйымдылық 2 есе кемісе, кернеу 2 есе артады:\nU₂/U₁ = C₁/C₂ = 2",
+        "answer": "кернеу 2 есе артады."
+      },
+      "electromagnetism-capacitors-task-5": {
+        "topic_title": "Конденсаторлар",
+        "title": "Жазық конденсатор пластиналарының ауданы 0,01 м², арақашықтығы 1 мм. Диэлектрик - ауа. Сыйымдылықты бағалаңыз. ε₀ = 8,85×10⁻¹² Ф/м.",
+        "problem_text": "Жазық конденсатор пластиналарының ауданы 0,01 м², арақашықтығы 1 мм. Диэлектрик - ауа. Сыйымдылықты бағалаңыз. ε₀ = 8,85×10⁻¹² Ф/м.",
+        "given_data": "S = 0,01 м²\nd = 1 мм = 0,001 м\nε₀ = 8,85×10⁻¹² Ф/м\nε ≈ 1",
+        "find_text": "C - ?",
+        "solution": "C = ε₀εS/d\nC = 8,85×10⁻¹² × 1 × 0,01 / 0,001 = 8,85×10⁻¹¹ Ф",
+        "answer": "C ≈ 88,5 пФ."
+      },
+      "electromagnetism-current-strength-task-1": {
+        "topic_title": "Ток күші",
+        "title": "Шам арқылы 2 мин ішінде 180 Кл заряд өтеді. Ток күшін табыңыз.",
+        "problem_text": "Шам арқылы 2 мин ішінде 180 Кл заряд өтеді. Ток күшін табыңыз.",
+        "given_data": "t = 2 мин = 120 с\nq = 180 Кл",
+        "find_text": "I - ?",
+        "solution": "I = q/t = 180/120 = 1,5 А.",
+        "answer": "1,5 А."
+      },
+      "electromagnetism-current-strength-task-2": {
+        "topic_title": "Ток күші",
+        "title": "Тізбектегі ток күші 0,8 А. 5 мин ішінде өткізгіштің көлденең қимасынан қандай заряд өтеді?",
+        "problem_text": "Тізбектегі ток күші 0,8 А. 5 мин ішінде өткізгіштің көлденең қимасынан қандай заряд өтеді?",
+        "given_data": "I = 0,8 А\nt = 5 мин = 300 с",
+        "find_text": "q - ?",
+        "solution": "q = It = 0,8 · 300 = 240 Кл.",
+        "answer": "240 Кл."
+      },
+      "electromagnetism-current-strength-task-3": {
+        "topic_title": "Ток күші",
+        "title": "Өткізгіш арқылы 10 с ішінде 3,2×10²⁰ электрон өтеді. Ток күшін табыңыз. Электрон заряды e = 1,6×10⁻¹⁹ Кл.",
+        "problem_text": "Өткізгіш арқылы 10 с ішінде 3,2×10²⁰ электрон өтеді. Ток күшін табыңыз. Электрон заряды e = 1,6×10⁻¹⁹ Кл.",
+        "given_data": "N = 3,2×10²⁰\ne = 1,6×10⁻¹⁹ Кл\nt = 10 с",
+        "find_text": "I - ?",
+        "solution": "q = Ne = 3,2×10²⁰ · 1,6×10⁻¹⁹ = 51,2 Кл.\nI = q/t = 51,2/10 = 5,12 А.",
+        "answer": "5,12 А."
+      },
+      "electromagnetism-current-strength-task-4": {
+        "topic_title": "Ток күші",
+        "title": "Екі өткізгіштен 6 с ішінде 18 Кл және 30 Кл зарядтар өтеді. Екінші өткізгіштегі ток күші неше есе үлкен?",
+        "problem_text": "Екі өткізгіштен 6 с ішінде 18 Кл және 30 Кл зарядтар өтеді. Екінші өткізгіштегі ток күші неше есе үлкен?",
+        "given_data": "t₁ = t₂ = 6 с\nq₁ = 18 Кл\nq₂ = 30 Кл",
+        "find_text": "I₂/I₁ - ?",
+        "solution": "Уақыт бірдей болғанда I зарядқа пропорционал.\nI₂/I₁ = q₂/q₁ = 30/18 = 5/3 ≈ 1,67.",
+        "answer": "екінші өткізгіштегі ток шамамен 1,67 есе үлкен."
+      },
+      "electromagnetism-current-strength-task-5": {
+        "topic_title": "Ток күші",
+        "title": "Микросхема арқылы 1 мс ішінде 2 мКл заряд өтті. Ток күшін табыңыз.",
+        "problem_text": "Микросхема арқылы 1 мс ішінде 2 мКл заряд өтті. Ток күшін табыңыз.",
+        "given_data": "q = 2 мКл = 2×10⁻³ Кл\nt = 1 мс = 1×10⁻³ с",
+        "find_text": "I - ?",
+        "solution": "I = q/t = 2×10⁻³ / 1×10⁻³ = 2 А.",
+        "answer": "2 А."
+      },
+      "electromagnetism-ohm-law-task-1": {
+        "topic_title": "Ом заңы",
+        "title": "8 Ом резисторға 24 В кернеу берілген. Ток күшін табыңыз.",
+        "problem_text": "8 Ом резисторға 24 В кернеу берілген. Ток күшін табыңыз.",
+        "given_data": "R = 8 Ом\nU = 24 В",
+        "find_text": "I - ?",
+        "solution": "I = U/R = 24/8 = 3 А.",
+        "answer": "3 А."
+      },
+      "electromagnetism-ohm-law-task-2": {
+        "topic_title": "Ом заңы",
+        "title": "220 В кернеуде спираль арқылы 0,4 А ток өтеді. Спираль кедергісін табыңыз.",
+        "problem_text": "220 В кернеуде спираль арқылы 0,4 А ток өтеді. Спираль кедергісін табыңыз.",
+        "given_data": "I = 0,4 А\nU = 220 В",
+        "find_text": "R - ?",
+        "solution": "R = U/I = 220/0,4 = 550 Ом.",
+        "answer": "550 Ом."
+      },
+      "electromagnetism-ohm-law-task-3": {
+        "topic_title": "Ом заңы",
+        "title": "Ток 0,2 А болуы үшін 15 Ом резисторға қандай кернеу беру керек?",
+        "problem_text": "Ток 0,2 А болуы үшін 15 Ом резисторға қандай кернеу беру керек?",
+        "given_data": "R = 15 Ом\nI = 0,2 А",
+        "find_text": "U - ?",
+        "solution": "U = IR = 0,2 · 15 = 3 В.",
+        "answer": "3 В."
+      },
+      "electromagnetism-ohm-law-task-4": {
+        "topic_title": "Ом заңы",
+        "title": "Көздің ЭҚК-і 12 В, ішкі кедергісі 1 Ом. Оған 5 Ом резистор қосылды. Тізбектегі токты табыңыз.",
+        "problem_text": "Көздің ЭҚК-і 12 В, ішкі кедергісі 1 Ом. Оған 5 Ом резистор қосылды. Тізбектегі токты табыңыз.",
+        "given_data": "ε = 12 В\nr = 1 Ом\nR = 5 Ом",
+        "find_text": "I - ?",
+        "solution": "I = ε/(R+r) = 12/(5+1) = 2 А.",
+        "answer": "2 А."
+      },
+      "electromagnetism-ohm-law-task-5": {
+        "topic_title": "Ом заңы",
+        "title": "ε = 9 В және r = 0,5 Ом көзі бар тізбекте сыртқы кедергі 8,5 Ом-нан 2,5 Ом-ға азайтылды. Ток қалай өзгерді?",
+        "problem_text": "ε = 9 В және r = 0,5 Ом көзі бар тізбекте сыртқы кедергі 8,5 Ом-нан 2,5 Ом-ға азайтылды. Ток қалай өзгерді?",
+        "given_data": "ε = 9 В\nr = 0,5 Ом\nR₁ = 8,5 Ом\nR₂ = 2,5 Ом",
+        "find_text": "I₁, I₂ - ?",
+        "solution": "I₁ = 9/(8,5+0,5) = 1 А.\nI₂ = 9/(2,5+0,5) = 3 А.",
+        "answer": "ток 1 А-ден 3 А-ге өсті, яғни 3 есе артты."
+      },
+      "electromagnetism-work-power-task-1": {
+        "topic_title": "Токтың жұмысы және қуаты",
+        "title": "Шам 12 В кернеуде және 0,5 А токта жұмыс істейді. Шам қуатын табыңыз.",
+        "problem_text": "Шам 12 В кернеуде және 0,5 А токта жұмыс істейді. Шам қуатын табыңыз.",
+        "given_data": "U = 12 В\nI = 0,5 А",
+        "find_text": "P - ?",
+        "solution": "P = UI = 12 · 0,5 = 6 Вт.",
+        "answer": "6 Вт."
+      },
+      "electromagnetism-work-power-task-2": {
+        "topic_title": "Токтың жұмысы және қуаты",
+        "title": "Қуаты 800 Вт электр құралы 15 мин жұмыс істеді. Ол қанша энергия жұмсады?",
+        "problem_text": "Қуаты 800 Вт электр құралы 15 мин жұмыс істеді. Ол қанша энергия жұмсады?",
+        "given_data": "P = 800 Вт\nt = 15 мин = 900 с",
+        "find_text": "A - ?",
+        "solution": "A = Pt = 800 · 900 = 720000 Дж = 720 кДж.",
+        "answer": "720 кДж."
+      },
+      "electromagnetism-work-power-task-3": {
+        "topic_title": "Токтың жұмысы және қуаты",
+        "title": "10 Ом резистор арқылы 30 с бойы 2 А ток өтеді. Қанша жылу бөлінеді?",
+        "problem_text": "10 Ом резистор арқылы 30 с бойы 2 А ток өтеді. Қанша жылу бөлінеді?",
+        "given_data": "R = 10 Ом\nI = 2 А\nt = 30 с",
+        "find_text": "Q - ?",
+        "solution": "Q = I²Rt = 2² · 10 · 30 = 1200 Дж.",
+        "answer": "1200 Дж."
+      },
+      "electromagnetism-work-power-task-4": {
+        "topic_title": "Токтың жұмысы және қуаты",
+        "title": "Резистордағы кернеу 20 В, ток 0,25 А. 2 мин ішіндегі ток жұмысын табыңыз.",
+        "problem_text": "Резистордағы кернеу 20 В, ток 0,25 А. 2 мин ішіндегі ток жұмысын табыңыз.",
+        "given_data": "U = 20 В\nI = 0,25 А\nt = 2 мин = 120 с",
+        "find_text": "A - ?",
+        "solution": "A = UIt = 20 · 0,25 · 120 = 600 Дж.",
+        "answer": "600 Дж."
+      },
+      "electromagnetism-work-power-task-5": {
+        "topic_title": "Токтың жұмысы және қуаты",
+        "title": "Екі қыздырғыштың кедергісі бірдей және бірдей уақыт жұмыс істейді. Біріншіден 1 А, екіншіден 3 А ток өтеді. Екіншісі неше есе көп жылу бөледі?",
+        "problem_text": "Екі қыздырғыштың кедергісі бірдей және бірдей уақыт жұмыс істейді. Біріншіден 1 А, екіншіден 3 А ток өтеді. Екіншісі неше есе көп жылу бөледі?",
+        "given_data": "I₁ = 1 А\nI₂ = 3 А\nR₁ = R₂\nt₁ = t₂",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q = I²Rt, сондықтан Q₂/Q₁ = I₂²/I₁² = 3²/1² = 9.",
+        "answer": "9 есе."
+      },
+      "electromagnetism-conductor-connections-task-1": {
+        "topic_title": "Өткізгіштерді қосу",
+        "title": "4 Ом және 6 Ом резисторлар тізбектей қосылған. Жалпы кедергіні табыңыз.",
+        "problem_text": "4 Ом және 6 Ом резисторлар тізбектей қосылған. Жалпы кедергіні табыңыз.",
+        "given_data": "R₁ = 4 Ом\nR₂ = 6 Ом",
+        "find_text": "R - ?",
+        "solution": "R = R₁ + R₂ = 4 + 6 = 10 Ом.",
+        "answer": "10 Ом."
+      },
+      "electromagnetism-conductor-connections-task-2": {
+        "topic_title": "Өткізгіштерді қосу",
+        "title": "6 Ом және 3 Ом резисторлар параллель қосылған. Жалпы кедергіні табыңыз.",
+        "problem_text": "6 Ом және 3 Ом резисторлар параллель қосылған. Жалпы кедергіні табыңыз.",
+        "given_data": "R₁ = 6 Ом\nR₂ = 3 Ом",
+        "find_text": "R - ?",
+        "solution": "1/R = 1/6 + 1/3 = 1/6 + 2/6 = 3/6 = 1/2.\nR = 2 Ом.",
+        "answer": "2 Ом."
+      },
+      "electromagnetism-conductor-connections-task-3": {
+        "topic_title": "Өткізгіштерді қосу",
+        "title": "5 Ом және 15 Ом екі резистор тізбектей қосылып, 40 В кернеуге жалғанған. Тізбектегі токты және әр резистордағы кернеуді табыңыз.",
+        "problem_text": "5 Ом және 15 Ом екі резистор тізбектей қосылып, 40 В кернеуге жалғанған. Тізбектегі токты және әр резистордағы кернеуді табыңыз.",
+        "given_data": "R₁ = 5 Ом\nR₂ = 15 Ом\nU = 40 В",
+        "find_text": "I, U₁, U₂ - ?",
+        "solution": "R = 5 + 15 = 20 Ом.\nI = U/R = 40/20 = 2 А.\nU₁ = IR₁ = 2 · 5 = 10 В.\nU₂ = IR₂ = 2 · 15 = 30 В.",
+        "answer": "I = 2 А, U₁ = 10 В, U₂ = 30 В."
+      },
+      "electromagnetism-conductor-connections-task-4": {
+        "topic_title": "Өткізгіштерді қосу",
+        "title": "12 Ом және 6 Ом екі резистор параллель қосылып, 24 В кернеуге жалғанған. Әр тармақтағы токты және жалпы токты табыңыз.",
+        "problem_text": "12 Ом және 6 Ом екі резистор параллель қосылып, 24 В кернеуге жалғанған. Әр тармақтағы токты және жалпы токты табыңыз.",
+        "given_data": "R₁ = 12 Ом\nR₂ = 6 Ом\nU = 24 В",
+        "find_text": "I₁, I₂, I - ?",
+        "solution": "I₁ = U/R₁ = 24/12 = 2 А.\nI₂ = U/R₂ = 24/6 = 4 А.\nI = I₁ + I₂ = 6 А.",
+        "answer": "2 А, 4 А, жалпы ток 6 А."
+      },
+      "electromagnetism-conductor-connections-task-5": {
+        "topic_title": "Өткізгіштерді қосу",
+        "title": "Аралас тізбекте 2 Ом резистор 6 Ом және 3 Ом параллель тобына тізбектей қосылған. Жалпы кедергіні табыңыз.",
+        "problem_text": "Аралас тізбекте 2 Ом резистор 6 Ом және 3 Ом параллель тобына тізбектей қосылған. Жалпы кедергіні табыңыз.",
+        "given_data": "R₁ = 2 Ом\nR₂ = 6 Ом\nR₃ = 3 Ом",
+        "find_text": "Rжалпы - ?",
+        "solution": "Алдымен параллель топты табамыз:\n1/R₂₃ = 1/6 + 1/3 = 1/2, демек R₂₃ = 2 Ом.\nR₁-мен тізбектей: Rжалпы = 2 + 2 = 4 Ом.",
+        "answer": "4 Ом."
+      },
+      "electromagnetism-magnetic-field-task-1": {
+        "topic_title": "Магнит өрісі",
+        "title": "10 А ток өтетін ұзын түзу өткізгіштен 0,20 м қашықтықтағы магнит индукциясын табыңыз. μ₀ = 4π×10⁻⁷ Н/А² қолданыңыз.",
+        "problem_text": "10 А ток өтетін ұзын түзу өткізгіштен 0,20 м қашықтықтағы магнит индукциясын табыңыз. μ₀ = 4π×10⁻⁷ Н/А² қолданыңыз.",
+        "given_data": "I = 10 А\nr = 0,20 м\nμ₀ = 4π×10⁻⁷ Н/А²",
+        "find_text": "B - ?",
+        "solution": "B = μ₀I/(2πr) = 4π×10⁻⁷ · 10 / (2π · 0,20).\nB = 2×10⁻⁷ · 10 / 0,20 = 1×10⁻⁵ Тл.",
+        "answer": "1×10⁻⁵ Тл."
+      },
+      "electromagnetism-magnetic-field-task-2": {
+        "topic_title": "Магнит өрісі",
+        "title": "Ауданы 0,03 м² рамка арқылы 0,4 Тл біртекті магнит өрісі рамка жазықтығына перпендикуляр өтеді. Магнит ағынын табыңыз.",
+        "problem_text": "Ауданы 0,03 м² рамка арқылы 0,4 Тл біртекті магнит өрісі рамка жазықтығына перпендикуляр өтеді. Магнит ағынын табыңыз.",
+        "given_data": "B = 0,4 Тл\nS = 0,03 м²",
+        "find_text": "Φ - ?",
+        "solution": "Φ = BS = 0,4 · 0,03 = 0,012 Вб.",
+        "answer": "0,012 Вб."
+      },
+      "electromagnetism-magnetic-field-task-3": {
+        "topic_title": "Магнит өрісі",
+        "title": "Өткізгіштен 5 см қашықтықта магнит индукциясы 8 мкТл. Сол ток кезінде 10 см қашықтықта индукция қандай болады?",
+        "problem_text": "Өткізгіштен 5 см қашықтықта магнит индукциясы 8 мкТл. Сол ток кезінде 10 см қашықтықта индукция қандай болады?",
+        "given_data": "B₁ = 8 мкТл\nr₁ = 5 см\nr₂ = 10 см",
+        "find_text": "B₂ - ?",
+        "solution": "Түзу өткізгіш үшін B r-ге кері пропорционал.\nB₂ = B₁r₁/r₂ = 8 · 5/10 = 4 мкТл.",
+        "answer": "4 мкТл."
+      },
+      "electromagnetism-magnetic-field-task-4": {
+        "topic_title": "Магнит өрісі",
+        "title": "0,2 Тл магнит өрісі ауданы 0,01 м² болатын 50 орамды катушканы тесіп өтеді. Өріс орамдарға перпендикуляр. Толық ағын ілінісуін NΦ табыңыз.",
+        "problem_text": "0,2 Тл магнит өрісі ауданы 0,01 м² болатын 50 орамды катушканы тесіп өтеді. Өріс орамдарға перпендикуляр. Толық ағын ілінісуін NΦ табыңыз.",
+        "given_data": "B = 0,2 Тл\nS = 0,01 м²\nN = 50",
+        "find_text": "NΦ - ?",
+        "solution": "Φ = BS = 0,2 · 0,01 = 0,002 Вб.\nNΦ = 50 · 0,002 = 0,1 Вб.",
+        "answer": "0,1 Вб."
+      },
+      "electromagnetism-magnetic-field-task-5": {
+        "topic_title": "Магнит өрісі",
+        "title": "Түзу өткізгіштегі ток жоғары бағытталған. Ток бағытымен жоғарыдан қарағанда магнит сызықтарының бағытын сипаттаңыз.",
+        "problem_text": "Түзу өткізгіштегі ток жоғары бағытталған. Ток бағытымен жоғарыдан қарағанда магнит сызықтарының бағытын сипаттаңыз.",
+        "given_data": "ток жоғары бағытталған",
+        "find_text": "B сызықтарының бағыты - ?",
+        "solution": "Оң қол ережесі бойынша бас бармақты ток бағытымен бағыттаймыз, бүгілген саусақтар магнит өрісі сызықтарының бағытын көрсетеді.\nТок бағытымен қарағанда, сызықтар сағат тіліне қарсы жүреді.",
+        "answer": "сағат тіліне қарсы."
+      },
+      "electromagnetism-ampere-force-task-1": {
+        "topic_title": "Ампер күші",
+        "title": "Ұзындығы 0,5 м, тогы 4 А өткізгіш 0,2 Тл магнит өрісіне перпендикуляр орналасқан. Ампер күшін табыңыз.",
+        "problem_text": "Ұзындығы 0,5 м, тогы 4 А өткізгіш 0,2 Тл магнит өрісіне перпендикуляр орналасқан. Ампер күшін табыңыз.",
+        "given_data": "B = 0,2 Тл\nI = 4 А\nL = 0,5 м\nα = 90°",
+        "find_text": "F - ?",
+        "solution": "F = BILsinα = 0,2 · 4 · 0,5 · 1 = 0,4 Н.",
+        "answer": "0,4 Н."
+      },
+      "electromagnetism-ampere-force-task-2": {
+        "topic_title": "Ампер күші",
+        "title": "Ұзындығы 0,25 м, тогы 8 А өткізгішке 0,6 Н күш әсер етеді. Өткізгіш өріске перпендикуляр. B-ны табыңыз.",
+        "problem_text": "Ұзындығы 0,25 м, тогы 8 А өткізгішке 0,6 Н күш әсер етеді. Өткізгіш өріске перпендикуляр. B-ны табыңыз.",
+        "given_data": "F = 0,6 Н\nL = 0,25 м\nI = 8 А\nα = 90°",
+        "find_text": "B - ?",
+        "solution": "B = F/(IL) = 0,6/(8 · 0,25) = 0,3 Тл.",
+        "answer": "0,3 Тл."
+      },
+      "electromagnetism-ampere-force-task-3": {
+        "topic_title": "Ампер күші",
+        "title": "Ұзындығы 0,4 м, тогы 5 А өткізгіш 0,5 Тл өріске 30° бұрышпен орналасқан. Ампер күшін табыңыз.",
+        "problem_text": "Ұзындығы 0,4 м, тогы 5 А өткізгіш 0,5 Тл өріске 30° бұрышпен орналасқан. Ампер күшін табыңыз.",
+        "given_data": "B = 0,5 Тл\nI = 5 А\nL = 0,4 м\nα = 30°",
+        "find_text": "F - ?",
+        "solution": "F = BILsin30° = 0,5 · 5 · 0,4 · 0,5 = 0,5 Н.",
+        "answer": "0,5 Н."
+      },
+      "electromagnetism-ampere-force-task-4": {
+        "topic_title": "Ампер күші",
+        "title": "B және L өзгермегенде өткізгіштегі ток 2 А-ден 6 А-ге артты. Ампер күші қалай өзгерді?",
+        "problem_text": "B және L өзгермегенде өткізгіштегі ток 2 А-ден 6 А-ге артты. Ампер күші қалай өзгерді?",
+        "given_data": "I₁ = 2 А\nI₂ = 6 А\nB, L, α - тұрақты",
+        "find_text": "F₂/F₁ - ?",
+        "solution": "F = BILsinα, сондықтан күш токқа пропорционал.\nF₂/F₁ = 6/2 = 3.",
+        "answer": "3 есе артты."
+      },
+      "electromagnetism-ampere-force-task-5": {
+        "topic_title": "Ампер күші",
+        "title": "Магнит өрісінде тогы бар өткізгіш өріс сызықтары бойымен орналасқан. Неге Ампер күші өткізгішті ауытқытпайды?",
+        "problem_text": "Магнит өрісінде тогы бар өткізгіш өріс сызықтары бойымен орналасқан. Неге Ампер күші өткізгішті ауытқытпайды?",
+        "given_data": "α = 0°",
+        "find_text": "F = 0 себебі - ?",
+        "solution": "F = BILsinα.\nα = 0° кезінде sin0° = 0, демек F = 0. Магнит өрісі өріс бойымен бағытталған өткізгішке бүйірлік әсер тудырмайды.",
+        "answer": "күш нөлге тең, себебі өткізгіш магнит өрісі сызықтарына параллель."
+      },
+      "electromagnetism-lorentz-force-task-1": {
+        "topic_title": "Лоренц күші",
+        "title": "Заряды 1,6×10⁻¹⁹ Кл протон 0,1 Тл өріске перпендикуляр 2×10⁶ м/с жылдамдықпен қозғалады. Лоренц күшін табыңыз.",
+        "problem_text": "Заряды 1,6×10⁻¹⁹ Кл протон 0,1 Тл өріске перпендикуляр 2×10⁶ м/с жылдамдықпен қозғалады. Лоренц күшін табыңыз.",
+        "given_data": "q = 1,6×10⁻¹⁹ Кл\nv = 2×10⁶ м/с\nB = 0,1 Тл\nα = 90°",
+        "find_text": "F - ?",
+        "solution": "F = qvB = 1,6×10⁻¹⁹ · 2×10⁶ · 0,1 = 3,2×10⁻¹⁴ Н.",
+        "answer": "3,2×10⁻¹⁴ Н."
+      },
+      "electromagnetism-lorentz-force-task-2": {
+        "topic_title": "Лоренц күші",
+        "title": "Заряды 3 мкКл бөлшек 0,5 Тл өріске 30° бұрышпен 400 м/с жылдамдықпен қозғалады. Лоренц күшін табыңыз.",
+        "problem_text": "Заряды 3 мкКл бөлшек 0,5 Тл өріске 30° бұрышпен 400 м/с жылдамдықпен қозғалады. Лоренц күшін табыңыз.",
+        "given_data": "q = 3 мкКл = 3×10⁻⁶ Кл\nv = 400 м/с\nB = 0,5 Тл\nα = 30°",
+        "find_text": "F - ?",
+        "solution": "F = qvBsin30° = 3×10⁻⁶ · 400 · 0,5 · 0,5 = 3×10⁻⁴ Н.",
+        "answer": "3×10⁻⁴ Н."
+      },
+      "electromagnetism-lorentz-force-task-3": {
+        "topic_title": "Лоренц күші",
+        "title": "Электрон магнит өрісіне перпендикуляр қозғалады. Жылдамдықты 4 есе арттырса, Лоренц күші қалай өзгереді?",
+        "problem_text": "Электрон магнит өрісіне перпендикуляр қозғалады. Жылдамдықты 4 есе арттырса, Лоренц күші қалай өзгереді?",
+        "given_data": "v₂ = 4v₁\nq, B, α - тұрақты",
+        "find_text": "F₂/F₁ - ?",
+        "solution": "F = qvBsinα, сондықтан күш жылдамдыққа пропорционал.\nF₂/F₁ = 4.",
+        "answer": "4 есе артады."
+      },
+      "electromagnetism-lorentz-force-task-4": {
+        "topic_title": "Лоренц күші",
+        "title": "Массасы 2×10⁻²⁷ кг және заряды 1,6×10⁻¹⁹ Кл бөлшек 0,2 Тл өріске перпендикуляр 8×10⁵ м/с жылдамдықпен қозғалады. Траектория радиусын табыңыз.",
+        "problem_text": "Массасы 2×10⁻²⁷ кг және заряды 1,6×10⁻¹⁹ Кл бөлшек 0,2 Тл өріске перпендикуляр 8×10⁵ м/с жылдамдықпен қозғалады. Траектория радиусын табыңыз.",
+        "given_data": "m = 2×10⁻²⁷ кг\nq = 1,6×10⁻¹⁹ Кл\nv = 8×10⁵ м/с\nB = 0,2 Тл",
+        "find_text": "R - ?",
+        "solution": "R = mv/(qB) = 2×10⁻²⁷ · 8×10⁵ / (1,6×10⁻¹⁹ · 0,2).\nR = 1,6×10⁻²¹ / 3,2×10⁻²⁰ = 0,05 м.",
+        "answer": "0,05 м."
+      },
+      "electromagnetism-lorentz-force-task-5": {
+        "topic_title": "Лоренц күші",
+        "title": "Оң заряд оңға ұшады, магнит өрісі бақылаушыдан экран ішіне бағытталған. Лоренц күші қайда бағытталған?",
+        "problem_text": "Оң заряд оңға ұшады, магнит өрісі бақылаушыдан экран ішіне бағытталған. Лоренц күші қайда бағытталған?",
+        "given_data": "q > 0\nv оңға бағытталған\nB экран ішіне бағытталған",
+        "find_text": "F бағыты - ?",
+        "solution": "Оң заряд үшін сол қол ережесін немесе v × B векторлық көбейтіндісін қолданамыз.\nОңға × экран ішіне бағыты жоғарыны береді.",
+        "answer": "жоғары."
+      },
+      "electromagnetism-faraday-law-task-1": {
+        "topic_title": "Фарадей заңы",
+        "title": "Контур арқылы магнит ағыны 0,12 Вб-ден 0,02 Вб-ге 0,05 с ішінде өзгерді. Индукция ЭҚК модулін табыңыз.",
+        "problem_text": "Контур арқылы магнит ағыны 0,12 Вб-ден 0,02 Вб-ге 0,05 с ішінде өзгерді. Индукция ЭҚК модулін табыңыз.",
+        "given_data": "Φ₁ = 0,12 Вб\nΦ₂ = 0,02 Вб\nΔt = 0,05 с",
+        "find_text": "|ε| - ?",
+        "solution": "|ΔΦ| = |0,02 - 0,12| = 0,10 Вб.\n|ε| = |ΔΦ|/Δt = 0,10/0,05 = 2 В.",
+        "answer": "2 В."
+      },
+      "electromagnetism-faraday-law-task-2": {
+        "topic_title": "Фарадей заңы",
+        "title": "Ұзындығы 0,4 м түзу өткізгіш 0,3 Тл магнит өрісіне перпендикуляр 5 м/с жылдамдықпен қозғалады. Индукция ЭҚК-ін табыңыз.",
+        "problem_text": "Ұзындығы 0,4 м түзу өткізгіш 0,3 Тл магнит өрісіне перпендикуляр 5 м/с жылдамдықпен қозғалады. Индукция ЭҚК-ін табыңыз.",
+        "given_data": "B = 0,3 Тл\nL = 0,4 м\nv = 5 м/с",
+        "find_text": "ε - ?",
+        "solution": "ε = BLv = 0,3 · 0,4 · 5 = 0,6 В.",
+        "answer": "0,6 В."
+      },
+      "electromagnetism-faraday-law-task-3": {
+        "topic_title": "Фарадей заңы",
+        "title": "200 орамды катушкада бір орам арқылы магнит ағыны 0,003 Вб-ге 0,02 с ішінде өзгерді. ЭҚК модулін табыңыз.",
+        "problem_text": "200 орамды катушкада бір орам арқылы магнит ағыны 0,003 Вб-ге 0,02 с ішінде өзгерді. ЭҚК модулін табыңыз.",
+        "given_data": "N = 200\n|ΔΦ| = 0,003 Вб\nΔt = 0,02 с",
+        "find_text": "|ε| - ?",
+        "solution": "Катушка үшін |ε| = N|ΔΦ|/Δt.\n|ε| = 200 · 0,003 / 0,02 = 30 В.",
+        "answer": "30 В."
+      },
+      "electromagnetism-faraday-law-task-4": {
+        "topic_title": "Фарадей заңы",
+        "title": "Ұзындығы 0,25 м өткізгіште 0,8 Тл өрісте қозғалғанда 1 В ЭҚК алу керек. Қозғалыс жылдамдығын табыңыз.",
+        "problem_text": "Ұзындығы 0,25 м өткізгіште 0,8 Тл өрісте қозғалғанда 1 В ЭҚК алу керек. Қозғалыс жылдамдығын табыңыз.",
+        "given_data": "ε = 1 В\nB = 0,8 Тл\nL = 0,25 м",
+        "find_text": "v - ?",
+        "solution": "v = ε/(BL) = 1/(0,8 · 0,25) = 5 м/с.",
+        "answer": "5 м/с."
+      },
+      "electromagnetism-faraday-law-task-5": {
+        "topic_title": "Фарадей заңы",
+        "title": "Контур арқылы магнит ағыны бірқалыпты өседі. Егер ағын сол жылдамдықпен кеми бастаса, индукциялық ток бағытымен не болады?",
+        "problem_text": "Контур арқылы магнит ағыны бірқалыпты өседі. Егер ағын сол жылдамдықпен кеми бастаса, индукциялық ток бағытымен не болады?",
+        "given_data": "|dΦ/dt| бірдей\nағын өзгерісінің бағыты қарама-қарсы",
+        "find_text": "ток бағытының өзгеруі - ?",
+        "solution": "Фарадей заңы және Ленц ережесі бойынша ЭҚК бағыты ағын өзгерісінің таңбасына тәуелді.\nАғынның өсуін сол жылдамдықтағы кемуге ауыстырса, ЭҚК модулі сол күйі қалады, ал ток бағыты қарама-қарсы болады.",
+        "answer": "индукциялық ток бағыты қарама-қарсыға өзгереді."
+      },
+      "electromagnetism-lenz-rule-task-1": {
+        "topic_title": "Ленц ережесі",
+        "title": "Магниттің солтүстік полюсі металл сақинаға жақындайды. Сақинаның жақын жағы қандай полюс болады?",
+        "problem_text": "Магниттің солтүстік полюсі металл сақинаға жақындайды. Сақинаның жақын жағы қандай полюс болады?",
+        "given_data": "сақинаға солтүстік полюс жақындайды",
+        "find_text": "сақинаның жақын жағының полюсі - ?",
+        "solution": "Сақина арқылы магнит ағыны артады.\nЛенц ережесі бойынша сақина магниттің жақындауына қарсы әсер ететін өріс тудырады, демек жақын жағы солтүстік полюсті тебуі керек.",
+        "answer": "жақын жағы солтүстік полюс болады."
+      },
+      "electromagnetism-lenz-rule-task-2": {
+        "topic_title": "Ленц ережесі",
+        "title": "Магниттің солтүстік полюсі сақинадан алыстайды. Сақинаның жақын жағы қандай полюс болады?",
+        "problem_text": "Магниттің солтүстік полюсі сақинадан алыстайды. Сақинаның жақын жағы қандай полюс болады?",
+        "given_data": "солтүстік полюс сақинадан алыстайды",
+        "find_text": "сақинаның жақын жағының полюсі - ?",
+        "solution": "Магнит ағыны кемиді.\nСақина ағынды сақтауға тырысады, сондықтан алыстап бара жатқан солтүстік полюсті тартады.",
+        "answer": "жақын жағы оңтүстік полюс болады."
+      },
+      "electromagnetism-lenz-rule-task-3": {
+        "topic_title": "Ленц ережесі",
+        "title": "Магнит алюминий сақина жанында тез қозғалғанда неге қозғалысқа қарсы кедергі сезіледі?",
+        "problem_text": "Магнит алюминий сақина жанында тез қозғалғанда неге қозғалысқа қарсы кедергі сезіледі?",
+        "given_data": "магнит қозғалады\nсақина арқылы ағын өзгереді",
+        "find_text": "кедергі себебі - ?",
+        "solution": "Ағынның өзгеруі сақинада индукциялық ток тудырады.\nЛенц ережесі бойынша бұл токтың магнит өрісі оны тудырған себепке қарсы әсер етеді, сондықтан магнит қозғалысы тежеледі.",
+        "answer": "кедергі ағын өзгерісіне қарсы әсер ететін индукциялық токтан пайда болады."
+      },
+      "electromagnetism-lenz-rule-task-4": {
+        "topic_title": "Ленц ережесі",
+        "title": "Көрші катушкада ток күрт артады. Екінші катушкадағы индукциялық токтың магниттік әсері қалай бағытталған?",
+        "problem_text": "Көрші катушкада ток күрт артады. Екінші катушкадағы индукциялық токтың магниттік әсері қалай бағытталған?",
+        "given_data": "бірінші катушкадағы ток артады\nекінші катушка арқылы ағын өседі",
+        "find_text": "индукциялық өрістің әсері - ?",
+        "solution": "Ленц ережесі бойынша екінші катушканың индукциялық өрісі ағынның өсуіне қарсы әсер етуі керек.\nДемек ол бірінші катушканың артып жатқан өрісіне қарама-қарсы бағытталады.",
+        "answer": "индукциялық өріс артып жатқан сыртқы өріске қарсы бағытталған."
+      },
+      "electromagnetism-lenz-rule-task-5": {
+        "topic_title": "Ленц ережесі",
+        "title": "Неге индукциялық ток оны тудырған ағын өзгерісін күшейтетіндей бағыттала алмайды?",
+        "problem_text": "Неге индукциялық ток оны тудырған ағын өзгерісін күшейтетіндей бағыттала алмайды?",
+        "given_data": "магнит ағыны өзгереді",
+        "find_text": "Ленц ережесінің физикалық себебі - ?",
+        "solution": "Егер индукциялық ток өзгерісті күшейтсе, энергия өздігінен пайда болар еді.\nЛенц ережесі энергия балансын сақтайды: ағынды өзгерту үшін индукциялық токтың магниттік әсеріне қарсы жұмыс істеу керек.",
+        "answer": "әйтпесе энергияның сақталу заңы бұзылар еді."
+      },
+      "electromagnetism-inductance-task-1": {
+        "topic_title": "Индуктивтік",
+        "title": "Катушка индуктивтігі 0,4 Гн, ток 3 А. Ағын ілінісуін табыңыз.",
+        "problem_text": "Катушка индуктивтігі 0,4 Гн, ток 3 А. Ағын ілінісуін табыңыз.",
+        "given_data": "L = 0,4 Гн\nI = 3 А",
+        "find_text": "Φ - ?",
+        "solution": "Φ = LI = 0,4 · 3 = 1,2 Вб.",
+        "answer": "1,2 Вб."
+      },
+      "electromagnetism-inductance-task-2": {
+        "topic_title": "Индуктивтік",
+        "title": "Индуктивтігі 0,2 Гн катушкадағы ток 0,04 с ішінде 1 А-ден 5 А-ге өзгерді. Өзіндік индукция ЭҚК модулін табыңыз.",
+        "problem_text": "Индуктивтігі 0,2 Гн катушкадағы ток 0,04 с ішінде 1 А-ден 5 А-ге өзгерді. Өзіндік индукция ЭҚК модулін табыңыз.",
+        "given_data": "L = 0,2 Гн\nI₁ = 1 А\nI₂ = 5 А\nΔt = 0,04 с",
+        "find_text": "|ε| - ?",
+        "solution": "|dI/dt| = |5 - 1|/0,04 = 100 А/с.\n|ε| = L|dI/dt| = 0,2 · 100 = 20 В.",
+        "answer": "20 В."
+      },
+      "electromagnetism-inductance-task-3": {
+        "topic_title": "Индуктивтік",
+        "title": "L = 0,5 Гн катушканың 4 А ток кезіндегі магнит өрісі энергиясын табыңыз.",
+        "problem_text": "L = 0,5 Гн катушканың 4 А ток кезіндегі магнит өрісі энергиясын табыңыз.",
+        "given_data": "L = 0,5 Гн\nI = 4 А",
+        "find_text": "W - ?",
+        "solution": "W = LI²/2 = 0,5 · 4² / 2 = 4 Дж.",
+        "answer": "4 Дж."
+      },
+      "electromagnetism-inductance-task-4": {
+        "topic_title": "Индуктивтік",
+        "title": "2 А ток кезінде катушканың магнит өрісі энергиясы 3 Дж. Индуктивтікті табыңыз.",
+        "problem_text": "2 А ток кезінде катушканың магнит өрісі энергиясы 3 Дж. Индуктивтікті табыңыз.",
+        "given_data": "I = 2 А\nW = 3 Дж",
+        "find_text": "L - ?",
+        "solution": "W = LI²/2, демек L = 2W/I².\nL = 2 · 3 / 2² = 1,5 Гн.",
+        "answer": "1,5 Гн."
+      },
+      "electromagnetism-inductance-task-5": {
+        "topic_title": "Индуктивтік",
+        "title": "Катушка токтың күрт өшуіне қарсы әсер етеді. Тізбекті ажыратқанда неге ұшқын пайда болуы мүмкін?",
+        "problem_text": "Катушка токтың күрт өшуіне қарсы әсер етеді. Тізбекті ажыратқанда неге ұшқын пайда болуы мүмкін?",
+        "given_data": "ток тез кемиді\nкатушка индуктивтігі нөл емес",
+        "find_text": "ұшқын себебі - ?",
+        "solution": "Ток тез кемігенде үлкен өзіндік индукция ЭҚК пайда болады: |ε| = L|dI/dt|.\nБұл ЭҚК бұрынғы токты сақтауға тырысады және ажыратқыштағы ауа саңылауын тесіп өтуі мүмкін.",
+        "answer": "ұшқын ток күрт өзгерген кездегі үлкен өзіндік индукция ЭҚК-інен пайда болады."
+      },
+      "electromagnetism-eddy-currents-task-1": {
+        "topic_title": "Құйынды токтар",
+        "title": "Металл пластинада 5 А құйынды ток кедергісі 0,2 Ом тұйық жолмен 10 с бойы өтеді. Бөлінген жылуды бағалаңыз.",
+        "problem_text": "Металл пластинада 5 А құйынды ток кедергісі 0,2 Ом тұйық жолмен 10 с бойы өтеді. Бөлінген жылуды бағалаңыз.",
+        "given_data": "I = 5 А\nR = 0,2 Ом\nt = 10 с",
+        "find_text": "Q - ?",
+        "solution": "Q = I²Rt = 5² · 0,2 · 10 = 50 Дж.",
+        "answer": "50 Дж."
+      },
+      "electromagnetism-eddy-currents-task-2": {
+        "topic_title": "Құйынды токтар",
+        "title": "Неге тұтас темір трансформатор өзекшесі пластиналы өзекшеге қарағанда қаттырақ қызады?",
+        "problem_text": "Неге тұтас темір трансформатор өзекшесі пластиналы өзекшеге қарағанда қаттырақ қызады?",
+        "given_data": "айнымалы магнит ағыны\nтұтас өткізгіш өзекше",
+        "find_text": "қызу себебі - ?",
+        "solution": "Айнымалы ағын өзекшеде құйынды токтар индукциялайды.\nТұтас металда тұйық ток контурларының ауданы үлкен, сондықтан I²R шығындары көбірек.\nПластиналы өзекшеде оқшаулау үлкен контурларды үзіп, токтарды азайтады.",
+        "answer": "тұтас өзекше үлкен құйынды токтарға байланысты қаттырақ қызады."
+      },
+      "electromagnetism-eddy-currents-task-3": {
+        "topic_title": "Құйынды токтар",
+        "title": "Металл диск магнит полюстері арасында айналып, тез тоқтайды. Тежелу себебін түсіндіріңіз.",
+        "problem_text": "Металл диск магнит полюстері арасында айналып, тез тоқтайды. Тежелу себебін түсіндіріңіз.",
+        "given_data": "диск магнит өрісінде қозғалады\nдиск бөліктері арқылы ағын өзгереді",
+        "find_text": "тежелу себебі - ?",
+        "solution": "Дискте құйынды токтар пайда болады.\nЛенц ережесі бойынша олардың магнит өрісі ағын өзгерісін тудырған қозғалысқа қарсы әсер етеді.",
+        "answer": "диск қарсы магниттік әсер тудыратын құйынды токтардан тежеледі."
+      },
+      "electromagnetism-eddy-currents-task-4": {
+        "topic_title": "Құйынды токтар",
+        "title": "Индукциялық плитада айнымалы магнит өрісі кастрюль түбінде токтар тудырады. Неге дәл металл түбі қызады?",
+        "problem_text": "Индукциялық плитада айнымалы магнит өрісі кастрюль түбінде токтар тудырады. Неге дәл металл түбі қызады?",
+        "given_data": "айнымалы магнит өрісі\nкастрюльдің металл түбі",
+        "find_text": "қызу механизмі - ?",
+        "solution": "Айнымалы өріс өткізгіш түпте құйынды токтар тудырады.\nМеталл кедергісіне байланысты ток энергиясы Джоуль-Ленц заңы бойынша жылуға айналады.",
+        "answer": "металл түбі құйынды токтар және I²R жылулық шығындары салдарынан қызады."
+      },
+      "electromagnetism-eddy-currents-task-5": {
+        "topic_title": "Құйынды токтар",
+        "title": "Пластинадағы құйынды ток 6 А-ден 3 А-ге азайтылды, R және t өзгермейді. Жылулық шығындар неше есе азайды?",
+        "problem_text": "Пластинадағы құйынды ток 6 А-ден 3 А-ге азайтылды, R және t өзгермейді. Жылулық шығындар неше есе азайды?",
+        "given_data": "I₁ = 6 А\nI₂ = 3 А\nR, t - тұрақты",
+        "find_text": "Q₁/Q₂ - ?",
+        "solution": "Q = I²Rt.\nQ₁/Q₂ = I₁²/I₂² = 6²/3² = 4.",
+        "answer": "жылулық шығындар 4 есе азайды."
+      },
+      "electromagnetism-sinusoidal-current-task-1": {
+        "topic_title": "Синусоидалық ток",
+        "title": "Айнымалы ток амплитудасы 14,1 А. Әсерлік мәнін табыңыз.",
+        "problem_text": "Айнымалы ток амплитудасы 14,1 А. Әсерлік мәнін табыңыз.",
+        "given_data": "I₀ = 14,1 А",
+        "find_text": "I - ?",
+        "solution": "I = I₀/√2 ≈ 14,1/1,41 = 10 А.",
+        "answer": "10 А."
+      },
+      "electromagnetism-sinusoidal-current-task-2": {
+        "topic_title": "Синусоидалық ток",
+        "title": "Желінің әсерлік кернеуі 220 В. Амплитудалық мәнін табыңыз.",
+        "problem_text": "Желінің әсерлік кернеуі 220 В. Амплитудалық мәнін табыңыз.",
+        "given_data": "U = 220 В",
+        "find_text": "U₀ - ?",
+        "solution": "U₀ = U√2 ≈ 220 · 1,41 ≈ 310 В.",
+        "answer": "шамамен 310 В."
+      },
+      "electromagnetism-sinusoidal-current-task-3": {
+        "topic_title": "Синусоидалық ток",
+        "title": "Айнымалы ток жиілігі 400 Гц. Периодын табыңыз.",
+        "problem_text": "Айнымалы ток жиілігі 400 Гц. Периодын табыңыз.",
+        "given_data": "f = 400 Гц",
+        "find_text": "T - ?",
+        "solution": "T = 1/f = 1/400 = 0,0025 с.",
+        "answer": "0,0025 с."
+      },
+      "electromagnetism-sinusoidal-current-task-4": {
+        "topic_title": "Синусоидалық ток",
+        "title": "Ток i = 6sin(ωt) А теңдеуімен берілген. ωt = π/6 кезінде лездік мәнін табыңыз.",
+        "problem_text": "Ток i = 6sin(ωt) А теңдеуімен берілген. ωt = π/6 кезінде лездік мәнін табыңыз.",
+        "given_data": "I₀ = 6 А\nωt = π/6",
+        "find_text": "i - ?",
+        "solution": "i = I₀sin(π/6) = 6 · 0,5 = 3 А.",
+        "answer": "3 А."
+      },
+      "electromagnetism-sinusoidal-current-task-5": {
+        "topic_title": "Синусоидалық ток",
+        "title": "20 Ом резистор арқылы әсерлік мәні 2 А синусоидалық ток өтеді. Орташа қуатты табыңыз.",
+        "problem_text": "20 Ом резистор арқылы әсерлік мәні 2 А синусоидалық ток өтеді. Орташа қуатты табыңыз.",
+        "given_data": "I = 2 А\nR = 20 Ом",
+        "find_text": "P - ?",
+        "solution": "Резистор үшін P = I²R, мұндағы I — әсерлік мән.\nP = 2² · 20 = 80 Вт.",
+        "answer": "80 Вт."
+      },
+      "electromagnetism-reactive-resistance-task-1": {
+        "topic_title": "Реактивті кедергі",
+        "title": "L = 0,2 Гн катушка бұрыштық жиілігі 100 рад/с айнымалы токқа қосылған. Индуктивті кедергіні табыңыз.",
+        "problem_text": "L = 0,2 Гн катушка бұрыштық жиілігі 100 рад/с айнымалы токқа қосылған. Индуктивті кедергіні табыңыз.",
+        "given_data": "L = 0,2 Гн\nω = 100 рад/с",
+        "find_text": "X_L - ?",
+        "solution": "X_L = ωL = 100 · 0,2 = 20 Ом.",
+        "answer": "20 Ом."
+      },
+      "electromagnetism-reactive-resistance-task-2": {
+        "topic_title": "Реактивті кедергі",
+        "title": "C = 50 мкФ конденсатор ω = 1000 рад/с тізбекке қосылған. Сыйымдылық кедергіні табыңыз.",
+        "problem_text": "C = 50 мкФ конденсатор ω = 1000 рад/с тізбекке қосылған. Сыйымдылық кедергіні табыңыз.",
+        "given_data": "C = 50 мкФ = 50×10⁻⁶ Ф\nω = 1000 рад/с",
+        "find_text": "X_C - ?",
+        "solution": "X_C = 1/(ωC) = 1/(1000 · 50×10⁻⁶) = 1/0,05 = 20 Ом.",
+        "answer": "20 Ом."
+      },
+      "electromagnetism-reactive-resistance-task-3": {
+        "topic_title": "Реактивті кедергі",
+        "title": "Тізбектей тізбекте R = 30 Ом, X_L = 50 Ом, X_C = 10 Ом. Толық кедергіні табыңыз.",
+        "problem_text": "Тізбектей тізбекте R = 30 Ом, X_L = 50 Ом, X_C = 10 Ом. Толық кедергіні табыңыз.",
+        "given_data": "R = 30 Ом\nX_L = 50 Ом\nX_C = 10 Ом",
+        "find_text": "Z - ?",
+        "solution": "Z = √(R² + (X_L - X_C)²) = √(30² + 40²) = √2500 = 50 Ом.",
+        "answer": "50 Ом."
+      },
+      "electromagnetism-reactive-resistance-task-4": {
+        "topic_title": "Реактивті кедергі",
+        "title": "f₁ жиілігінде катушканың индуктивті кедергісі 15 Ом. Жиілікті 3 есе арттырса, кедергі қандай болады?",
+        "problem_text": "f₁ жиілігінде катушканың индуктивті кедергісі 15 Ом. Жиілікті 3 есе арттырса, кедергі қандай болады?",
+        "given_data": "X_L₁ = 15 Ом\nf₂ = 3f₁",
+        "find_text": "X_L₂ - ?",
+        "solution": "X_L = ωL, сондықтан X_L жиілікке пропорционал.\nX_L₂ = 3 · 15 = 45 Ом.",
+        "answer": "45 Ом."
+      },
+      "electromagnetism-reactive-resistance-task-5": {
+        "topic_title": "Реактивті кедергі",
+        "title": "RLC-тізбекте X_L = X_C. Тізбектің толық кедергісі неге тең?",
+        "problem_text": "RLC-тізбекте X_L = X_C. Тізбектің толық кедергісі неге тең?",
+        "given_data": "X_L = X_C\nR = R",
+        "find_text": "Z - ?",
+        "solution": "Z = √(R² + (X_L - X_C)²).\nX_L - X_C = 0 болғандықтан, Z = R.",
+        "answer": "Z = R; бұл кернеулер резонансы шарты."
+      },
+      "electromagnetism-transformers-task-1": {
+        "topic_title": "Трансформаторлар",
+        "title": "Бірінші орамда 1000 орам, екінші орамда 200 орам бар. Бірінші орамға 220 В берілген. Екінші кернеуді табыңыз.",
+        "problem_text": "Бірінші орамда 1000 орам, екінші орамда 200 орам бар. Бірінші орамға 220 В берілген. Екінші кернеуді табыңыз.",
+        "given_data": "n₁ = 1000\nn₂ = 200\nU₁ = 220 В",
+        "find_text": "U₂ - ?",
+        "solution": "U₁/U₂ = n₁/n₂, демек U₂ = U₁n₂/n₁.\nU₂ = 220 · 200/1000 = 44 В.",
+        "answer": "44 В."
+      },
+      "electromagnetism-transformers-task-2": {
+        "topic_title": "Трансформаторлар",
+        "title": "Трансформатор кернеуді 110 В-тан 1100 В-қа арттырады. Екінші орам саны бірінші орамнан неше есе көп?",
+        "problem_text": "Трансформатор кернеуді 110 В-тан 1100 В-қа арттырады. Екінші орам саны бірінші орамнан неше есе көп?",
+        "given_data": "U₁ = 110 В\nU₂ = 1100 В",
+        "find_text": "n₂/n₁ - ?",
+        "solution": "U₂/U₁ = n₂/n₁.\nn₂/n₁ = 1100/110 = 10.",
+        "answer": "10 есе."
+      },
+      "electromagnetism-transformers-task-3": {
+        "topic_title": "Трансформаторлар",
+        "title": "Идеал трансформатор екінші тізбекте 24 В және 5 А береді. Екінші тізбектегі қуатты және U₁ = 120 В кезіндегі бірінші токты табыңыз.",
+        "problem_text": "Идеал трансформатор екінші тізбекте 24 В және 5 А береді. Екінші тізбектегі қуатты және U₁ = 120 В кезіндегі бірінші токты табыңыз.",
+        "given_data": "U₂ = 24 В\nI₂ = 5 А\nU₁ = 120 В",
+        "find_text": "P₂, I₁ - ?",
+        "solution": "P₂ = U₂I₂ = 24 · 5 = 120 Вт.\nИдеал трансформатор үшін P₁ ≈ P₂, демек I₁ = P₁/U₁ = 120/120 = 1 А.",
+        "answer": "P₂ = 120 Вт, I₁ = 1 А."
+      },
+      "electromagnetism-transformers-task-4": {
+        "topic_title": "Трансформаторлар",
+        "title": "Бірінші орамда 500 орам бар. 220 В-тан 12 В алу үшін екінші орамда қанша орам керек?",
+        "problem_text": "Бірінші орамда 500 орам бар. 220 В-тан 12 В алу үшін екінші орамда қанша орам керек?",
+        "given_data": "n₁ = 500\nU₁ = 220 В\nU₂ = 12 В",
+        "find_text": "n₂ - ?",
+        "solution": "n₂ = n₁U₂/U₁ = 500 · 12/220 ≈ 27,3.\nІс жүзінде құрылымын ескеріп, ең жақын бүтін орам саны алынады.",
+        "answer": "шамамен 27 орам."
+      },
+      "electromagnetism-transformers-task-5": {
+        "topic_title": "Трансформаторлар",
+        "title": "Трансформатор арқылы қуат беру үшін неге айнымалы ток қолданылады?",
+        "problem_text": "Трансформатор арқылы қуат беру үшін неге айнымалы ток қолданылады?",
+        "given_data": "трансформатор\nорамдар арасындағы энергия беру",
+        "find_text": "AC қолдану себебі - ?",
+        "solution": "Айнымалы ток өзекшеде айнымалы магнит ағынын тудырады.\nБұл ағын екінші орамда ЭҚК индукциялайды. Тұрақты ток өтпелі процестен кейін ағынды өзгертпейді, сондықтан ЭҚК сақталмайды.",
+        "answer": "өзгермелі магнит ағыны керек, сондықтан трансформатор айнымалы токпен жұмыс істейді."
+      },
+      "electromagnetism-power-transmission-task-1": {
+        "topic_title": "Электр энергиясын жеткізу",
+        "title": "Желі арқылы 10 кВ кернеуде 100 кВт қуат беру керек. Желідегі токты табыңыз.",
+        "problem_text": "Желі арқылы 10 кВ кернеуде 100 кВт қуат беру керек. Желідегі токты табыңыз.",
+        "given_data": "P = 100 кВт = 100000 Вт\nU = 10 кВ = 10000 В",
+        "find_text": "I - ?",
+        "solution": "I = P/U = 100000/10000 = 10 А.",
+        "answer": "10 А."
+      },
+      "electromagnetism-power-transmission-task-2": {
+        "topic_title": "Электр энергиясын жеткізу",
+        "title": "Желінің кедергісі 4 Ом, ток 15 А. Қуат шығынын табыңыз.",
+        "problem_text": "Желінің кедергісі 4 Ом, ток 15 А. Қуат шығынын табыңыз.",
+        "given_data": "R = 4 Ом\nI = 15 А",
+        "find_text": "Pшығын - ?",
+        "solution": "Pшығын = I²R = 15² · 4 = 900 Вт.",
+        "answer": "900 Вт."
+      },
+      "electromagnetism-power-transmission-task-3": {
+        "topic_title": "Электр энергиясын жеткізу",
+        "title": "Бірдей қуатты алдымен 1 кВ-та, кейін 10 кВ-та береді. Сымдардағы шығындар неше есе азаяды?",
+        "problem_text": "Бірдей қуатты алдымен 1 кВ-та, кейін 10 кВ-та береді. Сымдардағы шығындар неше есе азаяды?",
+        "given_data": "P - бірдей\nU₂ = 10U₁\nR - бірдей",
+        "find_text": "Pшығын₁/Pшығын₂ - ?",
+        "solution": "I = P/U, сондықтан кернеуді 10 есе арттырғанда ток 10 есе азаяды.\nPшығын = I²R шығындары 10² = 100 есе азаяды.",
+        "answer": "шығындар 100 есе азаяды."
+      },
+      "electromagnetism-power-transmission-task-4": {
+        "topic_title": "Электр энергиясын жеткізу",
+        "title": "Желі 20 А токпен 50 кВт қуат береді. Беру кернеуін табыңыз.",
+        "problem_text": "Желі 20 А токпен 50 кВт қуат береді. Беру кернеуін табыңыз.",
+        "given_data": "P = 50 кВт = 50000 Вт\nI = 20 А",
+        "find_text": "U - ?",
+        "solution": "P = UI, демек U = P/I = 50000/20 = 2500 В.",
+        "answer": "2500 В."
+      },
+      "electromagnetism-power-transmission-task-5": {
+        "topic_title": "Электр энергиясын жеткізу",
+        "title": "Кедергісі 2 Ом желіде қуат шығыны 200 Вт-тан аспауы керек. Қандай максимал ток рұқсат етіледі?",
+        "problem_text": "Кедергісі 2 Ом желіде қуат шығыны 200 Вт-тан аспауы керек. Қандай максимал ток рұқсат етіледі?",
+        "given_data": "R = 2 Ом\nPшығын = 200 Вт",
+        "find_text": "I - ?",
+        "solution": "Pшығын = I²R, демек I = √(Pшығын/R).\nI = √(200/2) = √100 = 10 А.",
+        "answer": "10 А."
+      }
+    }
+  }
+}

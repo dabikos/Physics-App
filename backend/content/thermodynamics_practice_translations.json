@@ -1,0 +1,3614 @@
+{
+  "en": {
+    "tests": {
+      "thermodynamics-matter-structure-test": {
+        "title": "Test: Structure of Matter",
+        "questions": [
+          {
+            "question": "Which statement matches molecular kinetic theory?",
+            "options": [
+              "Forces never act between molecules.",
+              "Molecules exist only in gases.",
+              "Matter consists of particles that move randomly and interact with each other.",
+              "Particles of matter are motionless."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "What does Avogadro's constant show?",
+            "options": [
+              "The mass of one molecule.",
+              "The number of particles in one mole of a substance.",
+              "The boiling temperature of a substance.",
+              "The pressure of one mole of gas."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "How can you find the number of molecules if the amount of substance is known?",
+            "options": [
+              "N = p/T",
+              "N = mV",
+              "N = Q/t",
+              "N = νNₐ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Why does the smell of perfume gradually spread through a room?",
+            "options": [
+              "Because molecules disappear.",
+              "Because of molecular diffusion.",
+              "Because air turns into liquid.",
+              "Only because of gravity."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In which state of matter are molecules arranged most orderly?",
+            "options": [
+              "In a crystalline solid.",
+              "In rarefied vapor.",
+              "In a gas.",
+              "In a liquid."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-temperature-test": {
+        "title": "Test: Temperature",
+        "questions": [
+          {
+            "question": "What does temperature characterize from the molecular kinetic theory point of view?",
+            "options": [
+              "Only gas pressure.",
+              "The volume of the vessel.",
+              "The average kinetic energy of random molecular motion.",
+              "The mass of all molecules."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "How do you convert temperature from degrees Celsius to kelvins?",
+            "options": [
+              "T = t - 273",
+              "T = 273/t",
+              "T = t + 273",
+              "T = 273 - t"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Which temperature corresponds to 27°C?",
+            "options": [
+              "246 K",
+              "273 K",
+              "327 K",
+              "300 K"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the absolute temperature of a gas doubles, the average kinetic energy of its molecules:",
+            "options": [
+              "increases by 4 times.",
+              "decreases by 2 times.",
+              "does not change.",
+              "increases by 2 times."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Absolute zero temperature is:",
+            "options": [
+              "0 K.",
+              "273 K.",
+              "0°C.",
+              "100°C."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-gas-pressure-test": {
+        "title": "Test: Gas Pressure",
+        "questions": [
+          {
+            "question": "What explains gas pressure on the walls of a vessel?",
+            "options": [
+              "Only the mass of the vessel.",
+              "Collisions of gas molecules with the vessel walls.",
+              "Earth's attraction to the vessel.",
+              "The presence of liquid in the vessel."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "How will gas pressure change if molecular concentration doubles at the same temperature?",
+            "options": [
+              "It will increase by 4 times.",
+              "It will decrease by 2 times.",
+              "It will not change.",
+              "It will increase by 2 times."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Which formula relates ideal gas pressure to concentration and temperature?",
+            "options": [
+              "F = kx",
+              "p = nkT",
+              "Q = cmΔT",
+              "A = pΔV"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If a gas is heated in a closed vessel of constant volume, its pressure:",
+            "options": [
+              "does not depend on temperature.",
+              "decreases.",
+              "becomes zero.",
+              "increases."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The SI unit of pressure is:",
+            "options": [
+              "Pa",
+              "W",
+              "N",
+              "J"
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-thermal-conductivity-test": {
+        "title": "Test: Thermal Conductivity",
+        "questions": [
+          {
+            "question": "What happens during thermal conductivity?",
+            "options": [
+              "The body's temperature never changes under any conditions.",
+              "Heat is carried together with a flow of matter.",
+              "Energy is transferred only by electromagnetic waves.",
+              "Energy is transferred from hotter particles to colder particles without matter transfer."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "What does the amount of heat passing through a flat wall directly depend on?",
+            "options": [
+              "Only on the wall color.",
+              "Only on atmospheric pressure.",
+              "On wall area, temperature difference, time, and thermal conductivity coefficient.",
+              "On the wall thickness."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "How will heat loss through a wall change if its thickness is doubled, all other conditions being equal?",
+            "options": [
+              "It will decrease by 2 times.",
+              "It will increase by 2 times.",
+              "It will not change.",
+              "It will increase by 4 times."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Why does a metal spoon heat up faster than a wooden spoon in hot tea?",
+            "options": [
+              "In metal, heat is transferred only by radiation.",
+              "Metal has a smaller mass of all molecules.",
+              "Wood does not receive heat at all.",
+              "Metal has a higher thermal conductivity coefficient."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Which formula describes heat transfer through a flat layer of material?",
+            "options": [
+              "Q = cmΔT",
+              "pV = νRT",
+              "η = A/Q₁",
+              "Q = λSΔTτ/d"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-convection-test": {
+        "title": "Test: Convection",
+        "questions": [
+          {
+            "question": "In which media is convection possible?",
+            "options": [
+              "In liquids and gases.",
+              "Only in solids.",
+              "Only in metals.",
+              "Only in vacuum."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Why does heated air rise?",
+            "options": [
+              "Its temperature always becomes lower than room temperature.",
+              "Its density becomes lower than the density of cold air.",
+              "It stops interacting with Earth.",
+              "Its mass becomes zero."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Which example is natural convection?",
+            "options": [
+              "Heating a metal spoon in tea.",
+              "Transfer of solar heat through space.",
+              "Warm air rising from a radiator.",
+              "Reflection of light from a mirror."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Why are radiators usually placed below windows?",
+            "options": [
+              "To lower the radiator temperature.",
+              "To stop air movement.",
+              "So heat is transferred only by radiation.",
+              "So warm air rises and creates circulation in the room."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "How does convection differ from thermal conductivity?",
+            "options": [
+              "Convection is possible only in solids.",
+              "In convection, heat is carried by flows of matter.",
+              "There is no difference.",
+              "In convection, matter always remains motionless."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-radiation-test": {
+        "title": "Test: Radiation",
+        "questions": [
+          {
+            "question": "Which heat transfer method is possible in vacuum?",
+            "options": [
+              "Convection.",
+              "Radiation.",
+              "Diffusion.",
+              "Thermal conductivity."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "How does thermal radiation power depend on absolute temperature?",
+            "options": [
+              "P ∼ T⁴",
+              "P ∼ T",
+              "P ∼ T²",
+              "P does not depend on T."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Which surfaces absorb thermal radiation better?",
+            "options": [
+              "Light mirror-like surfaces.",
+              "Dark matte surfaces.",
+              "Only transparent surfaces.",
+              "Only cold surfaces."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why does Earth receive energy from the Sun through the vacuum of space?",
+            "options": [
+              "Due to sound waves.",
+              "Due to electromagnetic radiation.",
+              "Due to thermal conductivity of vacuum.",
+              "Due to convection in vacuum."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If a body's absolute temperature doubles, its radiation power increases:",
+            "options": [
+              "by 2 times.",
+              "by 16 times.",
+              "by 8 times.",
+              "by 4 times."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-heat-quantity-test": {
+        "title": "Test: Quantity of Heat",
+        "questions": [
+          {
+            "question": "Quantity of heat is:",
+            "options": [
+              "body mass.",
+              "energy transferred to or from a body during heat exchange.",
+              "force of molecular interaction.",
+              "gas pressure."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Formula for heat during heating of a body:",
+            "options": [
+              "pV = νRT",
+              "Q = cmΔT",
+              "Q = Lm",
+              "Q = λm"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "What does Q depend on during heating without a phase transition?",
+            "options": [
+              "Only on atmospheric pressure.",
+              "On mass, specific heat capacity, and temperature change.",
+              "Only on body shape.",
+              "Only on body color."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The SI unit of heat is:",
+            "options": [
+              "W.",
+              "N.",
+              "Pa.",
+              "J."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the mass of water is doubled at the same ΔT, the amount of heat:",
+            "options": [
+              "increases by 2 times.",
+              "does not change.",
+              "increases by 4 times.",
+              "decreases by 2 times."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-state-equation-test": {
+        "title": "Test: Equation of State",
+        "questions": [
+          {
+            "question": "Which equation is the Mendeleev-Clapeyron equation?",
+            "options": [
+              "A = pΔV",
+              "F = ma",
+              "Q = cmΔT",
+              "pV = νRT"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "What does R denote in the equation pV = νRT?",
+            "options": [
+              "The universal gas constant.",
+              "The resistance of the gas.",
+              "The density of the gas.",
+              "The radius of the vessel."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "If the temperature of an ideal gas is doubled while p and ν are constant, the volume:",
+            "options": [
+              "increases by 2 times.",
+              "does not change.",
+              "increases by 4 times.",
+              "decreases by 2 times."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "In the equation of state, temperature must be substituted:",
+            "options": [
+              "in percent.",
+              "only in °C.",
+              "only in K.",
+              "in any units."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Under which condition does the ideal gas model work better?",
+            "options": [
+              "Only for liquids.",
+              "At very high density and strong molecular interaction.",
+              "At low density, when molecular size and interaction can be neglected.",
+              "Only for solids."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-isoprocesses-test": {
+        "title": "Test: Isoprocesses",
+        "questions": [
+          {
+            "question": "Which parameter is constant in an isothermal process?",
+            "options": [
+              "Earth's mass.",
+              "Temperature.",
+              "Pressure.",
+              "Volume."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The law for an isobaric process is:",
+            "options": [
+              "p/T = const",
+              "Q = cmΔT",
+              "V/T = const",
+              "pV = const"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "During isochoric heating of an ideal gas, the pressure:",
+            "options": [
+              "decreases.",
+              "becomes zero.",
+              "increases.",
+              "does not depend on temperature."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Which graph corresponds to an isotherm in p(V) coordinates?",
+            "options": [
+              "A straight line through the origin.",
+              "A vertical line.",
+              "A hyperbola.",
+              "A horizontal line under all conditions."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "If a gas is heated isobarically from 300 K to 600 K, its volume:",
+            "options": [
+              "does not change.",
+              "decreases by 2 times.",
+              "increases by 2 times.",
+              "increases by 4 times."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-gas-laws-test": {
+        "title": "Test: Gas Laws",
+        "questions": [
+          {
+            "question": "Boyle-Mariotte's law describes:",
+            "options": [
+              "an isochoric process.",
+              "an isothermal process.",
+              "melting of a body.",
+              "an isobaric process."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The combined gas law is written as:",
+            "options": [
+              "F = ma",
+              "η = A/Q₁",
+              "Q = cmΔT",
+              "p₁V₁/T₁ = p₂V₂/T₂"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "During isothermal compression of a gas, the pressure:",
+            "options": [
+              "increases.",
+              "does not change.",
+              "decreases.",
+              "becomes zero."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Charles's law applies to a process where:",
+            "options": [
+              "T = const.",
+              "V = const.",
+              "m = const only for solids.",
+              "p = const."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In gas laws, temperature is used:",
+            "options": [
+              "in percent.",
+              "in °C.",
+              "in liters.",
+              "in K."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-first-law-test": {
+        "title": "Test: First Law of Thermodynamics",
+        "questions": [
+          {
+            "question": "The first law of thermodynamics expresses:",
+            "options": [
+              "the law of conservation of charge.",
+              "the law of conservation of energy for thermal processes.",
+              "the law of universal gravitation.",
+              "the law of reflection of light."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The formula for the first law of thermodynamics is:",
+            "options": [
+              "Q = λm",
+              "pV = νRT",
+              "Q = ΔU + A",
+              "F = ma"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "A gas received 700 J of heat and did 200 J of work. Its internal energy:",
+            "options": [
+              "did not change.",
+              "increased by 900 J.",
+              "decreased by 500 J.",
+              "increased by 500 J."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The work done by a gas during isobaric expansion is:",
+            "options": [
+              "A = Q/T",
+              "A = λm",
+              "A = cmΔT",
+              "A = pΔV"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "In an isochoric process, the work done by the gas:",
+            "options": [
+              "is always maximum.",
+              "is zero.",
+              "is equal to temperature.",
+              "is equal to pressure."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-second-law-test": {
+        "title": "Test: Second Law of Thermodynamics",
+        "questions": [
+          {
+            "question": "The second law of thermodynamics indicates:",
+            "options": [
+              "the mass of gas molecules.",
+              "the direction of thermal processes.",
+              "the electric current in a circuit.",
+              "the speed of light."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Heat spontaneously transfers:",
+            "options": [
+              "from a cold body to a hot body.",
+              "only at zero temperature.",
+              "from a hot body to a cold body.",
+              "only in vacuum."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "A perpetual motion machine of the second kind is impossible because:",
+            "options": [
+              "gas pressure is always zero.",
+              "a gas cannot be heated.",
+              "temperature cannot be measured.",
+              "heat from a single source cannot be completely converted into work without other changes."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The entropy of an isolated system:",
+            "options": [
+              "is unrelated to thermal processes.",
+              "is always zero.",
+              "always decreases.",
+              "does not decrease."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Why does a refrigerator require electrical energy?",
+            "options": [
+              "Because there are no molecules inside.",
+              "There is no heat exchange inside it.",
+              "It violates the first law of thermodynamics.",
+              "It transfers heat from a colder body to a warmer one, which does not happen spontaneously."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-heat-engines-test": {
+        "title": "Test: Heat Engines",
+        "questions": [
+          {
+            "question": "A heat engine is designed to:",
+            "options": [
+              "measure pressure without heat exchange.",
+              "convert part of heat into mechanical work.",
+              "completely destroy heat.",
+              "turn mass into charge."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The main parts of a heat engine are:",
+            "options": [
+              "lens, screen, light source.",
+              "nucleus, electron, proton.",
+              "coil, magnet, resistor.",
+              "heater, working substance, cooler."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The work of a heat engine during one cycle is:",
+            "options": [
+              "A = Q₂ - Q₁",
+              "A = 0 always.",
+              "A = Q₁ - Q₂",
+              "A = Q₁ + Q₂"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The efficiency of a heat engine is:",
+            "options": [
+              "η = Q₁/A",
+              "η = A/Q₁",
+              "η = Q₂/Q₁ + 1",
+              "η = pV"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If an engine received 800 J and released 500 J, the work is:",
+            "options": [
+              "800 J.",
+              "500 J.",
+              "300 J.",
+              "1300 J."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-efficiency-test": {
+        "title": "Test: Efficiency",
+        "questions": [
+          {
+            "question": "Efficiency shows:",
+            "options": [
+              "the gas pressure in the vessel.",
+              "what part of the received energy a machine converts into useful work.",
+              "the mass of the working substance.",
+              "the absolute temperature of the cooler."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The efficiency formula for a heat engine is:",
+            "options": [
+              "η = Q₁/A",
+              "η = A/Q₁",
+              "η = pV/T",
+              "η = cmΔT"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "An efficiency of 0.4 corresponds to:",
+            "options": [
+              "0.4%.",
+              "4%.",
+              "40%.",
+              "400%."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The maximum efficiency of a Carnot cycle depends on:",
+            "options": [
+              "the piston shape.",
+              "the temperatures of the heater and cooler.",
+              "the engine mass.",
+              "the body color."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why can efficiency not be greater than 100%?",
+            "options": [
+              "Because pressure is always zero.",
+              "Because temperature is always constant.",
+              "Because a gas cannot be heated.",
+              "Useful work cannot exceed all the energy received."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-melting-test": {
+        "title": "Test: Melting",
+        "questions": [
+          {
+            "question": "Melting is the transition of a substance:",
+            "options": [
+              "from gas to liquid.",
+              "from solid to liquid.",
+              "from liquid to solid.",
+              "from liquid to gas."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "During melting of a crystalline solid, the temperature:",
+            "options": [
+              "becomes zero.",
+              "remains constant until melting is complete.",
+              "always decreases.",
+              "always rises rapidly."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The formula for heat of fusion is:",
+            "options": [
+              "Q = Lm",
+              "Q = λm",
+              "Q = cmΔT",
+              "pV = νRT"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Specific heat of fusion shows:",
+            "options": [
+              "the boiling temperature.",
+              "the mass of a substance.",
+              "how much heat is needed to melt 1 kg of a substance at its melting temperature.",
+              "the pressure of saturated vapor."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The process opposite to melting is:",
+            "options": [
+              "evaporation.",
+              "convection.",
+              "diffusion.",
+              "crystallization."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-evaporation-test": {
+        "title": "Test: Evaporation",
+        "questions": [
+          {
+            "question": "Evaporation occurs:",
+            "options": [
+              "only at the boiling temperature.",
+              "only inside a liquid.",
+              "at any temperature from the surface of a liquid.",
+              "only in solids."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "What speeds up evaporation?",
+            "options": [
+              "Lowering temperature to absolute zero.",
+              "Increasing surface area and temperature.",
+              "Decreasing surface area.",
+              "A complete absence of molecules."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The formula for heat of vaporization is:",
+            "options": [
+              "Q = cmΔT",
+              "Q = λm",
+              "F = ma",
+              "Q = Lm"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Why does a liquid cool during evaporation?",
+            "options": [
+              "The liquid mass always increases.",
+              "Temperature is unrelated to molecular energy.",
+              "Evaporation does not require energy.",
+              "Molecules with higher energy leave the liquid faster."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Specific heat of vaporization is measured in:",
+            "options": [
+              "m/s.",
+              "J/kg.",
+              "Pa.",
+              "N."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-boiling-test": {
+        "title": "Test: Boiling",
+        "questions": [
+          {
+            "question": "Boiling differs from evaporation because it:",
+            "options": [
+              "is possible only in a solid.",
+              "occurs throughout the liquid volume at the boiling temperature.",
+              "does not require heat.",
+              "occurs only from the surface at any temperature."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The boiling temperature of water at normal atmospheric pressure is:",
+            "options": [
+              "273°C.",
+              "0°C.",
+              "50°C.",
+              "100°C."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "When external pressure decreases, the boiling temperature:",
+            "options": [
+              "never changes.",
+              "decreases.",
+              "becomes absolute zero.",
+              "increases."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why is vapor found inside bubbles during boiling?",
+            "options": [
+              "There is no substance inside the bubbles.",
+              "The saturated vapor pressure inside a bubble becomes equal to the external pressure.",
+              "Water turns into metal.",
+              "The bubbles consist only of room air."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "While a liquid boils at constant pressure, its temperature:",
+            "options": [
+              "decreases to zero.",
+              "increases without limit.",
+              "remains constant.",
+              "cannot be measured."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-phase-diagrams-test": {
+        "title": "Test: Phase Diagrams",
+        "questions": [
+          {
+            "question": "A phase diagram shows:",
+            "options": [
+              "only electric charge.",
+              "only the speed of molecules.",
+              "only the mass of a substance.",
+              "regions where phases of a substance are stable at different p and T."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The point where solid, liquid, and gas phases coexist is called:",
+            "options": [
+              "the critical speed.",
+              "absolute zero.",
+              "the triple point.",
+              "the melting point of all substances."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The critical point is related to:",
+            "options": [
+              "the stopping of all molecules at any temperature.",
+              "the disappearance of the distinction between liquid and gas.",
+              "the complete disappearance of matter.",
+              "the transformation of matter only into a solid."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "On a p-T diagram, the boiling line separates:",
+            "options": [
+              "two identical gas regions.",
+              "liquid and gas.",
+              "solid and liquid.",
+              "solid and plasma."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "When crossing the melting line, a substance:",
+            "options": [
+              "disappears.",
+              "changes phase between solid and liquid.",
+              "does not change state.",
+              "must become a gas."
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "thermodynamics-matter-structure-task-1": {
+        "topic_title": "Structure of Matter",
+        "title": "How many molecules are contained in 0.5 mol of oxygen?",
+        "problem_text": "How many molecules are contained in 0.5 mol of oxygen?",
+        "given_data": "ν = 0.5 mol\nNₐ = 6.02×10²³ 1/mol",
+        "find_text": "N - ?",
+        "solution": "N = νNₐ\nN = 0.5 × 6.02×10²³ = 3.01×10²³",
+        "answer": "N = 3.01×10²³ molecules."
+      },
+      "thermodynamics-matter-structure-task-2": {
+        "topic_title": "Structure of Matter",
+        "title": "A vessel contains 3 mol of gas. How many gas molecules are in the vessel?",
+        "problem_text": "A vessel contains 3 mol of gas. How many gas molecules are in the vessel?",
+        "given_data": "ν = 3 mol\nNₐ = 6.02×10²³ 1/mol",
+        "find_text": "N - ?",
+        "solution": "N = νNₐ\nN = 3 × 6.02×10²³ = 1.806×10²⁴",
+        "answer": "N ≈ 1.81×10²⁴ molecules."
+      },
+      "thermodynamics-matter-structure-task-3": {
+        "topic_title": "Structure of Matter",
+        "title": "A sample contains 1.204×10²⁴ molecules. Find the amount of substance.",
+        "problem_text": "A sample contains 1.204×10²⁴ molecules. Find the amount of substance.",
+        "given_data": "N = 1.204×10²⁴\nNₐ = 6.02×10²³ 1/mol",
+        "find_text": "ν - ?",
+        "solution": "ν = N/Nₐ\nν = 1.204×10²⁴ / 6.02×10²³ = 2 mol",
+        "answer": "ν = 2 mol."
+      },
+      "thermodynamics-matter-structure-task-4": {
+        "topic_title": "Structure of Matter",
+        "title": "18 g of water contains 1 mol of molecules. How many water molecules are in 54 g of water?",
+        "problem_text": "18 g of water contains 1 mol of molecules. How many water molecules are in 54 g of water?",
+        "given_data": "m = 54 g\nM(H₂O) = 18 g/mol\nNₐ = 6.02×10²³ 1/mol",
+        "find_text": "N - ?",
+        "solution": "ν = m/M = 54/18 = 3 mol\nN = νNₐ = 3 × 6.02×10²³ = 1.806×10²⁴",
+        "answer": "N ≈ 1.81×10²⁴ molecules."
+      },
+      "thermodynamics-matter-structure-task-5": {
+        "topic_title": "Structure of Matter",
+        "title": "Explain why gases are easily compressed while liquids are almost incompressible.",
+        "problem_text": "Explain why gases are easily compressed while liquids are almost incompressible.",
+        "given_data": "Distances between molecules in a gas are large\nIn a liquid, molecules are much closer together",
+        "find_text": "explanation - ?",
+        "solution": "In a gas there is a lot of free space between molecules, so compression noticeably reduces the distances between particles. In a liquid, molecules are already close together, so it is much harder to reduce the volume significantly.",
+        "answer": "Gases are easily compressed because there are large gaps between molecules; liquids are almost incompressible."
+      },
+      "thermodynamics-temperature-task-1": {
+        "topic_title": "Temperature",
+        "title": "Convert 37°C to kelvins.",
+        "problem_text": "Convert 37°C to kelvins.",
+        "given_data": "t = 37°C",
+        "find_text": "T - ?",
+        "solution": "T = t + 273\nT = 37 + 273 = 310 K",
+        "answer": "T = 310 K."
+      },
+      "thermodynamics-temperature-task-2": {
+        "topic_title": "Temperature",
+        "title": "The gas temperature is 450 K. Express it in degrees Celsius.",
+        "problem_text": "The gas temperature is 450 K. Express it in degrees Celsius.",
+        "given_data": "T = 450 K",
+        "find_text": "t - ?",
+        "solution": "t = T - 273\nt = 450 - 273 = 177°C",
+        "answer": "t = 177°C."
+      },
+      "thermodynamics-temperature-task-3": {
+        "topic_title": "Temperature",
+        "title": "Find the average kinetic energy of a gas molecule at 300 K. k = 1.38×10⁻²³ J/K.",
+        "problem_text": "Find the average kinetic energy of a gas molecule at 300 K. k = 1.38×10⁻²³ J/K.",
+        "given_data": "T = 300 K\nk = 1.38×10⁻²³ J/K",
+        "find_text": "E - ?",
+        "solution": "E = (3/2)kT\nE = 1.5 × 1.38×10⁻²³ × 300 = 6.21×10⁻²¹ J",
+        "answer": "E = 6.21×10⁻²¹ J."
+      },
+      "thermodynamics-temperature-task-4": {
+        "topic_title": "Temperature",
+        "title": "By how many times does the average kinetic energy of molecules change when a gas is heated from 200 K to 600 K?",
+        "problem_text": "By how many times does the average kinetic energy of molecules change when a gas is heated from 200 K to 600 K?",
+        "given_data": "T₁ = 200 K\nT₂ = 600 K\nE ∼ T",
+        "find_text": "E₂/E₁ - ?",
+        "solution": "E₂/E₁ = T₂/T₁ = 600/200 = 3",
+        "answer": "The energy increases by 3 times."
+      },
+      "thermodynamics-temperature-task-5": {
+        "topic_title": "Temperature",
+        "title": "A gas was cooled from 80°C to 20°C. By how many kelvins did the temperature change?",
+        "problem_text": "A gas was cooled from 80°C to 20°C. By how many kelvins did the temperature change?",
+        "given_data": "t₁ = 80°C\nt₂ = 20°C",
+        "find_text": "ΔT - ?",
+        "solution": "A temperature difference in degrees Celsius is equal to the same temperature difference in kelvins.\nΔT = 20 - 80 = -60 K\nThe magnitude of the temperature change is 60 K.",
+        "answer": "The temperature decreased by 60 K."
+      },
+      "thermodynamics-gas-pressure-task-1": {
+        "topic_title": "Gas Pressure",
+        "title": "Find the gas pressure at molecular concentration 2×10²⁵ m⁻³ and temperature 300 K. k = 1.38×10⁻²³ J/K.",
+        "problem_text": "Find the gas pressure at molecular concentration 2×10²⁵ m⁻³ and temperature 300 K. k = 1.38×10⁻²³ J/K.",
+        "given_data": "n = 2×10²⁵ m⁻³\nT = 300 K\nk = 1.38×10⁻²³ J/K",
+        "find_text": "p - ?",
+        "solution": "p = nkT\np = 2×10²⁵ × 1.38×10⁻²³ × 300 = 8.28×10⁴ Pa",
+        "answer": "p = 82.8 kPa."
+      },
+      "thermodynamics-gas-pressure-task-2": {
+        "topic_title": "Gas Pressure",
+        "title": "The gas pressure is 100 kPa and the temperature is 250 K. Find the molecular concentration. k = 1.38×10⁻²³ J/K.",
+        "problem_text": "The gas pressure is 100 kPa and the temperature is 250 K. Find the molecular concentration. k = 1.38×10⁻²³ J/K.",
+        "given_data": "p = 100 kPa = 1×10⁵ Pa\nT = 250 K\nk = 1.38×10⁻²³ J/K",
+        "find_text": "n - ?",
+        "solution": "n = p/(kT)\nn = 1×10⁵ / (1.38×10⁻²³ × 250) ≈ 2.9×10²⁵ m⁻³",
+        "answer": "n ≈ 2.9×10²⁵ m⁻³."
+      },
+      "thermodynamics-gas-pressure-task-3": {
+        "topic_title": "Gas Pressure",
+        "title": "A gas is in a closed cylinder. Its temperature was increased from 300 K to 450 K. The initial pressure is 120 kPa. Find the final pressure.",
+        "problem_text": "A gas is in a closed cylinder. Its temperature was increased from 300 K to 450 K. The initial pressure is 120 kPa. Find the final pressure.",
+        "given_data": "T₁ = 300 K\nT₂ = 450 K\np₁ = 120 kPa\nV = const",
+        "find_text": "p₂ - ?",
+        "solution": "At constant volume, p/T = const.\np₂ = p₁T₂/T₁ = 120 × 450/300 = 180 kPa",
+        "answer": "p₂ = 180 kPa."
+      },
+      "thermodynamics-gas-pressure-task-4": {
+        "topic_title": "Gas Pressure",
+        "title": "The root-mean-square speed of molecules increased by 3 times. How will gas pressure change if concentration remains unchanged?",
+        "problem_text": "The root-mean-square speed of molecules increased by 3 times. How will gas pressure change if concentration remains unchanged?",
+        "given_data": "v₂ = 3v₁\nn = const\np = (1/3)nm₀v²",
+        "find_text": "p₂/p₁ - ?",
+        "solution": "p ∼ v²\np₂/p₁ = (v₂/v₁)² = 3² = 9",
+        "answer": "The pressure increases by 9 times."
+      },
+      "thermodynamics-gas-pressure-task-5": {
+        "topic_title": "Gas Pressure",
+        "title": "Why does pressure in a car tire increase after a long trip?",
+        "problem_text": "Why does pressure in a car tire increase after a long trip?",
+        "given_data": "V ≈ const\nThe air temperature in the tire increases",
+        "find_text": "explanation - ?",
+        "solution": "During motion, the tire heats up. The air volume is almost constant, so by the law p/T = const, an increase in temperature leads to an increase in pressure.",
+        "answer": "The pressure increases because the air heats up at almost constant volume."
+      },
+      "thermodynamics-thermal-conductivity-task-1": {
+        "topic_title": "Thermal Conductivity",
+        "title": "Heat passes through a brick wall with area 12 m² and thickness 0.6 m for 2 hours. The temperature difference between the room and outside is 30 K, and the thermal conductivity coefficient of brick is λ = 0.7 W/(m·K). Find the amount of heat.",
+        "problem_text": "Heat passes through a brick wall with area 12 m² and thickness 0.6 m for 2 hours. The temperature difference between the room and outside is 30 K, and the thermal conductivity coefficient of brick is λ = 0.7 W/(m·K). Find the amount of heat.",
+        "given_data": "S = 12 m²\nd = 0.6 m\nτ = 2 h = 7200 s\nΔT = 30 K\nλ = 0.7 W/(m·K)",
+        "find_text": "Q - ?",
+        "solution": "Q = λSΔTτ/d\nQ = 0.7 × 12 × 30 × 7200 / 0.6 = 3,024,000 J",
+        "answer": "Q = 3.024 MJ."
+      },
+      "thermodynamics-thermal-conductivity-task-2": {
+        "topic_title": "Thermal Conductivity",
+        "title": "27 kJ of heat passed through glass with area 1.5 m² in 5 minutes. The glass thickness is 3 mm and the temperature difference is 20 K. Find the thermal conductivity coefficient of the glass.",
+        "problem_text": "27 kJ of heat passed through glass with area 1.5 m² in 5 minutes. The glass thickness is 3 mm and the temperature difference is 20 K. Find the thermal conductivity coefficient of the glass.",
+        "given_data": "Q = 27 kJ = 27000 J\nS = 1.5 m²\nτ = 5 min = 300 s\nd = 3 mm = 0.003 m\nΔT = 20 K",
+        "find_text": "λ - ?",
+        "solution": "Q = λSΔTτ/d\nλ = Qd/(SΔTτ)\nλ = 27000 × 0.003 / (1.5 × 20 × 300) = 0.009 W/(m·K)",
+        "answer": "λ = 0.009 W/(m·K)."
+      },
+      "thermodynamics-thermal-conductivity-task-3": {
+        "topic_title": "Thermal Conductivity",
+        "title": "Two walls have the same area, material, and temperature difference. The first wall is 20 cm thick, the second is 40 cm thick. Through which wall is heat loss greater, and by how many times?",
+        "problem_text": "Two walls have the same area, material, and temperature difference. The first wall is 20 cm thick, the second is 40 cm thick. Through which wall is heat loss greater, and by how many times?",
+        "given_data": "d₁ = 20 cm\nd₂ = 40 cm\nQ ∼ 1/d",
+        "find_text": "Q₁/Q₂ - ?",
+        "solution": "With the same λ, S, ΔT, and τ, the amount of heat is inversely proportional to thickness:\nQ₁/Q₂ = d₂/d₁ = 40/20 = 2",
+        "answer": "Heat loss through the first wall is 2 times greater."
+      },
+      "thermodynamics-thermal-conductivity-task-4": {
+        "topic_title": "Thermal Conductivity",
+        "title": "Why does a metal bench feel colder than a wooden one in winter, even though both benches have the same temperature?",
+        "problem_text": "Why does a metal bench feel colder than a wooden one in winter, even though both benches have the same temperature?",
+        "given_data": "The temperatures of metal and wood are the same\nThe thermal conductivity of metal is higher than that of wood",
+        "find_text": "explanation - ?",
+        "solution": "Metal removes heat from a hand or body faster because it has higher thermal conductivity. Wood conducts heat worse, so the skin cools more slowly and wood feels warmer.",
+        "answer": "The sensation is caused by different rates of heat removal, not by different temperatures."
+      },
+      "thermodynamics-thermal-conductivity-task-5": {
+        "topic_title": "Thermal Conductivity",
+        "title": "A house replaced single glass with a double-glazed unit whose effective insulating layer thickness is 3 times greater. How will heat loss through the window change, all other conditions being equal?",
+        "problem_text": "A house replaced single glass with a double-glazed unit whose effective insulating layer thickness is 3 times greater. How will heat loss through the window change, all other conditions being equal?",
+        "given_data": "d₂ = 3d₁\nQ ∼ 1/d",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q₂/Q₁ = d₁/d₂ = d₁/(3d₁) = 1/3",
+        "answer": "Heat loss decreases by about 3 times."
+      },
+      "thermodynamics-convection-task-1": {
+        "topic_title": "Convection",
+        "title": "Air near a radiator was heated. Its density became lower than the density of the surrounding air. Where will this air move, and why?",
+        "problem_text": "Air near a radiator was heated. Its density became lower than the density of the surrounding air. Where will this air move, and why?",
+        "given_data": "ρ of warm air < ρ of cold air",
+        "find_text": "direction of motion - ?",
+        "solution": "Less dense warm air is displaced upward by denser cold air. Then cold air moves downward and heats again near the radiator.",
+        "answer": "Warm air rises, forming a convection current."
+      },
+      "thermodynamics-convection-task-2": {
+        "topic_title": "Convection",
+        "title": "Why is it more effective to heat water in a pot from below?",
+        "problem_text": "Why is it more effective to heat water in a pot from below?",
+        "given_data": "Lower layers of water heat first\nWhen heated, water density decreases",
+        "find_text": "explanation - ?",
+        "solution": "Water heated from below becomes less dense and rises. Colder water moves downward. Convection currents appear, mixing the water and speeding up heating.",
+        "answer": "Heating from below creates natural convection."
+      },
+      "thermodynamics-convection-task-3": {
+        "topic_title": "Convection",
+        "title": "In a room, the temperature near the ceiling is 28°C and near the floor is 20°C. Why is warm air at the top?",
+        "problem_text": "In a room, the temperature near the ceiling is 28°C and near the floor is 20°C. Why is warm air at the top?",
+        "given_data": "t near the ceiling = 28°C\nt near the floor = 20°C",
+        "find_text": "explanation - ?",
+        "solution": "Warm air has lower density, so it rises. If air mixing is weak, a warmer layer forms near the ceiling.",
+        "answer": "Warm air rises because of its lower density."
+      },
+      "thermodynamics-convection-task-4": {
+        "topic_title": "Convection",
+        "title": "Why does smoke first collect near the ceiling during a fire?",
+        "problem_text": "Why does smoke first collect near the ceiling during a fire?",
+        "given_data": "Smoke and hot gases are heated\nρ of hot gases < ρ of cold air",
+        "find_text": "explanation - ?",
+        "solution": "Hot gases expand and their density decreases. Denser cold air displaces them upward, so smoke rises and accumulates under the ceiling.",
+        "answer": "Smoke rises because of convection of hot gases."
+      },
+      "thermodynamics-convection-task-5": {
+        "topic_title": "Convection",
+        "title": "Why does natural convection almost disappear in weightlessness?",
+        "problem_text": "Why does natural convection almost disappear in weightlessness?",
+        "given_data": "g ≈ 0\nBuoyant force depends on the gravitational field",
+        "find_text": "explanation - ?",
+        "solution": "Natural convection occurs because density differences act in a gravitational field: lighter heated layers rise, heavier cold layers sink. In weightlessness there is no stable 'up' and 'down', so such circulation almost does not occur.",
+        "answer": "Without gravity, natural convection practically does not work."
+      },
+      "thermodynamics-radiation-task-1": {
+        "topic_title": "Radiation",
+        "title": "By how many times is the radiation power of a body at 600 K greater than at 300 K?",
+        "problem_text": "By how many times is the radiation power of a body at 600 K greater than at 300 K?",
+        "given_data": "T₁ = 300 K\nT₂ = 600 K\nP ∼ T⁴",
+        "find_text": "P₂/P₁ - ?",
+        "solution": "P₂/P₁ = (T₂/T₁)⁴ = (600/300)⁴ = 2⁴ = 16",
+        "answer": "The radiation power is 16 times greater."
+      },
+      "thermodynamics-radiation-task-2": {
+        "topic_title": "Radiation",
+        "title": "The surface temperature of a star is 3 times higher than that of another star with the same radius. By how many times is its radiated power greater?",
+        "problem_text": "The surface temperature of a star is 3 times higher than that of another star with the same radius. By how many times is its radiated power greater?",
+        "given_data": "T₂ = 3T₁\nSurface areas are the same\nP ∼ T⁴",
+        "find_text": "P₂/P₁ - ?",
+        "solution": "P₂/P₁ = (T₂/T₁)⁴ = 3⁴ = 81",
+        "answer": "The power is 81 times greater."
+      },
+      "thermodynamics-radiation-task-3": {
+        "topic_title": "Radiation",
+        "title": "Why is it cooler in white clothing than in black clothing in summer?",
+        "problem_text": "Why is it cooler in white clothing than in black clothing in summer?",
+        "given_data": "A white surface reflects more radiation\nA black surface absorbs more radiation",
+        "find_text": "explanation - ?",
+        "solution": "Black fabric absorbs solar radiation more strongly and heats up faster. White fabric reflects most of the light, so it receives less energy.",
+        "answer": "White clothing absorbs less solar radiation."
+      },
+      "thermodynamics-radiation-task-4": {
+        "topic_title": "Radiation",
+        "title": "Why are the inner walls of a thermos made reflective?",
+        "problem_text": "Why are the inner walls of a thermos made reflective?",
+        "given_data": "A reflective surface reflects infrared radiation well",
+        "find_text": "purpose - ?",
+        "solution": "Reflective walls reduce heat exchange by radiation: they reflect thermal radiation back inward or outward and reduce energy loss.",
+        "answer": "Reflective walls reduce heat loss by radiation."
+      },
+      "thermodynamics-radiation-task-5": {
+        "topic_title": "Radiation",
+        "title": "Why can heat from a campfire be felt from the side if hot air mainly rises upward?",
+        "problem_text": "Why can heat from a campfire be felt from the side if hot air mainly rises upward?",
+        "given_data": "The fire has a high temperature\nRadiation spreads in all directions",
+        "find_text": "method of heat transfer - ?",
+        "solution": "Hot air does rise upward by convection, but the fire also emits infrared radiation in all directions. Therefore a person feels heat from the side.",
+        "answer": "Heat from the side is transferred mainly by radiation."
+      },
+      "thermodynamics-heat-quantity-task-1": {
+        "topic_title": "Quantity of Heat",
+        "title": "How much heat is needed to warm 3 kg of water from 20°C to 70°C? c = 4200 J/(kg·°C).",
+        "problem_text": "How much heat is needed to warm 3 kg of water from 20°C to 70°C? c = 4200 J/(kg·°C).",
+        "given_data": "m = 3 kg\nt₁ = 20°C\nt₂ = 70°C\nc = 4200 J/(kg·°C)",
+        "find_text": "Q - ?",
+        "solution": "ΔT = 70 - 20 = 50°C\nQ = cmΔT = 4200 × 3 × 50 = 630000 J",
+        "answer": "Q = 630 kJ."
+      },
+      "thermodynamics-heat-quantity-task-2": {
+        "topic_title": "Quantity of Heat",
+        "title": "An aluminum part with mass 0.5 kg was heated by 40°C. c = 900 J/(kg·°C). Find the amount of heat.",
+        "problem_text": "An aluminum part with mass 0.5 kg was heated by 40°C. c = 900 J/(kg·°C). Find the amount of heat.",
+        "given_data": "m = 0.5 kg\nΔT = 40°C\nc = 900 J/(kg·°C)",
+        "find_text": "Q - ?",
+        "solution": "Q = cmΔT\nQ = 900 × 0.5 × 40 = 18000 J",
+        "answer": "Q = 18 kJ."
+      },
+      "thermodynamics-heat-quantity-task-3": {
+        "topic_title": "Quantity of Heat",
+        "title": "A body received 24 kJ of heat. Its mass is 2 kg and specific heat capacity is 600 J/(kg·°C). By how many degrees did it heat up?",
+        "problem_text": "A body received 24 kJ of heat. Its mass is 2 kg and specific heat capacity is 600 J/(kg·°C). By how many degrees did it heat up?",
+        "given_data": "Q = 24 kJ = 24000 J\nm = 2 kg\nc = 600 J/(kg·°C)",
+        "find_text": "ΔT - ?",
+        "solution": "ΔT = Q/(cm)\nΔT = 24000/(600 × 2) = 20°C",
+        "answer": "ΔT = 20°C."
+      },
+      "thermodynamics-heat-quantity-task-4": {
+        "topic_title": "Quantity of Heat",
+        "title": "What mass of water can be heated by 30°C if 252 kJ of heat is transferred to it? c = 4200 J/(kg·°C).",
+        "problem_text": "What mass of water can be heated by 30°C if 252 kJ of heat is transferred to it? c = 4200 J/(kg·°C).",
+        "given_data": "Q = 252 kJ = 252000 J\nΔT = 30°C\nc = 4200 J/(kg·°C)",
+        "find_text": "m - ?",
+        "solution": "m = Q/(cΔT)\nm = 252000/(4200 × 30) = 2 kg",
+        "answer": "m = 2 kg."
+      },
+      "thermodynamics-heat-quantity-task-5": {
+        "topic_title": "Quantity of Heat",
+        "title": "Two equal masses of water are heated: the first by 10°C, the second by 40°C. By how many times more heat does the second portion need?",
+        "problem_text": "Two equal masses of water are heated: the first by 10°C, the second by 40°C. By how many times more heat does the second portion need?",
+        "given_data": "m is the same\nc is the same\nΔT₁ = 10°C\nΔT₂ = 40°C",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q = cmΔT, so for the same m and c:\nQ₂/Q₁ = ΔT₂/ΔT₁ = 40/10 = 4",
+        "answer": "The second portion needs 4 times more heat."
+      },
+      "thermodynamics-state-equation-task-1": {
+        "topic_title": "Equation of State",
+        "title": "Find the volume of 1 mol of gas at 300 K and pressure 100 kPa.",
+        "problem_text": "Find the volume of 1 mol of gas at 300 K and pressure 100 kPa.",
+        "given_data": "ν = 1 mol\nT = 300 K\np = 100 kPa = 100000 Pa\nR = 8.31 J/(mol·K)",
+        "find_text": "V - ?",
+        "solution": "V = νRT/p\nV = 1 × 8.31 × 300 / 100000 = 0.02493 m³",
+        "answer": "V ≈ 24.9 L."
+      },
+      "thermodynamics-state-equation-task-2": {
+        "topic_title": "Equation of State",
+        "title": "A vessel with volume 0.05 m³ contains 2 mol of gas at 300 K. Find the pressure.",
+        "problem_text": "A vessel with volume 0.05 m³ contains 2 mol of gas at 300 K. Find the pressure.",
+        "given_data": "V = 0.05 m³\nν = 2 mol\nT = 300 K\nR = 8.31 J/(mol·K)",
+        "find_text": "p - ?",
+        "solution": "p = νRT/V\np = 2 × 8.31 × 300 / 0.05 = 99720 Pa",
+        "answer": "p ≈ 100 kPa."
+      },
+      "thermodynamics-state-equation-task-3": {
+        "topic_title": "Equation of State",
+        "title": "A gas occupies 10 L at pressure 200 kPa and temperature 400 K. Find the amount of substance.",
+        "problem_text": "A gas occupies 10 L at pressure 200 kPa and temperature 400 K. Find the amount of substance.",
+        "given_data": "V = 10 L = 0.01 m³\np = 200 kPa = 200000 Pa\nT = 400 K\nR = 8.31 J/(mol·K)",
+        "find_text": "ν - ?",
+        "solution": "ν = pV/(RT)\nν = 200000 × 0.01 / (8.31 × 400) ≈ 0.60 mol",
+        "answer": "ν ≈ 0.60 mol."
+      },
+      "thermodynamics-state-equation-task-4": {
+        "topic_title": "Equation of State",
+        "title": "A closed vessel with volume 2 L contains 0.1 mol of gas at 300 K. Find the pressure.",
+        "problem_text": "A closed vessel with volume 2 L contains 0.1 mol of gas at 300 K. Find the pressure.",
+        "given_data": "V = 2 L = 0.002 m³\nν = 0.1 mol\nT = 300 K\nR = 8.31 J/(mol·K)",
+        "find_text": "p - ?",
+        "solution": "p = νRT/V\np = 0.1 × 8.31 × 300 / 0.002 = 124650 Pa",
+        "answer": "p ≈ 125 kPa."
+      },
+      "thermodynamics-state-equation-task-5": {
+        "topic_title": "Equation of State",
+        "title": "Why must 27°C not be substituted as 27 in the equation pV = νRT?",
+        "problem_text": "Why must 27°C not be substituted as 27 in the equation pV = νRT?",
+        "given_data": "pV = νRT\nt = 27°C",
+        "find_text": "explanation - ?",
+        "solution": "In the equation of state, temperature must be absolute, meaning it must be in kelvins. 27°C = 300 K. Substituting 27 instead of 300 would make the result wrong by more than 11 times.",
+        "answer": "Temperature must be converted to K."
+      },
+      "thermodynamics-isoprocesses-task-1": {
+        "topic_title": "Isoprocesses",
+        "title": "A gas was heated isobarically from 300 K to 450 K. The initial volume is 4 L. Find the final volume.",
+        "problem_text": "A gas was heated isobarically from 300 K to 450 K. The initial volume is 4 L. Find the final volume.",
+        "given_data": "T₁ = 300 K\nT₂ = 450 K\nV₁ = 4 L\np = const",
+        "find_text": "V₂ - ?",
+        "solution": "V₁/T₁ = V₂/T₂\nV₂ = V₁T₂/T₁ = 4 × 450/300 = 6 L",
+        "answer": "V₂ = 6 L."
+      },
+      "thermodynamics-isoprocesses-task-2": {
+        "topic_title": "Isoprocesses",
+        "title": "A gas was heated isochorically from 250 K to 500 K. The initial pressure is 80 kPa. Find the final pressure.",
+        "problem_text": "A gas was heated isochorically from 250 K to 500 K. The initial pressure is 80 kPa. Find the final pressure.",
+        "given_data": "T₁ = 250 K\nT₂ = 500 K\np₁ = 80 kPa\nV = const",
+        "find_text": "p₂ - ?",
+        "solution": "p₁/T₁ = p₂/T₂\np₂ = p₁T₂/T₁ = 80 × 500/250 = 160 kPa",
+        "answer": "p₂ = 160 kPa."
+      },
+      "thermodynamics-isoprocesses-task-3": {
+        "topic_title": "Isoprocesses",
+        "title": "A gas was compressed isothermally from 12 L to 3 L. The initial pressure is 100 kPa. Find the final pressure.",
+        "problem_text": "A gas was compressed isothermally from 12 L to 3 L. The initial pressure is 100 kPa. Find the final pressure.",
+        "given_data": "V₁ = 12 L\nV₂ = 3 L\np₁ = 100 kPa\nT = const",
+        "find_text": "p₂ - ?",
+        "solution": "p₁V₁ = p₂V₂\np₂ = p₁V₁/V₂ = 100 × 12/3 = 400 kPa",
+        "answer": "p₂ = 400 kPa."
+      },
+      "thermodynamics-isoprocesses-task-4": {
+        "topic_title": "Isoprocesses",
+        "title": "In which process is the work done by a gas zero: isobaric, isothermal, or isochoric?",
+        "problem_text": "In which process is the work done by a gas zero: isobaric, isothermal, or isochoric?",
+        "given_data": "A = pΔV",
+        "find_text": "process - ?",
+        "solution": "The work done by a gas depends on the change in volume. In an isochoric process V = const, so ΔV = 0 and A = 0.",
+        "answer": "In an isochoric process."
+      },
+      "thermodynamics-isoprocesses-task-5": {
+        "topic_title": "Isoprocesses",
+        "title": "A gas expanded isobarically from 2 L to 5 L at pressure 100 kPa. Find the work done by the gas.",
+        "problem_text": "A gas expanded isobarically from 2 L to 5 L at pressure 100 kPa. Find the work done by the gas.",
+        "given_data": "p = 100 kPa = 100000 Pa\nV₁ = 2 L = 0.002 m³\nV₂ = 5 L = 0.005 m³",
+        "find_text": "A - ?",
+        "solution": "ΔV = 0.005 - 0.002 = 0.003 m³\nA = pΔV = 100000 × 0.003 = 300 J",
+        "answer": "A = 300 J."
+      },
+      "thermodynamics-gas-laws-task-1": {
+        "topic_title": "Gas Laws",
+        "title": "A gas had pressure 100 kPa, volume 6 L, and temperature 300 K. After a state change, the volume became 3 L and the temperature became 450 K. Find the final pressure.",
+        "problem_text": "A gas had pressure 100 kPa, volume 6 L, and temperature 300 K. After a state change, the volume became 3 L and the temperature became 450 K. Find the final pressure.",
+        "given_data": "p₁ = 100 kPa\nV₁ = 6 L\nT₁ = 300 K\nV₂ = 3 L\nT₂ = 450 K",
+        "find_text": "p₂ - ?",
+        "solution": "p₁V₁/T₁ = p₂V₂/T₂\np₂ = p₁V₁T₂/(T₁V₂)\np₂ = 100 × 6 × 450 / (300 × 3) = 300 kPa",
+        "answer": "p₂ = 300 kPa."
+      },
+      "thermodynamics-gas-laws-task-2": {
+        "topic_title": "Gas Laws",
+        "title": "A gas occupies 8 L at 27°C. What volume will it occupy at 127°C if pressure is constant?",
+        "problem_text": "A gas occupies 8 L at 27°C. What volume will it occupy at 127°C if pressure is constant?",
+        "given_data": "t₁ = 27°C, T₁ = 300 K\nt₂ = 127°C, T₂ = 400 K\nV₁ = 8 L\np = const",
+        "find_text": "V₂ - ?",
+        "solution": "V₂ = V₁T₂/T₁\nV₂ = 8 × 400/300 = 10.67 L",
+        "answer": "V₂ ≈ 10.7 L."
+      },
+      "thermodynamics-gas-laws-task-3": {
+        "topic_title": "Gas Laws",
+        "title": "The gas pressure in a closed cylinder is 150 kPa at 300 K. What will the pressure be at 360 K?",
+        "problem_text": "The gas pressure in a closed cylinder is 150 kPa at 300 K. What will the pressure be at 360 K?",
+        "given_data": "p₁ = 150 kPa\nT₁ = 300 K\nT₂ = 360 K\nV = const",
+        "find_text": "p₂ - ?",
+        "solution": "p₂ = p₁T₂/T₁ = 150 × 360/300 = 180 kPa",
+        "answer": "p₂ = 180 kPa."
+      },
+      "thermodynamics-gas-laws-task-4": {
+        "topic_title": "Gas Laws",
+        "title": "During isothermal expansion, the gas volume increased by 5 times. How did the pressure change?",
+        "problem_text": "During isothermal expansion, the gas volume increased by 5 times. How did the pressure change?",
+        "given_data": "V₂ = 5V₁\nT = const",
+        "find_text": "p₂/p₁ - ?",
+        "solution": "pV = const, so p₂/p₁ = V₁/V₂ = 1/5",
+        "answer": "The pressure decreased by 5 times."
+      },
+      "thermodynamics-gas-laws-task-5": {
+        "topic_title": "Gas Laws",
+        "title": "Why must 0°C not be used as T = 0 in the combined gas law?",
+        "problem_text": "Why must 0°C not be used as T = 0 in the combined gas law?",
+        "given_data": "t = 0°C\nT = 273 K",
+        "find_text": "explanation - ?",
+        "solution": "Temperature in gas laws must be absolute. 0°C corresponds to 273 K, not zero. Substituting T = 0 would make the expression meaningless.",
+        "answer": "The Kelvin scale must be used."
+      },
+      "thermodynamics-first-law-task-1": {
+        "topic_title": "First Law of Thermodynamics",
+        "title": "A gas received 900 J of heat and did 300 J of work. Find the change in internal energy.",
+        "problem_text": "A gas received 900 J of heat and did 300 J of work. Find the change in internal energy.",
+        "given_data": "Q = 900 J\nA = 300 J",
+        "find_text": "ΔU - ?",
+        "solution": "Q = ΔU + A\nΔU = Q - A = 900 - 300 = 600 J",
+        "answer": "ΔU = 600 J."
+      },
+      "thermodynamics-first-law-task-2": {
+        "topic_title": "First Law of Thermodynamics",
+        "title": "The internal energy of a gas increased by 400 J, and the gas did 150 J of work. How much heat did the gas receive?",
+        "problem_text": "The internal energy of a gas increased by 400 J, and the gas did 150 J of work. How much heat did the gas receive?",
+        "given_data": "ΔU = 400 J\nA = 150 J",
+        "find_text": "Q - ?",
+        "solution": "Q = ΔU + A\nQ = 400 + 150 = 550 J",
+        "answer": "Q = 550 J."
+      },
+      "thermodynamics-first-law-task-3": {
+        "topic_title": "First Law of Thermodynamics",
+        "title": "A gas received 500 J of heat, and external forces did 200 J of work on it. How did its internal energy change?",
+        "problem_text": "A gas received 500 J of heat, and external forces did 200 J of work on it. How did its internal energy change?",
+        "given_data": "Q = 500 J\nWork is done on the gas: A by gas = -200 J",
+        "find_text": "ΔU - ?",
+        "solution": "Q = ΔU + A\nΔU = Q - A = 500 - (-200) = 700 J",
+        "answer": "The internal energy increased by 700 J."
+      },
+      "thermodynamics-first-law-task-4": {
+        "topic_title": "First Law of Thermodynamics",
+        "title": "A gas expanded isobarically at pressure 150 kPa from 2 L to 6 L. Find the work done by the gas.",
+        "problem_text": "A gas expanded isobarically at pressure 150 kPa from 2 L to 6 L. Find the work done by the gas.",
+        "given_data": "p = 150 kPa = 150000 Pa\nV₁ = 2 L = 0.002 m³\nV₂ = 6 L = 0.006 m³",
+        "find_text": "A - ?",
+        "solution": "ΔV = 0.006 - 0.002 = 0.004 m³\nA = pΔV = 150000 × 0.004 = 600 J",
+        "answer": "A = 600 J."
+      },
+      "thermodynamics-first-law-task-5": {
+        "topic_title": "First Law of Thermodynamics",
+        "title": "During isochoric heating, a gas received 800 J of heat. What is the change in internal energy?",
+        "problem_text": "During isochoric heating, a gas received 800 J of heat. What is the change in internal energy?",
+        "given_data": "V = const\nQ = 800 J\nA = 0",
+        "find_text": "ΔU - ?",
+        "solution": "Q = ΔU + A\nSince A = 0, ΔU = Q = 800 J.",
+        "answer": "ΔU = 800 J."
+      },
+      "thermodynamics-second-law-task-1": {
+        "topic_title": "Second Law of Thermodynamics",
+        "title": "Why does hot tea cool down in a room instead of heating up spontaneously?",
+        "problem_text": "Why does hot tea cool down in a room instead of heating up spontaneously?",
+        "given_data": "T of tea > T of air",
+        "find_text": "explanation - ?",
+        "solution": "According to the second law of thermodynamics, heat spontaneously transfers from a hotter body to a colder body. Therefore the tea gives energy to the air.",
+        "answer": "The tea cools because heat transfers from hot to cold."
+      },
+      "thermodynamics-second-law-task-2": {
+        "topic_title": "Second Law of Thermodynamics",
+        "title": "Can an engine be created that converts all heat received from a heater into work without a cooler?",
+        "problem_text": "Can an engine be created that converts all heat received from a heater into work without a cooler?",
+        "given_data": "Q₂ = 0 is assumed\nη = 100% is assumed",
+        "find_text": "is it possible - ?",
+        "solution": "Such an engine would be a perpetual motion machine of the second kind. The second law of thermodynamics forbids complete conversion of heat into work in a cyclic process without transferring part of the heat to a cooler.",
+        "answer": "It is impossible."
+      },
+      "thermodynamics-second-law-task-3": {
+        "topic_title": "Second Law of Thermodynamics",
+        "title": "A heat engine received 1000 J of heat and released 700 J to the cooler. Why can the remaining 300 J be converted into work, but not all 1000 J?",
+        "problem_text": "A heat engine received 1000 J of heat and released 700 J to the cooler. Why can the remaining 300 J be converted into work, but not all 1000 J?",
+        "given_data": "Q₁ = 1000 J\nQ₂ = 700 J\nA = Q₁ - Q₂",
+        "find_text": "explanation - ?",
+        "solution": "Part of the heat must be transferred to the cooler; otherwise the second law of thermodynamics would be violated. Work is only the difference between received and released heat.",
+        "answer": "A = 300 J; complete conversion of Q₁ into work is impossible."
+      },
+      "thermodynamics-second-law-task-4": {
+        "topic_title": "Second Law of Thermodynamics",
+        "title": "Why does home insulation not create heat, but only reduce losses?",
+        "problem_text": "Why does home insulation not create heat, but only reduce losses?",
+        "given_data": "Heat transfers from the warm room to the cold outdoors",
+        "find_text": "explanation - ?",
+        "solution": "Insulation slows heat transfer, but it does not change the natural direction of heat exchange. Energy still tends to transfer from a warmer region to a colder one.",
+        "answer": "Insulation reduces the rate of heat loss but does not create energy."
+      },
+      "thermodynamics-second-law-task-5": {
+        "topic_title": "Second Law of Thermodynamics",
+        "title": "Why is the efficiency of a real heat engine always less than 100%?",
+        "problem_text": "Why is the efficiency of a real heat engine always less than 100%?",
+        "given_data": "Part of the heat is released to the cooler\nThere are losses due to friction and heat exchange",
+        "find_text": "reason - ?",
+        "solution": "Even an ideal cyclic engine cannot completely convert heat into work because of the second law. Real engines also have additional losses.",
+        "answer": "η < 100% because of the second law and irreversible losses."
+      },
+      "thermodynamics-heat-engines-task-1": {
+        "topic_title": "Heat Engines",
+        "title": "A heat engine receives 1200 J of heat and releases 900 J to the cooler. Find the work.",
+        "problem_text": "A heat engine receives 1200 J of heat and releases 900 J to the cooler. Find the work.",
+        "given_data": "Q₁ = 1200 J\nQ₂ = 900 J",
+        "find_text": "A - ?",
+        "solution": "A = Q₁ - Q₂ = 1200 - 900 = 300 J",
+        "answer": "A = 300 J."
+      },
+      "thermodynamics-heat-engines-task-2": {
+        "topic_title": "Heat Engines",
+        "title": "A machine does 250 J of work per cycle and receives 1000 J of heat. Find the efficiency.",
+        "problem_text": "A machine does 250 J of work per cycle and receives 1000 J of heat. Find the efficiency.",
+        "given_data": "A = 250 J\nQ₁ = 1000 J",
+        "find_text": "η - ?",
+        "solution": "η = A/Q₁ = 250/1000 = 0.25 = 25%",
+        "answer": "η = 25%."
+      },
+      "thermodynamics-heat-engines-task-3": {
+        "topic_title": "Heat Engines",
+        "title": "An engine has efficiency 30% and receives 2000 J of heat per cycle. Find the work done by the engine.",
+        "problem_text": "An engine has efficiency 30% and receives 2000 J of heat per cycle. Find the work done by the engine.",
+        "given_data": "η = 30% = 0.30\nQ₁ = 2000 J",
+        "find_text": "A - ?",
+        "solution": "A = ηQ₁ = 0.30 × 2000 = 600 J",
+        "answer": "A = 600 J."
+      },
+      "thermodynamics-heat-engines-task-4": {
+        "topic_title": "Heat Engines",
+        "title": "A machine received 1500 J of heat and its efficiency is 20%. How much heat did it release to the cooler?",
+        "problem_text": "A machine received 1500 J of heat and its efficiency is 20%. How much heat did it release to the cooler?",
+        "given_data": "Q₁ = 1500 J\nη = 20% = 0.20",
+        "find_text": "Q₂ - ?",
+        "solution": "A = ηQ₁ = 0.20 × 1500 = 300 J\nQ₂ = Q₁ - A = 1500 - 300 = 1200 J",
+        "answer": "Q₂ = 1200 J."
+      },
+      "thermodynamics-heat-engines-task-5": {
+        "topic_title": "Heat Engines",
+        "title": "Why does an internal combustion engine need cooling?",
+        "problem_text": "Why does an internal combustion engine need cooling?",
+        "given_data": "Part of the heat is not converted into work\nEngine parts heat up",
+        "find_text": "explanation - ?",
+        "solution": "Only part of the fuel energy is converted into useful work. The rest is released as heat, which must be removed so that the engine does not overheat.",
+        "answer": "Cooling removes unavoidable heat losses."
+      },
+      "thermodynamics-efficiency-task-1": {
+        "topic_title": "Efficiency",
+        "title": "An engine received 5000 J of heat and did 1500 J of work. Find the efficiency.",
+        "problem_text": "An engine received 5000 J of heat and did 1500 J of work. Find the efficiency.",
+        "given_data": "Q₁ = 5000 J\nA = 1500 J",
+        "find_text": "η - ?",
+        "solution": "η = A/Q₁ = 1500/5000 = 0.3 = 30%",
+        "answer": "η = 30%."
+      },
+      "thermodynamics-efficiency-task-2": {
+        "topic_title": "Efficiency",
+        "title": "An engine has efficiency 25% and useful work 2 kJ. How much heat did the engine receive?",
+        "problem_text": "An engine has efficiency 25% and useful work 2 kJ. How much heat did the engine receive?",
+        "given_data": "η = 25% = 0.25\nA = 2 kJ = 2000 J",
+        "find_text": "Q₁ - ?",
+        "solution": "Q₁ = A/η = 2000/0.25 = 8000 J",
+        "answer": "Q₁ = 8 kJ."
+      },
+      "thermodynamics-efficiency-task-3": {
+        "topic_title": "Efficiency",
+        "title": "The heater temperature is 600 K and the cooler temperature is 300 K. Find the maximum efficiency.",
+        "problem_text": "The heater temperature is 600 K and the cooler temperature is 300 K. Find the maximum efficiency.",
+        "given_data": "T₁ = 600 K\nT₂ = 300 K",
+        "find_text": "ηmax - ?",
+        "solution": "ηmax = (T₁ - T₂)/T₁\nηmax = (600 - 300)/600 = 0.5 = 50%",
+        "answer": "ηmax = 50%."
+      },
+      "thermodynamics-efficiency-task-4": {
+        "topic_title": "Efficiency",
+        "title": "The maximum efficiency of a Carnot engine is 40%, and the heater temperature is 500 K. Find the cooler temperature.",
+        "problem_text": "The maximum efficiency of a Carnot engine is 40%, and the heater temperature is 500 K. Find the cooler temperature.",
+        "given_data": "η = 40% = 0.4\nT₁ = 500 K",
+        "find_text": "T₂ - ?",
+        "solution": "η = (T₁ - T₂)/T₁\nT₂ = T₁(1 - η) = 500 × 0.6 = 300 K",
+        "answer": "T₂ = 300 K."
+      },
+      "thermodynamics-efficiency-task-5": {
+        "topic_title": "Efficiency",
+        "title": "Why can increasing the heater temperature increase the maximum efficiency?",
+        "problem_text": "Why can increasing the heater temperature increase the maximum efficiency?",
+        "given_data": "ηmax = (T₁ - T₂)/T₁\nT₂ = const",
+        "find_text": "explanation - ?",
+        "solution": "If T₂ is constant, increasing T₁ increases the temperature difference and decreases the ratio T₂/T₁. Therefore the maximum efficiency increases.",
+        "answer": "At higher T₁, the engine can potentially be more efficient."
+      },
+      "thermodynamics-melting-task-1": {
+        "topic_title": "Melting",
+        "title": "How much heat is needed to melt 3 kg of ice at 0°C? λ = 330 kJ/kg.",
+        "problem_text": "How much heat is needed to melt 3 kg of ice at 0°C? λ = 330 kJ/kg.",
+        "given_data": "m = 3 kg\nλ = 330 kJ/kg = 330000 J/kg",
+        "find_text": "Q - ?",
+        "solution": "Q = λm = 330000 × 3 = 990000 J",
+        "answer": "Q = 990 kJ."
+      },
+      "thermodynamics-melting-task-2": {
+        "topic_title": "Melting",
+        "title": "Melting a metal required 540 kJ of heat. The metal mass is 2 kg. Find the specific heat of fusion.",
+        "problem_text": "Melting a metal required 540 kJ of heat. The metal mass is 2 kg. Find the specific heat of fusion.",
+        "given_data": "Q = 540 kJ = 540000 J\nm = 2 kg",
+        "find_text": "λ - ?",
+        "solution": "λ = Q/m = 540000/2 = 270000 J/kg",
+        "answer": "λ = 270 kJ/kg."
+      },
+      "thermodynamics-melting-task-3": {
+        "topic_title": "Melting",
+        "title": "What mass of ice at 0°C can be melted by transferring 165 kJ of heat? λ = 330 kJ/kg.",
+        "problem_text": "What mass of ice at 0°C can be melted by transferring 165 kJ of heat? λ = 330 kJ/kg.",
+        "given_data": "Q = 165 kJ\nλ = 330 kJ/kg",
+        "find_text": "m - ?",
+        "solution": "m = Q/λ = 165/330 = 0.5 kg",
+        "answer": "m = 0.5 kg."
+      },
+      "thermodynamics-melting-task-4": {
+        "topic_title": "Melting",
+        "title": "Why does the temperature of ice remain 0°C during melting even though heat is supplied?",
+        "problem_text": "Why does the temperature of ice remain 0°C during melting even though heat is supplied?",
+        "given_data": "Ice melts at 0°C\nHeat is supplied",
+        "find_text": "explanation - ?",
+        "solution": "The supplied heat is not used to increase the average kinetic energy of molecules. It is used to break down the crystal lattice and change the state of matter.",
+        "answer": "The energy is spent on the phase transition."
+      },
+      "thermodynamics-melting-task-5": {
+        "topic_title": "Melting",
+        "title": "Compare melting 1 kg and 4 kg of the same substance at its melting temperature. How many times more heat is needed in the second case?",
+        "problem_text": "Compare melting 1 kg and 4 kg of the same substance at its melting temperature. How many times more heat is needed in the second case?",
+        "given_data": "m₂ = 4m₁\nQ = λm",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q is proportional to mass:\nQ₂/Q₁ = m₂/m₁ = 4",
+        "answer": "The second case requires 4 times more heat."
+      },
+      "thermodynamics-evaporation-task-1": {
+        "topic_title": "Evaporation",
+        "title": "How much heat is needed to evaporate 0.3 kg of water at the boiling temperature? L = 2.3 MJ/kg.",
+        "problem_text": "How much heat is needed to evaporate 0.3 kg of water at the boiling temperature? L = 2.3 MJ/kg.",
+        "given_data": "m = 0.3 kg\nL = 2.3 MJ/kg = 2.3×10⁶ J/kg",
+        "find_text": "Q - ?",
+        "solution": "Q = Lm = 2.3×10⁶ × 0.3 = 690000 J",
+        "answer": "Q = 690 kJ."
+      },
+      "thermodynamics-evaporation-task-2": {
+        "topic_title": "Evaporation",
+        "title": "Evaporating alcohol required 180 kJ of heat. L = 900 kJ/kg. Find the mass of alcohol.",
+        "problem_text": "Evaporating alcohol required 180 kJ of heat. L = 900 kJ/kg. Find the mass of alcohol.",
+        "given_data": "Q = 180 kJ\nL = 900 kJ/kg",
+        "find_text": "m - ?",
+        "solution": "m = Q/L = 180/900 = 0.2 kg",
+        "answer": "m = 0.2 kg."
+      },
+      "thermodynamics-evaporation-task-3": {
+        "topic_title": "Evaporation",
+        "title": "Why does wet skin feel cool in the wind?",
+        "problem_text": "Why does wet skin feel cool in the wind?",
+        "given_data": "Water evaporates from the skin surface\nWind speeds up evaporation",
+        "find_text": "explanation - ?",
+        "solution": "Evaporation requires energy. Water takes heat from the skin, and wind carries away moist air, speeding up evaporation.",
+        "answer": "The skin cools because heat is spent on evaporation."
+      },
+      "thermodynamics-evaporation-task-4": {
+        "topic_title": "Evaporation",
+        "title": "Compare the amount of heat needed to evaporate 1 kg and 0.25 kg of the same liquid at the boiling temperature.",
+        "problem_text": "Compare the amount of heat needed to evaporate 1 kg and 0.25 kg of the same liquid at the boiling temperature.",
+        "given_data": "m₁ = 1 kg\nm₂ = 0.25 kg\nQ = Lm",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q₂/Q₁ = m₂/m₁ = 0.25/1 = 0.25",
+        "answer": "For 0.25 kg, 4 times less heat is needed."
+      },
+      "thermodynamics-evaporation-task-5": {
+        "topic_title": "Evaporation",
+        "title": "Why does laundry dry faster at high temperature and in the wind?",
+        "problem_text": "Why does laundry dry faster at high temperature and in the wind?",
+        "given_data": "Temperature is higher\nAir is moving",
+        "find_text": "explanation - ?",
+        "solution": "High temperature increases the number of molecules that can leave the liquid. Wind carries moist air away from the surface, so evaporation proceeds faster.",
+        "answer": "Temperature and wind speed up evaporation."
+      },
+      "thermodynamics-boiling-task-1": {
+        "topic_title": "Boiling",
+        "title": "Why does water boil below 100°C in the mountains?",
+        "problem_text": "Why does water boil below 100°C in the mountains?",
+        "given_data": "Atmospheric pressure in the mountains is lower than normal",
+        "find_text": "explanation - ?",
+        "solution": "Boiling begins when saturated vapor pressure becomes equal to external pressure. At lower external pressure, this condition is reached at a lower temperature.",
+        "answer": "The boiling temperature decreases because atmospheric pressure is lower."
+      },
+      "thermodynamics-boiling-task-2": {
+        "topic_title": "Boiling",
+        "title": "How much heat is needed to turn 0.5 kg of water at 100°C into vapor? L = 2.3 MJ/kg.",
+        "problem_text": "How much heat is needed to turn 0.5 kg of water at 100°C into vapor? L = 2.3 MJ/kg.",
+        "given_data": "m = 0.5 kg\nL = 2.3×10⁶ J/kg",
+        "find_text": "Q - ?",
+        "solution": "Q = Lm = 2.3×10⁶ × 0.5 = 1.15×10⁶ J",
+        "answer": "Q = 1.15 MJ."
+      },
+      "thermodynamics-boiling-task-3": {
+        "topic_title": "Boiling",
+        "title": "Why does the temperature of boiling water not rise above 100°C at normal pressure?",
+        "problem_text": "Why does the temperature of boiling water not rise above 100°C at normal pressure?",
+        "given_data": "Water boils at 100°C\nHeat continues to be supplied",
+        "find_text": "explanation - ?",
+        "solution": "The supplied energy is spent on the phase transition: breaking intermolecular bonds and forming vapor, not on increasing the liquid temperature.",
+        "answer": "The heat is used for vaporization."
+      },
+      "thermodynamics-boiling-task-4": {
+        "topic_title": "Boiling",
+        "title": "The pressure in a pressure cooker is higher than atmospheric pressure. How does this affect the boiling temperature of water?",
+        "problem_text": "The pressure in a pressure cooker is higher than atmospheric pressure. How does this affect the boiling temperature of water?",
+        "given_data": "Pressure inside the pressure cooker is increased",
+        "find_text": "change in boiling temperature - ?",
+        "solution": "At higher external pressure, vapor bubbles are harder to form. Saturated vapor pressure must become higher, and that is reached at a higher temperature.",
+        "answer": "The boiling temperature increases."
+      },
+      "thermodynamics-boiling-task-5": {
+        "topic_title": "Boiling",
+        "title": "Evaporating 2 kg of water during boiling required 4.6 MJ of heat. Find the specific heat of vaporization.",
+        "problem_text": "Evaporating 2 kg of water during boiling required 4.6 MJ of heat. Find the specific heat of vaporization.",
+        "given_data": "Q = 4.6 MJ = 4.6×10⁶ J\nm = 2 kg",
+        "find_text": "L - ?",
+        "solution": "L = Q/m = 4.6×10⁶ / 2 = 2.3×10⁶ J/kg",
+        "answer": "L = 2.3 MJ/kg."
+      },
+      "thermodynamics-phase-diagrams-task-1": {
+        "topic_title": "Phase Diagrams",
+        "title": "On a phase diagram, a substance is in the gas region. What happens if pressure increases at constant temperature and the point crosses the condensation line?",
+        "problem_text": "On a phase diagram, a substance is in the gas region. What happens if pressure increases at constant temperature and the point crosses the condensation line?",
+        "given_data": "T = const\np increases\nThe point crosses the gas-liquid boundary",
+        "find_text": "phase transition - ?",
+        "solution": "When crossing the gas-liquid boundary from the gas side, the substance changes into the liquid state. This process is called condensation.",
+        "answer": "Condensation occurs."
+      },
+      "thermodynamics-phase-diagrams-task-2": {
+        "topic_title": "Phase Diagrams",
+        "title": "Why is the triple point important for describing a substance?",
+        "problem_text": "Why is the triple point important for describing a substance?",
+        "given_data": "Three phases coexist at the triple point",
+        "find_text": "meaning of the triple point - ?",
+        "solution": "The triple point gives the unique values of pressure and temperature at which solid, liquid, and gas phases are in equilibrium.",
+        "answer": "It shows the equilibrium conditions of three phases."
+      },
+      "thermodynamics-phase-diagrams-task-3": {
+        "topic_title": "Phase Diagrams",
+        "title": "A substance is heated at constant pressure. On a p-T diagram, the path crosses the melting line and then the boiling line. Which phase transitions occur?",
+        "problem_text": "A substance is heated at constant pressure. On a p-T diagram, the path crosses the melting line and then the boiling line. Which phase transitions occur?",
+        "given_data": "p = const\nT increases\nThe melting and boiling lines are crossed",
+        "find_text": "transition sequence - ?",
+        "solution": "When the melting line is crossed, the solid becomes a liquid. With further heating and crossing the boiling line, the liquid becomes a gas.",
+        "answer": "Melting, then boiling."
+      },
+      "thermodynamics-phase-diagrams-task-4": {
+        "topic_title": "Phase Diagrams",
+        "title": "What does the critical point mean on a phase diagram?",
+        "problem_text": "What does the critical point mean on a phase diagram?",
+        "given_data": "The diagram has an endpoint of the liquid-gas line",
+        "find_text": "meaning of the critical point - ?",
+        "solution": "At the critical point, the sharp boundary between liquid and gas disappears. Above the critical temperature, the substance cannot be turned into an ordinary liquid by compression.",
+        "answer": "It is the endpoint of the liquid-gas boundary."
+      },
+      "thermodynamics-phase-diagrams-task-5": {
+        "topic_title": "Phase Diagrams",
+        "title": "Why are phase diagrams different for different substances?",
+        "problem_text": "Why are phase diagrams different for different substances?",
+        "given_data": "Molecules of different substances have different masses and interactions",
+        "find_text": "reason for the differences - ?",
+        "solution": "Phase transitions depend on interaction forces between particles and on their thermal motion. These parameters differ for different substances, so phase transition temperatures and pressures also differ.",
+        "answer": "Because molecular interactions and structure differ between substances."
+      }
+    }
+  },
+  "kk": {
+    "tests": {
+      "thermodynamics-matter-structure-test": {
+        "title": "Тест: Заттың құрылысы",
+        "questions": [
+          {
+            "question": "Молекулалық-кинетикалық теорияға қай тұжырым сәйкес келеді?",
+            "options": [
+              "Молекулалар арасында ешқашан күш әсер етпейді.",
+              "Молекулалар тек газдарда ғана болады.",
+              "Зат ретсіз қозғалатын және өзара әрекеттесетін бөлшектерден тұрады.",
+              "Зат бөлшектері қозғалмайды."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Авогадро тұрақтысы нені көрсетеді?",
+            "options": [
+              "Бір молекуланың массасын.",
+              "Заттың бір моліндегі бөлшектер санын.",
+              "Заттың қайнау температурасын.",
+              "Бір моль газдың қысымын."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Зат мөлшері белгілі болса, молекулалар санын қалай табамыз?",
+            "options": [
+              "N = p/T",
+              "N = mV",
+              "N = Q/t",
+              "N = νNₐ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Иіссудың иісі бөлмеге неге біртіндеп таралады?",
+            "options": [
+              "Молекулалардың жоғалуынан.",
+              "Молекулалардың диффузиясы салдарынан.",
+              "Ауаның сұйыққа айналуынан.",
+              "Тек ауырлық күшінің әсерінен."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Заттың қай күйінде молекулалар ең реттелген орналасады?",
+            "options": [
+              "Кристалдық қатты денеде.",
+              "Сиретілген буда.",
+              "Газда.",
+              "Сұйықта."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-temperature-test": {
+        "title": "Тест: Температура",
+        "questions": [
+          {
+            "question": "МКТ тұрғысынан температура нені сипаттайды?",
+            "options": [
+              "Тек газ қысымын.",
+              "Ыдыстың көлемін.",
+              "Молекулалардың ретсіз қозғалысының орташа кинетикалық энергиясын.",
+              "Барлық молекулалардың массасын."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Цельсий градусындағы температураны кельвинге қалай аударамыз?",
+            "options": [
+              "T = t - 273",
+              "T = 273/t",
+              "T = t + 273",
+              "T = 273 - t"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "27°C температурасына қай мән сәйкес келеді?",
+            "options": [
+              "246 K",
+              "273 K",
+              "327 K",
+              "300 K"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Газдың абсолют температурасы 2 есе артса, молекулалардың орташа кинетикалық энергиясы:",
+            "options": [
+              "4 есе артады.",
+              "2 есе кемиді.",
+              "өзгермейді.",
+              "2 есе артады."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Температураның абсолют нөлі:",
+            "options": [
+              "0 K.",
+              "273 K.",
+              "0°C.",
+              "100°C."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-gas-pressure-test": {
+        "title": "Тест: Газ қысымы",
+        "questions": [
+          {
+            "question": "Газдың ыдыс қабырғасына түсіретін қысымы немен түсіндіріледі?",
+            "options": [
+              "Тек ыдыстың массасымен.",
+              "Газ молекулаларының ыдыс қабырғасына соқтығысуымен.",
+              "Жердің ыдысты тартуымен.",
+              "Ыдыста сұйықтың болуымен."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Температура өзгермей, молекулалар концентрациясы 2 есе артса, газ қысымы қалай өзгереді?",
+            "options": [
+              "4 есе артады.",
+              "2 есе кемиді.",
+              "өзгермейді.",
+              "2 есе артады."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Идеал газ қысымын концентрация және температурамен байланыстыратын формула қайсы?",
+            "options": [
+              "F = kx",
+              "p = nkT",
+              "Q = cmΔT",
+              "A = pΔV"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Көлемі тұрақты жабық ыдыста газды қыздырса, қысым:",
+            "options": [
+              "температураға тәуелді емес.",
+              "кемиді.",
+              "нөлге тең болады.",
+              "артады."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Қысымның SI жүйесіндегі өлшем бірлігі:",
+            "options": [
+              "Па",
+              "Вт",
+              "Н",
+              "Дж"
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-thermal-conductivity-test": {
+        "title": "Тест: Жылу өткізгіштік",
+        "questions": [
+          {
+            "question": "Жылу өткізгіштік кезінде не болады?",
+            "options": [
+              "Дененің температурасы еш жағдайда өзгермейді.",
+              "Жылу зат ағынымен бірге тасымалданады.",
+              "Энергия тек электромагниттік толқындармен беріледі.",
+              "Энергия қызуы жоғары бөлшектерден қызуы төмен бөлшектерге зат тасымалданбай беріледі."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жазық қабырға арқылы өтетін жылу мөлшері тікелей неге тәуелді?",
+            "options": [
+              "Тек қабырға түсіне.",
+              "Тек атмосфералық қысымға.",
+              "Қабырға ауданына, температура айырмасына, уақытқа және жылу өткізгіштік коэффициентіне.",
+              "Қабырға қалыңдығына."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Басқа шарттар бірдей болса, қабырға қалыңдығын 2 есе арттырғанда жылу шығыны қалай өзгереді?",
+            "options": [
+              "2 есе кемиді.",
+              "2 есе артады.",
+              "өзгермейді.",
+              "4 есе артады."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Ыстық шайдағы металл қасық ағаш қасыққа қарағанда неге тез қызады?",
+            "options": [
+              "Металда жылу тек сәуле шығарумен беріледі.",
+              "Металдағы барлық молекулалардың массасы аз.",
+              "Ағаш жылуды мүлде қабылдамайды.",
+              "Металдың жылу өткізгіштік коэффициенті жоғары."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жазық материал қабаты арқылы жылу берілуді қай формула сипаттайды?",
+            "options": [
+              "Q = cmΔT",
+              "pV = νRT",
+              "η = A/Q₁",
+              "Q = λSΔTτ/d"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-convection-test": {
+        "title": "Тест: Конвекция",
+        "questions": [
+          {
+            "question": "Конвекция қандай орталарда мүмкін?",
+            "options": [
+              "Сұйықтар мен газдарда.",
+              "Тек қатты денелерде.",
+              "Тек металдарда.",
+              "Тек вакуумда."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Қызған ауа неге жоғары көтеріледі?",
+            "options": [
+              "Оның температурасы әрқашан бөлме температурасынан төмен болады.",
+              "Оның тығыздығы суық ауаның тығыздығынан азаяды.",
+              "Ол Жермен әрекеттесуін тоқтатады.",
+              "Оның массасы нөлге тең болады."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Қай мысал табиғи конвекцияға жатады?",
+            "options": [
+              "Шайдағы металл қасықтың қызуы.",
+              "Күн жылуының ғарыш арқылы берілуі.",
+              "Жылы ауаның жылыту батареясынан жоғары көтерілуі.",
+              "Жарықтың айнадан шағылуы."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Жылыту батареяларын әдетте терезенің төменгі жағына неге қояды?",
+            "options": [
+              "Батарея температурасын азайту үшін.",
+              "Ауа қозғалысын тоқтату үшін.",
+              "Жылу тек сәуле шығарумен берілуі үшін.",
+              "Жылы ауа көтеріліп, бөлмеде айналым жасау үшін."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Конвекция жылу өткізгіштіктен несімен ерекшеленеді?",
+            "options": [
+              "Конвекция тек қатты денелерде мүмкін.",
+              "Конвекцияда жылу зат ағындарымен тасымалданады.",
+              "Айырмашылық жоқ.",
+              "Конвекцияда зат әрқашан қозғалмайды."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-radiation-test": {
+        "title": "Тест: Сәуле шығару",
+        "questions": [
+          {
+            "question": "Жылу берілудің қай түрі вакуумда мүмкін?",
+            "options": [
+              "Конвекция.",
+              "Сәуле шығару.",
+              "Диффузия.",
+              "Жылу өткізгіштік."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жылулық сәуле шығару қуаты абсолют температураға қалай тәуелді?",
+            "options": [
+              "P ∼ T⁴",
+              "P ∼ T",
+              "P ∼ T²",
+              "P температураға тәуелді емес."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Қандай беттер жылулық сәулені жақсы жұтады?",
+            "options": [
+              "Ашық түсті айна тәрізді беттер.",
+              "Қара күңгірт беттер.",
+              "Тек мөлдір беттер.",
+              "Тек суық беттер."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жер Күн энергиясын ғарыш вакуумы арқылы қалай алады?",
+            "options": [
+              "Дыбыс толқындары арқылы.",
+              "Электромагниттік сәуле шығару арқылы.",
+              "Вакуумның жылу өткізгіштігі арқылы.",
+              "Вакуумдағы конвекция арқылы."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Дененің абсолют температурасы 2 есе артса, сәуле шығару қуаты:",
+            "options": [
+              "2 есе артады.",
+              "16 есе артады.",
+              "8 есе артады.",
+              "4 есе артады."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-heat-quantity-test": {
+        "title": "Тест: Жылу мөлшері",
+        "questions": [
+          {
+            "question": "Жылу мөлшері дегеніміз:",
+            "options": [
+              "дене массасы.",
+              "жылу алмасу кезінде денеге берілген немесе денеден алынған энергия.",
+              "молекулалардың өзара әрекеттесу күші.",
+              "газ қысымы."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Денені қыздырғандағы жылу мөлшерінің формуласы:",
+            "options": [
+              "pV = νRT",
+              "Q = cmΔT",
+              "Q = Lm",
+              "Q = λm"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Фазалық ауысусыз қыздыруда Q неге тәуелді?",
+            "options": [
+              "Тек атмосфералық қысымға.",
+              "Массаға, меншікті жылу сыйымдылыққа және температура өзгерісіне.",
+              "Тек дене пішініне.",
+              "Тек дене түсіне."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жылу мөлшерінің SI жүйесіндегі бірлігі:",
+            "options": [
+              "Вт.",
+              "Н.",
+              "Па.",
+              "Дж."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "ΔT бірдей болғанда су массасын 2 есе арттырса, жылу мөлшері:",
+            "options": [
+              "2 есе артады.",
+              "өзгермейді.",
+              "4 есе артады.",
+              "2 есе кемиді."
+            ],
+            "correct": 0
+          }
+        ]
+      },
+      "thermodynamics-state-equation-test": {
+        "title": "Тест: Күй теңдеуі",
+        "questions": [
+          {
+            "question": "Қай теңдеу Менделеев-Клапейрон теңдеуі болып табылады?",
+            "options": [
+              "A = pΔV",
+              "F = ma",
+              "Q = cmΔT",
+              "pV = νRT"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "pV = νRT теңдеуіндегі R нені білдіреді?",
+            "options": [
+              "Универсал газ тұрақтысын.",
+              "Газ кедергісін.",
+              "Газ тығыздығын.",
+              "Ыдыс радиусын."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "p және ν тұрақты болғанда идеал газ температурасын 2 есе арттырса, көлем:",
+            "options": [
+              "2 есе артады.",
+              "өзгермейді.",
+              "4 есе артады.",
+              "2 есе кемиді."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Күй теңдеуінде температураны:",
+            "options": [
+              "пайызбен қою керек.",
+              "тек °C-пен қою керек.",
+              "тек K-пен қою керек.",
+              "кез келген бірлікпен қоюға болады."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Идеал газ моделі қай жағдайда жақсы жұмыс істейді?",
+            "options": [
+              "Тек сұйықтар үшін.",
+              "Тығыздық өте жоғары болып, молекулалар қатты әрекеттескенде.",
+              "Тығыздық төмен болып, молекула өлшемі мен әрекеттесуін елемеуге болатын кезде.",
+              "Тек қатты денелер үшін."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-isoprocesses-test": {
+        "title": "Тест: Изопроцестер",
+        "questions": [
+          {
+            "question": "Изотермиялық процесте қай шама тұрақты?",
+            "options": [
+              "Жер массасы.",
+              "Температура.",
+              "Қысым.",
+              "Көлем."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Изобарлық процесс заңы:",
+            "options": [
+              "p/T = const",
+              "Q = cmΔT",
+              "V/T = const",
+              "pV = const"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Идеал газды изохоралық қыздырғанда қысым:",
+            "options": [
+              "кемиді.",
+              "нөлге тең болады.",
+              "артады.",
+              "температураға тәуелді емес."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "p(V) координаталарындағы изотермаға қай график сәйкес келеді?",
+            "options": [
+              "Координата басынан өтетін түзу.",
+              "Тік сызық.",
+              "Гипербола.",
+              "Кез келген жағдайда көлденең сызық."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Газды изобарлық түрде 300 K-нен 600 K-ге дейін қыздырса, оның көлемі:",
+            "options": [
+              "өзгермейді.",
+              "2 есе кемиді.",
+              "2 есе артады.",
+              "4 есе артады."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-gas-laws-test": {
+        "title": "Тест: Газ заңдары",
+        "questions": [
+          {
+            "question": "Бойль-Мариотт заңы сипаттайды:",
+            "options": [
+              "изохоралық процесті.",
+              "изотермиялық процесті.",
+              "дененің балқуын.",
+              "изобарлық процесті."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Біріктірілген газ заңы былай жазылады:",
+            "options": [
+              "F = ma",
+              "η = A/Q₁",
+              "Q = cmΔT",
+              "p₁V₁/T₁ = p₂V₂/T₂"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Газды изотермиялық сығу кезінде қысым:",
+            "options": [
+              "артады.",
+              "өзгермейді.",
+              "кемиді.",
+              "нөлге тең болады."
+            ],
+            "correct": 0
+          },
+          {
+            "question": "Шарль заңы қай процеске жатады?",
+            "options": [
+              "T = const.",
+              "V = const.",
+              "m = const тек қатты денелер үшін.",
+              "p = const."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Газ заңдарында температура қолданылады:",
+            "options": [
+              "пайызбен.",
+              "°C-пен.",
+              "литрмен.",
+              "K-пен."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-first-law-test": {
+        "title": "Тест: Термодинамиканың бірінші заңы",
+        "questions": [
+          {
+            "question": "Термодинамиканың бірінші заңы нені өрнектейді?",
+            "options": [
+              "Зарядтың сақталу заңын.",
+              "Жылулық процестер үшін энергияның сақталу заңын.",
+              "Бүкіләлемдік тартылыс заңын.",
+              "Жарықтың шағылу заңын."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Термодинамиканың бірінші заңының формуласы:",
+            "options": [
+              "Q = λm",
+              "pV = νRT",
+              "Q = ΔU + A",
+              "F = ma"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Газ 700 Дж жылу алып, 200 Дж жұмыс жасады. Ішкі энергия:",
+            "options": [
+              "өзгермеді.",
+              "900 Дж-ге артты.",
+              "500 Дж-ге кеміді.",
+              "500 Дж-ге артты."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Изобарлық ұлғаюдағы газ жұмысы:",
+            "options": [
+              "A = Q/T",
+              "A = λm",
+              "A = cmΔT",
+              "A = pΔV"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Изохоралық процесте газ жұмысы:",
+            "options": [
+              "әрқашан ең үлкен.",
+              "нөлге тең.",
+              "температураға тең.",
+              "қысымға тең."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-second-law-test": {
+        "title": "Тест: Термодинамиканың екінші заңы",
+        "questions": [
+          {
+            "question": "Термодинамиканың екінші заңы нені көрсетеді?",
+            "options": [
+              "Газ молекулаларының массасын.",
+              "Жылулық процестердің жүру бағытын.",
+              "Тізбектегі ток күшін.",
+              "Жарық жылдамдығын."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жылу өздігінен:",
+            "options": [
+              "суық денеден ыстық денеге өтеді.",
+              "тек нөлдік температурада өтеді.",
+              "ыстық денеден суық денеге өтеді.",
+              "тек вакуумда өтеді."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Екінші текті мәңгі қозғалтқыш мүмкін емес, себебі:",
+            "options": [
+              "газ қысымы әрқашан нөлге тең.",
+              "газды қыздыруға болмайды.",
+              "температураны өлшеуге болмайды.",
+              "бір ғана көзден алынған жылуды басқа өзгерістерсіз толық жұмысқа айналдыруға болмайды."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Оқшауланған жүйенің энтропиясы:",
+            "options": [
+              "жылулық процестермен байланысты емес.",
+              "әрқашан нөлге тең.",
+              "әрқашан кемиді.",
+              "кемімейді."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Тоңазытқыш неге электр энергиясын қажет етеді?",
+            "options": [
+              "Ішінде молекулалар жоқ болғандықтан.",
+              "Онда жылу алмасу жоқ.",
+              "Ол термодинамиканың бірінші заңын бұзады.",
+              "Ол жылуды суық денеден жылырақ денеге тасымалдайды, ал бұл өздігінен болмайды."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-heat-engines-test": {
+        "title": "Тест: Жылу машиналары",
+        "questions": [
+          {
+            "question": "Жылу машинасы не үшін арналған?",
+            "options": [
+              "Жылу алмасусыз қысымды өлшеу үшін.",
+              "Жылудың бір бөлігін механикалық жұмысқа айналдыру үшін.",
+              "Жылуды толық жою үшін.",
+              "Массаны зарядқа айналдыру үшін."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жылу машинасының негізгі бөліктері:",
+            "options": [
+              "линза, экран, жарық көзі.",
+              "ядро, электрон, протон.",
+              "катушка, магнит, резистор.",
+              "қыздырғыш, жұмыстық дене, тоңазытқыш."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жылу машинасының бір циклдегі жұмысы:",
+            "options": [
+              "A = Q₂ - Q₁",
+              "A әрқашан 0.",
+              "A = Q₁ - Q₂",
+              "A = Q₁ + Q₂"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Жылу машинасының ПӘК-і:",
+            "options": [
+              "η = Q₁/A",
+              "η = A/Q₁",
+              "η = Q₂/Q₁ + 1",
+              "η = pV"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Машина 800 Дж алып, 500 Дж берсе, жұмыс:",
+            "options": [
+              "800 Дж.",
+              "500 Дж.",
+              "300 Дж.",
+              "1300 Дж."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-efficiency-test": {
+        "title": "Тест: ПӘК",
+        "questions": [
+          {
+            "question": "ПӘК нені көрсетеді?",
+            "options": [
+              "ыдыстағы газ қысымын.",
+              "машина алған энергияның қандай бөлігін пайдалы жұмысқа айналдыратынын.",
+              "жұмыстық дененің массасын.",
+              "тоңазытқыштың абсолют температурасын."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жылу машинасының ПӘК формуласы:",
+            "options": [
+              "η = Q₁/A",
+              "η = A/Q₁",
+              "η = pV/T",
+              "η = cmΔT"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "0,4 ПӘК сәйкес келеді:",
+            "options": [
+              "0,4%.",
+              "4%.",
+              "40%.",
+              "400%."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Карно циклінің максимал ПӘК-і неге тәуелді?",
+            "options": [
+              "поршень пішініне.",
+              "қыздырғыш пен тоңазытқыш температураларына.",
+              "қозғалтқыш массасына.",
+              "корпус түсіне."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "ПӘК неге 100%-дан артық бола алмайды?",
+            "options": [
+              "Қысым әрқашан нөлге тең болғандықтан.",
+              "Температура әрқашан тұрақты болғандықтан.",
+              "Газды қыздыруға болмайтындықтан.",
+              "Пайдалы жұмыс алынған барлық энергиядан артық бола алмайды."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-melting-test": {
+        "title": "Тест: Балқу",
+        "questions": [
+          {
+            "question": "Балқу дегеніміз заттың:",
+            "options": [
+              "газдан сұйыққа өтуі.",
+              "қатты күйден сұйық күйге өтуі.",
+              "сұйықтан қатты күйге өтуі.",
+              "сұйықтан газға өтуі."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Кристалдық дене балқығанда температура:",
+            "options": [
+              "нөлге тең болады.",
+              "балқу аяқталғанша тұрақты қалады.",
+              "әрқашан кемиді.",
+              "әрқашан тез өседі."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Балқу жылуының формуласы:",
+            "options": [
+              "Q = Lm",
+              "Q = λm",
+              "Q = cmΔT",
+              "pV = νRT"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Меншікті балқу жылуы нені көрсетеді?",
+            "options": [
+              "қайнау температурасын.",
+              "зат массасын.",
+              "балқу температурасында 1 кг затты балқытуға қажет жылуды.",
+              "қаныққан бу қысымын."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Балқуға кері процесс:",
+            "options": [
+              "булану.",
+              "конвекция.",
+              "диффузия.",
+              "кристалдану."
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "thermodynamics-evaporation-test": {
+        "title": "Тест: Булану",
+        "questions": [
+          {
+            "question": "Булану жүреді:",
+            "options": [
+              "тек қайнау температурасында.",
+              "тек сұйық ішінде.",
+              "сұйық бетінен кез келген температурада.",
+              "тек қатты денелерде."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Булануды не жылдамдатады?",
+            "options": [
+              "Температураны абсолют нөлге дейін түсіру.",
+              "Бет ауданы мен температураның артуы.",
+              "Бет ауданының кемуі.",
+              "Молекулалардың толық болмауы."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Булану жылуының формуласы:",
+            "options": [
+              "Q = cmΔT",
+              "Q = λm",
+              "F = ma",
+              "Q = Lm"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Булану кезінде сұйық неге салқындайды?",
+            "options": [
+              "Сұйық массасы әрқашан артады.",
+              "Температура молекула энергиясымен байланысты емес.",
+              "Булану энергияны қажет етпейді.",
+              "Энергиясы жоғары молекулалар тезірек ұшып кетеді."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Меншікті булану жылуының өлшем бірлігі:",
+            "options": [
+              "м/с.",
+              "Дж/кг.",
+              "Па.",
+              "Н."
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "thermodynamics-boiling-test": {
+        "title": "Тест: Қайнау",
+        "questions": [
+          {
+            "question": "Қайнаудың буланудан айырмашылығы:",
+            "options": [
+              "тек қатты денеде мүмкін.",
+              "қайнау температурасында сұйықтың бүкіл көлемінде жүреді.",
+              "жылуды қажет етпейді.",
+              "кез келген температурада тек беттен жүреді."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Қалыпты атмосфералық қысымда судың қайнау температурасы:",
+            "options": [
+              "273°C.",
+              "0°C.",
+              "50°C.",
+              "100°C."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Сыртқы қысым азайғанда қайнау температурасы:",
+            "options": [
+              "ешқашан өзгермейді.",
+              "төмендейді.",
+              "абсолют нөлге тең болады.",
+              "жоғарылайды."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Қайнау кезінде көпіршіктердің ішінде неге бу болады?",
+            "options": [
+              "Көпіршіктер ішінде зат жоқ.",
+              "Көпіршік ішіндегі қаныққан бу қысымы сыртқы қысымға теңеседі.",
+              "Су металға айналады.",
+              "Көпіршіктер тек бөлме ауасынан тұрады."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Сұйық тұрақты қысымда қайнап жатқанда оның температурасы:",
+            "options": [
+              "нөлге дейін кемиді.",
+              "шексіз өседі.",
+              "тұрақты қалады.",
+              "өлшенбейді."
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "thermodynamics-phase-diagrams-test": {
+        "title": "Тест: Күй диаграммалары",
+        "questions": [
+          {
+            "question": "Күй диаграммасы нені көрсетеді?",
+            "options": [
+              "тек электр зарядын.",
+              "тек молекулалар жылдамдығын.",
+              "тек зат массасын.",
+              "әртүрлі p және T кезіндегі зат фазаларының тұрақты аймақтарын."
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Қатты, сұйық және газ фазалары қатар болатын нүкте қалай аталады?",
+            "options": [
+              "критикалық жылдамдық.",
+              "абсолют нөл.",
+              "үштік нүкте.",
+              "барлық заттардың балқу нүктесі."
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Критикалық нүкте немен байланысты?",
+            "options": [
+              "кез келген температурада барлық молекулалардың тоқтауымен.",
+              "сұйық пен газ арасындағы айырмашылықтың жойылуымен.",
+              "заттың толық жоғалуымен.",
+              "заттың тек қатты күйге айналуымен."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "p-T диаграммасында қайнау сызығы нені бөледі?",
+            "options": [
+              "газдың екі бірдей аймағын.",
+              "сұйық пен газды.",
+              "қатты дене мен сұйықты.",
+              "қатты дене мен плазманы."
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Балқу сызығын кесіп өткенде зат:",
+            "options": [
+              "жоғалады.",
+              "қатты және сұйық күйлер арасында фазасын өзгертеді.",
+              "күйін өзгертпейді.",
+              "міндетті түрде газға айналады."
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "thermodynamics-matter-structure-task-1": {
+        "topic_title": "Заттың құрылысы",
+        "title": "0,5 моль оттекте қанша молекула бар?",
+        "problem_text": "0,5 моль оттекте қанша молекула бар?",
+        "given_data": "ν = 0,5 моль\nNₐ = 6,02×10²³ 1/моль",
+        "find_text": "N - ?",
+        "solution": "N = νNₐ\nN = 0,5 × 6,02×10²³ = 3,01×10²³",
+        "answer": "N = 3,01×10²³ молекула."
+      },
+      "thermodynamics-matter-structure-task-2": {
+        "topic_title": "Заттың құрылысы",
+        "title": "Ыдыста 3 моль газ бар. Ыдыста қанша газ молекуласы бар?",
+        "problem_text": "Ыдыста 3 моль газ бар. Ыдыста қанша газ молекуласы бар?",
+        "given_data": "ν = 3 моль\nNₐ = 6,02×10²³ 1/моль",
+        "find_text": "N - ?",
+        "solution": "N = νNₐ\nN = 3 × 6,02×10²³ = 1,806×10²⁴",
+        "answer": "N ≈ 1,81×10²⁴ молекула."
+      },
+      "thermodynamics-matter-structure-task-3": {
+        "topic_title": "Заттың құрылысы",
+        "title": "Үлгіде 1,204×10²⁴ молекула бар. Зат мөлшерін табыңыз.",
+        "problem_text": "Үлгіде 1,204×10²⁴ молекула бар. Зат мөлшерін табыңыз.",
+        "given_data": "N = 1,204×10²⁴\nNₐ = 6,02×10²³ 1/моль",
+        "find_text": "ν - ?",
+        "solution": "ν = N/Nₐ\nν = 1,204×10²⁴ / 6,02×10²³ = 2 моль",
+        "answer": "ν = 2 моль."
+      },
+      "thermodynamics-matter-structure-task-4": {
+        "topic_title": "Заттың құрылысы",
+        "title": "18 г суда 1 моль молекула бар. 54 г суда қанша су молекуласы бар?",
+        "problem_text": "18 г суда 1 моль молекула бар. 54 г суда қанша су молекуласы бар?",
+        "given_data": "m = 54 г\nM(H₂O) = 18 г/моль\nNₐ = 6,02×10²³ 1/моль",
+        "find_text": "N - ?",
+        "solution": "ν = m/M = 54/18 = 3 моль\nN = νNₐ = 3 × 6,02×10²³ = 1,806×10²⁴",
+        "answer": "N ≈ 1,81×10²⁴ молекула."
+      },
+      "thermodynamics-matter-structure-task-5": {
+        "topic_title": "Заттың құрылысы",
+        "title": "Газдар неге оңай сығылады, ал сұйықтар дерлік сығылмайды?",
+        "problem_text": "Газдар неге оңай сығылады, ал сұйықтар дерлік сығылмайды?",
+        "given_data": "Газда молекулалар арақашықтығы үлкен\nСұйықта молекулалар бір-біріне жақын орналасқан",
+        "find_text": "түсіндіру - ?",
+        "solution": "Газда молекулалар арасында бос кеңістік көп, сондықтан сығылғанда бөлшектер арасы айқын азаяды. Сұйықта молекулалар онсыз да жақын, сондықтан көлемді едәуір азайту қиын.",
+        "answer": "Газдар молекулалар арасындағы үлкен аралықтан оңай сығылады; сұйықтар дерлік сығылмайды."
+      },
+      "thermodynamics-temperature-task-1": {
+        "topic_title": "Температура",
+        "title": "37°C температурасын кельвинге айналдырыңыз.",
+        "problem_text": "37°C температурасын кельвинге айналдырыңыз.",
+        "given_data": "t = 37°C",
+        "find_text": "T - ?",
+        "solution": "T = t + 273\nT = 37 + 273 = 310 K",
+        "answer": "T = 310 K."
+      },
+      "thermodynamics-temperature-task-2": {
+        "topic_title": "Температура",
+        "title": "Газ температурасы 450 K. Оны Цельсий градусымен өрнектеңіз.",
+        "problem_text": "Газ температурасы 450 K. Оны Цельсий градусымен өрнектеңіз.",
+        "given_data": "T = 450 K",
+        "find_text": "t - ?",
+        "solution": "t = T - 273\nt = 450 - 273 = 177°C",
+        "answer": "t = 177°C."
+      },
+      "thermodynamics-temperature-task-3": {
+        "topic_title": "Температура",
+        "title": "300 K температурадағы газ молекуласының орташа кинетикалық энергиясын табыңыз. k = 1,38×10⁻²³ Дж/К.",
+        "problem_text": "300 K температурадағы газ молекуласының орташа кинетикалық энергиясын табыңыз. k = 1,38×10⁻²³ Дж/К.",
+        "given_data": "T = 300 K\nk = 1,38×10⁻²³ Дж/К",
+        "find_text": "E - ?",
+        "solution": "E = (3/2)kT\nE = 1,5 × 1,38×10⁻²³ × 300 = 6,21×10⁻²¹ Дж",
+        "answer": "E = 6,21×10⁻²¹ Дж."
+      },
+      "thermodynamics-temperature-task-4": {
+        "topic_title": "Температура",
+        "title": "Газды 200 K-нен 600 K-ге дейін қыздырғанда молекулалардың орташа кинетикалық энергиясы неше есе өзгереді?",
+        "problem_text": "Газды 200 K-нен 600 K-ге дейін қыздырғанда молекулалардың орташа кинетикалық энергиясы неше есе өзгереді?",
+        "given_data": "T₁ = 200 K\nT₂ = 600 K\nE ∼ T",
+        "find_text": "E₂/E₁ - ?",
+        "solution": "E₂/E₁ = T₂/T₁ = 600/200 = 3",
+        "answer": "Энергия 3 есе артады."
+      },
+      "thermodynamics-temperature-task-5": {
+        "topic_title": "Температура",
+        "title": "Газды 80°C-ден 20°C-ге дейін салқындатты. Температура қанша кельвинге өзгерді?",
+        "problem_text": "Газды 80°C-ден 20°C-ге дейін салқындатты. Температура қанша кельвинге өзгерді?",
+        "given_data": "t₁ = 80°C\nt₂ = 20°C",
+        "find_text": "ΔT - ?",
+        "solution": "Цельсий градусындағы температура айырмасы кельвиндегі айырмаға тең.\nΔT = 20 - 80 = -60 K\nӨзгеріс модулі 60 K.",
+        "answer": "Температура 60 K-ге төмендеді."
+      },
+      "thermodynamics-gas-pressure-task-1": {
+        "topic_title": "Газ қысымы",
+        "title": "Молекулалар концентрациясы 2×10²⁵ м⁻³ және температурасы 300 K газ қысымын табыңыз. k = 1,38×10⁻²³ Дж/К.",
+        "problem_text": "Молекулалар концентрациясы 2×10²⁵ м⁻³ және температурасы 300 K газ қысымын табыңыз. k = 1,38×10⁻²³ Дж/К.",
+        "given_data": "n = 2×10²⁵ м⁻³\nT = 300 K\nk = 1,38×10⁻²³ Дж/К",
+        "find_text": "p - ?",
+        "solution": "p = nkT\np = 2×10²⁵ × 1,38×10⁻²³ × 300 = 8,28×10⁴ Па",
+        "answer": "p = 82,8 кПа."
+      },
+      "thermodynamics-gas-pressure-task-2": {
+        "topic_title": "Газ қысымы",
+        "title": "Газ қысымы 100 кПа, температурасы 250 K. Молекулалар концентрациясын табыңыз. k = 1,38×10⁻²³ Дж/К.",
+        "problem_text": "Газ қысымы 100 кПа, температурасы 250 K. Молекулалар концентрациясын табыңыз. k = 1,38×10⁻²³ Дж/К.",
+        "given_data": "p = 100 кПа = 1×10⁵ Па\nT = 250 K\nk = 1,38×10⁻²³ Дж/К",
+        "find_text": "n - ?",
+        "solution": "n = p/(kT)\nn = 1×10⁵ / (1,38×10⁻²³ × 250) ≈ 2,9×10²⁵ м⁻³",
+        "answer": "n ≈ 2,9×10²⁵ м⁻³."
+      },
+      "thermodynamics-gas-pressure-task-3": {
+        "topic_title": "Газ қысымы",
+        "title": "Жабық баллондағы газ температурасы 300 K-нен 450 K-ге артты. Бастапқы қысым 120 кПа. Соңғы қысымды табыңыз.",
+        "problem_text": "Жабық баллондағы газ температурасы 300 K-нен 450 K-ге артты. Бастапқы қысым 120 кПа. Соңғы қысымды табыңыз.",
+        "given_data": "T₁ = 300 K\nT₂ = 450 K\np₁ = 120 кПа\nV = const",
+        "find_text": "p₂ - ?",
+        "solution": "Көлем тұрақты болса, p/T = const.\np₂ = p₁T₂/T₁ = 120 × 450/300 = 180 кПа",
+        "answer": "p₂ = 180 кПа."
+      },
+      "thermodynamics-gas-pressure-task-4": {
+        "topic_title": "Газ қысымы",
+        "title": "Молекулалардың орташа квадраттық жылдамдығы 3 есе артты. Концентрация өзгермесе, газ қысымы қалай өзгереді?",
+        "problem_text": "Молекулалардың орташа квадраттық жылдамдығы 3 есе артты. Концентрация өзгермесе, газ қысымы қалай өзгереді?",
+        "given_data": "v₂ = 3v₁\nn = const\np = (1/3)nm₀v²",
+        "find_text": "p₂/p₁ - ?",
+        "solution": "p ∼ v²\np₂/p₁ = (v₂/v₁)² = 3² = 9",
+        "answer": "Қысым 9 есе артады."
+      },
+      "thermodynamics-gas-pressure-task-5": {
+        "topic_title": "Газ қысымы",
+        "title": "Ұзақ жүргеннен кейін автокөлік шинасындағы қысым неге артады?",
+        "problem_text": "Ұзақ жүргеннен кейін автокөлік шинасындағы қысым неге артады?",
+        "given_data": "V ≈ const\nШинадағы ауаның температурасы артады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Қозғалыс кезінде шина қызады. Ауа көлемі шамамен тұрақты, сондықтан p/T = const заңы бойынша температура артса, қысым да артады.",
+        "answer": "Қысым ауа тұрақты көлемде қызғандықтан артады."
+      },
+      "thermodynamics-thermal-conductivity-task-1": {
+        "topic_title": "Жылу өткізгіштік",
+        "title": "Ауданы 12 м², қалыңдығы 0,6 м кірпіш қабырға арқылы 2 сағатта жылу өтеді. Бөлме мен сыртқы орта температураларының айырмасы 30 K, λ = 0,7 Вт/(м·К). Жылу мөлшерін табыңыз.",
+        "problem_text": "Ауданы 12 м², қалыңдығы 0,6 м кірпіш қабырға арқылы 2 сағатта жылу өтеді. Бөлме мен сыртқы орта температураларының айырмасы 30 K, λ = 0,7 Вт/(м·К). Жылу мөлшерін табыңыз.",
+        "given_data": "S = 12 м²\nd = 0,6 м\nτ = 2 сағ = 7200 с\nΔT = 30 K\nλ = 0,7 Вт/(м·К)",
+        "find_text": "Q - ?",
+        "solution": "Q = λSΔTτ/d\nQ = 0,7 × 12 × 30 × 7200 / 0,6 = 3 024 000 Дж",
+        "answer": "Q = 3,024 МДж."
+      },
+      "thermodynamics-thermal-conductivity-task-2": {
+        "topic_title": "Жылу өткізгіштік",
+        "title": "Ауданы 1,5 м² шыны арқылы 5 минутта 27 кДж жылу өтті. Қалыңдығы 3 мм, температура айырмасы 20 K. Шынының жылу өткізгіштік коэффициентін табыңыз.",
+        "problem_text": "Ауданы 1,5 м² шыны арқылы 5 минутта 27 кДж жылу өтті. Қалыңдығы 3 мм, температура айырмасы 20 K. Шынының жылу өткізгіштік коэффициентін табыңыз.",
+        "given_data": "Q = 27 кДж = 27000 Дж\nS = 1,5 м²\nτ = 5 мин = 300 с\nd = 3 мм = 0,003 м\nΔT = 20 K",
+        "find_text": "λ - ?",
+        "solution": "Q = λSΔTτ/d\nλ = Qd/(SΔTτ)\nλ = 27000 × 0,003 / (1,5 × 20 × 300) = 0,009 Вт/(м·К)",
+        "answer": "λ = 0,009 Вт/(м·К)."
+      },
+      "thermodynamics-thermal-conductivity-task-3": {
+        "topic_title": "Жылу өткізгіштік",
+        "title": "Екі қабырғаның ауданы, материалы және температура айырмасы бірдей. Біріншісінің қалыңдығы 20 см, екіншісінікі 40 см. Қай қабырға арқылы жылу шығыны көп және неше есе?",
+        "problem_text": "Екі қабырғаның ауданы, материалы және температура айырмасы бірдей. Біріншісінің қалыңдығы 20 см, екіншісінікі 40 см. Қай қабырға арқылы жылу шығыны көп және неше есе?",
+        "given_data": "d₁ = 20 см\nd₂ = 40 см\nQ ∼ 1/d",
+        "find_text": "Q₁/Q₂ - ?",
+        "solution": "λ, S, ΔT және τ бірдей болса, жылу мөлшері қалыңдыққа кері пропорционал:\nQ₁/Q₂ = d₂/d₁ = 40/20 = 2",
+        "answer": "Бірінші қабырға арқылы жылу шығыны 2 есе көп."
+      },
+      "thermodynamics-thermal-conductivity-task-4": {
+        "topic_title": "Жылу өткізгіштік",
+        "title": "Қыста металл орындық ағаш орындықтан неге суығырақ сезіледі, екеуінің температурасы бірдей болса да?",
+        "problem_text": "Қыста металл орындық ағаш орындықтан неге суығырақ сезіледі, екеуінің температурасы бірдей болса да?",
+        "given_data": "Металл мен ағаш температурасы бірдей\nМеталдың жылу өткізгіштігі ағаштан жоғары",
+        "find_text": "түсіндіру - ?",
+        "solution": "Металл жылуды қол немесе денеден тез әкетеді, себебі оның жылу өткізгіштігі жоғары. Ағаш жылуды нашар өткізеді, сондықтан тері баяуырақ салқындайды.",
+        "answer": "Сезім температурадан емес, жылудың әкетілу жылдамдығынан туындайды."
+      },
+      "thermodynamics-thermal-conductivity-task-5": {
+        "topic_title": "Жылу өткізгіштік",
+        "title": "Үйде бір қабатты шыныны тиімді оқшаулағыш қабаты 3 есе қалың шыныпакетке ауыстырды. Басқа шарттар бірдей болса, терезе арқылы жылу шығыны қалай өзгереді?",
+        "problem_text": "Үйде бір қабатты шыныны тиімді оқшаулағыш қабаты 3 есе қалың шыныпакетке ауыстырды. Басқа шарттар бірдей болса, терезе арқылы жылу шығыны қалай өзгереді?",
+        "given_data": "d₂ = 3d₁\nQ ∼ 1/d",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q₂/Q₁ = d₁/d₂ = d₁/(3d₁) = 1/3",
+        "answer": "Жылу шығыны шамамен 3 есе азаяды."
+      },
+      "thermodynamics-convection-task-1": {
+        "topic_title": "Конвекция",
+        "title": "Батарея жанындағы ауа қызды. Оның тығыздығы қоршаған ауадан аз болды. Бұл ауа қайда қозғалады және неге?",
+        "problem_text": "Батарея жанындағы ауа қызды. Оның тығыздығы қоршаған ауадан аз болды. Бұл ауа қайда қозғалады және неге?",
+        "given_data": "ρ жылы ауа < ρ суық ауа",
+        "find_text": "қозғалыс бағыты - ?",
+        "solution": "Тығыздығы аз жылы ауаны тығыздығы үлкен суық ауа жоғары ығыстырады. Кейін суық ауа төмен түсіп, батарея жанында қайта қызады.",
+        "answer": "Жылы ауа жоғары көтеріліп, конвекциялық ағын түзеді."
+      },
+      "thermodynamics-convection-task-2": {
+        "topic_title": "Конвекция",
+        "title": "Кастрөлдегі суды төменнен қыздыру неге тиімді?",
+        "problem_text": "Кастрөлдегі суды төменнен қыздыру неге тиімді?",
+        "given_data": "Судың төменгі қабаттары бірінші қызады\nҚызғанда судың тығыздығы азаяды",
+        "find_text": "түсіндіру - ?",
+        "solution": "Төменнен қызған су тығыздығы азайып, жоғары көтеріледі. Суықтау су төмен түседі. Конвекциялық ағындар суды араластырып, қызуды жылдамдатады.",
+        "answer": "Төменнен қыздыру табиғи конвекция тудырады."
+      },
+      "thermodynamics-convection-task-3": {
+        "topic_title": "Конвекция",
+        "title": "Бөлмеде төбе жанында 28°C, еден жанында 20°C. Жылы ауа неге жоғарыда?",
+        "problem_text": "Бөлмеде төбе жанында 28°C, еден жанында 20°C. Жылы ауа неге жоғарыда?",
+        "given_data": "t төбе жанында = 28°C\nt еден жанында = 20°C",
+        "find_text": "түсіндіру - ?",
+        "solution": "Жылы ауаның тығыздығы төмен, сондықтан ол жоғары көтеріледі. Ауа араласуы әлсіз болса, төбе жанында жылы қабат түзіледі.",
+        "answer": "Жылы ауа тығыздығы аз болғандықтан жоғары көтеріледі."
+      },
+      "thermodynamics-convection-task-4": {
+        "topic_title": "Конвекция",
+        "title": "Өрт кезінде түтін неге алдымен төбе астына жиналады?",
+        "problem_text": "Өрт кезінде түтін неге алдымен төбе астына жиналады?",
+        "given_data": "Түтін мен ыстық газдар қызған\nρ ыстық газдар < ρ суық ауа",
+        "find_text": "түсіндіру - ?",
+        "solution": "Ыстық газдар ұлғайып, тығыздығы азаяды. Тығыз суық ауа оларды жоғары ығыстырады, сондықтан түтін көтеріліп төбе астына жиналады.",
+        "answer": "Түтін ыстық газдардың конвекциясы салдарынан көтеріледі."
+      },
+      "thermodynamics-convection-task-5": {
+        "topic_title": "Конвекция",
+        "title": "Салмақсыздықта табиғи конвекция неге дерлік жоғалады?",
+        "problem_text": "Салмақсыздықта табиғи конвекция неге дерлік жоғалады?",
+        "given_data": "g ≈ 0\nКөтеруші күш ауырлық өрісіне тәуелді",
+        "find_text": "түсіндіру - ?",
+        "solution": "Табиғи конвекция тығыздық айырмасы ауырлық өрісінде әсер еткенде пайда болады: қызған жеңіл қабаттар көтеріледі, суық ауыр қабаттар төмен түседі. Салмақсыздықта тұрақты «жоғары» және «төмен» жоқ.",
+        "answer": "Ауырлық күші жоқта табиғи конвекция іс жүзінде жұмыс істемейді."
+      },
+      "thermodynamics-radiation-task-1": {
+        "topic_title": "Сәуле шығару",
+        "title": "600 K температурадағы дененің сәуле шығару қуаты 300 K-дегі қуаттан неше есе көп?",
+        "problem_text": "600 K температурадағы дененің сәуле шығару қуаты 300 K-дегі қуаттан неше есе көп?",
+        "given_data": "T₁ = 300 K\nT₂ = 600 K\nP ∼ T⁴",
+        "find_text": "P₂/P₁ - ?",
+        "solution": "P₂/P₁ = (T₂/T₁)⁴ = (600/300)⁴ = 2⁴ = 16",
+        "answer": "Сәуле шығару қуаты 16 есе көп."
+      },
+      "thermodynamics-radiation-task-2": {
+        "topic_title": "Сәуле шығару",
+        "title": "Бірдей радиусты екі жұлдыздың біреуінің бет температурасы екіншісінен 3 есе жоғары. Оның сәуле шығару қуаты неше есе көп?",
+        "problem_text": "Бірдей радиусты екі жұлдыздың біреуінің бет температурасы екіншісінен 3 есе жоғары. Оның сәуле шығару қуаты неше есе көп?",
+        "given_data": "T₂ = 3T₁\nБет аудандары бірдей\nP ∼ T⁴",
+        "find_text": "P₂/P₁ - ?",
+        "solution": "P₂/P₁ = (T₂/T₁)⁴ = 3⁴ = 81",
+        "answer": "Қуат 81 есе көп."
+      },
+      "thermodynamics-radiation-task-3": {
+        "topic_title": "Сәуле шығару",
+        "title": "Жазда ақ киім қара киімге қарағанда неге салқындау?",
+        "problem_text": "Жазда ақ киім қара киімге қарағанда неге салқындау?",
+        "given_data": "Ақ бет сәулені көбірек шағылдырады\nҚара бет сәулені көбірек жұтады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Қара мата күн сәулесін күшті жұтып, тез қызады. Ақ мата жарықтың көп бөлігін шағылдырады, сондықтан аз энергия алады.",
+        "answer": "Ақ киім күн сәулесін аз жұтады."
+      },
+      "thermodynamics-radiation-task-4": {
+        "topic_title": "Сәуле шығару",
+        "title": "Термостың ішкі қабырғаларын неге шағылдырғыш етіп жасайды?",
+        "problem_text": "Термостың ішкі қабырғаларын неге шағылдырғыш етіп жасайды?",
+        "given_data": "Шағылдырғыш бет инфрақызыл сәулені жақсы шағылдырады",
+        "find_text": "мақсаты - ?",
+        "solution": "Шағылдырғыш қабырғалар сәуле шығару арқылы жылу алмасуды азайтады: жылулық сәулені кері шағылдырып, энергия шығынын төмендетеді.",
+        "answer": "Шағылдырғыш қабырғалар сәуле арқылы жылу жоғалтуды азайтады."
+      },
+      "thermodynamics-radiation-task-5": {
+        "topic_title": "Сәуле шығару",
+        "title": "Ыстық ауа негізінен жоғары көтерілсе де, оттың жылуы жанынан неге сезіледі?",
+        "problem_text": "Ыстық ауа негізінен жоғары көтерілсе де, оттың жылуы жанынан неге сезіледі?",
+        "given_data": "От температурасы жоғары\nСәуле барлық бағытқа таралады",
+        "find_text": "жылу берілу тәсілі - ?",
+        "solution": "Ыстық ауа конвекциямен жоғары көтеріледі, бірақ от инфрақызыл сәулені барлық бағытта шығарады. Сондықтан адам жылуды жанынан да сезеді.",
+        "answer": "Жанынан сезілетін жылу негізінен сәуле шығарумен беріледі."
+      },
+      "thermodynamics-heat-quantity-task-1": {
+        "topic_title": "Жылу мөлшері",
+        "title": "3 кг суды 20°C-ден 70°C-ге дейін қыздыру үшін қанша жылу қажет? c = 4200 Дж/(кг·°C).",
+        "problem_text": "3 кг суды 20°C-ден 70°C-ге дейін қыздыру үшін қанша жылу қажет? c = 4200 Дж/(кг·°C).",
+        "given_data": "m = 3 кг\nt₁ = 20°C\nt₂ = 70°C\nc = 4200 Дж/(кг·°C)",
+        "find_text": "Q - ?",
+        "solution": "ΔT = 70 - 20 = 50°C\nQ = cmΔT = 4200 × 3 × 50 = 630000 Дж",
+        "answer": "Q = 630 кДж."
+      },
+      "thermodynamics-heat-quantity-task-2": {
+        "topic_title": "Жылу мөлшері",
+        "title": "Массасы 0,5 кг алюминий бөлшек 40°C-қа қыздырылды. c = 900 Дж/(кг·°C). Жылу мөлшерін табыңыз.",
+        "problem_text": "Массасы 0,5 кг алюминий бөлшек 40°C-қа қыздырылды. c = 900 Дж/(кг·°C). Жылу мөлшерін табыңыз.",
+        "given_data": "m = 0,5 кг\nΔT = 40°C\nc = 900 Дж/(кг·°C)",
+        "find_text": "Q - ?",
+        "solution": "Q = cmΔT\nQ = 900 × 0,5 × 40 = 18000 Дж",
+        "answer": "Q = 18 кДж."
+      },
+      "thermodynamics-heat-quantity-task-3": {
+        "topic_title": "Жылу мөлшері",
+        "title": "Дене 24 кДж жылу алды. Массасы 2 кг, меншікті жылу сыйымдылығы 600 Дж/(кг·°C). Ол неше градусқа қызды?",
+        "problem_text": "Дене 24 кДж жылу алды. Массасы 2 кг, меншікті жылу сыйымдылығы 600 Дж/(кг·°C). Ол неше градусқа қызды?",
+        "given_data": "Q = 24 кДж = 24000 Дж\nm = 2 кг\nc = 600 Дж/(кг·°C)",
+        "find_text": "ΔT - ?",
+        "solution": "ΔT = Q/(cm)\nΔT = 24000/(600 × 2) = 20°C",
+        "answer": "ΔT = 20°C."
+      },
+      "thermodynamics-heat-quantity-task-4": {
+        "topic_title": "Жылу мөлшері",
+        "title": "252 кДж жылу берілсе, судың қандай массасын 30°C-қа қыздыруға болады? c = 4200 Дж/(кг·°C).",
+        "problem_text": "252 кДж жылу берілсе, судың қандай массасын 30°C-қа қыздыруға болады? c = 4200 Дж/(кг·°C).",
+        "given_data": "Q = 252 кДж = 252000 Дж\nΔT = 30°C\nc = 4200 Дж/(кг·°C)",
+        "find_text": "m - ?",
+        "solution": "m = Q/(cΔT)\nm = 252000/(4200 × 30) = 2 кг",
+        "answer": "m = 2 кг."
+      },
+      "thermodynamics-heat-quantity-task-5": {
+        "topic_title": "Жылу мөлшері",
+        "title": "Судың екі бірдей массасын қыздырады: біріншісін 10°C-қа, екіншісін 40°C-қа. Екіншісіне неше есе көп жылу қажет?",
+        "problem_text": "Судың екі бірдей массасын қыздырады: біріншісін 10°C-қа, екіншісін 40°C-қа. Екіншісіне неше есе көп жылу қажет?",
+        "given_data": "m бірдей\nc бірдей\nΔT₁ = 10°C\nΔT₂ = 40°C",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q = cmΔT, m және c бірдей болғандықтан:\nQ₂/Q₁ = ΔT₂/ΔT₁ = 40/10 = 4",
+        "answer": "Екінші бөлікке 4 есе көп жылу қажет."
+      },
+      "thermodynamics-state-equation-task-1": {
+        "topic_title": "Күй теңдеуі",
+        "title": "300 K температурада және 100 кПа қысымда 1 моль газдың көлемін табыңыз.",
+        "problem_text": "300 K температурада және 100 кПа қысымда 1 моль газдың көлемін табыңыз.",
+        "given_data": "ν = 1 моль\nT = 300 K\np = 100 кПа = 100000 Па\nR = 8,31 Дж/(моль·К)",
+        "find_text": "V - ?",
+        "solution": "V = νRT/p\nV = 1 × 8,31 × 300 / 100000 = 0,02493 м³",
+        "answer": "V ≈ 24,9 л."
+      },
+      "thermodynamics-state-equation-task-2": {
+        "topic_title": "Күй теңдеуі",
+        "title": "Көлемі 0,05 м³ ыдыста 300 K температурада 2 моль газ бар. Қысымды табыңыз.",
+        "problem_text": "Көлемі 0,05 м³ ыдыста 300 K температурада 2 моль газ бар. Қысымды табыңыз.",
+        "given_data": "V = 0,05 м³\nν = 2 моль\nT = 300 K\nR = 8,31 Дж/(моль·К)",
+        "find_text": "p - ?",
+        "solution": "p = νRT/V\np = 2 × 8,31 × 300 / 0,05 = 99720 Па",
+        "answer": "p ≈ 100 кПа."
+      },
+      "thermodynamics-state-equation-task-3": {
+        "topic_title": "Күй теңдеуі",
+        "title": "Газ 200 кПа қысымда және 400 K температурада 10 л көлем алады. Зат мөлшерін табыңыз.",
+        "problem_text": "Газ 200 кПа қысымда және 400 K температурада 10 л көлем алады. Зат мөлшерін табыңыз.",
+        "given_data": "V = 10 л = 0,01 м³\np = 200 кПа = 200000 Па\nT = 400 K\nR = 8,31 Дж/(моль·К)",
+        "find_text": "ν - ?",
+        "solution": "ν = pV/(RT)\nν = 200000 × 0,01 / (8,31 × 400) ≈ 0,60 моль",
+        "answer": "ν ≈ 0,60 моль."
+      },
+      "thermodynamics-state-equation-task-4": {
+        "topic_title": "Күй теңдеуі",
+        "title": "Көлемі 2 л жабық ыдыста 300 K температурада 0,1 моль газ бар. Қысымды табыңыз.",
+        "problem_text": "Көлемі 2 л жабық ыдыста 300 K температурада 0,1 моль газ бар. Қысымды табыңыз.",
+        "given_data": "V = 2 л = 0,002 м³\nν = 0,1 моль\nT = 300 K\nR = 8,31 Дж/(моль·К)",
+        "find_text": "p - ?",
+        "solution": "p = νRT/V\np = 0,1 × 8,31 × 300 / 0,002 = 124650 Па",
+        "answer": "p ≈ 125 кПа."
+      },
+      "thermodynamics-state-equation-task-5": {
+        "topic_title": "Күй теңдеуі",
+        "title": "pV = νRT теңдеуіне 27°C температурасын 27 деп қоюға неге болмайды?",
+        "problem_text": "pV = νRT теңдеуіне 27°C температурасын 27 деп қоюға неге болмайды?",
+        "given_data": "pV = νRT\nt = 27°C",
+        "find_text": "түсіндіру - ?",
+        "solution": "Күй теңдеуінде температура абсолют шкалада, яғни кельвинмен алынуы керек. 27°C = 300 K. 300 орнына 27 қойылса, нәтиже 11 еседен артық қате болады.",
+        "answer": "Температураны K-ге айналдыру керек."
+      },
+      "thermodynamics-isoprocesses-task-1": {
+        "topic_title": "Изопроцестер",
+        "title": "Газды изобарлық түрде 300 K-нен 450 K-ге дейін қыздырды. Бастапқы көлемі 4 л. Соңғы көлемді табыңыз.",
+        "problem_text": "Газды изобарлық түрде 300 K-нен 450 K-ге дейін қыздырды. Бастапқы көлемі 4 л. Соңғы көлемді табыңыз.",
+        "given_data": "T₁ = 300 K\nT₂ = 450 K\nV₁ = 4 л\np = const",
+        "find_text": "V₂ - ?",
+        "solution": "V₁/T₁ = V₂/T₂\nV₂ = V₁T₂/T₁ = 4 × 450/300 = 6 л",
+        "answer": "V₂ = 6 л."
+      },
+      "thermodynamics-isoprocesses-task-2": {
+        "topic_title": "Изопроцестер",
+        "title": "Газды изохоралық түрде 250 K-нен 500 K-ге дейін қыздырды. Бастапқы қысым 80 кПа. Соңғы қысымды табыңыз.",
+        "problem_text": "Газды изохоралық түрде 250 K-нен 500 K-ге дейін қыздырды. Бастапқы қысым 80 кПа. Соңғы қысымды табыңыз.",
+        "given_data": "T₁ = 250 K\nT₂ = 500 K\np₁ = 80 кПа\nV = const",
+        "find_text": "p₂ - ?",
+        "solution": "p₁/T₁ = p₂/T₂\np₂ = p₁T₂/T₁ = 80 × 500/250 = 160 кПа",
+        "answer": "p₂ = 160 кПа."
+      },
+      "thermodynamics-isoprocesses-task-3": {
+        "topic_title": "Изопроцестер",
+        "title": "Газды изотермиялық түрде 12 л-ден 3 л-ге дейін сықты. Бастапқы қысым 100 кПа. Соңғы қысымды табыңыз.",
+        "problem_text": "Газды изотермиялық түрде 12 л-ден 3 л-ге дейін сықты. Бастапқы қысым 100 кПа. Соңғы қысымды табыңыз.",
+        "given_data": "V₁ = 12 л\nV₂ = 3 л\np₁ = 100 кПа\nT = const",
+        "find_text": "p₂ - ?",
+        "solution": "p₁V₁ = p₂V₂\np₂ = p₁V₁/V₂ = 100 × 12/3 = 400 кПа",
+        "answer": "p₂ = 400 кПа."
+      },
+      "thermodynamics-isoprocesses-task-4": {
+        "topic_title": "Изопроцестер",
+        "title": "Қай процесте газ жұмысы нөлге тең: изобарлық, изотермиялық немесе изохоралық?",
+        "problem_text": "Қай процесте газ жұмысы нөлге тең: изобарлық, изотермиялық немесе изохоралық?",
+        "given_data": "A = pΔV",
+        "find_text": "процесс - ?",
+        "solution": "Газ жұмысы көлемнің өзгерісіне тәуелді. Изохоралық процесте V = const, сондықтан ΔV = 0 және A = 0.",
+        "answer": "Изохоралық процесте."
+      },
+      "thermodynamics-isoprocesses-task-5": {
+        "topic_title": "Изопроцестер",
+        "title": "Газ 100 кПа қысымда изобарлық түрде 2 л-ден 5 л-ге дейін ұлғайды. Газ жұмысын табыңыз.",
+        "problem_text": "Газ 100 кПа қысымда изобарлық түрде 2 л-ден 5 л-ге дейін ұлғайды. Газ жұмысын табыңыз.",
+        "given_data": "p = 100 кПа = 100000 Па\nV₁ = 2 л = 0,002 м³\nV₂ = 5 л = 0,005 м³",
+        "find_text": "A - ?",
+        "solution": "ΔV = 0,005 - 0,002 = 0,003 м³\nA = pΔV = 100000 × 0,003 = 300 Дж",
+        "answer": "A = 300 Дж."
+      },
+      "thermodynamics-gas-laws-task-1": {
+        "topic_title": "Газ заңдары",
+        "title": "Газдың қысымы 100 кПа, көлемі 6 л, температурасы 300 K болды. Күй өзгергеннен кейін көлемі 3 л, температурасы 450 K болды. Соңғы қысымды табыңыз.",
+        "problem_text": "Газдың қысымы 100 кПа, көлемі 6 л, температурасы 300 K болды. Күй өзгергеннен кейін көлемі 3 л, температурасы 450 K болды. Соңғы қысымды табыңыз.",
+        "given_data": "p₁ = 100 кПа\nV₁ = 6 л\nT₁ = 300 K\nV₂ = 3 л\nT₂ = 450 K",
+        "find_text": "p₂ - ?",
+        "solution": "p₁V₁/T₁ = p₂V₂/T₂\np₂ = p₁V₁T₂/(T₁V₂)\np₂ = 100 × 6 × 450 / (300 × 3) = 300 кПа",
+        "answer": "p₂ = 300 кПа."
+      },
+      "thermodynamics-gas-laws-task-2": {
+        "topic_title": "Газ заңдары",
+        "title": "27°C-та газ 8 л көлем алады. Қысым тұрақты болса, 127°C-та қандай көлем алады?",
+        "problem_text": "27°C-та газ 8 л көлем алады. Қысым тұрақты болса, 127°C-та қандай көлем алады?",
+        "given_data": "t₁ = 27°C, T₁ = 300 K\nt₂ = 127°C, T₂ = 400 K\nV₁ = 8 л\np = const",
+        "find_text": "V₂ - ?",
+        "solution": "V₂ = V₁T₂/T₁\nV₂ = 8 × 400/300 = 10,67 л",
+        "answer": "V₂ ≈ 10,7 л."
+      },
+      "thermodynamics-gas-laws-task-3": {
+        "topic_title": "Газ заңдары",
+        "title": "Жабық баллондағы газ қысымы 300 K-де 150 кПа. 360 K-де қысым қандай болады?",
+        "problem_text": "Жабық баллондағы газ қысымы 300 K-де 150 кПа. 360 K-де қысым қандай болады?",
+        "given_data": "p₁ = 150 кПа\nT₁ = 300 K\nT₂ = 360 K\nV = const",
+        "find_text": "p₂ - ?",
+        "solution": "p₂ = p₁T₂/T₁ = 150 × 360/300 = 180 кПа",
+        "answer": "p₂ = 180 кПа."
+      },
+      "thermodynamics-gas-laws-task-4": {
+        "topic_title": "Газ заңдары",
+        "title": "Изотермиялық ұлғаюда газ көлемі 5 есе артты. Қысым қалай өзгерді?",
+        "problem_text": "Изотермиялық ұлғаюда газ көлемі 5 есе артты. Қысым қалай өзгерді?",
+        "given_data": "V₂ = 5V₁\nT = const",
+        "find_text": "p₂/p₁ - ?",
+        "solution": "pV = const, демек p₂/p₁ = V₁/V₂ = 1/5",
+        "answer": "Қысым 5 есе кеміді."
+      },
+      "thermodynamics-gas-laws-task-5": {
+        "topic_title": "Газ заңдары",
+        "title": "Біріктірілген газ заңында 0°C-ты T = 0 деп қолдануға неге болмайды?",
+        "problem_text": "Біріктірілген газ заңында 0°C-ты T = 0 деп қолдануға неге болмайды?",
+        "given_data": "t = 0°C\nT = 273 K",
+        "find_text": "түсіндіру - ?",
+        "solution": "Газ заңдарында температура абсолют шкалада алынуы керек. 0°C 273 K-ге сәйкес, нөлге емес. T = 0 қою өрнекті мағынасыз етеді.",
+        "answer": "Кельвин шкаласын қолдану керек."
+      },
+      "thermodynamics-first-law-task-1": {
+        "topic_title": "Термодинамиканың бірінші заңы",
+        "title": "Газ 900 Дж жылу алып, 300 Дж жұмыс жасады. Ішкі энергия өзгерісін табыңыз.",
+        "problem_text": "Газ 900 Дж жылу алып, 300 Дж жұмыс жасады. Ішкі энергия өзгерісін табыңыз.",
+        "given_data": "Q = 900 Дж\nA = 300 Дж",
+        "find_text": "ΔU - ?",
+        "solution": "Q = ΔU + A\nΔU = Q - A = 900 - 300 = 600 Дж",
+        "answer": "ΔU = 600 Дж."
+      },
+      "thermodynamics-first-law-task-2": {
+        "topic_title": "Термодинамиканың бірінші заңы",
+        "title": "Газдың ішкі энергиясы 400 Дж-ге артты, әрі газ 150 Дж жұмыс жасады. Газ қанша жылу алды?",
+        "problem_text": "Газдың ішкі энергиясы 400 Дж-ге артты, әрі газ 150 Дж жұмыс жасады. Газ қанша жылу алды?",
+        "given_data": "ΔU = 400 Дж\nA = 150 Дж",
+        "find_text": "Q - ?",
+        "solution": "Q = ΔU + A\nQ = 400 + 150 = 550 Дж",
+        "answer": "Q = 550 Дж."
+      },
+      "thermodynamics-first-law-task-3": {
+        "topic_title": "Термодинамиканың бірінші заңы",
+        "title": "Газ 500 Дж жылу алды, ал сыртқы күштер газға 200 Дж жұмыс жасады. Ішкі энергия қалай өзгерді?",
+        "problem_text": "Газ 500 Дж жылу алды, ал сыртқы күштер газға 200 Дж жұмыс жасады. Ішкі энергия қалай өзгерді?",
+        "given_data": "Q = 500 Дж\nЖұмыс газға жасалды: A газ = -200 Дж",
+        "find_text": "ΔU - ?",
+        "solution": "Q = ΔU + A\nΔU = Q - A = 500 - (-200) = 700 Дж",
+        "answer": "Ішкі энергия 700 Дж-ге артты."
+      },
+      "thermodynamics-first-law-task-4": {
+        "topic_title": "Термодинамиканың бірінші заңы",
+        "title": "Газ 150 кПа қысымда 2 л-ден 6 л-ге дейін изобарлық ұлғайды. Газ жұмысын табыңыз.",
+        "problem_text": "Газ 150 кПа қысымда 2 л-ден 6 л-ге дейін изобарлық ұлғайды. Газ жұмысын табыңыз.",
+        "given_data": "p = 150 кПа = 150000 Па\nV₁ = 2 л = 0,002 м³\nV₂ = 6 л = 0,006 м³",
+        "find_text": "A - ?",
+        "solution": "ΔV = 0,006 - 0,002 = 0,004 м³\nA = pΔV = 150000 × 0,004 = 600 Дж",
+        "answer": "A = 600 Дж."
+      },
+      "thermodynamics-first-law-task-5": {
+        "topic_title": "Термодинамиканың бірінші заңы",
+        "title": "Изохоралық қыздыруда газ 800 Дж жылу алды. Ішкі энергия өзгерісі неге тең?",
+        "problem_text": "Изохоралық қыздыруда газ 800 Дж жылу алды. Ішкі энергия өзгерісі неге тең?",
+        "given_data": "V = const\nQ = 800 Дж\nA = 0",
+        "find_text": "ΔU - ?",
+        "solution": "Q = ΔU + A\nA = 0 болғандықтан, ΔU = Q = 800 Дж.",
+        "answer": "ΔU = 800 Дж."
+      },
+      "thermodynamics-second-law-task-1": {
+        "topic_title": "Термодинамиканың екінші заңы",
+        "title": "Бөлмедегі ыстық шай неге өздігінен қызбай, салқындайды?",
+        "problem_text": "Бөлмедегі ыстық шай неге өздігінен қызбай, салқындайды?",
+        "given_data": "T шай > T ауа",
+        "find_text": "түсіндіру - ?",
+        "solution": "Термодинамиканың екінші заңы бойынша жылу өздігінен ыстық денеден суық денеге өтеді. Сондықтан шай энергиясын ауаға береді.",
+        "answer": "Шай салқындайды, себебі жылу ыстықтан суыққа өтеді."
+      },
+      "thermodynamics-second-law-task-2": {
+        "topic_title": "Термодинамиканың екінші заңы",
+        "title": "Қыздырғыштан алынған барлық жылуды тоңазытқышсыз жұмысқа айналдыратын қозғалтқыш жасауға бола ма?",
+        "problem_text": "Қыздырғыштан алынған барлық жылуды тоңазытқышсыз жұмысқа айналдыратын қозғалтқыш жасауға бола ма?",
+        "given_data": "Q₂ = 0 деп болжанады\nη = 100% деп болжанады",
+        "find_text": "мүмкін бе - ?",
+        "solution": "Мұндай қозғалтқыш екінші текті мәңгі қозғалтқыш болар еді. Термодинамиканың екінші заңы циклдік процесте жылуды тоңазытқышқа бір бөлігін бермей толық жұмысқа айналдыруға тыйым салады.",
+        "answer": "Мүмкін емес."
+      },
+      "thermodynamics-second-law-task-3": {
+        "topic_title": "Термодинамиканың екінші заңы",
+        "title": "Жылу машинасы 1000 Дж жылу алып, тоңазытқышқа 700 Дж берді. Неге қалған 300 Дж ғана жұмысқа айналады, ал барлық 1000 Дж емес?",
+        "problem_text": "Жылу машинасы 1000 Дж жылу алып, тоңазытқышқа 700 Дж берді. Неге қалған 300 Дж ғана жұмысқа айналады, ал барлық 1000 Дж емес?",
+        "given_data": "Q₁ = 1000 Дж\nQ₂ = 700 Дж\nA = Q₁ - Q₂",
+        "find_text": "түсіндіру - ?",
+        "solution": "Жылудың бір бөлігі міндетті түрде тоңазытқышқа берілуі керек, әйтпесе термодинамиканың екінші заңы бұзылады. Жұмыс алынған және берілген жылудың айырмасына тең.",
+        "answer": "A = 300 Дж; Q₁-ді толық жұмысқа айналдыру мүмкін емес."
+      },
+      "thermodynamics-second-law-task-4": {
+        "topic_title": "Термодинамиканың екінші заңы",
+        "title": "Үйдің жылу оқшаулауы неге жылу жасамай, тек шығынды азайтады?",
+        "problem_text": "Үйдің жылу оқшаулауы неге жылу жасамай, тек шығынды азайтады?",
+        "given_data": "Жылу жылы бөлмеден суық далаға өтеді",
+        "find_text": "түсіндіру - ?",
+        "solution": "Жылу оқшаулауы жылу берілуді баяулатады, бірақ табиғи жылу алмасу бағытын өзгертпейді. Энергия бәрібір жылы аймақтан суық аймаққа өтуге ұмтылады.",
+        "answer": "Оқшаулау шығын жылдамдығын азайтады, бірақ энергия жасамайды."
+      },
+      "thermodynamics-second-law-task-5": {
+        "topic_title": "Термодинамиканың екінші заңы",
+        "title": "Нақты жылу машинасының ПӘК-і неге әрқашан 100%-дан аз?",
+        "problem_text": "Нақты жылу машинасының ПӘК-і неге әрқашан 100%-дан аз?",
+        "given_data": "Жылудың бір бөлігі тоңазытқышқа беріледі\nҮйкеліс пен жылу алмасудан шығындар бар",
+        "find_text": "себебі - ?",
+        "solution": "Екінші заңға байланысты тіпті идеал циклдік машина да жылуды толық жұмысқа айналдыра алмайды. Нақты машиналарда қосымша шығындар болады.",
+        "answer": "η < 100%, себебі екінші заң және қайтымсыз шығындар әсер етеді."
+      },
+      "thermodynamics-heat-engines-task-1": {
+        "topic_title": "Жылу машиналары",
+        "title": "Жылу машинасы 1200 Дж жылу алып, тоңазытқышқа 900 Дж береді. Жұмысты табыңыз.",
+        "problem_text": "Жылу машинасы 1200 Дж жылу алып, тоңазытқышқа 900 Дж береді. Жұмысты табыңыз.",
+        "given_data": "Q₁ = 1200 Дж\nQ₂ = 900 Дж",
+        "find_text": "A - ?",
+        "solution": "A = Q₁ - Q₂ = 1200 - 900 = 300 Дж",
+        "answer": "A = 300 Дж."
+      },
+      "thermodynamics-heat-engines-task-2": {
+        "topic_title": "Жылу машиналары",
+        "title": "Машина бір циклде 250 Дж жұмыс жасап, 1000 Дж жылу алады. ПӘК-ті табыңыз.",
+        "problem_text": "Машина бір циклде 250 Дж жұмыс жасап, 1000 Дж жылу алады. ПӘК-ті табыңыз.",
+        "given_data": "A = 250 Дж\nQ₁ = 1000 Дж",
+        "find_text": "η - ?",
+        "solution": "η = A/Q₁ = 250/1000 = 0,25 = 25%",
+        "answer": "η = 25%."
+      },
+      "thermodynamics-heat-engines-task-3": {
+        "topic_title": "Жылу машиналары",
+        "title": "Қозғалтқыштың ПӘК-і 30%, бір циклде 2000 Дж жылу алады. Қозғалтқыш жұмысын табыңыз.",
+        "problem_text": "Қозғалтқыштың ПӘК-і 30%, бір циклде 2000 Дж жылу алады. Қозғалтқыш жұмысын табыңыз.",
+        "given_data": "η = 30% = 0,30\nQ₁ = 2000 Дж",
+        "find_text": "A - ?",
+        "solution": "A = ηQ₁ = 0,30 × 2000 = 600 Дж",
+        "answer": "A = 600 Дж."
+      },
+      "thermodynamics-heat-engines-task-4": {
+        "topic_title": "Жылу машиналары",
+        "title": "Машина 1500 Дж жылу алды, ПӘК-і 20%. Ол тоңазытқышқа қанша жылу берді?",
+        "problem_text": "Машина 1500 Дж жылу алды, ПӘК-і 20%. Ол тоңазытқышқа қанша жылу берді?",
+        "given_data": "Q₁ = 1500 Дж\nη = 20% = 0,20",
+        "find_text": "Q₂ - ?",
+        "solution": "A = ηQ₁ = 0,20 × 1500 = 300 Дж\nQ₂ = Q₁ - A = 1500 - 300 = 1200 Дж",
+        "answer": "Q₂ = 1200 Дж."
+      },
+      "thermodynamics-heat-engines-task-5": {
+        "topic_title": "Жылу машиналары",
+        "title": "Іштен жану қозғалтқышына салқындату неге қажет?",
+        "problem_text": "Іштен жану қозғалтқышына салқындату неге қажет?",
+        "given_data": "Жылудың бір бөлігі жұмысқа айналмайды\nҚозғалтқыш бөлшектері қызады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Отын энергиясының тек бір бөлігі пайдалы жұмысқа айналады. Қалған энергия жылу түрінде бөлінеді, оны әкетпесе қозғалтқыш қызып кетеді.",
+        "answer": "Салқындату міндетті жылу шығындарын әкетеді."
+      },
+      "thermodynamics-efficiency-task-1": {
+        "topic_title": "ПӘК",
+        "title": "Қозғалтқыш 5000 Дж жылу алып, 1500 Дж жұмыс жасады. ПӘК-ті табыңыз.",
+        "problem_text": "Қозғалтқыш 5000 Дж жылу алып, 1500 Дж жұмыс жасады. ПӘК-ті табыңыз.",
+        "given_data": "Q₁ = 5000 Дж\nA = 1500 Дж",
+        "find_text": "η - ?",
+        "solution": "η = A/Q₁ = 1500/5000 = 0,3 = 30%",
+        "answer": "η = 30%."
+      },
+      "thermodynamics-efficiency-task-2": {
+        "topic_title": "ПӘК",
+        "title": "Қозғалтқыштың ПӘК-і 25%, пайдалы жұмысы 2 кДж. Қозғалтқыш қанша жылу алды?",
+        "problem_text": "Қозғалтқыштың ПӘК-і 25%, пайдалы жұмысы 2 кДж. Қозғалтқыш қанша жылу алды?",
+        "given_data": "η = 25% = 0,25\nA = 2 кДж = 2000 Дж",
+        "find_text": "Q₁ - ?",
+        "solution": "Q₁ = A/η = 2000/0,25 = 8000 Дж",
+        "answer": "Q₁ = 8 кДж."
+      },
+      "thermodynamics-efficiency-task-3": {
+        "topic_title": "ПӘК",
+        "title": "Қыздырғыш температурасы 600 K, тоңазытқыш температурасы 300 K. Максимал ПӘК-ті табыңыз.",
+        "problem_text": "Қыздырғыш температурасы 600 K, тоңазытқыш температурасы 300 K. Максимал ПӘК-ті табыңыз.",
+        "given_data": "T₁ = 600 K\nT₂ = 300 K",
+        "find_text": "ηmax - ?",
+        "solution": "ηmax = (T₁ - T₂)/T₁\nηmax = (600 - 300)/600 = 0,5 = 50%",
+        "answer": "ηmax = 50%."
+      },
+      "thermodynamics-efficiency-task-4": {
+        "topic_title": "ПӘК",
+        "title": "Карно машинасының максимал ПӘК-і 40%, қыздырғыш температурасы 500 K. Тоңазытқыш температурасын табыңыз.",
+        "problem_text": "Карно машинасының максимал ПӘК-і 40%, қыздырғыш температурасы 500 K. Тоңазытқыш температурасын табыңыз.",
+        "given_data": "η = 40% = 0,4\nT₁ = 500 K",
+        "find_text": "T₂ - ?",
+        "solution": "η = (T₁ - T₂)/T₁\nT₂ = T₁(1 - η) = 500 × 0,6 = 300 K",
+        "answer": "T₂ = 300 K."
+      },
+      "thermodynamics-efficiency-task-5": {
+        "topic_title": "ПӘК",
+        "title": "Қыздырғыш температурасын арттыру максимал ПӘК-ті неге өсіруі мүмкін?",
+        "problem_text": "Қыздырғыш температурасын арттыру максимал ПӘК-ті неге өсіруі мүмкін?",
+        "given_data": "ηmax = (T₁ - T₂)/T₁\nT₂ = const",
+        "find_text": "түсіндіру - ?",
+        "solution": "T₂ тұрақты болса, T₁ артуы температура айырмасын үлкейтеді және T₂/T₁ үлесін азайтады. Сондықтан максимал ПӘК өседі.",
+        "answer": "T₁ үлкен болса, машина теориялық тұрғыдан тиімдірек болады."
+      },
+      "thermodynamics-melting-task-1": {
+        "topic_title": "Балқу",
+        "title": "0°C-тағы 3 кг мұзды балқыту үшін қанша жылу қажет? λ = 330 кДж/кг.",
+        "problem_text": "0°C-тағы 3 кг мұзды балқыту үшін қанша жылу қажет? λ = 330 кДж/кг.",
+        "given_data": "m = 3 кг\nλ = 330 кДж/кг = 330000 Дж/кг",
+        "find_text": "Q - ?",
+        "solution": "Q = λm = 330000 × 3 = 990000 Дж",
+        "answer": "Q = 990 кДж."
+      },
+      "thermodynamics-melting-task-2": {
+        "topic_title": "Балқу",
+        "title": "Металды балқытуға 540 кДж жылу қажет болды. Металл массасы 2 кг. Меншікті балқу жылуын табыңыз.",
+        "problem_text": "Металды балқытуға 540 кДж жылу қажет болды. Металл массасы 2 кг. Меншікті балқу жылуын табыңыз.",
+        "given_data": "Q = 540 кДж = 540000 Дж\nm = 2 кг",
+        "find_text": "λ - ?",
+        "solution": "λ = Q/m = 540000/2 = 270000 Дж/кг",
+        "answer": "λ = 270 кДж/кг."
+      },
+      "thermodynamics-melting-task-3": {
+        "topic_title": "Балқу",
+        "title": "165 кДж жылу беріп, 0°C-тағы мұздың қандай массасын балқытуға болады? λ = 330 кДж/кг.",
+        "problem_text": "165 кДж жылу беріп, 0°C-тағы мұздың қандай массасын балқытуға болады? λ = 330 кДж/кг.",
+        "given_data": "Q = 165 кДж\nλ = 330 кДж/кг",
+        "find_text": "m - ?",
+        "solution": "m = Q/λ = 165/330 = 0,5 кг",
+        "answer": "m = 0,5 кг."
+      },
+      "thermodynamics-melting-task-4": {
+        "topic_title": "Балқу",
+        "title": "Жылу беріліп тұрса да, мұз балқу кезінде неге 0°C температурасында қалады?",
+        "problem_text": "Жылу беріліп тұрса да, мұз балқу кезінде неге 0°C температурасында қалады?",
+        "given_data": "Мұз 0°C-та балқиды\nЖылу беріледі",
+        "find_text": "түсіндіру - ?",
+        "solution": "Берілген жылу молекулалардың орташа кинетикалық энергиясын арттыруға емес, кристалдық торды бұзуға және агрегаттық күйді өзгертуге жұмсалады.",
+        "answer": "Энергия фазалық ауысуға жұмсалады."
+      },
+      "thermodynamics-melting-task-5": {
+        "topic_title": "Балқу",
+        "title": "Бір заттың 1 кг және 4 кг массасын балқу температурасында балқытуды салыстырыңыз. Екінші жағдайда қанша есе көп жылу қажет?",
+        "problem_text": "Бір заттың 1 кг және 4 кг массасын балқу температурасында балқытуды салыстырыңыз. Екінші жағдайда қанша есе көп жылу қажет?",
+        "given_data": "m₂ = 4m₁\nQ = λm",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q массаға тура пропорционал:\nQ₂/Q₁ = m₂/m₁ = 4",
+        "answer": "Екінші жағдайда 4 есе көп жылу қажет."
+      },
+      "thermodynamics-evaporation-task-1": {
+        "topic_title": "Булану",
+        "title": "Қайнау температурасындағы 0,3 кг суды буландыру үшін қанша жылу қажет? L = 2,3 МДж/кг.",
+        "problem_text": "Қайнау температурасындағы 0,3 кг суды буландыру үшін қанша жылу қажет? L = 2,3 МДж/кг.",
+        "given_data": "m = 0,3 кг\nL = 2,3 МДж/кг = 2,3×10⁶ Дж/кг",
+        "find_text": "Q - ?",
+        "solution": "Q = Lm = 2,3×10⁶ × 0,3 = 690000 Дж",
+        "answer": "Q = 690 кДж."
+      },
+      "thermodynamics-evaporation-task-2": {
+        "topic_title": "Булану",
+        "title": "Спиртті буландыруға 180 кДж жылу жұмсалды. L = 900 кДж/кг. Спирт массасын табыңыз.",
+        "problem_text": "Спиртті буландыруға 180 кДж жылу жұмсалды. L = 900 кДж/кг. Спирт массасын табыңыз.",
+        "given_data": "Q = 180 кДж\nL = 900 кДж/кг",
+        "find_text": "m - ?",
+        "solution": "m = Q/L = 180/900 = 0,2 кг",
+        "answer": "m = 0,2 кг."
+      },
+      "thermodynamics-evaporation-task-3": {
+        "topic_title": "Булану",
+        "title": "Желде дымқыл тері неге салқын сезіледі?",
+        "problem_text": "Желде дымқыл тері неге салқын сезіледі?",
+        "given_data": "Су тері бетінен буланады\nЖел булануды жылдамдатады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Булану үшін энергия қажет. Су жылуды теріден алады, ал жел ылғалды ауаны әкетіп, булануды жылдамдатады.",
+        "answer": "Тері булануға жылу жұмсалғандықтан салқындайды."
+      },
+      "thermodynamics-evaporation-task-4": {
+        "topic_title": "Булану",
+        "title": "Қайнау температурасында бір сұйықтың 1 кг және 0,25 кг массасын буландыруға қажет жылу мөлшерін салыстырыңыз.",
+        "problem_text": "Қайнау температурасында бір сұйықтың 1 кг және 0,25 кг массасын буландыруға қажет жылу мөлшерін салыстырыңыз.",
+        "given_data": "m₁ = 1 кг\nm₂ = 0,25 кг\nQ = Lm",
+        "find_text": "Q₂/Q₁ - ?",
+        "solution": "Q₂/Q₁ = m₂/m₁ = 0,25/1 = 0,25",
+        "answer": "0,25 кг үшін 4 есе аз жылу қажет."
+      },
+      "thermodynamics-evaporation-task-5": {
+        "topic_title": "Булану",
+        "title": "Кір жоғары температурада және желде неге тез кебеді?",
+        "problem_text": "Кір жоғары температурада және желде неге тез кебеді?",
+        "given_data": "Температура жоғары\nАуа қозғалады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Жоғары температура сұйықтан шыға алатын молекулалар санын арттырады. Жел беттен ылғалды ауаны әкетеді, сондықтан булану тез жүреді.",
+        "answer": "Температура мен жел булануды жылдамдатады."
+      },
+      "thermodynamics-boiling-task-1": {
+        "topic_title": "Қайнау",
+        "title": "Тауда су неге 100°C-тан төмен температурада қайнайды?",
+        "problem_text": "Тауда су неге 100°C-тан төмен температурада қайнайды?",
+        "given_data": "Тауда атмосфералық қысым қалыптыдан төмен",
+        "find_text": "түсіндіру - ?",
+        "solution": "Қайнау қаныққан бу қысымы сыртқы қысымға тең болғанда басталады. Сыртқы қысым төмен болса, бұл шарт төмен температурада орындалады.",
+        "answer": "Атмосфералық қысым төмен болғандықтан қайнау температурасы төмендейді."
+      },
+      "thermodynamics-boiling-task-2": {
+        "topic_title": "Қайнау",
+        "title": "100°C-тағы 0,5 кг суды буға айналдыру үшін қанша жылу қажет? L = 2,3 МДж/кг.",
+        "problem_text": "100°C-тағы 0,5 кг суды буға айналдыру үшін қанша жылу қажет? L = 2,3 МДж/кг.",
+        "given_data": "m = 0,5 кг\nL = 2,3×10⁶ Дж/кг",
+        "find_text": "Q - ?",
+        "solution": "Q = Lm = 2,3×10⁶ × 0,5 = 1,15×10⁶ Дж",
+        "answer": "Q = 1,15 МДж."
+      },
+      "thermodynamics-boiling-task-3": {
+        "topic_title": "Қайнау",
+        "title": "Қалыпты қысымда қайнаған судың температурасы неге 100°C-тан жоғары көтерілмейді?",
+        "problem_text": "Қалыпты қысымда қайнаған судың температурасы неге 100°C-тан жоғары көтерілмейді?",
+        "given_data": "Су 100°C-та қайнайды\nЖылу берілуі жалғасады",
+        "find_text": "түсіндіру - ?",
+        "solution": "Берілген энергия температураны арттыруға емес, фазалық ауысуға: молекулааралық байланыстарды үзуге және бу түзуге жұмсалады.",
+        "answer": "Жылу булануға жұмсалады."
+      },
+      "thermodynamics-boiling-task-4": {
+        "topic_title": "Қайнау",
+        "title": "Қысымды пеште қысым атмосфералық қысымнан жоғары. Бұл судың қайнау температурасына қалай әсер етеді?",
+        "problem_text": "Қысымды пеште қысым атмосфералық қысымнан жоғары. Бұл судың қайнау температурасына қалай әсер етеді?",
+        "given_data": "Қысымды пеш ішіндегі қысым артқан",
+        "find_text": "қайнау температурасының өзгерісі - ?",
+        "solution": "Сыртқы қысым жоғары болса, бу көпіршіктерін түзу қиындайды. Қаныққан бу қысымы жоғарырақ болуы керек, ал ол жоғары температурада орындалады.",
+        "answer": "Қайнау температурасы жоғарылайды."
+      },
+      "thermodynamics-boiling-task-5": {
+        "topic_title": "Қайнау",
+        "title": "Қайнау кезінде 2 кг суды буландыруға 4,6 МДж жылу жұмсалды. Меншікті булану жылуын табыңыз.",
+        "problem_text": "Қайнау кезінде 2 кг суды буландыруға 4,6 МДж жылу жұмсалды. Меншікті булану жылуын табыңыз.",
+        "given_data": "Q = 4,6 МДж = 4,6×10⁶ Дж\nm = 2 кг",
+        "find_text": "L - ?",
+        "solution": "L = Q/m = 4,6×10⁶ / 2 = 2,3×10⁶ Дж/кг",
+        "answer": "L = 2,3 МДж/кг."
+      },
+      "thermodynamics-phase-diagrams-task-1": {
+        "topic_title": "Күй диаграммалары",
+        "title": "Күй диаграммасында зат нүктесі газ аймағында. Температура тұрақты болып, қысым артқанда нүкте конденсация сызығын кесіп өтсе, не болады?",
+        "problem_text": "Күй диаграммасында зат нүктесі газ аймағында. Температура тұрақты болып, қысым артқанда нүкте конденсация сызығын кесіп өтсе, не болады?",
+        "given_data": "T = const\np артады\nНүкте газ-сұйық шекарасын кеседі",
+        "find_text": "фазалық ауысу - ?",
+        "solution": "Газ жағынан газ-сұйық шекарасын кесіп өткенде зат сұйық күйге өтеді. Бұл процесс конденсация деп аталады.",
+        "answer": "Конденсация жүреді."
+      },
+      "thermodynamics-phase-diagrams-task-2": {
+        "topic_title": "Күй диаграммалары",
+        "title": "Үштік нүкте затты сипаттауда неге маңызды?",
+        "problem_text": "Үштік нүкте затты сипаттауда неге маңызды?",
+        "given_data": "Үштік нүктеде үш фаза қатар болады",
+        "find_text": "үштік нүктенің маңызы - ?",
+        "solution": "Үштік нүкте қатты, сұйық және газ фазалары тепе-теңдікте болатын қысым мен температураның жалғыз мәндерін береді.",
+        "answer": "Ол үш фазаның тепе-теңдік шарттарын көрсетеді."
+      },
+      "thermodynamics-phase-diagrams-task-3": {
+        "topic_title": "Күй диаграммалары",
+        "title": "Затты тұрақты қысымда қыздырады. p-T диаграммасында жол алдымен балқу сызығын, кейін қайнау сызығын кеседі. Қандай фазалық ауысулар болады?",
+        "problem_text": "Затты тұрақты қысымда қыздырады. p-T диаграммасында жол алдымен балқу сызығын, кейін қайнау сызығын кеседі. Қандай фазалық ауысулар болады?",
+        "given_data": "p = const\nT артады\nБалқу және қайнау сызықтары кесілген",
+        "find_text": "ауысулар реті - ?",
+        "solution": "Балқу сызығын кескенде қатты дене сұйыққа айналады. Әрі қарай қыздырғанда және қайнау сызығын кескенде сұйық газға айналады.",
+        "answer": "Алдымен балқу, кейін қайнау."
+      },
+      "thermodynamics-phase-diagrams-task-4": {
+        "topic_title": "Күй диаграммалары",
+        "title": "Күй диаграммасындағы критикалық нүкте нені білдіреді?",
+        "problem_text": "Күй диаграммасындағы критикалық нүкте нені білдіреді?",
+        "given_data": "Диаграммада сұйық-газ сызығының соңы бар",
+        "find_text": "критикалық нүктенің мағынасы - ?",
+        "solution": "Критикалық нүктеде сұйық пен газ арасындағы айқын шекара жойылады. Критикалық температурадан жоғары затты сығу арқылы кәдімгі сұйыққа айналдыруға болмайды.",
+        "answer": "Бұл сұйық-газ шекарасының соңғы нүктесі."
+      },
+      "thermodynamics-phase-diagrams-task-5": {
+        "topic_title": "Күй диаграммалары",
+        "title": "Әртүрлі заттардың күй диаграммалары неге әртүрлі?",
+        "problem_text": "Әртүрлі заттардың күй диаграммалары неге әртүрлі?",
+        "given_data": "Әртүрлі зат молекулаларының массалары мен әрекеттесулері әртүрлі",
+        "find_text": "айырмашылық себебі - ?",
+        "solution": "Фазалық ауысулар бөлшектер арасындағы әрекеттесу күштеріне және олардың жылулық қозғалысына тәуелді. Әртүрлі заттарда бұл шамалар әртүрлі, сондықтан фазалық ауысу температуралары мен қысымдары да өзгеше.",
+        "answer": "Себебі молекулааралық әрекеттесу мен зат құрылысы әртүрлі."
+      }
+    }
+  }
+}

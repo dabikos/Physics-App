@@ -1300,11 +1300,24 @@ INITIAL_TESTS = [
 # ==================== Sections Routes ====================
 
 @api_router.get("/sections")
-async def get_sections():
+async def get_sections(accept_language: str | None = Header(default=None, alias="Accept-Language")):
+    if is_postgres_configured():
+        try:
+            return await list_lesson_sections(lang=parse_accept_language(accept_language))
+        except Exception as exc:
+            logger.warning("Failed to load sections from PostgreSQL: %s", exc)
     return PHYSICS_SECTIONS
 
 @api_router.get("/sections/{section_id}")
-async def get_section(section_id: str):
+async def get_section(section_id: str, accept_language: str | None = Header(default=None, alias="Accept-Language")):
+    if is_postgres_configured():
+        try:
+            sections = await list_lesson_sections(lang=parse_accept_language(accept_language))
+            if section_id in sections:
+                return sections[section_id]
+        except Exception as exc:
+            logger.warning("Failed to load section '%s' from PostgreSQL: %s", section_id, exc)
+
     if section_id not in PHYSICS_SECTIONS:
         raise HTTPException(status_code=404, detail="Раздел не найден")
     return PHYSICS_SECTIONS[section_id]
@@ -1312,7 +1325,21 @@ async def get_section(section_id: str):
 # ==================== Topics/Lessons Routes ====================
 
 @api_router.get("/topics")
-async def get_topics(section: Optional[str] = None, subsection: Optional[str] = None):
+async def get_topics(
+    section: Optional[str] = None,
+    subsection: Optional[str] = None,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
+    if is_postgres_configured():
+        try:
+            return await list_lesson_topics(
+                section_id=section,
+                subsection_id=subsection,
+                lang=parse_accept_language(accept_language),
+            )
+        except Exception as exc:
+            logger.warning("Failed to load topics from PostgreSQL: %s", exc)
+
     query = {}
     if section:
         query["section"] = section
@@ -1331,7 +1358,15 @@ async def get_topics(section: Optional[str] = None, subsection: Optional[str] = 
     return topics
 
 @api_router.get("/topics/{topic_id}")
-async def get_topic(topic_id: str):
+async def get_topic(topic_id: str, accept_language: str | None = Header(default=None, alias="Accept-Language")):
+    if is_postgres_configured():
+        try:
+            item = await get_lesson_topic(topic_id, lang=parse_accept_language(accept_language))
+            if item:
+                return item
+        except Exception as exc:
+            logger.warning("Failed to load topic '%s' from PostgreSQL: %s", topic_id, exc)
+
     topic = await db.topics.find_one({"id": topic_id})
     if not topic:
         # Check in initial data
@@ -1839,10 +1874,13 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
 # ==================== Formulas Routes ====================
 
 @api_router.get("/formulas")
-async def get_formulas(section: Optional[str] = None):
+async def get_formulas(
+    section: Optional[str] = None,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     if is_postgres_configured():
         try:
-            return {"items": await list_physics_formulas(section_id=section)}
+            return {"items": await list_physics_formulas(section_id=section, lang=parse_accept_language(accept_language))}
         except Exception as exc:
             logger.warning("Failed to load formulas from PostgreSQL: %s", exc)
 
@@ -1859,10 +1897,10 @@ async def get_formulas(section: Optional[str] = None):
     return {"items": formulas}
 
 @api_router.get("/formulas/{formula_id}")
-async def get_formula(formula_id: str):
+async def get_formula(formula_id: str, accept_language: str | None = Header(default=None, alias="Accept-Language")):
     if is_postgres_configured():
         try:
-            item = await get_physics_formula(formula_id)
+            item = await get_physics_formula(formula_id, lang=parse_accept_language(accept_language))
             if item:
                 return {"item": item}
         except Exception as exc:
@@ -2073,6 +2111,10 @@ ACHIEVEMENTS_DEFINITIONS = [
     {"id": "mechanics_done", "name": "Механик", "description": "Изучите все темы механики", "icon": "⚙️", "condition": "section_mechanics_complete"},
     {"id": "thermo_done", "name": "Термодинамик", "description": "Изучите все темы термодинамики", "icon": "🌡️", "condition": "section_thermodynamics_complete"},
     {"id": "electro_done", "name": "Электрик", "description": "Изучите все темы электричества", "icon": "⚡", "condition": "section_electromagnetism_complete"},
+    {"id": "optics_done", "name": "Оптик", "description": "Изучите весь раздел оптики", "icon": "👁️", "condition": "section_optics_complete"},
+    {"id": "atomic_done", "name": "Атомщик", "description": "Изучите атомную и ядерную физику", "icon": "⚛️", "condition": "section_atomic_complete"},
+    {"id": "relativity_done", "name": "Релятивист", "description": "Изучите специальную теорию относительности", "icon": "🚀", "condition": "section_relativity_complete"},
+    {"id": "astronomy_done", "name": "Астроном", "description": "Изучите весь раздел астрономии", "icon": "🌌", "condition": "section_astronomy_complete"},
 ]
 
 # ==================== i18n Translations ====================
@@ -2137,6 +2179,10 @@ ACHIEVEMENTS_I18N = {
         "mechanics_done": {"name": "Mechanic", "description": "Study all mechanics topics"},
         "thermo_done": {"name": "Thermodynamicist", "description": "Study all thermodynamics topics"},
         "electro_done": {"name": "Electrician", "description": "Study all electricity topics"},
+        "optics_done": {"name": "Optics Expert", "description": "Study the full optics section"},
+        "atomic_done": {"name": "Atomic Physicist", "description": "Study atomic and nuclear physics"},
+        "relativity_done": {"name": "Relativist", "description": "Study special relativity"},
+        "astronomy_done": {"name": "Astronomer", "description": "Study the full astronomy section"},
     },
     "kk": {
         "first_test": {"name": "Бірінші тест", "description": "Бірінші тестті тапсырыңыз"},
@@ -2157,6 +2203,10 @@ ACHIEVEMENTS_I18N = {
         "mechanics_done": {"name": "Механик", "description": "Механиканың барлық тақырыптарын оқыңыз"},
         "thermo_done": {"name": "Термодинамик", "description": "Термодинамиканың барлық тақырыптарын оқыңыз"},
         "electro_done": {"name": "Электрик", "description": "Электр тақырыптарының барлығын оқыңыз"},
+        "optics_done": {"name": "Оптик", "description": "Оптика бөлімін толық оқыңыз"},
+        "atomic_done": {"name": "Атом физигі", "description": "Атом және ядролық физиканы оқыңыз"},
+        "relativity_done": {"name": "Релятивист", "description": "Арнайы салыстырмалылық теориясын оқыңыз"},
+        "astronomy_done": {"name": "Астроном", "description": "Астрономия бөлімін толық оқыңыз"},
     },
 }
 
@@ -3124,10 +3174,12 @@ from routes.practice import router as practice_router
 from postgres import (
     close_postgres_pool,
     get_physics_formula,
+    get_lesson_topic,
     get_practice_test,
     init_postgres_schema,
     is_postgres_configured,
     list_lesson_sections,
+    list_lesson_topics,
     list_physics_formulas,
     list_practice_tasks,
     list_practice_tests,

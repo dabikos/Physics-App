@@ -3,10 +3,10 @@ import random
 import uuid
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel
 
-from server import db, get_current_user, record_daily_activity
+from server import db, get_current_user, parse_accept_language, record_daily_activity
 
 from postgres import (
     get_practice_task,
@@ -79,6 +79,7 @@ async def get_practice_tests(
     section: str | None = Query(default=None),
     subsection: str | None = Query(default=None),
     topic: str | None = Query(default=None),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     ensure_postgres_configured()
     try:
@@ -86,6 +87,7 @@ async def get_practice_tests(
             section_id=section,
             subsection_id=subsection,
             topic_id=topic,
+            lang=parse_accept_language(accept_language),
         )
         return {"items": items}
     except Exception as exc:
@@ -96,6 +98,7 @@ async def get_practice_tests(
 async def create_random_practice_test(
     payload: RandomPracticeTestRequest,
     current_user: dict = Depends(get_current_user),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     ensure_postgres_configured()
     allowed_counts = {5, 10, 15, 20, 30}
@@ -107,7 +110,11 @@ async def create_random_practice_test(
         raise HTTPException(status_code=400, detail="Select at least one section")
 
     try:
-        questions = await list_random_practice_questions(section_ids=section_ids, limit=payload.question_count)
+        questions = await list_random_practice_questions(
+            section_ids=section_ids,
+            limit=payload.question_count,
+            lang=parse_accept_language(accept_language),
+        )
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Random practice test unavailable: {exc}") from exc
 
@@ -149,10 +156,13 @@ async def create_random_practice_test(
 
 
 @router.get("/practice/tests/{test_id}")
-async def get_practice_test_by_id(test_id: str):
+async def get_practice_test_by_id(
+    test_id: str,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     ensure_postgres_configured()
     try:
-        item = await get_practice_test(test_id)
+        item = await get_practice_test(test_id, lang=parse_accept_language(accept_language))
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Practice test unavailable: {exc}") from exc
 
@@ -166,6 +176,7 @@ async def get_practice_tasks(
     section: str | None = Query(default=None),
     subsection: str | None = Query(default=None),
     topic: str | None = Query(default=None),
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     ensure_postgres_configured()
     try:
@@ -173,6 +184,7 @@ async def get_practice_tasks(
             section_id=section,
             subsection_id=subsection,
             topic_id=topic,
+            lang=parse_accept_language(accept_language),
         )
         return {"items": items}
     except Exception as exc:
@@ -180,10 +192,13 @@ async def get_practice_tasks(
 
 
 @router.get("/practice/tasks/{task_id}")
-async def get_practice_task_by_id(task_id: str):
+async def get_practice_task_by_id(
+    task_id: str,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+):
     ensure_postgres_configured()
     try:
-        item = await get_practice_task(task_id)
+        item = await get_practice_task(task_id, lang=parse_accept_language(accept_language))
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Practice task unavailable: {exc}") from exc
 

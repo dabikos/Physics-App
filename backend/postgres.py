@@ -120,6 +120,7 @@ async def init_postgres_schema() -> None:
             CREATE TABLE IF NOT EXISTS lesson_sections (
                 id TEXT PRIMARY KEY,
                 name TEXT NOT NULL,
+                translations JSONB NOT NULL DEFAULT '{}'::jsonb,
                 icon TEXT,
                 color TEXT,
                 order_index INTEGER NOT NULL DEFAULT 0,
@@ -133,6 +134,7 @@ async def init_postgres_schema() -> None:
                 id TEXT PRIMARY KEY,
                 section_id TEXT NOT NULL REFERENCES lesson_sections(id) ON DELETE CASCADE,
                 name TEXT NOT NULL,
+                translations JSONB NOT NULL DEFAULT '{}'::jsonb,
                 order_index INTEGER NOT NULL DEFAULT 0,
                 is_published BOOLEAN NOT NULL DEFAULT TRUE,
                 source TEXT NOT NULL DEFAULT 'seed',
@@ -148,6 +150,7 @@ async def init_postgres_schema() -> None:
                 brief_info TEXT NOT NULL DEFAULT '',
                 example_problem TEXT NOT NULL DEFAULT '',
                 formulas JSONB NOT NULL DEFAULT '[]'::jsonb,
+                translations JSONB NOT NULL DEFAULT '{}'::jsonb,
                 video JSONB,
                 order_index INTEGER NOT NULL DEFAULT 0,
                 is_published BOOLEAN NOT NULL DEFAULT TRUE,
@@ -164,6 +167,7 @@ async def init_postgres_schema() -> None:
                 description TEXT NOT NULL DEFAULT '',
                 variables JSONB NOT NULL DEFAULT '{}'::jsonb,
                 unit TEXT NOT NULL DEFAULT '',
+                translations JSONB NOT NULL DEFAULT '{}'::jsonb,
                 order_index INTEGER NOT NULL DEFAULT 0,
                 is_published BOOLEAN NOT NULL DEFAULT TRUE,
                 source TEXT NOT NULL DEFAULT 'seed',
@@ -188,6 +192,7 @@ async def init_postgres_schema() -> None:
                 title TEXT NOT NULL,
                 difficulty TEXT NOT NULL DEFAULT 'basic',
                 questions JSONB NOT NULL DEFAULT '[]'::jsonb,
+                translations JSONB NOT NULL DEFAULT '{}'::jsonb,
                 time_limit INTEGER NOT NULL DEFAULT 300,
                 order_index INTEGER NOT NULL DEFAULT 0,
                 is_published BOOLEAN NOT NULL DEFAULT TRUE,
@@ -209,6 +214,7 @@ async def init_postgres_schema() -> None:
                 solution TEXT NOT NULL DEFAULT '',
                 answer TEXT NOT NULL DEFAULT '',
                 difficulty TEXT NOT NULL DEFAULT 'medium',
+                translations JSONB NOT NULL DEFAULT '{}'::jsonb,
                 raw_text TEXT NOT NULL DEFAULT '',
                 order_index INTEGER NOT NULL DEFAULT 0,
                 is_published BOOLEAN NOT NULL DEFAULT TRUE,
@@ -224,12 +230,21 @@ async def init_postgres_schema() -> None:
                 ON practice_tasks(section_id, subsection_id, order_index);
             """
         )
+        await conn.execute("ALTER TABLE lesson_sections ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
+        await conn.execute("ALTER TABLE lesson_subsections ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
+        await conn.execute("ALTER TABLE lesson_topics ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
+        await conn.execute("ALTER TABLE physics_formulas ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
+        await conn.execute("ALTER TABLE practice_tests ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
+        await conn.execute("ALTER TABLE practice_tasks ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
         await conn.execute("ALTER TABLE physics_formulas ENABLE ROW LEVEL SECURITY")
         await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
         await seed_default_ai_prompts(conn)
         await seed_lesson_content(conn)
+        await seed_lesson_translations(conn)
         await seed_formula_content(conn)
+        await seed_formula_translations(conn)
         await seed_practice_content(conn)
+        await seed_practice_translations(conn)
 
 
 async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
@@ -423,6 +438,68 @@ async def seed_lesson_file(conn: asyncpg.Connection, seed_path: Path) -> None:
         )
 
 
+async def seed_lesson_translations(conn: asyncpg.Connection) -> None:
+    seed_path = ROOT_DIR / "content" / "lesson_translations.json"
+    if not seed_path.exists():
+        logger.warning("Lesson translation seed file is missing: %s", seed_path)
+        return
+
+    payload = json.loads(seed_path.read_text(encoding="utf-8"))
+    section_translations: dict[str, dict[str, Any]] = {}
+    subsection_translations: dict[str, dict[str, Any]] = {}
+    topic_translations: dict[str, dict[str, Any]] = {}
+
+    for lang, lang_payload in payload.items():
+        for section_id, section in lang_payload.get("sections", {}).items():
+            section_translations.setdefault(section_id, {})[lang] = {
+                "name": section.get("name", "")
+            }
+            for subsection_id, subsection in section.get("subsections", {}).items():
+                subsection_translations.setdefault(subsection_id, {})[lang] = {
+                    "name": subsection.get("name", "")
+                }
+
+        for topic_id, topic in lang_payload.get("topics", {}).items():
+            topic_translations.setdefault(topic_id, {})[lang] = {
+                "title": topic.get("title", ""),
+                "brief_info": topic.get("brief_info", ""),
+                "example_problem": topic.get("example_problem", ""),
+            }
+
+    for section_id, translations in section_translations.items():
+        await conn.execute(
+            """
+            UPDATE lesson_sections
+            SET translations = $2::jsonb, updated_at = NOW()
+            WHERE id = $1 AND source = 'seed'
+            """,
+            section_id,
+            json.dumps(translations, ensure_ascii=False),
+        )
+
+    for subsection_id, translations in subsection_translations.items():
+        await conn.execute(
+            """
+            UPDATE lesson_subsections
+            SET translations = $2::jsonb, updated_at = NOW()
+            WHERE id = $1 AND source = 'seed'
+            """,
+            subsection_id,
+            json.dumps(translations, ensure_ascii=False),
+        )
+
+    for topic_id, translations in topic_translations.items():
+        await conn.execute(
+            """
+            UPDATE lesson_topics
+            SET translations = $2::jsonb, updated_at = NOW()
+            WHERE id = $1 AND source = 'seed'
+            """,
+            topic_id,
+            json.dumps(translations, ensure_ascii=False),
+        )
+
+
 async def seed_formula_content(conn: asyncpg.Connection) -> None:
     seed_path = ROOT_DIR / "content" / "formulas.json"
     if not seed_path.exists():
@@ -457,6 +534,36 @@ async def seed_formula_content(conn: asyncpg.Connection) -> None:
             json.dumps(formula.get("variables") or {}),
             formula.get("unit", ""),
             formula.get("order_index", index),
+        )
+
+
+async def seed_formula_translations(conn: asyncpg.Connection) -> None:
+    seed_path = ROOT_DIR / "content" / "formula_translations.json"
+    if not seed_path.exists():
+        logger.warning("Formula translation seed file is missing: %s", seed_path)
+        return
+
+    payload = json.loads(seed_path.read_text(encoding="utf-8"))
+    formula_translations: dict[str, dict[str, Any]] = {}
+
+    for lang, lang_payload in payload.items():
+        for formula_id, formula in lang_payload.get("formulas", {}).items():
+            formula_translations.setdefault(formula_id, {})[lang] = {
+                "name": formula.get("name", ""),
+                "description": formula.get("description", ""),
+                "variables": formula.get("variables") or {},
+                "unit": formula.get("unit", ""),
+            }
+
+    for formula_id, translations in formula_translations.items():
+        await conn.execute(
+            """
+            UPDATE physics_formulas
+            SET translations = $2::jsonb, updated_at = NOW()
+            WHERE id = $1 AND source = 'seed'
+            """,
+            formula_id,
+            json.dumps(translations, ensure_ascii=False),
         )
 
 
@@ -551,6 +658,58 @@ async def seed_practice_tasks_file(conn: asyncpg.Connection, seed_path: Path) ->
         )
 
 
+async def seed_practice_translations(conn: asyncpg.Connection) -> None:
+    seed_paths = sorted((ROOT_DIR / "content").glob("*_practice_translations.json"))
+    if not seed_paths:
+        logger.warning("Practice translation seed files are missing in %s", ROOT_DIR / "content")
+        return
+
+    for seed_path in seed_paths:
+        payload = json.loads(seed_path.read_text(encoding="utf-8"))
+        test_translations: dict[str, dict[str, Any]] = {}
+        task_translations: dict[str, dict[str, Any]] = {}
+
+        for lang, lang_payload in payload.items():
+            for test_id, test in lang_payload.get("tests", {}).items():
+                test_translations.setdefault(test_id, {})[lang] = {
+                    "title": test.get("title", ""),
+                    "questions": test.get("questions") or [],
+                }
+
+            for task_id, task in lang_payload.get("tasks", {}).items():
+                task_translations.setdefault(task_id, {})[lang] = {
+                    "topic_title": task.get("topic_title", ""),
+                    "title": task.get("title", ""),
+                    "problem_text": task.get("problem_text", ""),
+                    "given_data": task.get("given_data", ""),
+                    "find_text": task.get("find_text", ""),
+                    "solution": task.get("solution", ""),
+                    "answer": task.get("answer", ""),
+                }
+
+        for test_id, translations in test_translations.items():
+            await conn.execute(
+                """
+                UPDATE practice_tests
+                SET translations = $2::jsonb, updated_at = NOW()
+                WHERE id = $1 AND source = 'seed'
+                """,
+                test_id,
+                json.dumps(translations, ensure_ascii=False),
+            )
+
+        for task_id, translations in task_translations.items():
+            await conn.execute(
+                """
+                UPDATE practice_tasks
+                SET translations = $2::jsonb, updated_at = NOW()
+                WHERE id = $1 AND source = 'seed'
+                """,
+                task_id,
+                json.dumps(translations, ensure_ascii=False),
+            )
+
+
 def render_prompt_template(template: str, variables: dict[str, Any]) -> str:
     allowed = {name for _, name, _, _ in Formatter().parse(template) if name}
     values = {key: variables.get(key, "") for key in allowed}
@@ -582,54 +741,100 @@ async def get_ai_prompt(key: str) -> Optional[dict[str, Any]]:
         return None
 
 
-def _practice_test_row(row: asyncpg.Record) -> dict[str, Any]:
+def _localized_dict(translations: Any, lang: str | None) -> dict[str, Any]:
+    if not lang or lang == "ru":
+        return {}
+    values = _decode_jsonb(translations) or {}
+    return values.get(lang, {}) or {}
+
+
+def _practice_test_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    localized = _localized_dict(row["translations"], lang)
     return {
         **dict(row),
         "section": row["section_id"],
-        "questions": _decode_jsonb(row["questions"]) or [],
+        "title": localized.get("title") or row["title"],
+        "questions": localized.get("questions") or _decode_jsonb(row["questions"]) or [],
         "created_at": row["created_at"].isoformat(),
         "updated_at": row["updated_at"].isoformat(),
     }
 
 
-def _practice_task_row(row: asyncpg.Record) -> dict[str, Any]:
+def _practice_task_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    localized = _localized_dict(row["translations"], lang)
     return {
         **dict(row),
         "section": row["section_id"],
+        "topic_title": localized.get("topic_title") or row["topic_title"],
+        "title": localized.get("title") or row["title"],
+        "problem_text": localized.get("problem_text") or row["problem_text"],
+        "given_data": localized.get("given_data") or row["given_data"],
+        "find_text": localized.get("find_text") or row["find_text"],
+        "solution": localized.get("solution") or row["solution"],
+        "answer": localized.get("answer") or row["answer"],
         "created_at": row["created_at"].isoformat(),
         "updated_at": row["updated_at"].isoformat(),
     }
 
 
-def _formula_row(row: asyncpg.Record) -> dict[str, Any]:
+def _formula_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    translations = _decode_jsonb(row["translations"]) or {}
+    localized = translations.get(lang or "", {}) if lang and lang != "ru" else {}
     return {
         "id": row["id"],
         "section": row["section_id"],
-        "name": row["name"],
+        "name": localized.get("name") or row["name"],
         "formula": row["formula"],
-        "description": row["description"],
-        "variables": _decode_jsonb(row["variables"]) or {},
-        "unit": row["unit"],
+        "description": localized.get("description") or row["description"],
+        "variables": localized.get("variables") or _decode_jsonb(row["variables"]) or {},
+        "unit": localized.get("unit") or row["unit"],
         "created_at": row["created_at"].isoformat(),
         "updated_at": row["updated_at"].isoformat(),
     }
 
 
-async def list_lesson_sections() -> dict[str, Any]:
+def _localized_value(translations: Any, lang: str | None, field: str, fallback: str) -> str:
+    if not lang or lang == "ru":
+        return fallback
+    values = _decode_jsonb(translations) or {}
+    localized = values.get(lang, {}).get(field)
+    return localized or fallback
+
+
+def _topic_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    video = _decode_jsonb(row["video"])
+    return {
+        "id": row["id"],
+        "section": row["section_id"],
+        "subsection": row["subsection_id"],
+        "title": _localized_value(row["translations"], lang, "title", row["title"]),
+        "brief_info": _localized_value(row["translations"], lang, "brief_info", row["brief_info"]),
+        "example_problem": _localized_value(row["translations"], lang, "example_problem", row["example_problem"]),
+        "formulas": _decode_jsonb(row["formulas"]) or [],
+        "video": video,
+        "created_at": row["created_at"].isoformat(),
+        "updated_at": row["updated_at"].isoformat(),
+    }
+
+
+async def list_lesson_sections(lang: str | None = None) -> dict[str, Any]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
         """
         SELECT
             s.id AS section_id,
             s.name AS section_name,
+            s.translations AS section_translations,
             s.icon AS section_icon,
             s.color AS section_color,
             s.order_index AS section_order,
             ss.id AS subsection_id,
             ss.name AS subsection_name,
+            ss.translations AS subsection_translations,
             ss.order_index AS subsection_order,
             t.id AS topic_id,
             t.title AS topic_title,
+            t.translations AS topic_translations,
             t.order_index AS topic_order
         FROM lesson_sections s
         LEFT JOIN lesson_subsections ss
@@ -648,7 +853,7 @@ async def list_lesson_sections() -> dict[str, Any]:
         section_id = row["section_id"]
         if section_id not in sections:
             sections[section_id] = {
-                "name": row["section_name"],
+                "name": _localized_value(row["section_translations"], lang, "name", row["section_name"]),
                 "icon": row["section_icon"] or "book",
                 "color": row["section_color"] or "#6366F1",
                 "subsections": [],
@@ -666,7 +871,7 @@ async def list_lesson_sections() -> dict[str, Any]:
             sections[section_id]["subsections"].append(
                 {
                     "id": subsection_id,
-                    "name": row["subsection_name"],
+                    "name": _localized_value(row["subsection_translations"], lang, "name", row["subsection_name"]),
                     "topics": [],
                 }
             )
@@ -676,14 +881,48 @@ async def list_lesson_sections() -> dict[str, Any]:
             sections[section_id]["subsections"][sub_index]["topics"].append(
                 {
                     "id": topic_id,
-                    "name": row["topic_title"],
+                    "name": _localized_value(row["topic_translations"], lang, "title", row["topic_title"]),
                 }
             )
 
     return sections
 
 
-async def list_physics_formulas(section_id: str | None = None) -> list[dict[str, Any]]:
+async def list_lesson_topics(
+    section_id: str | None = None,
+    subsection_id: str | None = None,
+    lang: str | None = None,
+) -> list[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    rows = await pool.fetch(
+        """
+        SELECT *
+        FROM lesson_topics
+        WHERE is_published = TRUE
+            AND ($1::text IS NULL OR section_id = $1)
+            AND ($2::text IS NULL OR subsection_id = $2)
+        ORDER BY section_id, subsection_id, order_index, id
+        """,
+        section_id,
+        subsection_id,
+    )
+    return [_topic_row(row, lang) for row in rows]
+
+
+async def get_lesson_topic(topic_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
+    pool = await get_postgres_pool()
+    row = await pool.fetchrow(
+        """
+        SELECT *
+        FROM lesson_topics
+        WHERE id = $1 AND is_published = TRUE
+        """,
+        topic_id,
+    )
+    return _topic_row(row, lang) if row else None
+
+
+async def list_physics_formulas(section_id: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
         """
@@ -695,10 +934,10 @@ async def list_physics_formulas(section_id: str | None = None) -> list[dict[str,
         """,
         section_id,
     )
-    return [_formula_row(row) for row in rows]
+    return [_formula_row(row, lang) for row in rows]
 
 
-async def get_physics_formula(formula_id: str) -> Optional[dict[str, Any]]:
+async def get_physics_formula(formula_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
     pool = await get_postgres_pool()
     row = await pool.fetchrow(
         """
@@ -708,13 +947,14 @@ async def get_physics_formula(formula_id: str) -> Optional[dict[str, Any]]:
         """,
         formula_id,
     )
-    return _formula_row(row) if row else None
+    return _formula_row(row, lang) if row else None
 
 
 async def list_practice_tests(
     section_id: str | None = None,
     subsection_id: str | None = None,
     topic_id: str | None = None,
+    lang: str | None = None,
 ) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
@@ -731,12 +971,13 @@ async def list_practice_tests(
         subsection_id,
         topic_id,
     )
-    return [_practice_test_row(row) for row in rows]
+    return [_practice_test_row(row, lang) for row in rows]
 
 
 async def list_random_practice_questions(
     section_ids: list[str] | None = None,
     limit: int = 10,
+    lang: str | None = None,
 ) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
@@ -748,9 +989,11 @@ async def list_random_practice_questions(
             pt.subsection_id,
             pt.topic_id,
             pt.difficulty,
-            q.question AS question
+            q.ordinality AS question_index,
+            q.question AS question,
+            pt.translations AS translations
         FROM practice_tests pt
-        CROSS JOIN LATERAL jsonb_array_elements(pt.questions) AS q(question)
+        CROSS JOIN LATERAL jsonb_array_elements(pt.questions) WITH ORDINALITY AS q(question, ordinality)
         WHERE pt.is_published = TRUE
             AND jsonb_typeof(q.question) = 'object'
             AND (
@@ -767,6 +1010,13 @@ async def list_random_practice_questions(
     questions: list[dict[str, Any]] = []
     for row in rows:
         question = _decode_jsonb(row["question"]) or {}
+        localized_questions = _localized_dict(row["translations"], lang).get("questions") or []
+        localized_question = {}
+        question_index = int(row["question_index"] or 1) - 1
+        if 0 <= question_index < len(localized_questions):
+            localized_question = localized_questions[question_index] or {}
+        if localized_question:
+            question = {**question, **localized_question}
         options = question.get("options") or []
         if not question.get("question") or len(options) < 2:
             continue
@@ -787,7 +1037,7 @@ async def list_random_practice_questions(
     return questions
 
 
-async def get_practice_test(test_id: str) -> Optional[dict[str, Any]]:
+async def get_practice_test(test_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
     pool = await get_postgres_pool()
     row = await pool.fetchrow(
         """
@@ -797,13 +1047,14 @@ async def get_practice_test(test_id: str) -> Optional[dict[str, Any]]:
         """,
         test_id,
     )
-    return _practice_test_row(row) if row else None
+    return _practice_test_row(row, lang) if row else None
 
 
 async def list_practice_tasks(
     section_id: str | None = None,
     subsection_id: str | None = None,
     topic_id: str | None = None,
+    lang: str | None = None,
 ) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
@@ -820,10 +1071,10 @@ async def list_practice_tasks(
         subsection_id,
         topic_id,
     )
-    return [_practice_task_row(row) for row in rows]
+    return [_practice_task_row(row, lang) for row in rows]
 
 
-async def get_practice_task(task_id: str) -> Optional[dict[str, Any]]:
+async def get_practice_task(task_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
     pool = await get_postgres_pool()
     row = await pool.fetchrow(
         """
@@ -833,7 +1084,7 @@ async def get_practice_task(task_id: str) -> Optional[dict[str, Any]]:
         """,
         task_id,
     )
-    return _practice_task_row(row) if row else None
+    return _practice_task_row(row, lang) if row else None
 
 
 async def postgres_health() -> dict[str, Any]:

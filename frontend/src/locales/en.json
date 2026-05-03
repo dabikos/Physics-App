@@ -275,6 +275,18 @@
       },
       "electro_done": {
         "name": "Electrician"
+      },
+      "optics_done": {
+        "name": "Optics Expert"
+      },
+      "atomic_done": {
+        "name": "Atomic Physicist"
+      },
+      "relativity_done": {
+        "name": "Relativist"
+      },
+      "astronomy_done": {
+        "name": "Astronomer"
       }
     }
   },

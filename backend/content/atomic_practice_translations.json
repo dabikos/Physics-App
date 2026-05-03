@@ -1,0 +1,2814 @@
+{
+  "en": {
+    "tests": {
+      "atomic-atom-models-test": {
+        "title": "Test: Atomic Models",
+        "questions": [
+          {
+            "question": "In Rutherford's planetary model, almost all mass of the atom is concentrated:",
+            "options": [
+              "uniformly throughout the atom",
+              "in the nucleus",
+              "in the electron shells",
+              "only between the nucleus and electrons"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The typical size of an atomic nucleus is about:",
+            "options": [
+              "10⁻¹⁰ m",
+              "1 m",
+              "10⁻¹⁵ m",
+              "10⁵ m"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The typical size of an atom is about:",
+            "options": [
+              "10⁻³ m",
+              "10⁻¹⁵ m",
+              "10³ m",
+              "10⁻¹⁰ m"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Rutherford's alpha-particle scattering experiment showed that an atom:",
+            "options": [
+              "consists only of electrons",
+              "has a small dense positive nucleus",
+              "is completely filled with positive matter",
+              "contains no charges"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Why did most alpha particles pass through the foil almost without deflection?",
+            "options": [
+              "electrons have enormous mass",
+              "the nucleus occupies the whole atom",
+              "alpha particles do not interact with matter",
+              "most of the atom's volume is practically empty"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "atomic-energy-levels-test": {
+        "title": "Test: Energy Levels",
+        "questions": [
+          {
+            "question": "In an atom, an electron can have:",
+            "options": [
+              "any energy without restrictions",
+              "energy equal to the mass of the nucleus",
+              "only zero energy",
+              "only certain discrete energies"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "For a hydrogen atom, the energy of level n is:",
+            "options": [
+              "Eₙ = -13.6n eV",
+              "Eₙ = n/13.6 eV",
+              "Eₙ = -13.6/n² eV",
+              "Eₙ = 13.6n² eV"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "When an electron moves from a higher level to a lower one, the atom:",
+            "options": [
+              "ceases to exist",
+              "must absorb a photon",
+              "emits a photon",
+              "loses its nucleus"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The photon energy in a transition between levels is:",
+            "options": [
+              "hν = I²R",
+              "hν = E₁ + E₂ always",
+              "hν = E₁/E₂",
+              "hν = E₂ - E₁"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The larger the transition energy, the frequency of the emitted photon is:",
+            "options": [
+              "unchanged",
+              "higher",
+              "zero",
+              "lower"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-electron-shells-test": {
+        "title": "Test: Electron Shells",
+        "questions": [
+          {
+            "question": "The maximum number of electrons in a shell with principal quantum number n is:",
+            "options": [
+              "Nmax = n²",
+              "Nmax = 2n²",
+              "Nmax = 2n",
+              "Nmax = n + 2"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The first shell can contain at most:",
+            "options": [
+              "18 electrons",
+              "8 electrons",
+              "32 electrons",
+              "2 electrons"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The second shell can contain at most:",
+            "options": [
+              "2 electrons",
+              "32 electrons",
+              "18 electrons",
+              "8 electrons"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The chemical properties of an atom are mainly determined by:",
+            "options": [
+              "only proton mass",
+              "only neutrons in the nucleus",
+              "outer electrons",
+              "the speed of light"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The electron shell of an atom as a whole has charge:",
+            "options": [
+              "positive",
+              "negative",
+              "nuclear",
+              "always zero regardless of electrons"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-de-broglie-waves-test": {
+        "title": "Test: de Broglie Waves",
+        "questions": [
+          {
+            "question": "The de Broglie wavelength of a particle is:",
+            "options": [
+              "λ = p/h",
+              "λ = hp",
+              "λ = mv²/2",
+              "λ = h/p"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "For a nonrelativistic particle with mass m and speed v:",
+            "options": [
+              "λ = mv/h",
+              "λ = h/(mv)",
+              "λ = hmv",
+              "λ = m/(hv)"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If a particle's momentum increases, its de Broglie wavelength:",
+            "options": [
+              "becomes negative",
+              "decreases",
+              "does not change",
+              "increases"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The wave properties of electrons are confirmed by:",
+            "options": [
+              "thermal conductivity of a gas",
+              "electron diffraction",
+              "only falling bodies",
+              "Archimedes' law"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "For a heavy body at ordinary speed, the de Broglie wave is practically unobservable because:",
+            "options": [
+              "the body's mass is zero",
+              "momentum is very large and λ is very small",
+              "the speed of light disappears",
+              "Planck's constant is enormous"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-heisenberg-uncertainty-test": {
+        "title": "Test: Heisenberg Uncertainty",
+        "questions": [
+          {
+            "question": "The uncertainty relation for coordinate and momentum is:",
+            "options": [
+              "Δx/Δp ≥ ℏ/2",
+              "Δx·Δp = mv²",
+              "Δx·Δp ≥ ℏ/2",
+              "Δx + Δp = 0"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The more accurately a particle's coordinate is specified, the:",
+            "options": [
+              "smaller Planck's constant becomes",
+              "more its mass disappears",
+              "more accurately its momentum becomes without limits",
+              "less accurately its momentum can be specified"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The relation ΔE·Δt ≥ ℏ/2 connects uncertainties of:",
+            "options": [
+              "charge and voltage",
+              "force and distance",
+              "mass and volume",
+              "energy and time"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The uncertainty principle is most important:",
+            "options": [
+              "only for sound",
+              "in the microworld",
+              "only for liquids",
+              "only for planets"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The uncertainty principle means:",
+            "options": [
+              "impossibility of any measurements",
+              "absence of laws in physics",
+              "a bad-instrument error that can be fully removed",
+              "a quantum limit on the simultaneous precision of some quantities"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "atomic-nucleus-structure-test": {
+        "title": "Test: Nuclear Structure",
+        "questions": [
+          {
+            "question": "The mass number of a nucleus is:",
+            "options": [
+              "A = N/Z",
+              "A = Z + N",
+              "A = Z/N",
+              "A = Z - N"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Z in nuclear notation means:",
+            "options": [
+              "the number of electron shells",
+              "the number of neutrons",
+              "binding energy",
+              "the number of protons"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "N in a nucleus means:",
+            "options": [
+              "the number of protons",
+              "the number of neutrons",
+              "electron charge",
+              "the speed of light"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Isotopes of the same element have the same:",
+            "options": [
+              "number of nucleons always",
+              "number of protons",
+              "mass number",
+              "number of neutrons"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "An atomic nucleus as a whole has:",
+            "options": [
+              "zero charge for all elements",
+              "positive charge",
+              "negative charge",
+              "photon charge"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-nuclear-forces-test": {
+        "title": "Test: Nuclear Forces",
+        "questions": [
+          {
+            "question": "Nuclear forces act mainly at distances of about:",
+            "options": [
+              "only kilometers",
+              "only between planets",
+              "10⁻¹⁵ m",
+              "only in electric circuits"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Nuclear forces hold together:",
+            "options": [
+              "planets in orbits",
+              "protons and neutrons in the nucleus",
+              "gas molecules at large distances",
+              "only electrons in a conductor"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Compared with electrostatic repulsion of protons at small distances, the nuclear interaction is:",
+            "options": [
+              "always weaker",
+              "acts only on electrons",
+              "absent",
+              "stronger"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Nuclear forces are:",
+            "options": [
+              "infinitely long-range without weakening",
+              "short-range",
+              "only magnetic",
+              "only gravitational"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Neutrons help stabilize heavy nuclei because they:",
+            "options": [
+              "turn the nucleus into an atomic shell",
+              "participate in the strong interaction without adding electric repulsion",
+              "have a large positive charge",
+              "electrically repel all protons"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-binding-energy-test": {
+        "title": "Test: Binding Energy",
+        "questions": [
+          {
+            "question": "The binding energy of a nucleus is:",
+            "options": [
+              "the energy of motion of the atom as a whole",
+              "the temperature of matter",
+              "the energy of electrons in a conductor",
+              "the energy required to split the nucleus into separate nucleons"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The mass defect of a nucleus is:",
+            "options": [
+              "Δm = E/c",
+              "Δm = M - Zmp - Nmn",
+              "Δm = Z + N",
+              "Δm = Zmp + Nmn - M"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The relation between binding energy and mass defect is:",
+            "options": [
+              "Ebind = Δm/c²",
+              "Ebind = Δm·c²",
+              "Ebind = c²/Δm",
+              "Ebind = Δm + c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the mass defect is larger, the binding energy is:",
+            "options": [
+              "unchanged",
+              "larger",
+              "zero",
+              "smaller"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Specific binding energy shows:",
+            "options": [
+              "nuclear charge",
+              "energy of one shell electron",
+              "binding energy per nucleon",
+              "mass of one proton"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "atomic-decay-types-test": {
+        "title": "Test: Types of Decay",
+        "questions": [
+          {
+            "question": "In alpha decay, the nucleus emits:",
+            "options": [
+              "an air molecule",
+              "the whole electron shell",
+              "a helium nucleus ⁴He",
+              "a visible-light photon"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "In alpha decay, the mass number of the nucleus:",
+            "options": [
+              "does not change",
+              "decreases by 1",
+              "decreases by 4",
+              "increases by 4"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "In beta-minus decay, the nuclear charge number:",
+            "options": [
+              "does not change",
+              "increases by 1",
+              "decreases by 2",
+              "decreases by 1"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Gamma radiation is:",
+            "options": [
+              "a chemical reaction",
+              "a stream of high-energy photons",
+              "a stream of helium nuclei",
+              "a stream of slow atoms"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Which type of radiation usually has the greatest penetrating power?",
+            "options": [
+              "thermal conductivity",
+              "gamma radiation",
+              "alpha radiation",
+              "ordinary sound"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-decay-law-test": {
+        "title": "Test: Radioactive Decay Law",
+        "questions": [
+          {
+            "question": "The decay law using half-life is:",
+            "options": [
+              "N = T/t",
+              "N = N₀·2^(-t/T)",
+              "N = N₀·2^(t/T)",
+              "N = N₀ + t/T"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "After one half-life, there remains:",
+            "options": [
+              "one quarter of the initial nuclei",
+              "all nuclei",
+              "necessarily zero nuclei",
+              "half of the initial nuclei"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "After two half-lives, there remains:",
+            "options": [
+              "3/4 of the initial nuclei",
+              "1/4 of the initial nuclei",
+              "all nuclei",
+              "1/2 of the initial nuclei"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The decay constant λ appears in the law:",
+            "options": [
+              "N = λ/t",
+              "N = t/λ",
+              "N = N₀·e^(-λt)",
+              "N = N₀·e^(λt)"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The activity of a radioactive sample over time:",
+            "options": [
+              "always increases",
+              "decreases",
+              "becomes negative",
+              "does not depend on the number of nuclei"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-radiation-doses-test": {
+        "title": "Test: Radiation Doses",
+        "questions": [
+          {
+            "question": "The absorbed radiation dose is:",
+            "options": [
+              "D = I/R",
+              "D = m/E",
+              "D = Et",
+              "D = E/m"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The unit of absorbed dose is:",
+            "options": [
+              "coulomb",
+              "gray",
+              "ohm",
+              "tesla"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The equivalent dose is:",
+            "options": [
+              "H = D + m",
+              "H = D·k",
+              "H = E/t",
+              "H = D/k"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The unit of equivalent dose is:",
+            "options": [
+              "volt",
+              "newton",
+              "watt",
+              "sievert"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The quality factor k is needed because:",
+            "options": [
+              "body mass is always unknown",
+              "different types of radiation damage tissue differently for the same absorbed energy",
+              "all radiation is identical",
+              "radiation energy is unimportant"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-fission-test": {
+        "title": "Test: Nuclear Fission",
+        "questions": [
+          {
+            "question": "Fission of a heavy nucleus is a process in which the nucleus:",
+            "options": [
+              "absorbs an electron shell",
+              "splits into two lighter fragments and neutrons",
+              "becomes a molecule",
+              "turns only into a photon"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Fission of ²³⁵U usually releases:",
+            "options": [
+              "only electrons",
+              "2-3 neutrons and energy",
+              "oxygen molecules",
+              "only cold"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "A chain reaction is possible if:",
+            "options": [
+              "no energy is released",
+              "neutrons from fission cause new fissions",
+              "nuclei do not interact",
+              "all neutrons disappear"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In a nuclear reactor, the chain reaction is made:",
+            "options": [
+              "chemical",
+              "impossible",
+              "controlled",
+              "necessarily explosive"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The main source of energy in fission is:",
+            "options": [
+              "water evaporation without nuclear processes",
+              "Ohm's law",
+              "air friction",
+              "mass defect and E = Δm·c²"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "atomic-fusion-test": {
+        "title": "Test: Thermonuclear Fusion",
+        "questions": [
+          {
+            "question": "Thermonuclear fusion is:",
+            "options": [
+              "reflection of light",
+              "chemical combustion",
+              "the merging of light nuclei into a heavier one",
+              "the fission of a heavy nucleus"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "An example of a fusion reaction is:",
+            "options": [
+              "U + n → fragments",
+              "I = U/R",
+              "NaCl → Na⁺ + Cl⁻",
+              "²H + ³H → ⁴He + n + E"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Fusion requires very high temperatures because nuclei:",
+            "options": [
+              "are neutral molecules",
+              "have positive charges and repel each other electrostatically",
+              "do not interact through nuclear forces",
+              "have no mass"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The energy of stars is mainly related to:",
+            "options": [
+              "friction of planets",
+              "ordinary coal burning",
+              "a radio antenna",
+              "thermonuclear fusion"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Fusion of light nuclei releases energy if:",
+            "options": [
+              "the product mass is always greater",
+              "the mass of the products is less than the mass of the initial nuclei",
+              "a neutron turns into a molecule",
+              "charge disappears"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-nuclear-energy-use-test": {
+        "title": "Test: Uses of Nuclear Energy",
+        "questions": [
+          {
+            "question": "In a nuclear power plant, nuclear energy is usually first converted into:",
+            "options": [
+              "light without heating",
+              "thermal energy",
+              "chemical salt",
+              "sound"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The formula E = Δm·c² shows:",
+            "options": [
+              "Ohm's law",
+              "the relation between released energy and mass defect",
+              "gas pressure",
+              "the law of reflection of light"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Control rods in a reactor are needed to:",
+            "options": [
+              "directly increase socket voltage",
+              "create gravity",
+              "absorb neutrons and regulate the chain reaction",
+              "turn water into uranium"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The main task of the coolant in a reactor is to:",
+            "options": [
+              "amplify sound",
+              "replace fuel",
+              "create the photoelectric effect",
+              "remove heat from the core"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "An important issue in nuclear energy is:",
+            "options": [
+              "impossibility of controlling the reaction",
+              "absence of energy release",
+              "absence of heat in the reactor",
+              "handling radioactive waste"
+            ],
+            "correct": 3
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "atomic-atom-models-task-1": {
+        "topic_title": "Atomic Models",
+        "title": "The atomic radius is about 10⁻¹⁰ m and the nuclear radius is 10⁻¹⁵ m. How many times larger is the atomic radius than the nuclear radius?",
+        "problem_text": "The atomic radius is about 10⁻¹⁰ m and the nuclear radius is 10⁻¹⁵ m. How many times larger is the atomic radius than the nuclear radius?",
+        "given_data": "ratom = 10⁻¹⁰ m\nrnucleus = 10⁻¹⁵ m",
+        "find_text": "ratom/rnucleus - ?",
+        "solution": "ratom/rnucleus = 10⁻¹⁰ / 10⁻¹⁵ = 10⁵.",
+        "answer": "100000 times."
+      },
+      "atomic-atom-models-task-2": {
+        "topic_title": "Atomic Models",
+        "title": "Explain why the strong deflection of a small fraction of alpha particles in Rutherford's experiment indicates the existence of a nucleus.",
+        "problem_text": "Explain why the strong deflection of a small fraction of alpha particles in Rutherford's experiment indicates the existence of a nucleus.",
+        "given_data": "some alpha particles are strongly deflected",
+        "find_text": "physical conclusion - ?",
+        "solution": "Strong deflection is possible when a particle passes close to a region with large positive charge and large mass.\nSince such deflections are rare, this region occupies a very small volume.",
+        "answer": "The atom contains a small massive positive nucleus."
+      },
+      "atomic-atom-models-task-3": {
+        "topic_title": "Atomic Models",
+        "title": "If an atomic model is enlarged so that the nuclear radius becomes 1 cm, what will the atomic radius be when the size ratio is 10⁵?",
+        "problem_text": "If an atomic model is enlarged so that the nuclear radius becomes 1 cm, what will the atomic radius be when the size ratio is 10⁵?",
+        "given_data": "rnucleus = 1 cm\nratom/rnucleus = 10⁵",
+        "find_text": "ratom - ?",
+        "solution": "ratom = 1 cm · 10⁵ = 100000 cm = 1000 m.",
+        "answer": "1000 m."
+      },
+      "atomic-atom-models-task-4": {
+        "topic_title": "Atomic Models",
+        "title": "Why could Thomson's model not explain Rutherford's experiment?",
+        "problem_text": "Why could Thomson's model not explain Rutherford's experiment?",
+        "given_data": "Thomson model: positive charge is spread through the atom\nexperiment: strong alpha-particle deflections occur",
+        "find_text": "contradiction - ?",
+        "solution": "With a spread-out positive charge, the field inside the atom would be weak and could not sharply deflect heavy alpha particles.\nStrong deflections require a compact positive nucleus.",
+        "answer": "Thomson's model has no small dense nucleus that could cause large deflections."
+      },
+      "atomic-atom-models-task-5": {
+        "topic_title": "Atomic Models",
+        "title": "An atom is almost empty, but matter feels solid. What explains resistance to compression?",
+        "problem_text": "An atom is almost empty, but matter feels solid. What explains resistance to compression?",
+        "given_data": "atoms have electron shells",
+        "find_text": "cause of solidity - ?",
+        "solution": "When atoms approach each other, their electron shells interact.\nElectromagnetic repulsion and quantum restrictions prevent the shells from passing freely through one another.",
+        "answer": "Solidity is caused by the interaction of electron shells, not by a completely filled atom."
+      },
+      "atomic-energy-levels-task-1": {
+        "topic_title": "Energy Levels",
+        "title": "Find the energy of the first level of the hydrogen atom.",
+        "problem_text": "Find the energy of the first level of the hydrogen atom.",
+        "given_data": "n = 1\nEₙ = -13.6/n² eV",
+        "find_text": "E₁ - ?",
+        "solution": "E₁ = -13.6/1² = -13.6 eV.",
+        "answer": "-13.6 eV."
+      },
+      "atomic-energy-levels-task-2": {
+        "topic_title": "Energy Levels",
+        "title": "Find the energy of the n = 2 level of the hydrogen atom.",
+        "problem_text": "Find the energy of the n = 2 level of the hydrogen atom.",
+        "given_data": "n = 2\nEₙ = -13.6/n² eV",
+        "find_text": "E₂ - ?",
+        "solution": "E₂ = -13.6/2² = -13.6/4 = -3.4 eV.",
+        "answer": "-3.4 eV."
+      },
+      "atomic-energy-levels-task-3": {
+        "topic_title": "Energy Levels",
+        "title": "An electron in a hydrogen atom moved from n = 2 to n = 1. Find the energy of the emitted photon.",
+        "problem_text": "An electron in a hydrogen atom moved from n = 2 to n = 1. Find the energy of the emitted photon.",
+        "given_data": "E₂ = -3.4 eV\nE₁ = -13.6 eV",
+        "find_text": "hν - ?",
+        "solution": "hν = E₂ - E₁ = -3.4 - (-13.6) = 10.2 eV.",
+        "answer": "10.2 eV."
+      },
+      "atomic-energy-levels-task-4": {
+        "topic_title": "Energy Levels",
+        "title": "An atom absorbed a photon of energy 1.9 eV starting from the level -3.4 eV. What is the electron's new energy?",
+        "problem_text": "An atom absorbed a photon of energy 1.9 eV starting from the level -3.4 eV. What is the electron's new energy?",
+        "given_data": "Einitial = -3.4 eV\nhν = 1.9 eV",
+        "find_text": "Efinal - ?",
+        "solution": "During absorption the electron energy increases:\nEfinal = Einitial + hν = -3.4 + 1.9 = -1.5 eV.",
+        "answer": "-1.5 eV."
+      },
+      "atomic-energy-levels-task-5": {
+        "topic_title": "Energy Levels",
+        "title": "Why is an atomic spectrum line-like rather than continuous?",
+        "problem_text": "Why is an atomic spectrum line-like rather than continuous?",
+        "given_data": "electron energies are discrete",
+        "find_text": "cause of the line spectrum - ?",
+        "solution": "An electron can move only between allowed levels.\nTherefore photon energies are equal to specific level differences, not arbitrary values.",
+        "answer": "The spectrum is line-like because energy levels are discrete."
+      },
+      "atomic-electron-shells-task-1": {
+        "topic_title": "Electron Shells",
+        "title": "How many electrons can fit at most in the third shell?",
+        "problem_text": "How many electrons can fit at most in the third shell?",
+        "given_data": "n = 3\nNmax = 2n²",
+        "find_text": "Nmax - ?",
+        "solution": "Nmax = 2 · 3² = 2 · 9 = 18.",
+        "answer": "18 electrons."
+      },
+      "atomic-electron-shells-task-2": {
+        "topic_title": "Electron Shells",
+        "title": "Find the maximum number of electrons in the fourth shell.",
+        "problem_text": "Find the maximum number of electrons in the fourth shell.",
+        "given_data": "n = 4\nNmax = 2n²",
+        "find_text": "Nmax - ?",
+        "solution": "Nmax = 2 · 4² = 32.",
+        "answer": "32 electrons."
+      },
+      "atomic-electron-shells-task-3": {
+        "topic_title": "Electron Shells",
+        "title": "A neutral atom has 11 electrons. How many protons are in its nucleus?",
+        "problem_text": "A neutral atom has 11 electrons. How many protons are in its nucleus?",
+        "given_data": "the atom is neutral\nnumber of electrons = 11",
+        "find_text": "Z - ?",
+        "solution": "In a neutral atom, the number of protons equals the number of electrons.\nZ = 11.",
+        "answer": "11 protons."
+      },
+      "atomic-electron-shells-task-4": {
+        "topic_title": "Electron Shells",
+        "title": "Why is the outer shell important for chemical properties?",
+        "problem_text": "Why is the outer shell important for chemical properties?",
+        "given_data": "chemical bonds are formed by electron shells",
+        "find_text": "role of outer electrons - ?",
+        "solution": "When atoms approach each other, the outer electrons interact first.\nThey take part in losing, gaining, or sharing electrons.",
+        "answer": "Chemical properties are determined by outer electrons."
+      },
+      "atomic-electron-shells-task-5": {
+        "topic_title": "Electron Shells",
+        "title": "An ion formed from a neutral atom with 17 electrons after gaining one electron. What is the ion charge?",
+        "problem_text": "An ion formed from a neutral atom with 17 electrons after gaining one electron. What is the ion charge?",
+        "given_data": "neutral atom: 17 e⁻ and 17 p⁺\n1 electron added",
+        "find_text": "ion charge - ?",
+        "solution": "After gaining an electron, there are 18 electrons and still 17 protons.\nThe extra electron gives charge -1e.",
+        "answer": "The ion has charge -1."
+      },
+      "atomic-de-broglie-waves-task-1": {
+        "topic_title": "de Broglie Waves",
+        "title": "An electron has momentum 6.63×10⁻²⁴ kg·m/s. Find its de Broglie wavelength. h = 6.63×10⁻³⁴ J·s.",
+        "problem_text": "An electron has momentum 6.63×10⁻²⁴ kg·m/s. Find its de Broglie wavelength. h = 6.63×10⁻³⁴ J·s.",
+        "given_data": "p = 6.63×10⁻²⁴ kg·m/s\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "λ - ?",
+        "solution": "λ = h/p = 6.63×10⁻³⁴ / 6.63×10⁻²⁴ = 1×10⁻¹⁰ m.",
+        "answer": "1×10⁻¹⁰ m."
+      },
+      "atomic-de-broglie-waves-task-2": {
+        "topic_title": "de Broglie Waves",
+        "title": "A particle of mass 1×10⁻²⁶ kg moves at 1000 m/s. Find its de Broglie wavelength.",
+        "problem_text": "A particle of mass 1×10⁻²⁶ kg moves at 1000 m/s. Find its de Broglie wavelength.",
+        "given_data": "m = 1×10⁻²⁶ kg\nv = 1000 m/s\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "λ - ?",
+        "solution": "p = mv = 1×10⁻²⁶ · 1000 = 1×10⁻²³ kg·m/s.\nλ = h/p = 6.63×10⁻³⁴ / 1×10⁻²³ = 6.63×10⁻¹¹ m.",
+        "answer": "6.63×10⁻¹¹ m."
+      },
+      "atomic-de-broglie-waves-task-3": {
+        "topic_title": "de Broglie Waves",
+        "title": "The momentum of a particle was increased 4 times. How did its de Broglie wavelength change?",
+        "problem_text": "The momentum of a particle was increased 4 times. How did its de Broglie wavelength change?",
+        "given_data": "p₂ = 4p₁",
+        "find_text": "λ₂/λ₁ - ?",
+        "solution": "λ = h/p, so wavelength is inversely proportional to momentum.\nλ₂/λ₁ = p₁/p₂ = 1/4.",
+        "answer": "The wavelength decreased 4 times."
+      },
+      "atomic-de-broglie-waves-task-4": {
+        "topic_title": "de Broglie Waves",
+        "title": "Why can an electron show diffraction on a crystal?",
+        "problem_text": "Why can an electron show diffraction on a crystal?",
+        "given_data": "an electron has λ = h/p\nspacings between atomic planes are comparable with λ",
+        "find_text": "cause of diffraction - ?",
+        "solution": "If a particle's wavelength is comparable with the crystal lattice period, wave effects become noticeable.\nThe electron behaves as a de Broglie wave and produces a diffraction pattern.",
+        "answer": "Because of the electron's wave properties and comparable scales of λ and the lattice."
+      },
+      "atomic-de-broglie-waves-task-5": {
+        "topic_title": "de Broglie Waves",
+        "title": "A ball of mass 0.1 kg flies at 10 m/s. Estimate its de Broglie wavelength.",
+        "problem_text": "A ball of mass 0.1 kg flies at 10 m/s. Estimate its de Broglie wavelength.",
+        "given_data": "m = 0.1 kg\nv = 10 m/s\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "λ - ?",
+        "solution": "p = mv = 0.1 · 10 = 1 kg·m/s.\nλ = h/p = 6.63×10⁻³⁴ m.",
+        "answer": "6.63×10⁻³⁴ m, so the ball's wave properties are unnoticeable."
+      },
+      "atomic-heisenberg-uncertainty-task-1": {
+        "topic_title": "Heisenberg Uncertainty",
+        "title": "The coordinate of an electron is determined with uncertainty Δx = 1×10⁻¹⁰ m. Estimate the minimum uncertainty of momentum. ℏ = 1.05×10⁻³⁴ J·s.",
+        "problem_text": "The coordinate of an electron is determined with uncertainty Δx = 1×10⁻¹⁰ m. Estimate the minimum uncertainty of momentum. ℏ = 1.05×10⁻³⁴ J·s.",
+        "given_data": "Δx = 1×10⁻¹⁰ m\nℏ = 1.05×10⁻³⁴ J·s",
+        "find_text": "Δpmin - ?",
+        "solution": "Δx·Δp ≥ ℏ/2, so Δp ≥ ℏ/(2Δx).\nΔp ≥ 1.05×10⁻³⁴ / (2×10⁻¹⁰) = 5.25×10⁻²⁵ kg·m/s.",
+        "answer": "not less than 5.25×10⁻²⁵ kg·m/s."
+      },
+      "atomic-heisenberg-uncertainty-task-2": {
+        "topic_title": "Heisenberg Uncertainty",
+        "title": "The momentum uncertainty of a particle is 2×10⁻²⁴ kg·m/s. Find the minimum coordinate uncertainty.",
+        "problem_text": "The momentum uncertainty of a particle is 2×10⁻²⁴ kg·m/s. Find the minimum coordinate uncertainty.",
+        "given_data": "Δp = 2×10⁻²⁴ kg·m/s\nℏ = 1.05×10⁻³⁴ J·s",
+        "find_text": "Δxmin - ?",
+        "solution": "Δx ≥ ℏ/(2Δp) = 1.05×10⁻³⁴ / (4×10⁻²⁴) = 2.625×10⁻¹¹ m.",
+        "answer": "2.6×10⁻¹¹ m."
+      },
+      "atomic-heisenberg-uncertainty-task-3": {
+        "topic_title": "Heisenberg Uncertainty",
+        "title": "The lifetime of an excited state is Δt = 1×10⁻⁸ s. Estimate the minimum energy uncertainty.",
+        "problem_text": "The lifetime of an excited state is Δt = 1×10⁻⁸ s. Estimate the minimum energy uncertainty.",
+        "given_data": "Δt = 1×10⁻⁸ s\nℏ = 1.05×10⁻³⁴ J·s",
+        "find_text": "ΔEmin - ?",
+        "solution": "ΔE ≥ ℏ/(2Δt) = 1.05×10⁻³⁴ / (2×10⁻⁸) = 5.25×10⁻²⁷ J.",
+        "answer": "5.25×10⁻²⁷ J."
+      },
+      "atomic-heisenberg-uncertainty-task-4": {
+        "topic_title": "Heisenberg Uncertainty",
+        "title": "Why cannot an electron in an atom be described as a small planet with an exact orbit?",
+        "problem_text": "Why cannot an electron in an atom be described as a small planet with an exact orbit?",
+        "given_data": "electron in an atom\nsmall scales",
+        "find_text": "reason for rejecting an exact orbit - ?",
+        "solution": "If we try to specify the electron position exactly, its momentum uncertainty becomes large.\nTherefore quantum mechanics uses a probability distribution rather than a classical trajectory.",
+        "answer": "Because of the uncertainty principle, an electron cannot simultaneously have an exact coordinate and momentum."
+      },
+      "atomic-heisenberg-uncertainty-task-5": {
+        "topic_title": "Heisenberg Uncertainty",
+        "title": "Coordinate uncertainty was decreased 5 times. How must the minimum momentum uncertainty change?",
+        "problem_text": "Coordinate uncertainty was decreased 5 times. How must the minimum momentum uncertainty change?",
+        "given_data": "Δx₂ = Δx₁/5",
+        "find_text": "Δp₂/Δp₁ - ?",
+        "solution": "The minimum Δp is inversely proportional to Δx.\nIf Δx is decreased 5 times, the minimum Δp increases 5 times.",
+        "answer": "It increases 5 times."
+      },
+      "atomic-nucleus-structure-task-1": {
+        "topic_title": "Nuclear Structure",
+        "title": "In an oxygen nucleus, Z = 8 and N = 8. Find the mass number.",
+        "problem_text": "In an oxygen nucleus, Z = 8 and N = 8. Find the mass number.",
+        "given_data": "Z = 8\nN = 8",
+        "find_text": "A - ?",
+        "solution": "A = Z + N = 8 + 8 = 16.",
+        "answer": "A = 16."
+      },
+      "atomic-nucleus-structure-task-2": {
+        "topic_title": "Nuclear Structure",
+        "title": "A nucleus has A = 238 and Z = 92. Find the number of neutrons.",
+        "problem_text": "A nucleus has A = 238 and Z = 92. Find the number of neutrons.",
+        "given_data": "A = 238\nZ = 92",
+        "find_text": "N - ?",
+        "solution": "N = A - Z = 238 - 92 = 146.",
+        "answer": "146 neutrons."
+      },
+      "atomic-nucleus-structure-task-3": {
+        "topic_title": "Nuclear Structure",
+        "title": "Chlorine isotopes have Z = 17 and mass numbers 35 and 37. How many neutrons are in each nucleus?",
+        "problem_text": "Chlorine isotopes have Z = 17 and mass numbers 35 and 37. How many neutrons are in each nucleus?",
+        "given_data": "Z = 17\nA₁ = 35\nA₂ = 37",
+        "find_text": "N₁, N₂ - ?",
+        "solution": "N₁ = 35 - 17 = 18.\nN₂ = 37 - 17 = 20.",
+        "answer": "18 and 20 neutrons."
+      },
+      "atomic-nucleus-structure-task-4": {
+        "topic_title": "Nuclear Structure",
+        "title": "Why do isotopes have similar chemical properties?",
+        "problem_text": "Why do isotopes have similar chemical properties?",
+        "given_data": "isotopes of one element\nsame Z",
+        "find_text": "cause of similar properties - ?",
+        "solution": "Chemical properties are determined by nuclear charge and the electron shell.\nIsotopes have the same number of protons, so neutral atoms have the same number of electrons.",
+        "answer": "Neutral isotopes have similar electron shells."
+      },
+      "atomic-nucleus-structure-task-5": {
+        "topic_title": "Nuclear Structure",
+        "title": "A nucleus has charge +13e and mass number 27. Find the number of protons and neutrons.",
+        "problem_text": "A nucleus has charge +13e and mass number 27. Find the number of protons and neutrons.",
+        "given_data": "Z = 13\nA = 27",
+        "find_text": "Z, N - ?",
+        "solution": "The charge +13e means 13 protons.\nN = A - Z = 27 - 13 = 14.",
+        "answer": "13 protons and 14 neutrons."
+      },
+      "atomic-nuclear-forces-task-1": {
+        "topic_title": "Nuclear Forces",
+        "title": "Explain why protons in a nucleus do not fly apart despite electric repulsion.",
+        "problem_text": "Explain why protons in a nucleus do not fly apart despite electric repulsion.",
+        "given_data": "protons repel electrically\nnucleons are very close",
+        "find_text": "stabilizing interaction - ?",
+        "solution": "At nuclear distances, the strong nuclear interaction acts between nucleons.\nIt is stronger than electrostatic repulsion at these small distances.",
+        "answer": "They are held by strong short-range nuclear forces."
+      },
+      "atomic-nuclear-forces-task-2": {
+        "topic_title": "Nuclear Forces",
+        "title": "The range of nuclear forces is about 10⁻¹⁵ m. How many times smaller is it than the atomic size 10⁻¹⁰ m?",
+        "problem_text": "The range of nuclear forces is about 10⁻¹⁵ m. How many times smaller is it than the atomic size 10⁻¹⁰ m?",
+        "given_data": "rforce = 10⁻¹⁵ m\nratom = 10⁻¹⁰ m",
+        "find_text": "ratom/rforce - ?",
+        "solution": "ratom/rforce = 10⁻¹⁰ / 10⁻¹⁵ = 10⁵.",
+        "answer": "100000 times smaller."
+      },
+      "atomic-nuclear-forces-task-3": {
+        "topic_title": "Nuclear Forces",
+        "title": "Why do heavy nuclei need more neutrons than protons?",
+        "problem_text": "Why do heavy nuclei need more neutrons than protons?",
+        "given_data": "many protons create strong electric repulsion",
+        "find_text": "role of extra neutrons - ?",
+        "solution": "Neutrons add strong nuclear attraction but do not add electric repulsion.\nThis helps compensate for the increasing proton-proton repulsion in heavy nuclei.",
+        "answer": "Extra neutrons increase nuclear attraction without increasing Coulomb repulsion."
+      },
+      "atomic-nuclear-forces-task-4": {
+        "topic_title": "Nuclear Forces",
+        "title": "Why do nuclear forces not determine the chemical properties of atoms?",
+        "problem_text": "Why do nuclear forces not determine the chemical properties of atoms?",
+        "given_data": "nuclear forces are short-range\nchemical properties involve electron shells",
+        "find_text": "reason - ?",
+        "solution": "Nuclear forces act only at distances of about 10⁻¹⁵ m inside the nucleus.\nChemical properties are determined by outer electrons at atomic scales.",
+        "answer": "Nuclear forces are too short-range; chemistry is controlled by electron shells."
+      },
+      "atomic-nuclear-forces-task-5": {
+        "topic_title": "Nuclear Forces",
+        "title": "Two protons are far apart on the nuclear scale. Which interaction between them is more noticeable: electrostatic or nuclear?",
+        "problem_text": "Two protons are far apart on the nuclear scale. Which interaction between them is more noticeable: electrostatic or nuclear?",
+        "given_data": "distance is much larger than nuclear-force range",
+        "find_text": "dominant interaction - ?",
+        "solution": "Nuclear forces are short-range and quickly become negligible outside the nucleus.\nElectrostatic interaction is long-range, so it remains noticeable.",
+        "answer": "Electrostatic interaction is more noticeable."
+      },
+      "atomic-binding-energy-task-1": {
+        "topic_title": "Binding Energy",
+        "title": "The mass defect of a nucleus is 1.0×10⁻²⁹ kg. Find the binding energy. c = 3×10⁸ m/s.",
+        "problem_text": "The mass defect of a nucleus is 1.0×10⁻²⁹ kg. Find the binding energy. c = 3×10⁸ m/s.",
+        "given_data": "Δm = 1.0×10⁻²⁹ kg\nc = 3×10⁸ m/s",
+        "find_text": "Ebind - ?",
+        "solution": "E = Δm·c² = 1.0×10⁻²⁹ · 9×10¹⁶ = 9×10⁻¹³ J.",
+        "answer": "9×10⁻¹³ J."
+      },
+      "atomic-binding-energy-task-2": {
+        "topic_title": "Binding Energy",
+        "title": "The binding energy of a nucleus is 28 MeV and mass number A = 4. Find the specific binding energy.",
+        "problem_text": "The binding energy of a nucleus is 28 MeV and mass number A = 4. Find the specific binding energy.",
+        "given_data": "Ebind = 28 MeV\nA = 4",
+        "find_text": "Ebind/A - ?",
+        "solution": "Ebind/A = 28/4 = 7 MeV per nucleon.",
+        "answer": "7 MeV per nucleon."
+      },
+      "atomic-binding-energy-task-3": {
+        "topic_title": "Binding Energy",
+        "title": "The mass of free nucleons exceeds the nucleus mass by 0.03 u. Find the binding energy in MeV. Use 1 u·c² = 931.5 MeV.",
+        "problem_text": "The mass of free nucleons exceeds the nucleus mass by 0.03 u. Find the binding energy in MeV. Use 1 u·c² = 931.5 MeV.",
+        "given_data": "Δm = 0.03 u\n1 u·c² = 931.5 MeV",
+        "find_text": "Ebind - ?",
+        "solution": "Ebind = 0.03 · 931.5 = 27.945 MeV.",
+        "answer": "approximately 28 MeV."
+      },
+      "atomic-binding-energy-task-4": {
+        "topic_title": "Binding Energy",
+        "title": "Why is the mass of a bound nucleus smaller than the sum of the masses of free protons and neutrons?",
+        "problem_text": "Why is the mass of a bound nucleus smaller than the sum of the masses of free protons and neutrons?",
+        "given_data": "nucleons form a bound system",
+        "find_text": "meaning of mass defect - ?",
+        "solution": "When a nucleus forms, energy is released.\nBy E = Δm·c², the released binding energy corresponds to a decrease in the mass of the system.",
+        "answer": "Part of the mass is converted into binding energy."
+      },
+      "atomic-binding-energy-task-5": {
+        "topic_title": "Binding Energy",
+        "title": "Two nuclei have the same A = 20. The first has binding energy 120 MeV, the second 160 MeV. Which nucleus is more stable by specific binding energy?",
+        "problem_text": "Two nuclei have the same A = 20. The first has binding energy 120 MeV, the second 160 MeV. Which nucleus is more stable by specific binding energy?",
+        "given_data": "A = 20\nE₁ = 120 MeV\nE₂ = 160 MeV",
+        "find_text": "which nucleus is more stable - ?",
+        "solution": "E₁/A = 120/20 = 6 MeV per nucleon.\nE₂/A = 160/20 = 8 MeV per nucleon.",
+        "answer": "The second nucleus is more stable."
+      },
+      "atomic-decay-types-task-1": {
+        "topic_title": "Types of Decay",
+        "title": "A nucleus with A = 238 and Z = 92 underwent alpha decay. Find A and Z of the daughter nucleus.",
+        "problem_text": "A nucleus with A = 238 and Z = 92 underwent alpha decay. Find A and Z of the daughter nucleus.",
+        "given_data": "A = 238\nZ = 92\nalpha decay",
+        "find_text": "A', Z' - ?",
+        "solution": "In alpha decay, A decreases by 4 and Z decreases by 2.\nA' = 238 - 4 = 234, Z' = 92 - 2 = 90.",
+        "answer": "A = 234, Z = 90."
+      },
+      "atomic-decay-types-task-2": {
+        "topic_title": "Types of Decay",
+        "title": "A nucleus with A = 14 and Z = 6 underwent beta-minus decay. Find A and Z of the daughter nucleus.",
+        "problem_text": "A nucleus with A = 14 and Z = 6 underwent beta-minus decay. Find A and Z of the daughter nucleus.",
+        "given_data": "A = 14\nZ = 6\nβ⁻ decay",
+        "find_text": "A', Z' - ?",
+        "solution": "In β⁻ decay, A does not change and Z increases by 1.\nA' = 14, Z' = 7.",
+        "answer": "A = 14, Z = 7."
+      },
+      "atomic-decay-types-task-3": {
+        "topic_title": "Types of Decay",
+        "title": "Why does gamma radiation not change A and Z of a nucleus?",
+        "problem_text": "Why does gamma radiation not change A and Z of a nucleus?",
+        "given_data": "gamma radiation is a photon emission",
+        "find_text": "effect on nucleus composition - ?",
+        "solution": "Gamma emission removes excess energy from the nucleus.\nIt does not emit protons or neutrons, so the mass number and charge number stay the same.",
+        "answer": "Because only energy is emitted, not nucleons."
+      },
+      "atomic-decay-types-task-4": {
+        "topic_title": "Types of Decay",
+        "title": "Which shield is more effective for alpha particles: a sheet of paper or a thick lead plate? Is lead necessary?",
+        "problem_text": "Which shield is more effective for alpha particles: a sheet of paper or a thick lead plate? Is lead necessary?",
+        "given_data": "alpha particles\nlow penetrating power",
+        "find_text": "sufficient protection - ?",
+        "solution": "Alpha particles strongly ionize matter but lose energy quickly.\nThey are stopped even by a sheet of paper or the outer layer of skin.",
+        "answer": "Paper is usually enough for alpha particles; lead is excessive."
+      },
+      "atomic-decay-types-task-5": {
+        "topic_title": "Types of Decay",
+        "title": "Why is beta radiation more dangerous than alpha radiation for external exposure, while an alpha source is especially dangerous inside the body?",
+        "problem_text": "Why is beta radiation more dangerous than alpha radiation for external exposure, while an alpha source is especially dangerous inside the body?",
+        "given_data": "alpha has short range and strong ionization\nbeta penetrates deeper",
+        "find_text": "comparison of danger - ?",
+        "solution": "Outside the body, alpha particles are stopped by skin, while beta particles penetrate deeper.\nInside the body, alpha particles deposit large energy over a very short distance near tissues.",
+        "answer": "Externally beta is more dangerous; inside the body alpha sources are especially dangerous."
+      },
+      "atomic-decay-law-task-1": {
+        "topic_title": "Radioactive Decay Law",
+        "title": "There were 8000 radioactive nuclei. How many remain after 3 half-lives?",
+        "problem_text": "There were 8000 radioactive nuclei. How many remain after 3 half-lives?",
+        "given_data": "N₀ = 8000\nt = 3T",
+        "find_text": "N - ?",
+        "solution": "After each half-life, half remains.\nN = 8000/2³ = 8000/8 = 1000.",
+        "answer": "1000 nuclei."
+      },
+      "atomic-decay-law-task-2": {
+        "topic_title": "Radioactive Decay Law",
+        "title": "A substance has half-life 5 days. What fraction of nuclei remains after 20 days?",
+        "problem_text": "A substance has half-life 5 days. What fraction of nuclei remains after 20 days?",
+        "given_data": "T = 5 days\nt = 20 days",
+        "find_text": "N/N₀ - ?",
+        "solution": "t/T = 20/5 = 4.\nN/N₀ = 2⁻⁴ = 1/16.",
+        "answer": "1/16 of the initial amount remains."
+      },
+      "atomic-decay-law-task-3": {
+        "topic_title": "Radioactive Decay Law",
+        "title": "After 2 half-lives, 250 g of a substance remained. How much was there initially?",
+        "problem_text": "After 2 half-lives, 250 g of a substance remained. How much was there initially?",
+        "given_data": "N = 250 g\nt = 2T",
+        "find_text": "N₀ - ?",
+        "solution": "After 2 half-lives, 1/4 of the initial amount remains.\nN₀ = 250 · 4 = 1000 g.",
+        "answer": "1000 g."
+      },
+      "atomic-decay-law-task-4": {
+        "topic_title": "Radioactive Decay Law",
+        "title": "The half-life is 10 years. After how many years will 1/8 of the initial nuclei remain?",
+        "problem_text": "The half-life is 10 years. After how many years will 1/8 of the initial nuclei remain?",
+        "given_data": "T = 10 years\nN/N₀ = 1/8",
+        "find_text": "t - ?",
+        "solution": "1/8 = 1/2³, so 3 half-lives have passed.\nt = 3T = 30 years.",
+        "answer": "30 years."
+      },
+      "atomic-decay-law-task-5": {
+        "topic_title": "Radioactive Decay Law",
+        "title": "Why can we not predict the decay time of a particular nucleus, but can predict the fraction that decays in a large sample?",
+        "problem_text": "Why can we not predict the decay time of a particular nucleus, but can predict the fraction that decays in a large sample?",
+        "given_data": "radioactive decay is probabilistic\na large number of nuclei",
+        "find_text": "reason for the statistical law - ?",
+        "solution": "Decay of a single nucleus is a random quantum event.\nFor a large number of identical nuclei, the decay probability gives a stable statistical pattern.",
+        "answer": "A single decay is random, while a large sample is described statistically."
+      },
+      "atomic-radiation-doses-task-1": {
+        "topic_title": "Radiation Doses",
+        "title": "Tissue of mass 2 kg absorbed energy 0.04 J. Find the absorbed dose.",
+        "problem_text": "Tissue of mass 2 kg absorbed energy 0.04 J. Find the absorbed dose.",
+        "given_data": "E = 0.04 J\nm = 2 kg",
+        "find_text": "D - ?",
+        "solution": "D = E/m = 0.04/2 = 0.02 Gy.",
+        "answer": "0.02 Gy."
+      },
+      "atomic-radiation-doses-task-2": {
+        "topic_title": "Radiation Doses",
+        "title": "The absorbed dose is 0.01 Gy and the radiation quality factor is k = 20. Find the equivalent dose.",
+        "problem_text": "The absorbed dose is 0.01 Gy and the radiation quality factor is k = 20. Find the equivalent dose.",
+        "given_data": "D = 0.01 Gy\nk = 20",
+        "find_text": "H - ?",
+        "solution": "H = D·k = 0.01 · 20 = 0.2 Sv.",
+        "answer": "0.2 Sv."
+      },
+      "atomic-radiation-doses-task-3": {
+        "topic_title": "Radiation Doses",
+        "title": "The equivalent dose is 0.05 Sv with k = 5. Find the absorbed dose.",
+        "problem_text": "The equivalent dose is 0.05 Sv with k = 5. Find the absorbed dose.",
+        "given_data": "H = 0.05 Sv\nk = 5",
+        "find_text": "D - ?",
+        "solution": "D = H/k = 0.05/5 = 0.01 Gy.",
+        "answer": "0.01 Gy."
+      },
+      "atomic-radiation-doses-task-4": {
+        "topic_title": "Radiation Doses",
+        "title": "Two radiations gave the same absorbed dose 0.002 Gy. For the first k = 1, for the second k = 10. Compare the equivalent doses.",
+        "problem_text": "Two radiations gave the same absorbed dose 0.002 Gy. For the first k = 1, for the second k = 10. Compare the equivalent doses.",
+        "given_data": "D = 0.002 Gy\nk₁ = 1\nk₂ = 10",
+        "find_text": "H₁, H₂ - ?",
+        "solution": "H₁ = 0.002 · 1 = 0.002 Sv.\nH₂ = 0.002 · 10 = 0.02 Sv.",
+        "answer": "The second radiation gives an equivalent dose 10 times larger."
+      },
+      "atomic-radiation-doses-task-5": {
+        "topic_title": "Radiation Doses",
+        "title": "Why is absorbed energy alone not enough to assess radiation danger?",
+        "problem_text": "Why is absorbed energy alone not enough to assess radiation danger?",
+        "given_data": "different types of radiation\nsame energy per mass",
+        "find_text": "reason for using H - ?",
+        "solution": "Different particles create different ionization density and damage cells differently.\nTherefore the absorbed dose is multiplied by a quality factor.",
+        "answer": "The equivalent dose is needed because it accounts for the biological effect of radiation."
+      },
+      "atomic-fission-task-1": {
+        "topic_title": "Nuclear Fission",
+        "title": "One fission event releases 200 MeV. How much energy is released in 10⁶ fission events?",
+        "problem_text": "One fission event releases 200 MeV. How much energy is released in 10⁶ fission events?",
+        "given_data": "E₁ = 200 MeV\nN = 10⁶",
+        "find_text": "E - ?",
+        "solution": "E = NE₁ = 10⁶ · 200 = 2×10⁸ MeV.",
+        "answer": "2×10⁸ MeV."
+      },
+      "atomic-fission-task-2": {
+        "topic_title": "Nuclear Fission",
+        "title": "One uranium fission released 3 neutrons. If each causes a new fission, how many fissions will occur in the second generation?",
+        "problem_text": "One uranium fission released 3 neutrons. If each causes a new fission, how many fissions will occur in the second generation?",
+        "given_data": "1 fission\n3 neutrons per fission",
+        "find_text": "number of second-generation fissions - ?",
+        "solution": "If each of the 3 neutrons causes a fission, the second generation will contain 3 fissions.",
+        "answer": "3 fissions."
+      },
+      "atomic-fission-task-3": {
+        "topic_title": "Nuclear Fission",
+        "title": "Why is energy released when heavy nuclei fission?",
+        "problem_text": "Why is energy released when heavy nuclei fission?",
+        "given_data": "a heavy nucleus splits into more stable fragments",
+        "find_text": "cause of energy release - ?",
+        "solution": "Fission fragments have greater specific binding energy than the original heavy nucleus.\nThe mass difference between initial and final particles is converted into energy by E = Δm·c².",
+        "answer": "Energy is released because binding energy increases and a mass defect appears."
+      },
+      "atomic-fission-task-4": {
+        "topic_title": "Nuclear Fission",
+        "title": "Why is it important to slow fast neutrons in a reactor?",
+        "problem_text": "Why is it important to slow fast neutrons in a reactor?",
+        "given_data": "²³⁵U fission is caused more effectively by slow neutrons",
+        "find_text": "role of moderator - ?",
+        "solution": "Neutrons after fission are usually fast.\nA moderator reduces their energy, increasing the probability of capture by ²³⁵U and a new fission.",
+        "answer": "Slowing neutrons supports a controlled chain reaction."
+      },
+      "atomic-fission-task-5": {
+        "topic_title": "Nuclear Fission",
+        "title": "Why can a chain reaction become avalanche-like?",
+        "problem_text": "Why can a chain reaction become avalanche-like?",
+        "given_data": "each fission gives several neutrons",
+        "find_text": "reason for reaction growth - ?",
+        "solution": "If on average more than one neutron from each fission causes a new fission, the number of fissions grows from generation to generation.\nThis leads to a rapid increase in released energy.",
+        "answer": "The reaction grows when the neutron multiplication factor is greater than 1."
+      },
+      "atomic-fusion-task-1": {
+        "topic_title": "Thermonuclear Fusion",
+        "title": "In a fusion reaction, the mass defect is 3×10⁻²⁹ kg. Find the released energy. c = 3×10⁸ m/s.",
+        "problem_text": "In a fusion reaction, the mass defect is 3×10⁻²⁹ kg. Find the released energy. c = 3×10⁸ m/s.",
+        "given_data": "Δm = 3×10⁻²⁹ kg\nc = 3×10⁸ m/s",
+        "find_text": "E - ?",
+        "solution": "E = Δm·c² = 3×10⁻²⁹ · 9×10¹⁶ = 2.7×10⁻¹² J.",
+        "answer": "2.7×10⁻¹² J."
+      },
+      "atomic-fusion-task-2": {
+        "topic_title": "Thermonuclear Fusion",
+        "title": "Why are deuterium and tritium easier to use for fusion than heavier nuclei?",
+        "problem_text": "Why are deuterium and tritium easier to use for fusion than heavier nuclei?",
+        "given_data": "nuclei have positive charge\nCoulomb barrier depends on charges",
+        "find_text": "reason for choosing light isotopes - ?",
+        "solution": "Deuterium and tritium have nuclear charge +1e.\nTheir electrostatic repulsion is smaller than for nuclei with larger Z, so it is easier to bring them within the range of nuclear forces.",
+        "answer": "They have a smaller Coulomb barrier."
+      },
+      "atomic-fusion-task-3": {
+        "topic_title": "Thermonuclear Fusion",
+        "title": "One fusion reaction releases 17.6 MeV. How much energy is released in 10⁹ such reactions?",
+        "problem_text": "One fusion reaction releases 17.6 MeV. How much energy is released in 10⁹ such reactions?",
+        "given_data": "E₁ = 17.6 MeV\nN = 10⁹",
+        "find_text": "E - ?",
+        "solution": "E = NE₁ = 10⁹ · 17.6 = 1.76×10¹⁰ MeV.",
+        "answer": "1.76×10¹⁰ MeV."
+      },
+      "atomic-fusion-task-4": {
+        "topic_title": "Thermonuclear Fusion",
+        "title": "Why is thermonuclear plasma difficult to confine with the walls of an ordinary vessel?",
+        "problem_text": "Why is thermonuclear plasma difficult to confine with the walls of an ordinary vessel?",
+        "given_data": "very high plasma temperature",
+        "find_text": "confinement problem - ?",
+        "solution": "At fusion temperatures, matter is plasma with enormous thermal energy.\nOrdinary materials cannot withstand direct contact, so magnetic or inertial confinement is used.",
+        "answer": "The walls would be destroyed, so plasma is confined without direct contact."
+      },
+      "atomic-fusion-task-5": {
+        "topic_title": "Thermonuclear Fusion",
+        "title": "Why is the Sun not a chemical bonfire?",
+        "problem_text": "Why is the Sun not a chemical bonfire?",
+        "given_data": "the Sun radiates enormous energy for billions of years",
+        "find_text": "energy source - ?",
+        "solution": "Chemical combustion cannot provide such power and duration.\nFusion reactions of light nuclei occur in the Sun's core, where part of the mass is converted into energy.",
+        "answer": "The Sun's energy has a thermonuclear origin."
+      },
+      "atomic-nuclear-energy-use-task-1": {
+        "topic_title": "Uses of Nuclear Energy",
+        "title": "The mass defect in a nuclear process is 1×10⁻⁶ kg. Find the released energy.",
+        "problem_text": "The mass defect in a nuclear process is 1×10⁻⁶ kg. Find the released energy.",
+        "given_data": "Δm = 1×10⁻⁶ kg\nc = 3×10⁸ m/s",
+        "find_text": "E - ?",
+        "solution": "E = Δm·c² = 1×10⁻⁶ · 9×10¹⁶ = 9×10¹⁰ J.",
+        "answer": "9×10¹⁰ J."
+      },
+      "atomic-nuclear-energy-use-task-2": {
+        "topic_title": "Uses of Nuclear Energy",
+        "title": "A reactor produces thermal power 3000 MW and the plant's electric power is 1000 MW. Find the efficiency.",
+        "problem_text": "A reactor produces thermal power 3000 MW and the plant's electric power is 1000 MW. Find the efficiency.",
+        "given_data": "Pthermal = 3000 MW\nPelectric = 1000 MW",
+        "find_text": "η - ?",
+        "solution": "η = Pelectric/Pthermal = 1000/3000 = 1/3 ≈ 0.33.",
+        "answer": "about 33%."
+      },
+      "atomic-nuclear-energy-use-task-3": {
+        "topic_title": "Uses of Nuclear Energy",
+        "title": "Why are control rods needed in a reactor?",
+        "problem_text": "Why are control rods needed in a reactor?",
+        "given_data": "the chain reaction is maintained by neutrons",
+        "find_text": "function of rods - ?",
+        "solution": "Control rods absorb some neutrons.\nIf they are inserted deeper, fewer neutrons cause new fissions and power decreases.",
+        "answer": "They regulate the number of neutrons and reactor power."
+      },
+      "atomic-nuclear-energy-use-task-4": {
+        "topic_title": "Uses of Nuclear Energy",
+        "title": "What role does the coolant perform in a nuclear power plant?",
+        "problem_text": "What role does the coolant perform in a nuclear power plant?",
+        "given_data": "the core releases heat\nelectricity must be produced",
+        "find_text": "role of coolant - ?",
+        "solution": "The coolant removes heat from the core and transfers it to a steam generator or turbine.\nThus nuclear energy is converted through heat into mechanical and then electrical energy.",
+        "answer": "The coolant transfers thermal energy from the reactor to the power system."
+      },
+      "atomic-nuclear-energy-use-task-5": {
+        "topic_title": "Uses of Nuclear Energy",
+        "title": "Why does nuclear energy require a strict safety system?",
+        "problem_text": "Why does nuclear energy require a strict safety system?",
+        "given_data": "the reactor contains radioactive materials\na large amount of energy is released",
+        "find_text": "reasons for safety - ?",
+        "solution": "It is necessary to control the chain reaction, remove residual heat, and keep radioactive products inside protective barriers.\nFailure of these conditions can lead to overheating and radioactive contamination.",
+        "answer": "Safety is needed to control the reaction, cooling, and isolation of radioactive materials."
+      }
+    }
+  },
+  "kk": {
+    "tests": {
+      "atomic-atom-models-test": {
+        "title": "Тест: Атом модельдері",
+        "questions": [
+          {
+            "question": "Резерфордтың планетарлық моделінде атом массасының басым бөлігі қайда шоғырланған?",
+            "options": [
+              "бүкіл атомға біркелкі таралған",
+              "ядрода",
+              "электрондық қабықтарда",
+              "тек ядро мен электрондардың арасында"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Атом ядросының әдеттегі өлшемі шамамен:",
+            "options": [
+              "10⁻¹⁰ м",
+              "1 м",
+              "10⁻¹⁵ м",
+              "10⁵ м"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Атомның әдеттегі өлшемі шамамен:",
+            "options": [
+              "10⁻³ м",
+              "10⁻¹⁵ м",
+              "10³ м",
+              "10⁻¹⁰ м"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Резерфордтың α-бөлшектердің шашырауы тәжірибесі атомның:",
+            "options": [
+              "тек электрондардан тұратынын",
+              "кіші, тығыз, оң зарядталған ядросы бар екенін",
+              "толығымен оң затпен толтырылғанын",
+              "зарядтары жоқ екенін"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Неге α-бөлшектердің көпшілігі фольгадан дерлік ауытқымай өтті?",
+            "options": [
+              "электрондардың массасы өте үлкен",
+              "ядро атомның бүкіл көлемін алады",
+              "α-бөлшектер затпен әрекеттеспейді",
+              "атом көлемінің көп бөлігі іс жүзінде бос"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "atomic-energy-levels-test": {
+        "title": "Тест: Энергетикалық деңгейлер",
+        "questions": [
+          {
+            "question": "Атомда электрон:",
+            "options": [
+              "кез келген энергияға шектеусіз ие болады",
+              "ядро массасына тең энергияға ие болады",
+              "тек нөлдік энергияға ие болады",
+              "тек белгілі дискретті энергияларға ие бола алады"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Сутек атомы үшін деңгей энергиясы:",
+            "options": [
+              "Eₙ = -13,6n эВ",
+              "Eₙ = n/13,6 эВ",
+              "Eₙ = -13,6/n² эВ",
+              "Eₙ = 13,6n² эВ"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Электрон жоғары деңгейден төменгі деңгейге өткенде атом:",
+            "options": [
+              "өмір сүруін тоқтатады",
+              "міндетті түрде фотон жұтады",
+              "фотон шығарады",
+              "ядросын жоғалтады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Деңгейлер арасындағы ауысуда фотон энергиясы:",
+            "options": [
+              "hν = I²R",
+              "hν = E₁ + E₂ әрқашан",
+              "hν = E₁/E₂",
+              "hν = E₂ - E₁"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ауысу энергиясы неғұрлым үлкен болса, шығарылған фотон жиілігі:",
+            "options": [
+              "өзгермейді",
+              "соғұрлым үлкен",
+              "нөлге тең",
+              "соғұрлым кіші"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-electron-shells-test": {
+        "title": "Тест: Электрондық қабықтар",
+        "questions": [
+          {
+            "question": "Бас кванттық саны n болатын қабықтағы электрондардың ең көп саны:",
+            "options": [
+              "Nmax = n²",
+              "Nmax = 2n²",
+              "Nmax = 2n",
+              "Nmax = n + 2"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Бірінші қабықта ең көбі:",
+            "options": [
+              "18 электрон",
+              "8 электрон",
+              "32 электрон",
+              "2 электрон"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Екінші қабықта ең көбі:",
+            "options": [
+              "2 электрон",
+              "32 электрон",
+              "18 электрон",
+              "8 электрон"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Атомның химиялық қасиеттері негізінен немен анықталады?",
+            "options": [
+              "тек протон массасымен",
+              "тек ядро нейтрондарымен",
+              "сыртқы электрондармен",
+              "жарық жылдамдығымен"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Атомның электрондық қабығы жалпы қандай зарядқа ие?",
+            "options": [
+              "оң",
+              "теріс",
+              "ядролық",
+              "электрондарға тәуелсіз әрқашан нөл"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-de-broglie-waves-test": {
+        "title": "Тест: де Бройль толқындары",
+        "questions": [
+          {
+            "question": "Бөлшектің де Бройль толқын ұзындығы:",
+            "options": [
+              "λ = p/h",
+              "λ = hp",
+              "λ = mv²/2",
+              "λ = h/p"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Массасы m және жылдамдығы v болатын релятивистік емес бөлшек үшін:",
+            "options": [
+              "λ = mv/h",
+              "λ = h/(mv)",
+              "λ = hmv",
+              "λ = m/(hv)"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Бөлшек импульсі артса, оның де Бройль толқын ұзындығы:",
+            "options": [
+              "теріс болады",
+              "кемиді",
+              "өзгермейді",
+              "артады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Электрондардың толқындық қасиеттері немен дәлелденеді?",
+            "options": [
+              "газдың жылуөткізгіштігімен",
+              "электрондар дифракциясымен",
+              "тек денелердің құлауымен",
+              "Архимед заңымен"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ауыр дененің әдеттегі жылдамдықтағы де Бройль толқыны неге байқалмайды?",
+            "options": [
+              "дене массасы нөлге тең",
+              "импульсі өте үлкен, ал λ өте кіші",
+              "жарық жылдамдығы жоғалады",
+              "Планк тұрақтысы өте үлкен"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-heisenberg-uncertainty-test": {
+        "title": "Тест: Гейзенберг анықталмаушылығы",
+        "questions": [
+          {
+            "question": "Координата мен импульс үшін анықталмаушылық қатынасы:",
+            "options": [
+              "Δx/Δp ≥ ℏ/2",
+              "Δx·Δp = mv²",
+              "Δx·Δp ≥ ℏ/2",
+              "Δx + Δp = 0"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Бөлшектің координатасы неғұрлым дәл берілсе, оның:",
+            "options": [
+              "Планк тұрақтысы азаяды",
+              "массасы жоғалады",
+              "импульсі шектеусіз дәл болады",
+              "импульсін соғұрлым дәл емес беруге болады"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "ΔE·Δt ≥ ℏ/2 қатынасы қандай анықталмаушылықтарды байланыстырады?",
+            "options": [
+              "заряд пен кернеуді",
+              "күш пен жолды",
+              "масса мен көлемді",
+              "энергия мен уақытты"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Анықталмаушылық принципі ең алдымен қайда маңызды?",
+            "options": [
+              "тек дыбыс үшін",
+              "микроәлемде",
+              "тек сұйықтар үшін",
+              "тек планеталар үшін"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Анықталмаушылық принципі нені білдіреді?",
+            "options": [
+              "кез келген өлшеудің мүмкін еместігін",
+              "физикада заңдардың жоқтығын",
+              "толық жоюға болатын нашар құрал қатесін",
+              "кейбір шамаларды бір уақытта дәл өлшеудің кванттық шегін"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "atomic-nucleus-structure-test": {
+        "title": "Тест: Ядро құрылысы",
+        "questions": [
+          {
+            "question": "Ядроның массалық саны:",
+            "options": [
+              "A = N/Z",
+              "A = Z + N",
+              "A = Z/N",
+              "A = Z - N"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ядро жазбасындағы Z нені білдіреді?",
+            "options": [
+              "электрондық қабықтар санын",
+              "нейтрондар санын",
+              "байланыс энергиясын",
+              "протондар санын"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ядродағы N нені білдіреді?",
+            "options": [
+              "протондар санын",
+              "нейтрондар санын",
+              "электрон зарядын",
+              "жарық жылдамдығын"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Бір элементтің изотоптарында не бірдей болады?",
+            "options": [
+              "нуклондар саны әрқашан",
+              "протондар саны",
+              "массалық саны",
+              "нейтрондар саны"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Атом ядросы жалпы қандай зарядқа ие?",
+            "options": [
+              "барлық элементтер үшін нөлдік заряд",
+              "оң заряд",
+              "теріс заряд",
+              "фотон заряды"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-nuclear-forces-test": {
+        "title": "Тест: Ядролық күштер",
+        "questions": [
+          {
+            "question": "Ядролық күштер негізінен қандай қашықтықтарда әсер етеді?",
+            "options": [
+              "тек километрлік қашықтықтарда",
+              "тек планеталар арасында",
+              "10⁻¹⁵ м шамасында",
+              "тек электр тізбектерінде"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Ядролық күштер нені бірге ұстап тұрады?",
+            "options": [
+              "орбитадағы планеталарды",
+              "ядродағы протондар мен нейтрондарды",
+              "газ молекулаларын үлкен қашықтықта",
+              "тек өткізгіштегі электрондарды"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Кіші қашықтықтарда протондардың электростатикалық тебілуімен салыстырғанда ядролық әрекеттесу:",
+            "options": [
+              "әрқашан әлсіз",
+              "тек электрондарға әсер етеді",
+              "жоқ",
+              "күштірек"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ядролық күштер:",
+            "options": [
+              "әлсіремейтін шексіз алыс әсер етеді",
+              "қысқа қашықтықта әсер етеді",
+              "тек магниттік",
+              "тек гравитациялық"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Нейтрондар ауыр ядроларды тұрақтандыруға көмектеседі, себебі олар:",
+            "options": [
+              "ядроны атомдық қабыққа айналдырады",
+              "электрлік тебілу қоспай күшті әрекеттесуге қатысады",
+              "үлкен оң зарядқа ие",
+              "барлық протондарды электрлік тебеді"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-binding-energy-test": {
+        "title": "Тест: Байланыс энергиясы",
+        "questions": [
+          {
+            "question": "Ядроның байланыс энергиясы:",
+            "options": [
+              "атомның тұтас қозғалыс энергиясы",
+              "зат температурасы",
+              "өткізгіштегі электрондар энергиясы",
+              "ядроны жеке нуклондарға бөлуге қажет энергия"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ядроның масса ақауы:",
+            "options": [
+              "Δm = E/c",
+              "Δm = M - Zmp - Nmn",
+              "Δm = Z + N",
+              "Δm = Zmp + Nmn - M"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Байланыс энергиясы мен масса ақауының байланысы:",
+            "options": [
+              "Eбайл = Δm/c²",
+              "Eбайл = Δm·c²",
+              "Eбайл = c²/Δm",
+              "Eбайл = Δm + c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Масса ақауы үлкен болса, байланыс энергиясы:",
+            "options": [
+              "өзгермейді",
+              "үлкен болады",
+              "нөлге тең",
+              "кіші болады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Меншікті байланыс энергиясы нені көрсетеді?",
+            "options": [
+              "ядро зарядын",
+              "қабықтағы бір электрон энергиясын",
+              "бір нуклонға келетін байланыс энергиясын",
+              "бір протон массасын"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "atomic-decay-types-test": {
+        "title": "Тест: Ыдырау түрлері",
+        "questions": [
+          {
+            "question": "α-ыдырауда ядродан не ұшып шығады?",
+            "options": [
+              "ауа молекуласы",
+              "бүкіл электрондық қабық",
+              "гелий ядросы ⁴He",
+              "көрінетін жарық фотоны"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "α-ыдырауда ядроның массалық саны:",
+            "options": [
+              "өзгермейді",
+              "1-ге кемиді",
+              "4-ке кемиді",
+              "4-ке артады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "β⁻-ыдырауда ядроның зарядтық саны:",
+            "options": [
+              "өзгермейді",
+              "1-ге артады",
+              "2-ге кемиді",
+              "1-ге кемиді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "γ-сәулелену дегеніміз:",
+            "options": [
+              "химиялық реакция",
+              "жоғары энергиялы фотондар ағыны",
+              "гелий ядроларының ағыны",
+              "баяу атомдар ағыны"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Әдетте қай сәулеленудің өтімділік қабілеті ең жоғары?",
+            "options": [
+              "жылуөткізгіштік",
+              "γ-сәулелену",
+              "α-сәулелену",
+              "кәдімгі дыбыс"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-decay-law-test": {
+        "title": "Тест: Радиоактивті ыдырау заңы",
+        "questions": [
+          {
+            "question": "Жартылай ыдырау периоды арқылы жазылған ыдырау заңы:",
+            "options": [
+              "N = T/t",
+              "N = N₀·2^(-t/T)",
+              "N = N₀·2^(t/T)",
+              "N = N₀ + t/T"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Бір жартылай ыдырау периодынан кейін:",
+            "options": [
+              "бастапқы ядролардың ширегі қалады",
+              "барлық ядролар қалады",
+              "міндетті түрде нөл ядро қалады",
+              "бастапқы ядролардың жартысы қалады"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Екі жартылай ыдырау периодынан кейін:",
+            "options": [
+              "бастапқы ядролардың 3/4 бөлігі қалады",
+              "бастапқы ядролардың 1/4 бөлігі қалады",
+              "барлық ядролар қалады",
+              "бастапқы ядролардың 1/2 бөлігі қалады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ыдырау тұрақтысы λ қай заңға кіреді?",
+            "options": [
+              "N = λ/t",
+              "N = t/λ",
+              "N = N₀·e^(-λt)",
+              "N = N₀·e^(λt)"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Радиоактивті үлгінің активтілігі уақыт өте:",
+            "options": [
+              "әрқашан артады",
+              "кемиді",
+              "теріс болады",
+              "ядролар санына тәуелді емес"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-radiation-doses-test": {
+        "title": "Тест: Сәулелену дозалары",
+        "questions": [
+          {
+            "question": "Сәулеленудің жұтылған дозасы:",
+            "options": [
+              "D = I/R",
+              "D = m/E",
+              "D = Et",
+              "D = E/m"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жұтылған дозаның бірлігі:",
+            "options": [
+              "кулон",
+              "грей",
+              "ом",
+              "тесла"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Эквивалентті доза:",
+            "options": [
+              "H = D + m",
+              "H = D·k",
+              "H = E/t",
+              "H = D/k"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Эквивалентті дозаның бірлігі:",
+            "options": [
+              "вольт",
+              "ньютон",
+              "ватт",
+              "зиверт"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Сапа коэффициенті k не үшін қажет?",
+            "options": [
+              "дене массасы әрқашан белгісіз",
+              "бірдей жұтылған энергияда әртүрлі сәулелер ұлпаларды әртүрлі зақымдайды",
+              "барлық сәулеленулер бірдей",
+              "сәулелену энергиясы маңызды емес"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-fission-test": {
+        "title": "Тест: Ядролардың бөлінуі",
+        "questions": [
+          {
+            "question": "Ауыр ядроның бөлінуі дегеніміз ядроның:",
+            "options": [
+              "электрондық қабықты жұтуы",
+              "екі жеңіл жарықшаққа және нейтрондарға бөлінуі",
+              "молекулаға айналуы",
+              "тек фотонға айналуы"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "²³⁵U бөлінгенде әдетте:",
+            "options": [
+              "тек электрондар бөлінеді",
+              "2-3 нейтрон және энергия бөлінеді",
+              "оттек молекулалары бөлінеді",
+              "тек суық бөлінеді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Тізбекті реакция қашан мүмкін?",
+            "options": [
+              "энергия бөлінбесе",
+              "бөлінуден шыққан нейтрондар жаңа бөлінулер туғызса",
+              "ядролар әрекеттеспесе",
+              "барлық нейтрондар жоғалса"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Ядролық реакторда тізбекті реакция:",
+            "options": [
+              "химиялық болады",
+              "мүмкін емес етіледі",
+              "басқарылатын етіледі",
+              "міндетті түрде жарылыстық болады"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Бөлінудегі энергияның негізгі көзі:",
+            "options": [
+              "ядролық процестерсіз судың булануы",
+              "Ом заңы",
+              "ауа үйкелісі",
+              "масса ақауы және E = Δm·c²"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "atomic-fusion-test": {
+        "title": "Тест: Термоядролық синтез",
+        "questions": [
+          {
+            "question": "Термоядролық синтез дегеніміз:",
+            "options": [
+              "жарықтың шағылуы",
+              "химиялық жану",
+              "жеңіл ядролардың ауырлау ядроға бірігуі",
+              "ауыр ядроның бөлінуі"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Синтез реакциясының мысалы:",
+            "options": [
+              "U + n → жарықшақтар",
+              "I = U/R",
+              "NaCl → Na⁺ + Cl⁻",
+              "²H + ³H → ⁴He + n + E"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Синтез үшін өте жоғары температуралар керек, себебі ядролар:",
+            "options": [
+              "бейтарап молекулалар",
+              "оң зарядталған және Кулон күшімен тебіледі",
+              "ядролық күштермен әрекеттеспейді",
+              "массасыз"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жұлдыздардың энергиясы негізінен немен байланысты?",
+            "options": [
+              "планеталардың үйкелісімен",
+              "көмірдің кәдімгі жануымен",
+              "радиоантеннамен",
+              "термоядролық синтезбен"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жеңіл ядролар синтезінде энергия қашан бөлінеді?",
+            "options": [
+              "өнімдердің массасы әрқашан үлкен болса",
+              "өнімдердің массасы бастапқы ядролар массасынан кіші болса",
+              "нейтрон молекулаға айналса",
+              "заряд жоғалса"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "atomic-nuclear-energy-use-test": {
+        "title": "Тест: Ядролық энергияны қолдану",
+        "questions": [
+          {
+            "question": "Атом электр станциясында ядролық энергия әдетте алдымен неге айналады?",
+            "options": [
+              "қызусыз жарыққа",
+              "жылу энергиясына",
+              "химиялық тұзға",
+              "дыбысқа"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "E = Δm·c² формуласы нені көрсетеді?",
+            "options": [
+              "Ом заңын",
+              "бөлінген энергия мен масса ақауының байланысын",
+              "газ қысымын",
+              "жарықтың шағылу заңын"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Реактордағы басқару стерженьдері не үшін қажет?",
+            "options": [
+              "розетка кернеуін тікелей арттыру үшін",
+              "гравитация жасау үшін",
+              "нейтрондарды жұтып, тізбекті реакцияны реттеу үшін",
+              "суды уранға айналдыру үшін"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Реактордағы жылутасымалдағыштың негізгі міндеті:",
+            "options": [
+              "дыбысты күшейту",
+              "отынды ауыстыру",
+              "фотоэффект жасау",
+              "активті аймақтан жылуды әкету"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ядролық энергетиканың маңызды мәселелерінің бірі:",
+            "options": [
+              "реакцияны басқарудың мүмкін еместігі",
+              "энергия бөлінбеуі",
+              "реакторда жылудың болмауы",
+              "радиоактивті қалдықтармен жұмыс істеу"
+            ],
+            "correct": 3
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "atomic-atom-models-task-1": {
+        "topic_title": "Атом модельдері",
+        "title": "Атом радиусы шамамен 10⁻¹⁰ м, ядро радиусы 10⁻¹⁵ м. Атом радиусы ядро радиусынан неше есе үлкен?",
+        "problem_text": "Атом радиусы шамамен 10⁻¹⁰ м, ядро радиусы 10⁻¹⁵ м. Атом радиусы ядро радиусынан неше есе үлкен?",
+        "given_data": "rатом = 10⁻¹⁰ м\nrядро = 10⁻¹⁵ м",
+        "find_text": "rатом/rядро - ?",
+        "solution": "rатом/rядро = 10⁻¹⁰ / 10⁻¹⁵ = 10⁵.",
+        "answer": "100000 есе."
+      },
+      "atomic-atom-models-task-2": {
+        "topic_title": "Атом модельдері",
+        "title": "Резерфорд тәжірибесінде α-бөлшектердің аз бөлігінің қатты ауытқуы ядроның бар екенін неге көрсетеді?",
+        "problem_text": "Резерфорд тәжірибесінде α-бөлшектердің аз бөлігінің қатты ауытқуы ядроның бар екенін неге көрсетеді?",
+        "given_data": "α-бөлшектердің бір бөлігі қатты ауытқиды",
+        "find_text": "физикалық қорытынды - ?",
+        "solution": "Қатты ауытқу үлкен оң заряд пен үлкен масса шоғырланған аймаққа жақын өткенде мүмкін.\nМұндай ауытқулар аз болғандықтан, бұл аймақ өте аз көлем алады.",
+        "answer": "Атомда кішкентай, массивті, оң зарядталған ядро бар."
+      },
+      "atomic-atom-models-task-3": {
+        "topic_title": "Атом модельдері",
+        "title": "Атом моделін үлкейтіп, ядро радиусы 1 см болса, өлшемдер қатынасы 10⁵ кезінде атом радиусы қандай болады?",
+        "problem_text": "Атом моделін үлкейтіп, ядро радиусы 1 см болса, өлшемдер қатынасы 10⁵ кезінде атом радиусы қандай болады?",
+        "given_data": "rядро = 1 см\nrатом/rядро = 10⁵",
+        "find_text": "rатом - ?",
+        "solution": "rатом = 1 см · 10⁵ = 100000 см = 1000 м.",
+        "answer": "1000 м."
+      },
+      "atomic-atom-models-task-4": {
+        "topic_title": "Атом модельдері",
+        "title": "Томсон моделі Резерфорд тәжірибесінің нәтижелерін неге түсіндіре алмады?",
+        "problem_text": "Томсон моделі Резерфорд тәжірибесінің нәтижелерін неге түсіндіре алмады?",
+        "given_data": "Томсон моделі: оң заряд атом бойымен таралған\nтәжірибе: α-бөлшектер қатты ауытқиды",
+        "find_text": "қайшылық - ?",
+        "solution": "Оң заряд жайылған болса, атом ішіндегі өріс әлсіз болып, ауыр α-бөлшектерді қатты бұра алмас еді.\nҚатты ауытқулар үшін ықшам оң ядро керек.",
+        "answer": "Томсон моделінде үлкен ауытқулар тудыратын кішкентай тығыз ядро жоқ."
+      },
+      "atomic-atom-models-task-5": {
+        "topic_title": "Атом модельдері",
+        "title": "Атом дерлік бос, бірақ зат қатты сезіледі. Сығылуға қарсыласу немен түсіндіріледі?",
+        "problem_text": "Атом дерлік бос, бірақ зат қатты сезіледі. Сығылуға қарсыласу немен түсіндіріледі?",
+        "given_data": "атомдарда электрондық қабықтар бар",
+        "find_text": "қаттылық себебі - ?",
+        "solution": "Атомдар жақындасқанда олардың электрондық қабықтары әрекеттеседі.\nЭлектромагниттік тебілу және кванттық шектеулер қабықтардың бір-бірінен еркін өтуіне мүмкіндік бермейді.",
+        "answer": "Қаттылық атомның толық толуынан емес, электрондық қабықтардың әрекеттесуінен болады."
+      },
+      "atomic-energy-levels-task-1": {
+        "topic_title": "Энергетикалық деңгейлер",
+        "title": "Сутек атомының бірінші деңгей энергиясын табыңыз.",
+        "problem_text": "Сутек атомының бірінші деңгей энергиясын табыңыз.",
+        "given_data": "n = 1\nEₙ = -13,6/n² эВ",
+        "find_text": "E₁ - ?",
+        "solution": "E₁ = -13,6/1² = -13,6 эВ.",
+        "answer": "-13,6 эВ."
+      },
+      "atomic-energy-levels-task-2": {
+        "topic_title": "Энергетикалық деңгейлер",
+        "title": "Сутек атомының n = 2 деңгей энергиясын табыңыз.",
+        "problem_text": "Сутек атомының n = 2 деңгей энергиясын табыңыз.",
+        "given_data": "n = 2\nEₙ = -13,6/n² эВ",
+        "find_text": "E₂ - ?",
+        "solution": "E₂ = -13,6/2² = -13,6/4 = -3,4 эВ.",
+        "answer": "-3,4 эВ."
+      },
+      "atomic-energy-levels-task-3": {
+        "topic_title": "Энергетикалық деңгейлер",
+        "title": "Сутек атомындағы электрон n = 2 деңгейінен n = 1 деңгейіне өтті. Шығарылған фотон энергиясын табыңыз.",
+        "problem_text": "Сутек атомындағы электрон n = 2 деңгейінен n = 1 деңгейіне өтті. Шығарылған фотон энергиясын табыңыз.",
+        "given_data": "E₂ = -3,4 эВ\nE₁ = -13,6 эВ",
+        "find_text": "hν - ?",
+        "solution": "hν = E₂ - E₁ = -3,4 - (-13,6) = 10,2 эВ.",
+        "answer": "10,2 эВ."
+      },
+      "atomic-energy-levels-task-4": {
+        "topic_title": "Энергетикалық деңгейлер",
+        "title": "Атом -3,4 эВ деңгейінен бастап 1,9 эВ энергиялы фотон жұтты. Электрон энергиясы қандай болды?",
+        "problem_text": "Атом -3,4 эВ деңгейінен бастап 1,9 эВ энергиялы фотон жұтты. Электрон энергиясы қандай болды?",
+        "given_data": "Eбаст = -3,4 эВ\nhν = 1,9 эВ",
+        "find_text": "Eсоң - ?",
+        "solution": "Жұтылу кезінде электрон энергиясы артады:\nEсоң = Eбаст + hν = -3,4 + 1,9 = -1,5 эВ.",
+        "answer": "-1,5 эВ."
+      },
+      "atomic-energy-levels-task-5": {
+        "topic_title": "Энергетикалық деңгейлер",
+        "title": "Неге атом спектрі үздіксіз емес, сызықтық болады?",
+        "problem_text": "Неге атом спектрі үздіксіз емес, сызықтық болады?",
+        "given_data": "электрон энергиялары дискретті",
+        "find_text": "сызықтық спектр себебі - ?",
+        "solution": "Электрон тек рұқсат етілген деңгейлер арасында ғана өте алады.\nСондықтан фотон энергиялары кез келген мән емес, нақты деңгей айырмаларына тең.",
+        "answer": "Спектр энергетикалық деңгейлердің дискреттілігіне байланысты сызықтық болады."
+      },
+      "atomic-electron-shells-task-1": {
+        "topic_title": "Электрондық қабықтар",
+        "title": "Үшінші қабыққа ең көбі қанша электрон сыяды?",
+        "problem_text": "Үшінші қабыққа ең көбі қанша электрон сыяды?",
+        "given_data": "n = 3\nNmax = 2n²",
+        "find_text": "Nmax - ?",
+        "solution": "Nmax = 2 · 3² = 2 · 9 = 18.",
+        "answer": "18 электрон."
+      },
+      "atomic-electron-shells-task-2": {
+        "topic_title": "Электрондық қабықтар",
+        "title": "Төртінші қабықтағы электрондардың ең көп санын табыңыз.",
+        "problem_text": "Төртінші қабықтағы электрондардың ең көп санын табыңыз.",
+        "given_data": "n = 4\nNmax = 2n²",
+        "find_text": "Nmax - ?",
+        "solution": "Nmax = 2 · 4² = 32.",
+        "answer": "32 электрон."
+      },
+      "atomic-electron-shells-task-3": {
+        "topic_title": "Электрондық қабықтар",
+        "title": "Бейтарап атомда 11 электрон бар. Оның ядросында қанша протон бар?",
+        "problem_text": "Бейтарап атомда 11 электрон бар. Оның ядросында қанша протон бар?",
+        "given_data": "атом бейтарап\nэлектрондар саны = 11",
+        "find_text": "Z - ?",
+        "solution": "Бейтарап атомда протондар саны электрондар санына тең.\nZ = 11.",
+        "answer": "11 протон."
+      },
+      "atomic-electron-shells-task-4": {
+        "topic_title": "Электрондық қабықтар",
+        "title": "Неге сыртқы қабық химиялық қасиеттер үшін маңызды?",
+        "problem_text": "Неге сыртқы қабық химиялық қасиеттер үшін маңызды?",
+        "given_data": "химиялық байланыстар электрондық қабықтар арқылы түзіледі",
+        "find_text": "сыртқы электрондардың рөлі - ?",
+        "solution": "Атомдар жақындасқанда алдымен сыртқы электрондар әрекеттеседі.\nОлар электрон беру, қосып алу немесе ортақ пайдалану процестеріне қатысады.",
+        "answer": "Химиялық қасиеттер сыртқы электрондармен анықталады."
+      },
+      "atomic-electron-shells-task-5": {
+        "topic_title": "Электрондық қабықтар",
+        "title": "17 электроны бар бейтарап атом бір электрон қосып алып ион түзді. Ион заряды қандай?",
+        "problem_text": "17 электроны бар бейтарап атом бір электрон қосып алып ион түзді. Ион заряды қандай?",
+        "given_data": "бейтарап атом: 17 e⁻ және 17 p⁺\n1 электрон қосылды",
+        "find_text": "ион заряды - ?",
+        "solution": "Электрон қосылғаннан кейін электрондар 18 болды, протондар 17 болып қалды.\nАртық электрон -1e заряд береді.",
+        "answer": "Ион заряды -1."
+      },
+      "atomic-de-broglie-waves-task-1": {
+        "topic_title": "де Бройль толқындары",
+        "title": "Электрон импульсі 6,63×10⁻²⁴ кг·м/с. Де Бройль толқын ұзындығын табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "problem_text": "Электрон импульсі 6,63×10⁻²⁴ кг·м/с. Де Бройль толқын ұзындығын табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "given_data": "p = 6,63×10⁻²⁴ кг·м/с\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "λ - ?",
+        "solution": "λ = h/p = 6,63×10⁻³⁴ / 6,63×10⁻²⁴ = 1×10⁻¹⁰ м.",
+        "answer": "1×10⁻¹⁰ м."
+      },
+      "atomic-de-broglie-waves-task-2": {
+        "topic_title": "де Бройль толқындары",
+        "title": "Массасы 1×10⁻²⁶ кг бөлшек 1000 м/с жылдамдықпен қозғалады. Оның де Бройль толқын ұзындығын табыңыз.",
+        "problem_text": "Массасы 1×10⁻²⁶ кг бөлшек 1000 м/с жылдамдықпен қозғалады. Оның де Бройль толқын ұзындығын табыңыз.",
+        "given_data": "m = 1×10⁻²⁶ кг\nv = 1000 м/с\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "λ - ?",
+        "solution": "p = mv = 1×10⁻²⁶ · 1000 = 1×10⁻²³ кг·м/с.\nλ = h/p = 6,63×10⁻³⁴ / 1×10⁻²³ = 6,63×10⁻¹¹ м.",
+        "answer": "6,63×10⁻¹¹ м."
+      },
+      "atomic-de-broglie-waves-task-3": {
+        "topic_title": "де Бройль толқындары",
+        "title": "Бөлшек импульсі 4 есе артты. Де Бройль толқын ұзындығы қалай өзгерді?",
+        "problem_text": "Бөлшек импульсі 4 есе артты. Де Бройль толқын ұзындығы қалай өзгерді?",
+        "given_data": "p₂ = 4p₁",
+        "find_text": "λ₂/λ₁ - ?",
+        "solution": "λ = h/p, сондықтан толқын ұзындығы импульске кері пропорционал.\nλ₂/λ₁ = p₁/p₂ = 1/4.",
+        "answer": "Толқын ұзындығы 4 есе кеміді."
+      },
+      "atomic-de-broglie-waves-task-4": {
+        "topic_title": "де Бройль толқындары",
+        "title": "Неге электрон кристалда дифракция көрсете алады?",
+        "problem_text": "Неге электрон кристалда дифракция көрсете алады?",
+        "given_data": "электронда λ = h/p\nатомдық жазықтықтар аралығы λ-мен шамалас",
+        "find_text": "дифракция себебі - ?",
+        "solution": "Егер бөлшек толқын ұзындығы кристалл торының периодымен шамалас болса, толқындық әсерлер байқалады.\nЭлектрон де Бройль толқыны сияқты әрекет етіп, дифракциялық көрініс береді.",
+        "answer": "Электронның толқындық қасиеттері және λ мен тор өлшемдерінің шамаластығы себеп болады."
+      },
+      "atomic-de-broglie-waves-task-5": {
+        "topic_title": "де Бройль толқындары",
+        "title": "Массасы 0,1 кг доп 10 м/с жылдамдықпен ұшады. Оның де Бройль толқын ұзындығын бағалаңыз.",
+        "problem_text": "Массасы 0,1 кг доп 10 м/с жылдамдықпен ұшады. Оның де Бройль толқын ұзындығын бағалаңыз.",
+        "given_data": "m = 0,1 кг\nv = 10 м/с\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "λ - ?",
+        "solution": "p = mv = 0,1 · 10 = 1 кг·м/с.\nλ = h/p = 6,63×10⁻³⁴ м.",
+        "answer": "6,63×10⁻³⁴ м, сондықтан доптың толқындық қасиеттері байқалмайды."
+      },
+      "atomic-heisenberg-uncertainty-task-1": {
+        "topic_title": "Гейзенберг анықталмаушылығы",
+        "title": "Электрон координатасы Δx = 1×10⁻¹⁰ м анықталмаушылықпен анықталған. Импульстің ең кіші анықталмаушылығын бағалаңыз. ℏ = 1,05×10⁻³⁴ Дж·с.",
+        "problem_text": "Электрон координатасы Δx = 1×10⁻¹⁰ м анықталмаушылықпен анықталған. Импульстің ең кіші анықталмаушылығын бағалаңыз. ℏ = 1,05×10⁻³⁴ Дж·с.",
+        "given_data": "Δx = 1×10⁻¹⁰ м\nℏ = 1,05×10⁻³⁴ Дж·с",
+        "find_text": "Δpmin - ?",
+        "solution": "Δx·Δp ≥ ℏ/2, демек Δp ≥ ℏ/(2Δx).\nΔp ≥ 1,05×10⁻³⁴ / (2×10⁻¹⁰) = 5,25×10⁻²⁵ кг·м/с.",
+        "answer": "5,25×10⁻²⁵ кг·м/с-тан кем емес."
+      },
+      "atomic-heisenberg-uncertainty-task-2": {
+        "topic_title": "Гейзенберг анықталмаушылығы",
+        "title": "Бөлшек импульсінің анықталмаушылығы 2×10⁻²⁴ кг·м/с. Координатаның ең кіші анықталмаушылығын табыңыз.",
+        "problem_text": "Бөлшек импульсінің анықталмаушылығы 2×10⁻²⁴ кг·м/с. Координатаның ең кіші анықталмаушылығын табыңыз.",
+        "given_data": "Δp = 2×10⁻²⁴ кг·м/с\nℏ = 1,05×10⁻³⁴ Дж·с",
+        "find_text": "Δxmin - ?",
+        "solution": "Δx ≥ ℏ/(2Δp) = 1,05×10⁻³⁴ / (4×10⁻²⁴) = 2,625×10⁻¹¹ м.",
+        "answer": "2,6×10⁻¹¹ м."
+      },
+      "atomic-heisenberg-uncertainty-task-3": {
+        "topic_title": "Гейзенберг анықталмаушылығы",
+        "title": "Қозған күйдің өмір сүру уақыты Δt = 1×10⁻⁸ с. Энергияның ең кіші анықталмаушылығын бағалаңыз.",
+        "problem_text": "Қозған күйдің өмір сүру уақыты Δt = 1×10⁻⁸ с. Энергияның ең кіші анықталмаушылығын бағалаңыз.",
+        "given_data": "Δt = 1×10⁻⁸ с\nℏ = 1,05×10⁻³⁴ Дж·с",
+        "find_text": "ΔEmin - ?",
+        "solution": "ΔE ≥ ℏ/(2Δt) = 1,05×10⁻³⁴ / (2×10⁻⁸) = 5,25×10⁻²⁷ Дж.",
+        "answer": "5,25×10⁻²⁷ Дж."
+      },
+      "atomic-heisenberg-uncertainty-task-4": {
+        "topic_title": "Гейзенберг анықталмаушылығы",
+        "title": "Неге атомдағы электронды нақты орбитасы бар кішкентай планета ретінде сипаттауға болмайды?",
+        "problem_text": "Неге атомдағы электронды нақты орбитасы бар кішкентай планета ретінде сипаттауға болмайды?",
+        "given_data": "атомдағы электрон\nкіші масштабтар",
+        "find_text": "нақты орбитадан бас тарту себебі - ?",
+        "solution": "Электронның орнын дәл беруге тырыссақ, оның импульс анықталмаушылығы үлкен болады.\nСондықтан кванттық механика классикалық траекторияны емес, ықтималдық таралуын қолданады.",
+        "answer": "Анықталмаушылық принципіне байланысты электронның координатасы мен импульсі бір уақытта дәл болмайды."
+      },
+      "atomic-heisenberg-uncertainty-task-5": {
+        "topic_title": "Гейзенберг анықталмаушылығы",
+        "title": "Координата анықталмаушылығы 5 есе азайтылды. Импульстің ең кіші анықталмаушылығы қалай өзгеруі керек?",
+        "problem_text": "Координата анықталмаушылығы 5 есе азайтылды. Импульстің ең кіші анықталмаушылығы қалай өзгеруі керек?",
+        "given_data": "Δx₂ = Δx₁/5",
+        "find_text": "Δp₂/Δp₁ - ?",
+        "solution": "Ең кіші Δp координата анықталмаушылығына кері пропорционал.\nΔx 5 есе азайса, ең кіші Δp 5 есе артады.",
+        "answer": "5 есе артады."
+      },
+      "atomic-nucleus-structure-task-1": {
+        "topic_title": "Ядро құрылысы",
+        "title": "Оттек ядросында Z = 8, N = 8. Массалық санды табыңыз.",
+        "problem_text": "Оттек ядросында Z = 8, N = 8. Массалық санды табыңыз.",
+        "given_data": "Z = 8\nN = 8",
+        "find_text": "A - ?",
+        "solution": "A = Z + N = 8 + 8 = 16.",
+        "answer": "A = 16."
+      },
+      "atomic-nucleus-structure-task-2": {
+        "topic_title": "Ядро құрылысы",
+        "title": "Ядро үшін A = 238 және Z = 92. Нейтрондар санын табыңыз.",
+        "problem_text": "Ядро үшін A = 238 және Z = 92. Нейтрондар санын табыңыз.",
+        "given_data": "A = 238\nZ = 92",
+        "find_text": "N - ?",
+        "solution": "N = A - Z = 238 - 92 = 146.",
+        "answer": "146 нейтрон."
+      },
+      "atomic-nucleus-structure-task-3": {
+        "topic_title": "Ядро құрылысы",
+        "title": "Хлор изотоптарында Z = 17, массалық сандары 35 және 37. Әр ядрода қанша нейтрон бар?",
+        "problem_text": "Хлор изотоптарында Z = 17, массалық сандары 35 және 37. Әр ядрода қанша нейтрон бар?",
+        "given_data": "Z = 17\nA₁ = 35\nA₂ = 37",
+        "find_text": "N₁, N₂ - ?",
+        "solution": "N₁ = 35 - 17 = 18.\nN₂ = 37 - 17 = 20.",
+        "answer": "18 және 20 нейтрон."
+      },
+      "atomic-nucleus-structure-task-4": {
+        "topic_title": "Ядро құрылысы",
+        "title": "Неге изотоптардың химиялық қасиеттері ұқсас?",
+        "problem_text": "Неге изотоптардың химиялық қасиеттері ұқсас?",
+        "given_data": "бір элементтің изотоптары\nZ бірдей",
+        "find_text": "қасиеттер ұқсастығының себебі - ?",
+        "solution": "Химиялық қасиеттер ядро зарядымен және электрондық қабықпен анықталады.\nИзотоптарда протондар саны бірдей, сондықтан бейтарап атомдарда электрондар саны да бірдей.",
+        "answer": "Бейтарап изотоптардың электрондық қабықтары ұқсас."
+      },
+      "atomic-nucleus-structure-task-5": {
+        "topic_title": "Ядро құрылысы",
+        "title": "Ядро заряды +13e және массалық саны 27. Протондар мен нейтрондар санын табыңыз.",
+        "problem_text": "Ядро заряды +13e және массалық саны 27. Протондар мен нейтрондар санын табыңыз.",
+        "given_data": "Z = 13\nA = 27",
+        "find_text": "Z, N - ?",
+        "solution": "+13e заряды 13 протон бар екенін білдіреді.\nN = A - Z = 27 - 13 = 14.",
+        "answer": "13 протон және 14 нейтрон."
+      },
+      "atomic-nuclear-forces-task-1": {
+        "topic_title": "Ядролық күштер",
+        "title": "Электрлік тебілуге қарамастан, ядро ішіндегі протондар неге ұшып кетпейді?",
+        "problem_text": "Электрлік тебілуге қарамастан, ядро ішіндегі протондар неге ұшып кетпейді?",
+        "given_data": "протондар электрлік тебіледі\nнуклондар өте жақын",
+        "find_text": "тұрақтандыратын әрекеттесу - ?",
+        "solution": "Ядролық қашықтықтарда нуклондар арасында күшті ядролық әрекеттесу әсер етеді.\nОл осындай кіші қашықтықтарда электростатикалық тебілуден күшті.",
+        "answer": "Оларды қысқа қашықтықтағы күшті ядролық күштер ұстап тұрады."
+      },
+      "atomic-nuclear-forces-task-2": {
+        "topic_title": "Ядролық күштер",
+        "title": "Ядролық күштердің әсер ету радиусы 10⁻¹⁵ м шамасында. Ол атом өлшемі 10⁻¹⁰ м-ден неше есе кіші?",
+        "problem_text": "Ядролық күштердің әсер ету радиусы 10⁻¹⁵ м шамасында. Ол атом өлшемі 10⁻¹⁰ м-ден неше есе кіші?",
+        "given_data": "rкүш = 10⁻¹⁵ м\nrатом = 10⁻¹⁰ м",
+        "find_text": "rатом/rкүш - ?",
+        "solution": "rатом/rкүш = 10⁻¹⁰ / 10⁻¹⁵ = 10⁵.",
+        "answer": "100000 есе кіші."
+      },
+      "atomic-nuclear-forces-task-3": {
+        "topic_title": "Ядролық күштер",
+        "title": "Неге ауыр ядроларға протондарға қарағанда көбірек нейтрон керек?",
+        "problem_text": "Неге ауыр ядроларға протондарға қарағанда көбірек нейтрон керек?",
+        "given_data": "көп протон күшті электрлік тебілу тудырады",
+        "find_text": "қосымша нейтрондардың рөлі - ?",
+        "solution": "Нейтрондар күшті ядролық тартылысты арттырады, бірақ электрлік тебілу қоспайды.\nБұл ауыр ядролардағы протон-протон тебілуінің артуын өтеуге көмектеседі.",
+        "answer": "Қосымша нейтрондар Кулон тебілуін арттырмай ядролық тартылысты күшейтеді."
+      },
+      "atomic-nuclear-forces-task-4": {
+        "topic_title": "Ядролық күштер",
+        "title": "Неге ядролық күштер атомдардың химиялық қасиеттерін анықтамайды?",
+        "problem_text": "Неге ядролық күштер атомдардың химиялық қасиеттерін анықтамайды?",
+        "given_data": "ядролық күштер қысқа қашықтықта әсер етеді\nхимиялық қасиеттер электрондық қабықтармен байланысты",
+        "find_text": "себебі - ?",
+        "solution": "Ядролық күштер тек ядро ішінде 10⁻¹⁵ м шамасындағы қашықтықтарда әсер етеді.\nХимиялық қасиеттер атомдық масштабтағы сыртқы электрондармен анықталады.",
+        "answer": "Ядролық күштер тым қысқа әсер етеді; химияны электрондық қабықтар басқарады."
+      },
+      "atomic-nuclear-forces-task-5": {
+        "topic_title": "Ядролық күштер",
+        "title": "Екі протон ядролық масштаб бойынша бір-бірінен алыс орналасқан. Қай әрекеттесу айқынырақ болады: электростатикалық па, ядролық па?",
+        "problem_text": "Екі протон ядролық масштаб бойынша бір-бірінен алыс орналасқан. Қай әрекеттесу айқынырақ болады: электростатикалық па, ядролық па?",
+        "given_data": "қашықтық ядролық күш радиусынан әлдеқайда үлкен",
+        "find_text": "басым әрекеттесу - ?",
+        "solution": "Ядролық күштер қысқа қашықтықта әсер етеді және ядродан тыс тез әлсірейді.\nЭлектростатикалық әрекеттесу алыс қашықтықта да әсер етеді, сондықтан байқалады.",
+        "answer": "Электростатикалық әрекеттесу айқынырақ болады."
+      },
+      "atomic-binding-energy-task-1": {
+        "topic_title": "Байланыс энергиясы",
+        "title": "Ядроның масса ақауы 1,0×10⁻²⁹ кг. Байланыс энергиясын табыңыз. c = 3×10⁸ м/с.",
+        "problem_text": "Ядроның масса ақауы 1,0×10⁻²⁹ кг. Байланыс энергиясын табыңыз. c = 3×10⁸ м/с.",
+        "given_data": "Δm = 1,0×10⁻²⁹ кг\nc = 3×10⁸ м/с",
+        "find_text": "Eбайл - ?",
+        "solution": "E = Δm·c² = 1,0×10⁻²⁹ · 9×10¹⁶ = 9×10⁻¹³ Дж.",
+        "answer": "9×10⁻¹³ Дж."
+      },
+      "atomic-binding-energy-task-2": {
+        "topic_title": "Байланыс энергиясы",
+        "title": "Ядроның байланыс энергиясы 28 МэВ, массалық саны A = 4. Меншікті байланыс энергиясын табыңыз.",
+        "problem_text": "Ядроның байланыс энергиясы 28 МэВ, массалық саны A = 4. Меншікті байланыс энергиясын табыңыз.",
+        "given_data": "Eбайл = 28 МэВ\nA = 4",
+        "find_text": "Eбайл/A - ?",
+        "solution": "Eбайл/A = 28/4 = 7 МэВ/нуклон.",
+        "answer": "7 МэВ/нуклон."
+      },
+      "atomic-binding-energy-task-3": {
+        "topic_title": "Байланыс энергиясы",
+        "title": "Еркін нуклондар массасы ядро массасынан 0,03 а.м.б.-ға артық. Байланыс энергиясын МэВ-пен табыңыз. 1 а.м.б.·c² = 931,5 МэВ.",
+        "problem_text": "Еркін нуклондар массасы ядро массасынан 0,03 а.м.б.-ға артық. Байланыс энергиясын МэВ-пен табыңыз. 1 а.м.б.·c² = 931,5 МэВ.",
+        "given_data": "Δm = 0,03 а.м.б.\n1 а.м.б.·c² = 931,5 МэВ",
+        "find_text": "Eбайл - ?",
+        "solution": "Eбайл = 0,03 · 931,5 = 27,945 МэВ.",
+        "answer": "шамамен 28 МэВ."
+      },
+      "atomic-binding-energy-task-4": {
+        "topic_title": "Байланыс энергиясы",
+        "title": "Неге байланысқан ядро массасы еркін протондар мен нейтрондар массаларының қосындысынан кіші?",
+        "problem_text": "Неге байланысқан ядро массасы еркін протондар мен нейтрондар массаларының қосындысынан кіші?",
+        "given_data": "нуклондар байланысқан жүйе түзеді",
+        "find_text": "масса ақауының мағынасы - ?",
+        "solution": "Ядро түзілгенде энергия бөлінеді.\nE = Δm·c² бойынша бөлінген байланыс энергиясы жүйе массасының кемуіне сәйкес келеді.",
+        "answer": "Массаның бір бөлігі байланыс энергиясына айналады."
+      },
+      "atomic-binding-energy-task-5": {
+        "topic_title": "Байланыс энергиясы",
+        "title": "Екі ядроның A = 20. Біріншісінің байланыс энергиясы 120 МэВ, екіншісінікі 160 МэВ. Меншікті байланыс энергиясы бойынша қай ядро тұрақтырақ?",
+        "problem_text": "Екі ядроның A = 20. Біріншісінің байланыс энергиясы 120 МэВ, екіншісінікі 160 МэВ. Меншікті байланыс энергиясы бойынша қай ядро тұрақтырақ?",
+        "given_data": "A = 20\nE₁ = 120 МэВ\nE₂ = 160 МэВ",
+        "find_text": "қай ядро тұрақтырақ - ?",
+        "solution": "E₁/A = 120/20 = 6 МэВ/нуклон.\nE₂/A = 160/20 = 8 МэВ/нуклон.",
+        "answer": "Екінші ядро тұрақтырақ."
+      },
+      "atomic-decay-types-task-1": {
+        "topic_title": "Ыдырау түрлері",
+        "title": "A = 238, Z = 92 ядро α-ыдырауға ұшырады. Туынды ядроның A және Z мәндерін табыңыз.",
+        "problem_text": "A = 238, Z = 92 ядро α-ыдырауға ұшырады. Туынды ядроның A және Z мәндерін табыңыз.",
+        "given_data": "A = 238\nZ = 92\nα-ыдырау",
+        "find_text": "A', Z' - ?",
+        "solution": "α-ыдырауда A 4-ке, Z 2-ге кемиді.\nA' = 238 - 4 = 234, Z' = 92 - 2 = 90.",
+        "answer": "A = 234, Z = 90."
+      },
+      "atomic-decay-types-task-2": {
+        "topic_title": "Ыдырау түрлері",
+        "title": "A = 14, Z = 6 ядро β⁻-ыдырауға ұшырады. Туынды ядроның A және Z мәндерін табыңыз.",
+        "problem_text": "A = 14, Z = 6 ядро β⁻-ыдырауға ұшырады. Туынды ядроның A және Z мәндерін табыңыз.",
+        "given_data": "A = 14\nZ = 6\nβ⁻-ыдырау",
+        "find_text": "A', Z' - ?",
+        "solution": "β⁻-ыдырауда A өзгермейді, ал Z 1-ге артады.\nA' = 14, Z' = 7.",
+        "answer": "A = 14, Z = 7."
+      },
+      "atomic-decay-types-task-3": {
+        "topic_title": "Ыдырау түрлері",
+        "title": "Неге γ-сәулелену ядроның A және Z мәндерін өзгертпейді?",
+        "problem_text": "Неге γ-сәулелену ядроның A және Z мәндерін өзгертпейді?",
+        "given_data": "γ-сәулелену — фотон шығару",
+        "find_text": "ядро құрамына әсері - ?",
+        "solution": "Гамма-сәуле ядродан артық энергияны алып кетеді.\nПротон немесе нейтрон шықпайды, сондықтан массалық және зарядтық сандар өзгермейді.",
+        "answer": "Тек энергия шығады, нуклондар шықпайды."
+      },
+      "atomic-decay-types-task-4": {
+        "topic_title": "Ыдырау түрлері",
+        "title": "α-бөлшектер үшін қай қорғаныш тиімді: қағаз парағы ма, әлде қалың қорғасын плита ма? Қорғасын қажет пе?",
+        "problem_text": "α-бөлшектер үшін қай қорғаныш тиімді: қағаз парағы ма, әлде қалың қорғасын плита ма? Қорғасын қажет пе?",
+        "given_data": "α-бөлшектер\nөтімділік қабілеті аз",
+        "find_text": "жеткілікті қорғаныш - ?",
+        "solution": "α-бөлшектер ортаны күшті иондайды, бірақ энергиясын тез жоғалтады.\nОларды қағаз парағы немесе терінің сыртқы қабаты да тоқтатады.",
+        "answer": "α-бөлшектер үшін әдетте қағаз жеткілікті; қорғасын артық."
+      },
+      "atomic-decay-types-task-5": {
+        "topic_title": "Ыдырау түрлері",
+        "title": "Неге сыртқы сәулеленуде β-сәуле α-сәуледен қауіптілеу, ал α-көзі ағза ішінде ерекше қауіпті?",
+        "problem_text": "Неге сыртқы сәулеленуде β-сәуле α-сәуледен қауіптілеу, ал α-көзі ағза ішінде ерекше қауіпті?",
+        "given_data": "α қысқа қашықтыққа өтеді және күшті иондайды\nβ тереңірек өтеді",
+        "find_text": "қауіптілікті салыстыру - ?",
+        "solution": "Сырттан α-бөлшектер терімен тоқтатылады, ал β-бөлшектер тереңірек өтеді.\nАғза ішінде α-бөлшектер энергиясын ұлпалар жанында өте қысқа қашықтықта береді.",
+        "answer": "Сырттан β қауіптілеу, ал ағза ішінде α-көздер ерекше қауіпті."
+      },
+      "atomic-decay-law-task-1": {
+        "topic_title": "Радиоактивті ыдырау заңы",
+        "title": "8000 радиоактивті ядро болды. 3 жартылай ыдырау периодынан кейін қаншасы қалады?",
+        "problem_text": "8000 радиоактивті ядро болды. 3 жартылай ыдырау периодынан кейін қаншасы қалады?",
+        "given_data": "N₀ = 8000\nt = 3T",
+        "find_text": "N - ?",
+        "solution": "Әр периодтан кейін жартысы қалады.\nN = 8000/2³ = 8000/8 = 1000.",
+        "answer": "1000 ядро."
+      },
+      "atomic-decay-law-task-2": {
+        "topic_title": "Радиоактивті ыдырау заңы",
+        "title": "Заттың жартылай ыдырау периоды 5 тәулік. 20 тәуліктен кейін ядролардың қандай бөлігі қалады?",
+        "problem_text": "Заттың жартылай ыдырау периоды 5 тәулік. 20 тәуліктен кейін ядролардың қандай бөлігі қалады?",
+        "given_data": "T = 5 тәулік\nt = 20 тәулік",
+        "find_text": "N/N₀ - ?",
+        "solution": "t/T = 20/5 = 4.\nN/N₀ = 2⁻⁴ = 1/16.",
+        "answer": "бастапқы мөлшердің 1/16 бөлігі қалады."
+      },
+      "atomic-decay-law-task-3": {
+        "topic_title": "Радиоактивті ыдырау заңы",
+        "title": "2 жартылай ыдырау периодынан кейін 250 г зат қалды. Басында қанша болған?",
+        "problem_text": "2 жартылай ыдырау периодынан кейін 250 г зат қалды. Басында қанша болған?",
+        "given_data": "N = 250 г\nt = 2T",
+        "find_text": "N₀ - ?",
+        "solution": "2 периодтан кейін бастапқы мөлшердің 1/4 бөлігі қалады.\nN₀ = 250 · 4 = 1000 г.",
+        "answer": "1000 г."
+      },
+      "atomic-decay-law-task-4": {
+        "topic_title": "Радиоактивті ыдырау заңы",
+        "title": "Жартылай ыдырау периоды 10 жыл. Бастапқы ядролардың 1/8 бөлігі қанша жылдан кейін қалады?",
+        "problem_text": "Жартылай ыдырау периоды 10 жыл. Бастапқы ядролардың 1/8 бөлігі қанша жылдан кейін қалады?",
+        "given_data": "T = 10 жыл\nN/N₀ = 1/8",
+        "find_text": "t - ?",
+        "solution": "1/8 = 1/2³, демек 3 жартылай ыдырау периоды өткен.\nt = 3T = 30 жыл.",
+        "answer": "30 жыл."
+      },
+      "atomic-decay-law-task-5": {
+        "topic_title": "Радиоактивті ыдырау заңы",
+        "title": "Неге нақты бір ядроның ыдырау уақытын болжауға болмайды, бірақ үлкен үлгідегі ыдыраған ядролар үлесін болжауға болады?",
+        "problem_text": "Неге нақты бір ядроның ыдырау уақытын болжауға болмайды, бірақ үлкен үлгідегі ыдыраған ядролар үлесін болжауға болады?",
+        "given_data": "радиоактивті ыдырау ықтималдық сипатта\nядролар саны көп",
+        "find_text": "статистикалық заң себебі - ?",
+        "solution": "Жеке ядроның ыдырауы кездейсоқ кванттық оқиға.\nАл көп бірдей ядро үшін ыдырау ықтималдығы тұрақты статистикалық заңдылық береді.",
+        "answer": "Жеке ыдырау кездейсоқ, ал үлкен үлгі статистикалық сипатталады."
+      },
+      "atomic-radiation-doses-task-1": {
+        "topic_title": "Сәулелену дозалары",
+        "title": "Массасы 2 кг ұлпа 0,04 Дж энергия жұтты. Жұтылған дозаны табыңыз.",
+        "problem_text": "Массасы 2 кг ұлпа 0,04 Дж энергия жұтты. Жұтылған дозаны табыңыз.",
+        "given_data": "E = 0,04 Дж\nm = 2 кг",
+        "find_text": "D - ?",
+        "solution": "D = E/m = 0,04/2 = 0,02 Гр.",
+        "answer": "0,02 Гр."
+      },
+      "atomic-radiation-doses-task-2": {
+        "topic_title": "Сәулелену дозалары",
+        "title": "Жұтылған доза 0,01 Гр, сәулеленудің сапа коэффициенті k = 20. Эквивалентті дозаны табыңыз.",
+        "problem_text": "Жұтылған доза 0,01 Гр, сәулеленудің сапа коэффициенті k = 20. Эквивалентті дозаны табыңыз.",
+        "given_data": "D = 0,01 Гр\nk = 20",
+        "find_text": "H - ?",
+        "solution": "H = D·k = 0,01 · 20 = 0,2 Зв.",
+        "answer": "0,2 Зв."
+      },
+      "atomic-radiation-doses-task-3": {
+        "topic_title": "Сәулелену дозалары",
+        "title": "Эквивалентті доза 0,05 Зв, k = 5. Жұтылған дозаны табыңыз.",
+        "problem_text": "Эквивалентті доза 0,05 Зв, k = 5. Жұтылған дозаны табыңыз.",
+        "given_data": "H = 0,05 Зв\nk = 5",
+        "find_text": "D - ?",
+        "solution": "D = H/k = 0,05/5 = 0,01 Гр.",
+        "answer": "0,01 Гр."
+      },
+      "atomic-radiation-doses-task-4": {
+        "topic_title": "Сәулелену дозалары",
+        "title": "Екі сәулелену бірдей 0,002 Гр жұтылған доза берді. Біріншісі үшін k = 1, екіншісі үшін k = 10. Эквивалентті дозаларды салыстырыңыз.",
+        "problem_text": "Екі сәулелену бірдей 0,002 Гр жұтылған доза берді. Біріншісі үшін k = 1, екіншісі үшін k = 10. Эквивалентті дозаларды салыстырыңыз.",
+        "given_data": "D = 0,002 Гр\nk₁ = 1\nk₂ = 10",
+        "find_text": "H₁, H₂ - ?",
+        "solution": "H₁ = 0,002 · 1 = 0,002 Зв.\nH₂ = 0,002 · 10 = 0,02 Зв.",
+        "answer": "Екінші сәулеленудің эквивалентті дозасы 10 есе үлкен."
+      },
+      "atomic-radiation-doses-task-5": {
+        "topic_title": "Сәулелену дозалары",
+        "title": "Неге радиациялық қауіпті бағалау үшін тек жұтылған энергия жеткіліксіз?",
+        "problem_text": "Неге радиациялық қауіпті бағалау үшін тек жұтылған энергия жеткіліксіз?",
+        "given_data": "сәулеленудің түрлері әртүрлі\nмассаға шаққандағы энергия бірдей",
+        "find_text": "H қолдану себебі - ?",
+        "solution": "Әртүрлі бөлшектер иондану тығыздығын әртүрлі жасап, жасушаларды әртүрлі зақымдайды.\nСондықтан жұтылған доза сапа коэффициентіне көбейтіледі.",
+        "answer": "Сәулеленудің биологиялық әсерін ескеретін эквивалентті доза керек."
+      },
+      "atomic-fission-task-1": {
+        "topic_title": "Ядролардың бөлінуі",
+        "title": "Бір бөліну актінде 200 МэВ энергия бөлінеді. 10⁶ бөліну актінде қанша энергия бөлінеді?",
+        "problem_text": "Бір бөліну актінде 200 МэВ энергия бөлінеді. 10⁶ бөліну актінде қанша энергия бөлінеді?",
+        "given_data": "E₁ = 200 МэВ\nN = 10⁶",
+        "find_text": "E - ?",
+        "solution": "E = NE₁ = 10⁶ · 200 = 2×10⁸ МэВ.",
+        "answer": "2×10⁸ МэВ."
+      },
+      "atomic-fission-task-2": {
+        "topic_title": "Ядролардың бөлінуі",
+        "title": "Уранның бір бөлінуінде 3 нейтрон шықты. Егер әрқайсысы жаңа бөліну тудырса, екінші ұрпақта қанша бөліну болады?",
+        "problem_text": "Уранның бір бөлінуінде 3 нейтрон шықты. Егер әрқайсысы жаңа бөліну тудырса, екінші ұрпақта қанша бөліну болады?",
+        "given_data": "1 бөліну\nбір бөлінуге 3 нейтрон",
+        "find_text": "екінші ұрпақтағы бөліну саны - ?",
+        "solution": "Егер 3 нейтронның әрқайсысы бөліну тудырса, екінші ұрпақта 3 бөліну болады.",
+        "answer": "3 бөліну."
+      },
+      "atomic-fission-task-3": {
+        "topic_title": "Ядролардың бөлінуі",
+        "title": "Неге ауыр ядролар бөлінгенде энергия бөлінеді?",
+        "problem_text": "Неге ауыр ядролар бөлінгенде энергия бөлінеді?",
+        "given_data": "ауыр ядро тұрақтырақ жарықшақтарға бөлінеді",
+        "find_text": "энергия бөліну себебі - ?",
+        "solution": "Бөліну жарықшақтарының меншікті байланыс энергиясы бастапқы ауыр ядроға қарағанда үлкен.\nБастапқы және соңғы бөлшектер массаларының айырмасы E = Δm·c² бойынша энергияға айналады.",
+        "answer": "Энергия байланыс энергиясының артуы және масса ақауы есебінен бөлінеді."
+      },
+      "atomic-fission-task-4": {
+        "topic_title": "Ядролардың бөлінуі",
+        "title": "Реакторда жылдам нейтрондарды баяулату неге маңызды?",
+        "problem_text": "Реакторда жылдам нейтрондарды баяулату неге маңызды?",
+        "given_data": "²³⁵U бөлінуін баяу нейтрондар тиімдірек тудырады",
+        "find_text": "баяулатқыштың рөлі - ?",
+        "solution": "Бөлінуден кейін нейтрондар әдетте жылдам болады.\nБаяулатқыш олардың энергиясын азайтып, ²³⁵U ядросымен жұтылу және жаңа бөліну ықтималдығын арттырады.",
+        "answer": "Баяулату басқарылатын тізбекті реакцияны қолдайды."
+      },
+      "atomic-fission-task-5": {
+        "topic_title": "Ядролардың бөлінуі",
+        "title": "Неге тізбекті реакция көшкін тәрізді болуы мүмкін?",
+        "problem_text": "Неге тізбекті реакция көшкін тәрізді болуы мүмкін?",
+        "given_data": "әр бөліну бірнеше нейтрон береді",
+        "find_text": "реакция өсуінің себебі - ?",
+        "solution": "Егер әр бөлінуден шыққан нейтрондардың орташа бірден көбі жаңа бөліну тудырса, бөлінулер саны ұрпақтан ұрпаққа артады.\nБұл бөлінетін энергияның тез өсуіне әкеледі.",
+        "answer": "Нейтрондардың көбею коэффициенті 1-ден үлкен болса, реакция өседі."
+      },
+      "atomic-fusion-task-1": {
+        "topic_title": "Термоядролық синтез",
+        "title": "Синтез реакциясында масса ақауы 3×10⁻²⁹ кг. Бөлінген энергияны табыңыз. c = 3×10⁸ м/с.",
+        "problem_text": "Синтез реакциясында масса ақауы 3×10⁻²⁹ кг. Бөлінген энергияны табыңыз. c = 3×10⁸ м/с.",
+        "given_data": "Δm = 3×10⁻²⁹ кг\nc = 3×10⁸ м/с",
+        "find_text": "E - ?",
+        "solution": "E = Δm·c² = 3×10⁻²⁹ · 9×10¹⁶ = 2,7×10⁻¹² Дж.",
+        "answer": "2,7×10⁻¹² Дж."
+      },
+      "atomic-fusion-task-2": {
+        "topic_title": "Термоядролық синтез",
+        "title": "Неге дейтерий мен тритийді синтезде қолдану ауыр ядроларға қарағанда жеңілірек?",
+        "problem_text": "Неге дейтерий мен тритийді синтезде қолдану ауыр ядроларға қарағанда жеңілірек?",
+        "given_data": "ядролар оң зарядталған\nКулон тосқауылы зарядтарға тәуелді",
+        "find_text": "жеңіл изотоптарды таңдау себебі - ?",
+        "solution": "Дейтерий мен тритий ядросының заряды +1e.\nОлардың электростатикалық тебілуі Z үлкен ядроларға қарағанда аз, сондықтан оларды ядролық күштер әсер ететін қашықтыққа жақындату оңайырақ.",
+        "answer": "Оларда Кулон тосқауылы кіші."
+      },
+      "atomic-fusion-task-3": {
+        "topic_title": "Термоядролық синтез",
+        "title": "Бір синтез реакциясында 17,6 МэВ энергия бөлінеді. Осындай 10⁹ реакцияда қанша энергия бөлінеді?",
+        "problem_text": "Бір синтез реакциясында 17,6 МэВ энергия бөлінеді. Осындай 10⁹ реакцияда қанша энергия бөлінеді?",
+        "given_data": "E₁ = 17,6 МэВ\nN = 10⁹",
+        "find_text": "E - ?",
+        "solution": "E = NE₁ = 10⁹ · 17,6 = 1,76×10¹⁰ МэВ.",
+        "answer": "1,76×10¹⁰ МэВ."
+      },
+      "atomic-fusion-task-4": {
+        "topic_title": "Термоядролық синтез",
+        "title": "Неге термоядролық плазманы кәдімгі ыдыстың қабырғаларымен ұстау қиын?",
+        "problem_text": "Неге термоядролық плазманы кәдімгі ыдыстың қабырғаларымен ұстау қиын?",
+        "given_data": "плазманың температурасы өте жоғары",
+        "find_text": "ұстау мәселесі - ?",
+        "solution": "Синтез температураларында зат орасан жылулық энергиясы бар плазма күйінде болады.\nКәдімгі материалдар тікелей жанасуға шыдамайды, сондықтан магниттік немесе инерциялық ұстау қолданылады.",
+        "answer": "Қабырғалар бұзылар еді, сондықтан плазманы тікелей жанастырмай ұстайды."
+      },
+      "atomic-fusion-task-5": {
+        "topic_title": "Термоядролық синтез",
+        "title": "Неге Күн химиялық от емес?",
+        "problem_text": "Неге Күн химиялық от емес?",
+        "given_data": "Күн миллиардтаған жыл бойы орасан энергия шығарады",
+        "find_text": "энергия көзі - ?",
+        "solution": "Химиялық жану мұндай қуат пен ұзақтықты қамтамасыз ете алмайды.\nКүн ядросында жеңіл ядролардың синтез реакциялары жүреді, онда массаның бір бөлігі энергияға айналады.",
+        "answer": "Күн энергиясы термоядролық текті."
+      },
+      "atomic-nuclear-energy-use-task-1": {
+        "topic_title": "Ядролық энергияны қолдану",
+        "title": "Ядролық процестегі масса ақауы 1×10⁻⁶ кг. Бөлінген энергияны табыңыз.",
+        "problem_text": "Ядролық процестегі масса ақауы 1×10⁻⁶ кг. Бөлінген энергияны табыңыз.",
+        "given_data": "Δm = 1×10⁻⁶ кг\nc = 3×10⁸ м/с",
+        "find_text": "E - ?",
+        "solution": "E = Δm·c² = 1×10⁻⁶ · 9×10¹⁶ = 9×10¹⁰ Дж.",
+        "answer": "9×10¹⁰ Дж."
+      },
+      "atomic-nuclear-energy-use-task-2": {
+        "topic_title": "Ядролық энергияны қолдану",
+        "title": "Реактордың жылулық қуаты 3000 МВт, станцияның электр қуаты 1000 МВт. ПӘК-ін табыңыз.",
+        "problem_text": "Реактордың жылулық қуаты 3000 МВт, станцияның электр қуаты 1000 МВт. ПӘК-ін табыңыз.",
+        "given_data": "Pжылу = 3000 МВт\nPэл = 1000 МВт",
+        "find_text": "η - ?",
+        "solution": "η = Pэл/Pжылу = 1000/3000 = 1/3 ≈ 0,33.",
+        "answer": "шамамен 33%."
+      },
+      "atomic-nuclear-energy-use-task-3": {
+        "topic_title": "Ядролық энергияны қолдану",
+        "title": "Реакторда басқару стерженьдері не үшін қажет?",
+        "problem_text": "Реакторда басқару стерженьдері не үшін қажет?",
+        "given_data": "тізбекті реакция нейтрондармен сақталады",
+        "find_text": "стерженьдердің қызметі - ?",
+        "solution": "Басқару стерженьдері нейтрондардың бір бөлігін жұтады.\nОларды тереңірек түсірсе, жаңа бөлінулер тудыратын нейтрондар азайып, қуат төмендейді.",
+        "answer": "Олар нейтрондар санын және реактор қуатын реттейді."
+      },
+      "atomic-nuclear-energy-use-task-4": {
+        "topic_title": "Ядролық энергияны қолдану",
+        "title": "Атом электр станциясында жылутасымалдағыш қандай рөл атқарады?",
+        "problem_text": "Атом электр станциясында жылутасымалдағыш қандай рөл атқарады?",
+        "given_data": "активті аймақ жылу бөледі\nэлектр энергиясын алу керек",
+        "find_text": "жылутасымалдағыштың рөлі - ?",
+        "solution": "Жылутасымалдағыш активті аймақтан жылуды алып, оны бу генераторына немесе турбинаға береді.\nОсылай ядролық энергия жылу арқылы механикалық, кейін электр энергиясына айналады.",
+        "answer": "Жылутасымалдағыш жылу энергиясын реактордан энергетикалық қондырғыға тасымалдайды."
+      },
+      "atomic-nuclear-energy-use-task-5": {
+        "topic_title": "Ядролық энергияны қолдану",
+        "title": "Неге ядролық энергетика қатаң қауіпсіздік жүйесін талап етеді?",
+        "problem_text": "Неге ядролық энергетика қатаң қауіпсіздік жүйесін талап етеді?",
+        "given_data": "реакторда радиоактивті заттар бар\nкөп энергия бөлінеді",
+        "find_text": "қауіпсіздік себептері - ?",
+        "solution": "Тізбекті реакцияны бақылау, қалдық жылуды әкету және радиоактивті өнімдерді қорғаныш бөгеттер ішінде ұстау қажет.\nБұл шарттар бұзылса, қызып кету және радиоактивті ластану болуы мүмкін.",
+        "answer": "Қауіпсіздік реакцияны бақылау, салқындату және радиоактивті заттарды оқшаулау үшін қажет."
+      }
+    }
+  }
+}

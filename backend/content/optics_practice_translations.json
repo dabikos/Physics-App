@@ -1,0 +1,2414 @@
+{
+  "en": {
+    "tests": {
+      "optics-light-propagation-test": {
+        "title": "Test: Propagation of Light",
+        "questions": [
+          {
+            "question": "In a homogeneous transparent medium, light propagates:",
+            "options": [
+              "only along a circle",
+              "in a straight line",
+              "chaotically",
+              "only along a parabola"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The speed of light in vacuum is approximately:",
+            "options": [
+              "9.8 m/s²",
+              "3×10⁸ m/s",
+              "340 m/s",
+              "3×10⁶ m/s"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In a medium with refractive index n, the speed of light is:",
+            "options": [
+              "v = n/c",
+              "v = c + n",
+              "v = cn",
+              "v = c/n"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the refractive index of a medium is larger, the speed of light in it is:",
+            "options": [
+              "independent of n",
+              "smaller",
+              "larger",
+              "equal to zero"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The formation of a sharp shadow is best explained by:",
+            "options": [
+              "Ohm's law",
+              "rectilinear propagation of light",
+              "molecular diffusion",
+              "thermal expansion"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-reflection-test": {
+        "title": "Test: Reflection",
+        "questions": [
+          {
+            "question": "The law of reflection of light is written as:",
+            "options": [
+              "n₁sinα = n₂sinβ",
+              "I = U/R",
+              "F = ma",
+              "α = β"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The angle of incidence is measured between the incident ray and:",
+            "options": [
+              "the reflected ray",
+              "the horizon",
+              "the surface itself",
+              "the normal to the surface"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the angle of incidence is 35°, the angle of reflection is:",
+            "options": [
+              "70°",
+              "35°",
+              "55°",
+              "0°"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "During specular reflection, parallel rays after reflection:",
+            "options": [
+              "always scatter in all directions",
+              "remain parallel",
+              "disappear",
+              "become sound"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "A plane mirror gives an image that is:",
+            "options": [
+              "always enlarged 10 times",
+              "virtual, upright, and equal in size to the object",
+              "only real",
+              "upside down"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-refraction-test": {
+        "title": "Test: Refraction",
+        "questions": [
+          {
+            "question": "The law of refraction of light is:",
+            "options": [
+              "I = q/t",
+              "α = β",
+              "n₁sinα = n₂sinβ",
+              "Q = cmΔT"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "When passing from air into glass, a ray usually:",
+            "options": [
+              "cannot enter glass",
+              "bends away from the normal",
+              "stops being light",
+              "bends toward the normal"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Total internal reflection is possible when light passes:",
+            "options": [
+              "only in vacuum",
+              "from an optically denser medium into a less dense medium",
+              "from air into glass at any angle",
+              "only when α = 0°"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The critical angle is given by:",
+            "options": [
+              "αcr = n₁ + n₂",
+              "sinαcr = n₂/n₁ when n₁ > n₂",
+              "sinαcr = n₁/n₂ when n₁ > n₂",
+              "αcr = n₁n₂"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If n₂ > n₁, then when entering the second medium the speed of light:",
+            "options": [
+              "increases",
+              "decreases",
+              "becomes greater than c",
+              "does not change"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-lenses-mirrors-test": {
+        "title": "Test: Lenses and Mirrors",
+        "questions": [
+          {
+            "question": "The thin lens formula is:",
+            "options": [
+              "F = ma",
+              "1/F = 1/d + 1/f",
+              "λ = vT",
+              "I = U/R"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The optical power of a lens is:",
+            "options": [
+              "D = F",
+              "D = d/f",
+              "D = Fd",
+              "D = 1/F"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The unit of optical power is:",
+            "options": [
+              "tesla",
+              "diopter",
+              "pascal",
+              "coulomb"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Lens magnification can be found as:",
+            "options": [
+              "Γ = 1/F",
+              "Γ = f/d",
+              "Γ = F/d",
+              "Γ = d + f"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "A converging lens has:",
+            "options": [
+              "always zero focal length",
+              "positive focal length",
+              "negative speed of light",
+              "only virtual images"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-optical-devices-test": {
+        "title": "Test: Optical Devices",
+        "questions": [
+          {
+            "question": "A magnifying glass is usually used to obtain:",
+            "options": [
+              "electric current",
+              "an enlarged virtual image of a nearby object",
+              "only a shadow",
+              "a reduced real image of a distant object"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The magnification of a magnifying glass is approximately:",
+            "options": [
+              "Γ = F/25 cm",
+              "Γ = 25 cm/F",
+              "Γ = F + 25 cm",
+              "Γ = 1/(25 cm · F)"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In a camera, the lens forms on the sensor:",
+            "options": [
+              "an image without light",
+              "a real image",
+              "a magnetic field",
+              "only a virtual image"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "A microscope is used when it is necessary to observe:",
+            "options": [
+              "only distant stars without magnification",
+              "electric circuits without light",
+              "very small nearby objects",
+              "only plane mirrors"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "A telescope is mainly needed for:",
+            "options": [
+              "measuring resistance",
+              "heating lenses",
+              "observing distant objects and collecting more light",
+              "creating sound"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "optics-interference-test": {
+        "title": "Test: Interference",
+        "questions": [
+          {
+            "question": "Light interference occurs when the following are superposed:",
+            "options": [
+              "gas molecules",
+              "coherent light waves",
+              "any bodies without waves",
+              "direct currents"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Condition for an interference maximum:",
+            "options": [
+              "Δ = λ/4 always",
+              "Δ = (2k+1)λ/2",
+              "Δ = kλ",
+              "Δ = 0 only when k = 5"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Condition for an interference minimum:",
+            "options": [
+              "Δ = kλ",
+              "Δ = (2k+1)λ/2",
+              "Δ = c/n",
+              "Δ = λL/d"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "In Young's experiment, the distance between neighboring bright fringes is:",
+            "options": [
+              "Δx = λd/L",
+              "Δx = λL/d",
+              "Δx = d/(λL)",
+              "Δx = L/(λd)"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the distance between slits d is increased, the distance between interference fringes:",
+            "options": [
+              "does not change",
+              "decreases",
+              "increases",
+              "becomes equal to the wavelength"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-diffraction-test": {
+        "title": "Test: Diffraction",
+        "questions": [
+          {
+            "question": "Diffraction is:",
+            "options": [
+              "motion of electrons in a conductor",
+              "bending of a wave around obstacles and deviation from straight-line propagation",
+              "only heating of light",
+              "only reflection from a mirror"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Condition for maxima of a diffraction grating:",
+            "options": [
+              "d/sinφ = kλ",
+              "d = λ/sinφ for any k = 0",
+              "d·sinφ = kλ",
+              "sinφ = kd/λ"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The smaller the slit size compared with the wavelength, the diffraction is:",
+            "options": [
+              "completely absent",
+              "turned into refraction",
+              "weaker",
+              "more noticeable"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "For the central maximum of a grating, the order k equals:",
+            "options": [
+              "1",
+              "2",
+              "-5",
+              "0"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the wavelength increases for the same grating and the same k, the angle of the diffraction maximum:",
+            "options": [
+              "does not change",
+              "increases",
+              "decreases",
+              "is always 90°"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-polarization-test": {
+        "title": "Test: Polarization",
+        "questions": [
+          {
+            "question": "Polarization shows that a light wave is:",
+            "options": [
+              "not a wave",
+              "longitudinal",
+              "transverse",
+              "does not carry energy"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Malus's law is:",
+            "options": [
+              "I = I₀sinφ",
+              "I = φ/I₀",
+              "I = I₀/φ",
+              "I = I₀cos²φ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "If the axes of two polarizers are at 90°, the intensity after the second ideal polarizer:",
+            "options": [
+              "equals I₀",
+              "is always one half",
+              "is zero",
+              "is maximum"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "For φ = 0° according to Malus's law:",
+            "options": [
+              "I = 2I₀",
+              "I = 0",
+              "I = I₀/2",
+              "I = I₀"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Polarizing glasses reduce glare because they:",
+            "options": [
+              "change the mass of photons",
+              "turn light into sound",
+              "increase the speed of light",
+              "mainly transmit oscillations of one orientation"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "optics-photoelectric-effect-test": {
+        "title": "Test: Photoelectric Effect",
+        "questions": [
+          {
+            "question": "The photoelectric effect is:",
+            "options": [
+              "heating of gas without light",
+              "ejection of electrons from a substance under the action of light",
+              "reflection of light from a mirror",
+              "bending of light around obstacles"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Einstein's equation for the photoelectric effect is:",
+            "options": [
+              "F = ma",
+              "E = mc²",
+              "I = U/R",
+              "hν = A + Ek"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The threshold frequency of the photoelectric effect is determined by:",
+            "options": [
+              "ν₀ = A + h",
+              "ν₀ = A/h",
+              "ν₀ = h/A",
+              "ν₀ = Ah"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the frequency of light is below the threshold frequency, the photoelectric effect:",
+            "options": [
+              "occurs only at high brightness",
+              "does not occur",
+              "always becomes stronger",
+              "turns into interference"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Increasing the frequency of incident light in the photoelectric effect increases:",
+            "options": [
+              "the work function of the metal",
+              "the maximum kinetic energy of photoelectrons",
+              "the electron charge",
+              "Planck's constant"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-light-dualism-test": {
+        "title": "Test: Dual Nature of Light",
+        "questions": [
+          {
+            "question": "The dual nature of light means that light shows:",
+            "options": [
+              "only rest mass",
+              "only mechanical properties",
+              "only electrical resistance",
+              "wave and particle properties"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Photon energy is:",
+            "options": [
+              "E = F/S",
+              "E = hν",
+              "E = IR",
+              "E = q/t"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Photon momentum is:",
+            "options": [
+              "p = λ/h",
+              "p = mv²/2",
+              "p = hλ",
+              "p = h/λ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "The greater the frequency of light, the photon energy is:",
+            "options": [
+              "zero",
+              "greater",
+              "smaller",
+              "unchanged"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "The smaller the photon wavelength, its momentum is:",
+            "options": [
+              "independent of λ",
+              "smaller",
+              "negative",
+              "greater"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "optics-emission-spectra-test": {
+        "title": "Test: Emission Spectra",
+        "questions": [
+          {
+            "question": "The line spectrum of an atom appears because of:",
+            "options": [
+              "liquid pressure",
+              "uniform heating of all bodies",
+              "electron transitions between energy levels",
+              "Ohm's law"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The energy of an emitted photon during a transition is:",
+            "options": [
+              "hν = E₁/E₂",
+              "hν = E₁ + E₂ always",
+              "hν = E₂ - E₁",
+              "hν = IR"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The wavelength of radiation is related to transition energy by:",
+            "options": [
+              "λ = ΔE/(hc)",
+              "λ = hc/ΔE",
+              "λ = cΔE/h",
+              "λ = hΔE/c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Different chemical elements have different spectra because they:",
+            "options": [
+              "do not emit photons",
+              "have different energy levels",
+              "have identical levels",
+              "are always at one temperature"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "If the transition energy is greater, the wavelength of the emitted photon is:",
+            "options": [
+              "infinite",
+              "smaller",
+              "unchanged",
+              "greater"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-lasers-test": {
+        "title": "Test: Lasers",
+        "questions": [
+          {
+            "question": "Laser radiation is usually:",
+            "options": [
+              "completely chaotic",
+              "non-electromagnetic",
+              "coherent and directional",
+              "always only infrared"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "The operation of a laser is based on:",
+            "options": [
+              "Archimedes' law",
+              "stimulated emission",
+              "mechanical friction",
+              "only gas diffusion"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Photon energy of laser radiation is:",
+            "options": [
+              "E = mgh without relation to light",
+              "E = q/t",
+              "E = IR",
+              "E = hν = hc/λ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "To amplify light in a laser, it is necessary to have:",
+            "options": [
+              "complete absence of excited atoms",
+              "only a plane mirror without an active medium",
+              "direct current in vacuum without matter",
+              "population inversion of energy levels"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Small divergence of a laser beam means that the beam:",
+            "options": [
+              "immediately scatters in all directions",
+              "propagates as a narrow bundle over long distances",
+              "does not carry energy",
+              "has no wavelength"
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "optics-light-propagation-task-1": {
+        "topic_title": "Propagation of Light",
+        "title": "Find the speed of light in water with refractive index n = 1.33.",
+        "problem_text": "Find the speed of light in water with refractive index n = 1.33.",
+        "given_data": "c = 3×10⁸ m/s\nn = 1.33",
+        "find_text": "v - ?",
+        "solution": "v = c/n = 3×10⁸/1.33 ≈ 2.26×10⁸ m/s.",
+        "answer": "2.26×10⁸ m/s."
+      },
+      "optics-light-propagation-task-2": {
+        "topic_title": "Propagation of Light",
+        "title": "Light travels a distance of 1.5×10⁸ m in vacuum. How long does the path take?",
+        "problem_text": "Light travels a distance of 1.5×10⁸ m in vacuum. How long does the path take?",
+        "given_data": "s = 1.5×10⁸ m\nc = 3×10⁸ m/s",
+        "find_text": "t - ?",
+        "solution": "t = s/c = 1.5×10⁸ / 3×10⁸ = 0.5 s.",
+        "answer": "0.5 s."
+      },
+      "optics-light-propagation-task-3": {
+        "topic_title": "Propagation of Light",
+        "title": "In glass the speed of light is 2×10⁸ m/s. Find the refractive index of the glass.",
+        "problem_text": "In glass the speed of light is 2×10⁸ m/s. Find the refractive index of the glass.",
+        "given_data": "c = 3×10⁸ m/s\nv = 2×10⁸ m/s",
+        "find_text": "n - ?",
+        "solution": "n = c/v = 3×10⁸ / 2×10⁸ = 1.5.",
+        "answer": "1.5."
+      },
+      "optics-light-propagation-task-4": {
+        "topic_title": "Propagation of Light",
+        "title": "A light ray travels 6×10⁷ m in a medium in 0.3 s. Find the speed of light in this medium and its refractive index.",
+        "problem_text": "A light ray travels 6×10⁷ m in a medium in 0.3 s. Find the speed of light in this medium and its refractive index.",
+        "given_data": "s = 6×10⁷ m\nt = 0.3 s\nc = 3×10⁸ m/s",
+        "find_text": "v, n - ?",
+        "solution": "v = s/t = 6×10⁷/0.3 = 2×10⁸ m/s.\nn = c/v = 3×10⁸ / 2×10⁸ = 1.5.",
+        "answer": "v = 2×10⁸ m/s, n = 1.5."
+      },
+      "optics-light-propagation-task-5": {
+        "topic_title": "Propagation of Light",
+        "title": "Why does a shadow appear behind an opaque object in a room?",
+        "problem_text": "Why does a shadow appear behind an opaque object in a room?",
+        "given_data": "opaque object\nlight source",
+        "find_text": "cause of the shadow - ?",
+        "solution": "An opaque object does not transmit light.\nBecause light travels in straight lines in a homogeneous medium, the region behind the object is not illuminated by direct rays.",
+        "answer": "A shadow appears because light propagates in straight lines and is absorbed by the object."
+      },
+      "optics-reflection-task-1": {
+        "topic_title": "Reflection",
+        "title": "A ray falls on a mirror at an angle of 42° to the normal. Find the angle of reflection.",
+        "problem_text": "A ray falls on a mirror at an angle of 42° to the normal. Find the angle of reflection.",
+        "given_data": "α = 42°",
+        "find_text": "β - ?",
+        "solution": "By the law of reflection, β = α.\nβ = 42°.",
+        "answer": "42°."
+      },
+      "optics-reflection-task-2": {
+        "topic_title": "Reflection",
+        "title": "The angle between the incident and reflected rays is 80°. Find the angle of incidence.",
+        "problem_text": "The angle between the incident and reflected rays is 80°. Find the angle of incidence.",
+        "given_data": "angle between rays = 80°",
+        "find_text": "α - ?",
+        "solution": "The incident and reflected rays are symmetric about the normal, so the angle between them equals 2α.\nα = 80°/2 = 40°.",
+        "answer": "40°."
+      },
+      "optics-reflection-task-3": {
+        "topic_title": "Reflection",
+        "title": "A ray falls on a mirror at an angle of 25° to the mirror surface. Find the angle of incidence and the angle of reflection.",
+        "problem_text": "A ray falls on a mirror at an angle of 25° to the mirror surface. Find the angle of incidence and the angle of reflection.",
+        "given_data": "angle to surface = 25°",
+        "find_text": "α, β - ?",
+        "solution": "The angle of incidence is measured from the normal, so α = 90° - 25° = 65°.\nβ = α = 65°.",
+        "answer": "α = 65°, β = 65°."
+      },
+      "optics-reflection-task-4": {
+        "topic_title": "Reflection",
+        "title": "A person stands 1.8 m from a plane mirror. How far from the person is the image?",
+        "problem_text": "A person stands 1.8 m from a plane mirror. How far from the person is the image?",
+        "given_data": "d = 1.8 m",
+        "find_text": "distance to image - ?",
+        "solution": "In a plane mirror, the image is the same distance behind the mirror.\nDistance from the person to the image: 1.8 + 1.8 = 3.6 m.",
+        "answer": "3.6 m."
+      },
+      "optics-reflection-task-5": {
+        "topic_title": "Reflection",
+        "title": "A mirror was rotated by 10°. By what angle will the reflected ray rotate if the incident ray is unchanged?",
+        "problem_text": "A mirror was rotated by 10°. By what angle will the reflected ray rotate if the incident ray is unchanged?",
+        "given_data": "mirror rotation = 10°",
+        "find_text": "rotation of reflected ray - ?",
+        "solution": "When a mirror rotates by angle φ, the normal also rotates by φ.\nThe direction of the reflected ray changes by 2φ.\n2φ = 20°.",
+        "answer": "20°."
+      },
+      "optics-refraction-task-1": {
+        "topic_title": "Refraction",
+        "title": "A ray passes from air into glass with n = 1.5. The angle of incidence is 30°. Find sin of the angle of refraction.",
+        "problem_text": "A ray passes from air into glass with n = 1.5. The angle of incidence is 30°. Find sin of the angle of refraction.",
+        "given_data": "n₁ = 1\nn₂ = 1.5\nα = 30°",
+        "find_text": "sinβ - ?",
+        "solution": "n₁sinα = n₂sinβ.\nsinβ = n₁sinα/n₂ = 1 · 0.5/1.5 = 1/3 ≈ 0.333.",
+        "answer": "sinβ ≈ 0.333."
+      },
+      "optics-refraction-task-2": {
+        "topic_title": "Refraction",
+        "title": "Light passes from glass n₁ = 1.5 into air n₂ = 1. Find the critical angle.",
+        "problem_text": "Light passes from glass n₁ = 1.5 into air n₂ = 1. Find the critical angle.",
+        "given_data": "n₁ = 1.5\nn₂ = 1",
+        "find_text": "αcr - ?",
+        "solution": "sinαcr = n₂/n₁ = 1/1.5 = 0.667.\nαcr ≈ 42°.",
+        "answer": "about 42°."
+      },
+      "optics-refraction-task-3": {
+        "topic_title": "Refraction",
+        "title": "A ray from water n = 1.33 falls on the boundary with air at an angle of 60°. Will total internal reflection occur?",
+        "problem_text": "A ray from water n = 1.33 falls on the boundary with air at an angle of 60°. Will total internal reflection occur?",
+        "given_data": "n₁ = 1.33\nn₂ = 1\nα = 60°",
+        "find_text": "will total reflection occur - ?",
+        "solution": "sinαcr = n₂/n₁ = 1/1.33 ≈ 0.752.\nαcr ≈ 49°.\nSince 60° > 49°, total internal reflection occurs.",
+        "answer": "Yes, total internal reflection will occur."
+      },
+      "optics-refraction-task-4": {
+        "topic_title": "Refraction",
+        "title": "The speed of light in a liquid is 2.4×10⁸ m/s. Find the refractive index.",
+        "problem_text": "The speed of light in a liquid is 2.4×10⁸ m/s. Find the refractive index.",
+        "given_data": "c = 3×10⁸ m/s\nv = 2.4×10⁸ m/s",
+        "find_text": "n - ?",
+        "solution": "n = c/v = 3×10⁸ / 2.4×10⁸ = 1.25.",
+        "answer": "1.25."
+      },
+      "optics-refraction-task-5": {
+        "topic_title": "Refraction",
+        "title": "Why does a ray bend toward the normal when passing from air into glass?",
+        "problem_text": "Why does a ray bend toward the normal when passing from air into glass?",
+        "given_data": "nglass > nair",
+        "find_text": "reason for the direction of refraction - ?",
+        "solution": "In glass the speed of light is lower than in air.\nFrom n₁sinα = n₂sinβ, when n₂ > n₁ we get sinβ < sinα, so β < α.",
+        "answer": "The ray bends toward the normal because light travels slower in glass."
+      },
+      "optics-lenses-mirrors-task-1": {
+        "topic_title": "Lenses and Mirrors",
+        "title": "An object is 30 cm from a converging lens with focal length 10 cm. Find the image distance.",
+        "problem_text": "An object is 30 cm from a converging lens with focal length 10 cm. Find the image distance.",
+        "given_data": "d = 30 cm\nF = 10 cm",
+        "find_text": "f - ?",
+        "solution": "1/F = 1/d + 1/f.\n1/f = 1/F - 1/d = 1/10 - 1/30 = 2/30 = 1/15.\nf = 15 cm.",
+        "answer": "15 cm."
+      },
+      "optics-lenses-mirrors-task-2": {
+        "topic_title": "Lenses and Mirrors",
+        "title": "The focal length of a lens is 0.25 m. Find its optical power.",
+        "problem_text": "The focal length of a lens is 0.25 m. Find its optical power.",
+        "given_data": "F = 0.25 m",
+        "find_text": "D - ?",
+        "solution": "D = 1/F = 1/0.25 = 4 diopters.",
+        "answer": "4 diopters."
+      },
+      "optics-lenses-mirrors-task-3": {
+        "topic_title": "Lenses and Mirrors",
+        "title": "The image is 40 cm from the lens, and the object is 20 cm from the lens. Find the magnification.",
+        "problem_text": "The image is 40 cm from the lens, and the object is 20 cm from the lens. Find the magnification.",
+        "given_data": "f = 40 cm\nd = 20 cm",
+        "find_text": "Γ - ?",
+        "solution": "Γ = f/d = 40/20 = 2.",
+        "answer": "The image is enlarged 2 times."
+      },
+      "optics-lenses-mirrors-task-4": {
+        "topic_title": "Lenses and Mirrors",
+        "title": "The optical power of a lens is -2 diopters. Find its focal length and lens type.",
+        "problem_text": "The optical power of a lens is -2 diopters. Find its focal length and lens type.",
+        "given_data": "D = -2 diopters",
+        "find_text": "F, type - ?",
+        "solution": "F = 1/D = 1/(-2) = -0.5 m.\nA negative focal length corresponds to a diverging lens.",
+        "answer": "F = -0.5 m, the lens is diverging."
+      },
+      "optics-lenses-mirrors-task-5": {
+        "topic_title": "Lenses and Mirrors",
+        "title": "An object is placed at the focus of a converging lens. Where is the image formed?",
+        "problem_text": "An object is placed at the focus of a converging lens. Where is the image formed?",
+        "given_data": "d = F",
+        "find_text": "image position - ?",
+        "solution": "1/F = 1/d + 1/f.\nIf d = F, then 1/f = 1/F - 1/F = 0.\nTherefore f tends to infinity, and the rays after the lens are parallel.",
+        "answer": "The image is formed at infinity."
+      },
+      "optics-optical-devices-task-1": {
+        "topic_title": "Optical Devices",
+        "title": "A magnifying glass has focal length 5 cm. Estimate its angular magnification.",
+        "problem_text": "A magnifying glass has focal length 5 cm. Estimate its angular magnification.",
+        "given_data": "F = 5 cm",
+        "find_text": "Γ - ?",
+        "solution": "Γ = 25 cm/F = 25/5 = 5.",
+        "answer": "Approximately 5 times."
+      },
+      "optics-optical-devices-task-2": {
+        "topic_title": "Optical Devices",
+        "title": "A magnifying glass with magnification 10 is needed. What focal length should the lens have?",
+        "problem_text": "A magnifying glass with magnification 10 is needed. What focal length should the lens have?",
+        "given_data": "Γ = 10",
+        "find_text": "F - ?",
+        "solution": "Γ = 25 cm/F, so F = 25 cm/Γ.\nF = 25/10 = 2.5 cm.",
+        "answer": "2.5 cm."
+      },
+      "optics-optical-devices-task-3": {
+        "topic_title": "Optical Devices",
+        "title": "A camera lens has focal length 50 mm. A distant object can be considered at infinity. Where is the image formed approximately?",
+        "problem_text": "A camera lens has focal length 50 mm. A distant object can be considered at infinity. Where is the image formed approximately?",
+        "given_data": "F = 50 mm\nd → ∞",
+        "find_text": "f - ?",
+        "solution": "For a distant object, 1/d ≈ 0.\nFrom the lens formula, 1/F = 1/f, so f ≈ F.",
+        "answer": "Approximately 50 mm from the lens."
+      },
+      "optics-optical-devices-task-4": {
+        "topic_title": "Optical Devices",
+        "title": "Why does a microscope use two lenses instead of one?",
+        "problem_text": "Why does a microscope use two lenses instead of one?",
+        "given_data": "object is very small\nlarge magnification is needed",
+        "find_text": "role of objective and eyepiece - ?",
+        "solution": "The objective creates an enlarged real intermediate image.\nThe eyepiece works like a magnifying glass and additionally enlarges this image for the eye.",
+        "answer": "Two lenses give the product of the objective and eyepiece magnifications."
+      },
+      "optics-optical-devices-task-5": {
+        "topic_title": "Optical Devices",
+        "title": "Why does a telescope with a larger objective diameter allow us to see fainter stars?",
+        "problem_text": "Why does a telescope with a larger objective diameter allow us to see fainter stars?",
+        "given_data": "larger objective diameter\nlarger objective area",
+        "find_text": "reason for better visibility - ?",
+        "solution": "A large objective collects more light because its area is larger.\nMore light enters the image, so faint objects become more visible.",
+        "answer": "A large objective collects more light."
+      },
+      "optics-interference-task-1": {
+        "topic_title": "Interference",
+        "title": "In Young's experiment, λ = 600 nm, L = 2 m, d = 0.4 mm. Find the distance between neighboring fringes.",
+        "problem_text": "In Young's experiment, λ = 600 nm, L = 2 m, d = 0.4 mm. Find the distance between neighboring fringes.",
+        "given_data": "λ = 600 nm = 600×10⁻⁹ m\nL = 2 m\nd = 0.4 mm = 0.4×10⁻³ m",
+        "find_text": "Δx - ?",
+        "solution": "Δx = λL/d = 600×10⁻⁹ · 2 / (0.4×10⁻³) = 3×10⁻³ m.",
+        "answer": "3 mm."
+      },
+      "optics-interference-task-2": {
+        "topic_title": "Interference",
+        "title": "The path difference of two waves is 1.5 μm, and the wavelength is 500 nm. Will there be a maximum or a minimum?",
+        "problem_text": "The path difference of two waves is 1.5 μm, and the wavelength is 500 nm. Will there be a maximum or a minimum?",
+        "given_data": "Δ = 1.5 μm = 1500 nm\nλ = 500 nm",
+        "find_text": "type of interference - ?",
+        "solution": "Δ/λ = 1500/500 = 3.\nThe path difference equals an integer number of wavelengths, so Δ = kλ.",
+        "answer": "Maximum, k = 3."
+      },
+      "optics-interference-task-3": {
+        "topic_title": "Interference",
+        "title": "For light with λ = 400 nm, find the first path difference at which a minimum is observed.",
+        "problem_text": "For light with λ = 400 nm, find the first path difference at which a minimum is observed.",
+        "given_data": "λ = 400 nm\nk = 0",
+        "find_text": "Δmin - ?",
+        "solution": "For a minimum, Δ = (2k+1)λ/2.\nAt k = 0: Δ = λ/2 = 200 nm.",
+        "answer": "200 nm."
+      },
+      "optics-interference-task-4": {
+        "topic_title": "Interference",
+        "title": "In Young's experiment, the fringe spacing is 2 mm, the screen is 1.5 m away, and λ = 500 nm. Find the distance between the slits.",
+        "problem_text": "In Young's experiment, the fringe spacing is 2 mm, the screen is 1.5 m away, and λ = 500 nm. Find the distance between the slits.",
+        "given_data": "Δx = 2 mm = 2×10⁻³ m\nL = 1.5 m\nλ = 500 nm = 500×10⁻⁹ m",
+        "find_text": "d - ?",
+        "solution": "Δx = λL/d, so d = λL/Δx.\nd = 500×10⁻⁹ · 1.5 / 2×10⁻³ = 3.75×10⁻⁴ m.",
+        "answer": "0.375 mm."
+      },
+      "optics-interference-task-5": {
+        "topic_title": "Interference",
+        "title": "Why are coherent sources needed for a stable interference pattern?",
+        "problem_text": "Why are coherent sources needed for a stable interference pattern?",
+        "given_data": "light interference",
+        "find_text": "role of coherence - ?",
+        "solution": "Coherent sources maintain a constant phase difference.\nThen maxima and minima remain in the same places, and the pattern does not blur over time.",
+        "answer": "Coherence is needed for a stable phase difference and stable fringes."
+      },
+      "optics-diffraction-task-1": {
+        "topic_title": "Diffraction",
+        "title": "A diffraction grating has period d = 2 μm. Light with λ = 500 nm gives a first-order maximum. Find sinφ.",
+        "problem_text": "A diffraction grating has period d = 2 μm. Light with λ = 500 nm gives a first-order maximum. Find sinφ.",
+        "given_data": "d = 2 μm = 2×10⁻⁶ m\nλ = 500 nm = 5×10⁻⁷ m\nk = 1",
+        "find_text": "sinφ - ?",
+        "solution": "d·sinφ = kλ.\nsinφ = kλ/d = 5×10⁻⁷ / 2×10⁻⁶ = 0.25.",
+        "answer": "sinφ = 0.25."
+      },
+      "optics-diffraction-task-2": {
+        "topic_title": "Diffraction",
+        "title": "For a grating with d = 1.5 μm, a second-order maximum is observed at sinφ = 0.8. Find the wavelength.",
+        "problem_text": "For a grating with d = 1.5 μm, a second-order maximum is observed at sinφ = 0.8. Find the wavelength.",
+        "given_data": "d = 1.5 μm\nk = 2\nsinφ = 0.8",
+        "find_text": "λ - ?",
+        "solution": "λ = d·sinφ/k = 1.5 · 0.8 / 2 = 0.6 μm.",
+        "answer": "0.6 μm = 600 nm."
+      },
+      "optics-diffraction-task-3": {
+        "topic_title": "Diffraction",
+        "title": "Can a grating with d = 1 μm produce a third-order maximum for λ = 500 nm?",
+        "problem_text": "Can a grating with d = 1 μm produce a third-order maximum for λ = 500 nm?",
+        "given_data": "d = 1 μm\nλ = 0.5 μm\nk = 3",
+        "find_text": "is the maximum possible - ?",
+        "solution": "sinφ = kλ/d = 3 · 0.5 / 1 = 1.5.\nSince sinφ cannot be greater than 1, such a maximum is impossible.",
+        "answer": "No, the third-order maximum is impossible."
+      },
+      "optics-diffraction-task-4": {
+        "topic_title": "Diffraction",
+        "title": "Why does a compact disc split white light into colors?",
+        "problem_text": "Why does a compact disc split white light into colors?",
+        "given_data": "there are closely spaced tracks on the disc surface\nwhite light contains different λ",
+        "find_text": "cause of colored bands - ?",
+        "solution": "The tracks on the disc work like a diffraction grating.\nFor different wavelengths, the condition d·sinφ = kλ is satisfied at different angles, so colors separate.",
+        "answer": "Because of diffraction on the regular tracks of the disc."
+      },
+      "optics-diffraction-task-5": {
+        "topic_title": "Diffraction",
+        "title": "A grating gives the first maximum for red light at a larger angle than for blue light. What can be said about the wavelengths?",
+        "problem_text": "A grating gives the first maximum for red light at a larger angle than for blue light. What can be said about the wavelengths?",
+        "given_data": "k is the same\nd is the same\nφred > φblue",
+        "find_text": "comparison of λ - ?",
+        "solution": "From d·sinφ = kλ, for the same d and k the wavelength is proportional to sinφ.\nA larger angle means a larger wavelength.",
+        "answer": "Red light has a longer wavelength than blue light."
+      },
+      "optics-polarization-task-1": {
+        "topic_title": "Polarization",
+        "title": "Polarized light of intensity 80 W/m² falls on an analyzer. The angle between the polarization direction and the analyzer axis is 60°. Find the intensity after the analyzer.",
+        "problem_text": "Polarized light of intensity 80 W/m² falls on an analyzer. The angle between the polarization direction and the analyzer axis is 60°. Find the intensity after the analyzer.",
+        "given_data": "I₀ = 80 W/m²\nφ = 60°",
+        "find_text": "I - ?",
+        "solution": "I = I₀cos²φ = 80 · cos²60° = 80 · 0.25 = 20 W/m².",
+        "answer": "20 W/m²."
+      },
+      "optics-polarization-task-2": {
+        "topic_title": "Polarization",
+        "title": "After an analyzer, 25% of the initial intensity of polarized light remains. Find angle φ.",
+        "problem_text": "After an analyzer, 25% of the initial intensity of polarized light remains. Find angle φ.",
+        "given_data": "I/I₀ = 0.25",
+        "find_text": "φ - ?",
+        "solution": "I/I₀ = cos²φ = 0.25.\ncosφ = 0.5, so φ = 60°.",
+        "answer": "60°."
+      },
+      "optics-polarization-task-3": {
+        "topic_title": "Polarization",
+        "title": "Two ideal polarizers are crossed at 90°. Why does almost no light pass through?",
+        "problem_text": "Two ideal polarizers are crossed at 90°. Why does almost no light pass through?",
+        "given_data": "φ = 90°",
+        "find_text": "reason for absence of light - ?",
+        "solution": "By Malus's law, I = I₀cos²90°.\ncos90° = 0, so I = 0.",
+        "answer": "The second polarizer does not transmit oscillations perpendicular to its axis."
+      },
+      "optics-polarization-task-4": {
+        "topic_title": "Polarization",
+        "title": "The intensity of polarized light is 120 W/m². After an analyzer it became 90 W/m². Find cos²φ.",
+        "problem_text": "The intensity of polarized light is 120 W/m². After an analyzer it became 90 W/m². Find cos²φ.",
+        "given_data": "I₀ = 120 W/m²\nI = 90 W/m²",
+        "find_text": "cos²φ - ?",
+        "solution": "I = I₀cos²φ.\ncos²φ = I/I₀ = 90/120 = 0.75.",
+        "answer": "cos²φ = 0.75."
+      },
+      "optics-polarization-task-5": {
+        "topic_title": "Polarization",
+        "title": "Why is light reflected from water often partially polarized?",
+        "problem_text": "Why is light reflected from water often partially polarized?",
+        "given_data": "reflection from a water surface",
+        "find_text": "cause of glare polarization - ?",
+        "solution": "When light reflects from a dielectric surface, different directions of oscillation are reflected differently.\nTherefore one orientation of oscillations dominates in the reflected light.",
+        "answer": "Reflection from water partially orders the direction of electric-field oscillations."
+      },
+      "optics-photoelectric-effect-task-1": {
+        "topic_title": "Photoelectric Effect",
+        "title": "The work function of a metal is 2 eV, and photon energy is 5 eV. Find the maximum kinetic energy of photoelectrons.",
+        "problem_text": "The work function of a metal is 2 eV, and photon energy is 5 eV. Find the maximum kinetic energy of photoelectrons.",
+        "given_data": "A = 2 eV\nhν = 5 eV",
+        "find_text": "Ek - ?",
+        "solution": "hν = A + Ek, so Ek = hν - A.\nEk = 5 - 2 = 3 eV.",
+        "answer": "3 eV."
+      },
+      "optics-photoelectric-effect-task-2": {
+        "topic_title": "Photoelectric Effect",
+        "title": "The work function is 3.2×10⁻¹⁹ J. Find the threshold frequency of the photoelectric effect. h = 6.63×10⁻³⁴ J·s.",
+        "problem_text": "The work function is 3.2×10⁻¹⁹ J. Find the threshold frequency of the photoelectric effect. h = 6.63×10⁻³⁴ J·s.",
+        "given_data": "A = 3.2×10⁻¹⁹ J\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "ν₀ - ?",
+        "solution": "ν₀ = A/h = 3.2×10⁻¹⁹ / 6.63×10⁻³⁴ ≈ 4.83×10¹⁴ Hz.",
+        "answer": "4.83×10¹⁴ Hz."
+      },
+      "optics-photoelectric-effect-task-3": {
+        "topic_title": "Photoelectric Effect",
+        "title": "Light with photon energy 2.0 eV falls on a metal with work function 2.5 eV. Will the photoelectric effect occur?",
+        "problem_text": "Light with photon energy 2.0 eV falls on a metal with work function 2.5 eV. Will the photoelectric effect occur?",
+        "given_data": "A = 2.5 eV\nhν = 2.0 eV",
+        "find_text": "presence of photoelectric effect - ?",
+        "solution": "The photoelectric effect is possible if hν ≥ A.\nHere 2.0 eV < 2.5 eV, so the photon energy is insufficient.",
+        "answer": "The photoelectric effect will not occur."
+      },
+      "optics-photoelectric-effect-task-4": {
+        "topic_title": "Photoelectric Effect",
+        "title": "The threshold frequency of a metal is ν₀ = 5×10¹⁴ Hz. Find the work function in joules.",
+        "problem_text": "The threshold frequency of a metal is ν₀ = 5×10¹⁴ Hz. Find the work function in joules.",
+        "given_data": "ν₀ = 5×10¹⁴ Hz\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "A - ?",
+        "solution": "A = hν₀ = 6.63×10⁻³⁴ · 5×10¹⁴ = 3.315×10⁻¹⁹ J.",
+        "answer": "3.315×10⁻¹⁹ J."
+      },
+      "optics-photoelectric-effect-task-5": {
+        "topic_title": "Photoelectric Effect",
+        "title": "Why does increasing the brightness of light below the threshold frequency not cause the photoelectric effect?",
+        "problem_text": "Why does increasing the brightness of light below the threshold frequency not cause the photoelectric effect?",
+        "given_data": "ν < ν₀\nbrightness is increased",
+        "find_text": "reason for absence of photoelectric effect - ?",
+        "solution": "The energy of one photon is hν.\nIf hν is less than the work function, one electron cannot receive enough energy from one photon. Increasing brightness increases the number of photons, but not the energy of each photon.",
+        "answer": "There is no photoelectric effect because each photon has energy lower than the work function."
+      },
+      "optics-light-dualism-task-1": {
+        "topic_title": "Dual Nature of Light",
+        "title": "Find the energy of a photon with frequency 6×10¹⁴ Hz. h = 6.63×10⁻³⁴ J·s.",
+        "problem_text": "Find the energy of a photon with frequency 6×10¹⁴ Hz. h = 6.63×10⁻³⁴ J·s.",
+        "given_data": "ν = 6×10¹⁴ Hz\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "E - ?",
+        "solution": "E = hν = 6.63×10⁻³⁴ · 6×10¹⁴ = 3.978×10⁻¹⁹ J.",
+        "answer": "3.98×10⁻¹⁹ J."
+      },
+      "optics-light-dualism-task-2": {
+        "topic_title": "Dual Nature of Light",
+        "title": "Find the momentum of a photon with wavelength 500 nm. h = 6.63×10⁻³⁴ J·s.",
+        "problem_text": "Find the momentum of a photon with wavelength 500 nm. h = 6.63×10⁻³⁴ J·s.",
+        "given_data": "λ = 500 nm = 5×10⁻⁷ m\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "p - ?",
+        "solution": "p = h/λ = 6.63×10⁻³⁴ / 5×10⁻⁷ = 1.326×10⁻²⁷ kg·m/s.",
+        "answer": "1.33×10⁻²⁷ kg·m/s."
+      },
+      "optics-light-dualism-task-3": {
+        "topic_title": "Dual Nature of Light",
+        "title": "Which photon has greater energy: red with ν = 4×10¹⁴ Hz or violet with ν = 7.5×10¹⁴ Hz?",
+        "problem_text": "Which photon has greater energy: red with ν = 4×10¹⁴ Hz or violet with ν = 7.5×10¹⁴ Hz?",
+        "given_data": "νred = 4×10¹⁴ Hz\nνviolet = 7.5×10¹⁴ Hz",
+        "find_text": "energy comparison - ?",
+        "solution": "E = hν, so energy is proportional to frequency.\nSince 7.5×10¹⁴ > 4×10¹⁴, the violet photon has greater energy.",
+        "answer": "The violet photon has greater energy."
+      },
+      "optics-light-dualism-task-4": {
+        "topic_title": "Dual Nature of Light",
+        "title": "The wavelength of a photon decreased by 3 times. How did its momentum change?",
+        "problem_text": "The wavelength of a photon decreased by 3 times. How did its momentum change?",
+        "given_data": "λ₂ = λ₁/3",
+        "find_text": "p₂/p₁ - ?",
+        "solution": "p = h/λ, so momentum is inversely proportional to wavelength.\nIf λ decreased by 3 times, p increased by 3 times.",
+        "answer": "The momentum increased by 3 times."
+      },
+      "optics-light-dualism-task-5": {
+        "topic_title": "Dual Nature of Light",
+        "title": "Why do interference and the photoelectric effect together confirm the dual nature of light?",
+        "problem_text": "Why do interference and the photoelectric effect together confirm the dual nature of light?",
+        "given_data": "interference\nphotoelectric effect",
+        "find_text": "connection with duality - ?",
+        "solution": "Interference is explained by the wave properties of light.\nThe photoelectric effect requires treating light as a stream of photons with energy hν.",
+        "answer": "Light shows both wave and quantum properties."
+      },
+      "optics-emission-spectra-task-1": {
+        "topic_title": "Emission Spectra",
+        "title": "An electron moved from a 5 eV level to a 2 eV level. Find the energy of the emitted photon.",
+        "problem_text": "An electron moved from a 5 eV level to a 2 eV level. Find the energy of the emitted photon.",
+        "given_data": "E₂ = 5 eV\nE₁ = 2 eV",
+        "find_text": "hν - ?",
+        "solution": "hν = E₂ - E₁ = 5 - 2 = 3 eV.",
+        "answer": "3 eV."
+      },
+      "optics-emission-spectra-task-2": {
+        "topic_title": "Emission Spectra",
+        "title": "The transition energy of an atom is 4×10⁻¹⁹ J. Find the radiation frequency. h = 6.63×10⁻³⁴ J·s.",
+        "problem_text": "The transition energy of an atom is 4×10⁻¹⁹ J. Find the radiation frequency. h = 6.63×10⁻³⁴ J·s.",
+        "given_data": "ΔE = 4×10⁻¹⁹ J\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "ν - ?",
+        "solution": "ν = ΔE/h = 4×10⁻¹⁹ / 6.63×10⁻³⁴ ≈ 6.03×10¹⁴ Hz.",
+        "answer": "6.03×10¹⁴ Hz."
+      },
+      "optics-emission-spectra-task-3": {
+        "topic_title": "Emission Spectra",
+        "title": "A photon has energy 3.0×10⁻¹⁹ J. Find its wavelength. h = 6.63×10⁻³⁴ J·s, c = 3×10⁸ m/s.",
+        "problem_text": "A photon has energy 3.0×10⁻¹⁹ J. Find its wavelength. h = 6.63×10⁻³⁴ J·s, c = 3×10⁸ m/s.",
+        "given_data": "ΔE = 3.0×10⁻¹⁹ J\nh = 6.63×10⁻³⁴ J·s\nc = 3×10⁸ m/s",
+        "find_text": "λ - ?",
+        "solution": "λ = hc/ΔE = 6.63×10⁻³⁴ · 3×10⁸ / 3.0×10⁻¹⁹.\nλ = 6.63×10⁻⁷ m = 663 nm.",
+        "answer": "663 nm."
+      },
+      "optics-emission-spectra-task-4": {
+        "topic_title": "Emission Spectra",
+        "title": "Why can the chemical composition of a star's atmosphere be determined from its spectrum?",
+        "problem_text": "Why can the chemical composition of a star's atmosphere be determined from its spectrum?",
+        "given_data": "elements have different spectral lines",
+        "find_text": "reason for spectral analysis - ?",
+        "solution": "Each element has its own set of energy levels.\nTransitions between them produce characteristic emission or absorption lines.",
+        "answer": "Spectral lines work like fingerprints of chemical elements."
+      },
+      "optics-emission-spectra-task-5": {
+        "topic_title": "Emission Spectra",
+        "title": "Two transitions have energies 2 eV and 4 eV. Which transition emits radiation with the shorter wavelength?",
+        "problem_text": "Two transitions have energies 2 eV and 4 eV. Which transition emits radiation with the shorter wavelength?",
+        "given_data": "ΔE₁ = 2 eV\nΔE₂ = 4 eV",
+        "find_text": "smaller λ - ?",
+        "solution": "λ = hc/ΔE, so wavelength is inversely proportional to transition energy.\nThe greater energy, 4 eV, corresponds to the shorter wavelength.",
+        "answer": "The 4 eV transition."
+      },
+      "optics-lasers-task-1": {
+        "topic_title": "Lasers",
+        "title": "A laser emits light with wavelength 632 nm. Find the energy of one photon. h = 6.63×10⁻³⁴ J·s, c = 3×10⁸ m/s.",
+        "problem_text": "A laser emits light with wavelength 632 nm. Find the energy of one photon. h = 6.63×10⁻³⁴ J·s, c = 3×10⁸ m/s.",
+        "given_data": "λ = 632 nm = 632×10⁻⁹ m\nh = 6.63×10⁻³⁴ J·s\nc = 3×10⁸ m/s",
+        "find_text": "E - ?",
+        "solution": "E = hc/λ = 6.63×10⁻³⁴ · 3×10⁸ / 632×10⁻⁹.\nE ≈ 3.15×10⁻¹⁹ J.",
+        "answer": "3.15×10⁻¹⁹ J."
+      },
+      "optics-lasers-task-2": {
+        "topic_title": "Lasers",
+        "title": "The frequency of laser radiation is 5×10¹⁴ Hz. Find the photon energy.",
+        "problem_text": "The frequency of laser radiation is 5×10¹⁴ Hz. Find the photon energy.",
+        "given_data": "ν = 5×10¹⁴ Hz\nh = 6.63×10⁻³⁴ J·s",
+        "find_text": "E - ?",
+        "solution": "E = hν = 6.63×10⁻³⁴ · 5×10¹⁴ = 3.315×10⁻¹⁹ J.",
+        "answer": "3.315×10⁻¹⁹ J."
+      },
+      "optics-lasers-task-3": {
+        "topic_title": "Lasers",
+        "title": "A laser has power 2 mW and works for 10 s. How much energy did it emit?",
+        "problem_text": "A laser has power 2 mW and works for 10 s. How much energy did it emit?",
+        "given_data": "P = 2 mW = 2×10⁻³ W\nt = 10 s",
+        "find_text": "W - ?",
+        "solution": "W = Pt = 2×10⁻³ · 10 = 2×10⁻² J.",
+        "answer": "0.02 J."
+      },
+      "optics-lasers-task-4": {
+        "topic_title": "Lasers",
+        "title": "Why can a laser beam remain narrow over a long distance?",
+        "problem_text": "Why can a laser beam remain narrow over a long distance?",
+        "given_data": "laser radiation\nsmall divergence",
+        "find_text": "reason for narrow beam - ?",
+        "solution": "In a laser, photons are emitted coherently and mainly in one direction.\nThe optical resonator selects directions close to the axis, so the beam has small divergence.",
+        "answer": "Because of the directionality and coherence of radiation in the resonator."
+      },
+      "optics-lasers-task-5": {
+        "topic_title": "Lasers",
+        "title": "Why is population inversion needed for laser operation?",
+        "problem_text": "Why is population inversion needed for laser operation?",
+        "given_data": "laser active medium\nstimulated emission",
+        "find_text": "role of population inversion - ?",
+        "solution": "For light to be amplified, stimulated emission events must outnumber absorption events.\nFor this, more particles must be on the upper energy level than on the lower one.",
+        "answer": "Population inversion allows light to be amplified instead of absorbed."
+      }
+    }
+  },
+  "kk": {
+    "tests": {
+      "optics-light-propagation-test": {
+        "title": "Тест: Жарықтың таралуы",
+        "questions": [
+          {
+            "question": "Біртекті мөлдір ортада жарық қалай таралады?",
+            "options": [
+              "тек шеңбер бойымен",
+              "түзу сызық бойымен",
+              "ретсіз",
+              "тек парабола бойымен"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Вакуумдағы жарық жылдамдығы шамамен:",
+            "options": [
+              "9,8 м/с²",
+              "3×10⁸ м/с",
+              "340 м/с",
+              "3×10⁶ м/с"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Сыну көрсеткіші n ортада жарық жылдамдығы:",
+            "options": [
+              "v = n/c",
+              "v = c + n",
+              "v = cn",
+              "v = c/n"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Ортаның сыну көрсеткіші үлкен болса, ондағы жарық жылдамдығы:",
+            "options": [
+              "n-ге тәуелді емес",
+              "кіші болады",
+              "үлкен болады",
+              "нөлге тең болады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Айқын көлеңкенің пайда болуы ең жақсы немен түсіндіріледі?",
+            "options": [
+              "Ом заңымен",
+              "жарықтың түзу сызықты таралуымен",
+              "молекулалар диффузиясымен",
+              "жылулық ұлғаюмен"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-reflection-test": {
+        "title": "Тест: Шағылу",
+        "questions": [
+          {
+            "question": "Жарықтың шағылу заңы қалай жазылады?",
+            "options": [
+              "n₁sinα = n₂sinβ",
+              "I = U/R",
+              "F = ma",
+              "α = β"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Түсу бұрышы түскен сәуле мен ненің арасынан өлшенеді?",
+            "options": [
+              "шағылған сәуленің",
+              "көкжиектің",
+              "беттің өзінің",
+              "бетке түсірілген перпендикулярдың"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Түсу бұрышы 35° болса, шағылу бұрышы:",
+            "options": [
+              "70°",
+              "35°",
+              "55°",
+              "0°"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Айнадай шағылуда параллель сәулелер шағылғаннан кейін:",
+            "options": [
+              "әрқашан барлық жаққа шашырайды",
+              "параллель болып қалады",
+              "жоғалады",
+              "дыбысқа айналады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жазық айна қандай кескін береді?",
+            "options": [
+              "әрқашан 10 есе үлкейтілген",
+              "жалған, тура және өлшемі затпен бірдей",
+              "тек нақты",
+              "төңкерілген"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-refraction-test": {
+        "title": "Тест: Сыну",
+        "questions": [
+          {
+            "question": "Жарықтың сыну заңы:",
+            "options": [
+              "I = q/t",
+              "α = β",
+              "n₁sinα = n₂sinβ",
+              "Q = cmΔT"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Ауадан шыныға өткенде сәуле әдетте:",
+            "options": [
+              "шыныға өте алмайды",
+              "перпендикулярдан алыстайды",
+              "жарық болуын тоқтатады",
+              "перпендикулярға жақындайды"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Толық ішкі шағылу қай кезде мүмкін?",
+            "options": [
+              "тек вакуумда",
+              "оптикалық тығыз ортадан сиректеу ортаға өткенде",
+              "ауадан шыныға кез келген бұрышпен өткенде",
+              "тек α = 0° болғанда"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Шекті бұрыш формуласы:",
+            "options": [
+              "αкр = n₁ + n₂",
+              "sinαкр = n₂/n₁, n₁ > n₂ кезінде",
+              "sinαкр = n₁/n₂, n₁ > n₂ кезінде",
+              "αкр = n₁n₂"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Егер n₂ > n₁ болса, екінші ортаға өткенде жарық жылдамдығы:",
+            "options": [
+              "артады",
+              "кемиді",
+              "c-ден үлкен болады",
+              "өзгермейді"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-lenses-mirrors-test": {
+        "title": "Тест: Линзалар және айналар",
+        "questions": [
+          {
+            "question": "Жұқа линза формуласы:",
+            "options": [
+              "F = ma",
+              "1/F = 1/d + 1/f",
+              "λ = vT",
+              "I = U/R"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Линзаның оптикалық күші:",
+            "options": [
+              "D = F",
+              "D = d/f",
+              "D = Fd",
+              "D = 1/F"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Оптикалық күштің бірлігі:",
+            "options": [
+              "тесла",
+              "диоптрия",
+              "паскаль",
+              "кулон"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Линзаның үлкейтуін қалай табуға болады?",
+            "options": [
+              "Γ = 1/F",
+              "Γ = f/d",
+              "Γ = F/d",
+              "Γ = d + f"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жинағыш линзаның:",
+            "options": [
+              "фокус қашықтығы әрқашан нөл",
+              "фокус қашықтығы оң болады",
+              "жарық жылдамдығы теріс",
+              "тек жалған кескіндері болады"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-optical-devices-test": {
+        "title": "Тест: Оптикалық аспаптар",
+        "questions": [
+          {
+            "question": "Лупа әдетте не алу үшін қолданылады?",
+            "options": [
+              "электр тогын",
+              "жақын заттың үлкейтілген жалған кескінін",
+              "тек көлеңкені",
+              "алыс заттың кішірейтілген нақты кескінін"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Лупаның үлкейтуі жуықтап:",
+            "options": [
+              "Γ = F/25 см",
+              "Γ = 25 см/F",
+              "Γ = F + 25 см",
+              "Γ = 1/(25 см · F)"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Фотоаппаратта объектив матрицада:",
+            "options": [
+              "жарықсыз кескін түзеді",
+              "нақты кескін түзеді",
+              "магнит өрісін түзеді",
+              "тек жалған кескін түзеді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Микроскоп қашан қолданылады?",
+            "options": [
+              "тек алыстағы жұлдыздарды үлкейтусіз қарағанда",
+              "жарықсыз электр тізбектерін қарағанда",
+              "өте ұсақ жақын объектілерді қарау керек болғанда",
+              "тек жазық айналарды қарағанда"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Телескоп ең алдымен не үшін керек?",
+            "options": [
+              "кедергіні өлшеу үшін",
+              "линзаларды қыздыру үшін",
+              "алыс объектілерді бақылау және көбірек жарық жинау үшін",
+              "дыбыс шығару үшін"
+            ],
+            "correct": 2
+          }
+        ]
+      },
+      "optics-interference-test": {
+        "title": "Тест: Интерференция",
+        "questions": [
+          {
+            "question": "Жарық интерференциясы нелер қабаттасқанда пайда болады?",
+            "options": [
+              "газ молекулалары",
+              "когерентті жарық толқындары",
+              "толқынсыз кез келген денелер",
+              "тұрақты токтар"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Интерференциялық максимум шарты:",
+            "options": [
+              "Δ = λ/4 әрқашан",
+              "Δ = (2k+1)λ/2",
+              "Δ = kλ",
+              "Δ = 0 тек k = 5 кезінде"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Интерференциялық минимум шарты:",
+            "options": [
+              "Δ = kλ",
+              "Δ = (2k+1)λ/2",
+              "Δ = c/n",
+              "Δ = λL/d"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Юнг тәжірибесінде көршілес жарық жолақтар арақашықтығы:",
+            "options": [
+              "Δx = λd/L",
+              "Δx = λL/d",
+              "Δx = d/(λL)",
+              "Δx = L/(λd)"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Саңылаулар арақашықтығы d артса, интерференциялық жолақтар арақашықтығы:",
+            "options": [
+              "өзгермейді",
+              "кемиді",
+              "артады",
+              "толқын ұзындығына тең болады"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-diffraction-test": {
+        "title": "Тест: Дифракция",
+        "questions": [
+          {
+            "question": "Дифракция дегеніміз:",
+            "options": [
+              "өткізгіштегі электрондардың қозғалысы",
+              "толқынның бөгеттерді айналып өтуі және түзу сызықты таралудан ауытқуы",
+              "тек жарықтың қызуы",
+              "тек айнадан шағылу"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Дифракциялық тор максимумдарының шарты:",
+            "options": [
+              "d/sinφ = kλ",
+              "кез келген k = 0 үшін d = λ/sinφ",
+              "d·sinφ = kλ",
+              "sinφ = kd/λ"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Саңылау өлшемі толқын ұзындығымен салыстырғанда неғұрлым кіші болса, дифракция:",
+            "options": [
+              "толық жоғалады",
+              "сынуға айналады",
+              "әлсізірек",
+              "айқынырақ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Тордың орталық максимумы үшін реттік сан k:",
+            "options": [
+              "1",
+              "2",
+              "-5",
+              "0"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Бірдей тор және бірдей k үшін толқын ұзындығы артса, дифракциялық максимум бұрышы:",
+            "options": [
+              "өзгермейді",
+              "артады",
+              "кемиді",
+              "әрқашан 90° болады"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-polarization-test": {
+        "title": "Тест: Поляризация",
+        "questions": [
+          {
+            "question": "Поляризация жарық толқынының қандай екенін көрсетеді?",
+            "options": [
+              "толқын емес",
+              "бойлық",
+              "көлденең",
+              "энергия тасымалдамайды"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Малюс заңы:",
+            "options": [
+              "I = I₀sinφ",
+              "I = φ/I₀",
+              "I = I₀/φ",
+              "I = I₀cos²φ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Поляризаторлар осьтері 90° бұрыш жасаса, екінші идеал поляризатордан кейінгі интенсивтік:",
+            "options": [
+              "I₀-ге тең",
+              "әрқашан жартысына тең",
+              "нөлге тең",
+              "максимал"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "φ = 0° кезінде Малюс заңы бойынша:",
+            "options": [
+              "I = 2I₀",
+              "I = 0",
+              "I = I₀/2",
+              "I = I₀"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Поляризациялық көзілдірік шағылысты неге азайтады?",
+            "options": [
+              "фотон массасын өзгертеді",
+              "жарықты дыбысқа айналдырады",
+              "жарық жылдамдығын арттырады",
+              "бір бағыттағы тербелістерді басым өткізеді"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "optics-photoelectric-effect-test": {
+        "title": "Тест: Фотоэффект",
+        "questions": [
+          {
+            "question": "Фотоэффект дегеніміз:",
+            "options": [
+              "жарықсыз газдың қызуы",
+              "жарық әсерінен заттан электрондардың жұлынып шығуы",
+              "жарықтың айнадан шағылуы",
+              "жарықтың бөгеттерді айналып өтуі"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Фотоэффект үшін Эйнштейн теңдеуі:",
+            "options": [
+              "F = ma",
+              "E = mc²",
+              "I = U/R",
+              "hν = A + Eк"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Фотоэффектінің қызыл шекарасы формуламен анықталады:",
+            "options": [
+              "ν₀ = A + h",
+              "ν₀ = A/h",
+              "ν₀ = h/A",
+              "ν₀ = Ah"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Жарық жиілігі қызыл шекарадан кіші болса, фотоэффект:",
+            "options": [
+              "тек үлкен жарықтықта болады",
+              "болмайды",
+              "әрқашан күшейеді",
+              "интерференцияға айналады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Фотоэффект кезінде түскен жарық жиілігін арттыру нені арттырады?",
+            "options": [
+              "металдың шығу жұмысын",
+              "фотоэлектрондардың максимал кинетикалық энергиясын",
+              "электрон зарядын",
+              "Планк тұрақтысын"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-light-dualism-test": {
+        "title": "Тест: Жарық дуализмі",
+        "questions": [
+          {
+            "question": "Жарық дуализмі жарықтың қандай қасиеттер көрсететінін білдіреді?",
+            "options": [
+              "тек тыныштық массасын",
+              "тек механикалық",
+              "тек электр кедергісін",
+              "толқындық және корпускулалық"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Фотон энергиясы:",
+            "options": [
+              "E = F/S",
+              "E = hν",
+              "E = IR",
+              "E = q/t"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Фотон импульсі:",
+            "options": [
+              "p = λ/h",
+              "p = mv²/2",
+              "p = hλ",
+              "p = h/λ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Жарық жиілігі артқан сайын фотон энергиясы:",
+            "options": [
+              "нөлге тең",
+              "артады",
+              "кемиді",
+              "өзгермейді"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Фотон толқын ұзындығы азайған сайын оның импульсі:",
+            "options": [
+              "λ-ға тәуелді емес",
+              "кемиді",
+              "теріс болады",
+              "артады"
+            ],
+            "correct": 3
+          }
+        ]
+      },
+      "optics-emission-spectra-test": {
+        "title": "Тест: Сәуле шығару спектрлері",
+        "questions": [
+          {
+            "question": "Атомның сызықтық спектрі не себепті пайда болады?",
+            "options": [
+              "сұйық қысымынан",
+              "барлық денелердің біркелкі қызуынан",
+              "электрондардың энергетикалық деңгейлер арасында өтуінен",
+              "Ом заңынан"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Өту кезіндегі шығарылған фотон энергиясы:",
+            "options": [
+              "hν = E₁/E₂",
+              "hν = E₁ + E₂ әрқашан",
+              "hν = E₂ - E₁",
+              "hν = IR"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Сәуле толқын ұзындығы өту энергиясымен қалай байланысады?",
+            "options": [
+              "λ = ΔE/(hc)",
+              "λ = hc/ΔE",
+              "λ = cΔE/h",
+              "λ = hΔE/c"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Әртүрлі химиялық элементтердің спектрлері неге әртүрлі?",
+            "options": [
+              "фотон шығармайды",
+              "энергетикалық деңгейлері әртүрлі",
+              "деңгейлері бірдей",
+              "әрқашан бір температурада болады"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Өту энергиясы үлкен болса, шығарылған фотонның толқын ұзындығы:",
+            "options": [
+              "шексіз болады",
+              "кіші болады",
+              "өзгермейді",
+              "үлкен болады"
+            ],
+            "correct": 1
+          }
+        ]
+      },
+      "optics-lasers-test": {
+        "title": "Тест: Лазерлер",
+        "questions": [
+          {
+            "question": "Лазер сәулесі әдетте:",
+            "options": [
+              "толық ретсіз",
+              "электромагниттік емес",
+              "когерентті және бағытталған",
+              "әрқашан тек инфрақызыл"
+            ],
+            "correct": 2
+          },
+          {
+            "question": "Лазер жұмысының негізінде не жатыр?",
+            "options": [
+              "Архимед заңы",
+              "еріксіз сәуле шығару",
+              "механикалық үйкеліс",
+              "тек газ диффузиясы"
+            ],
+            "correct": 1
+          },
+          {
+            "question": "Лазер сәулесі фотонының энергиясы:",
+            "options": [
+              "жарықпен байланыссыз E = mgh",
+              "E = q/t",
+              "E = IR",
+              "E = hν = hc/λ"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Лазерде жарықты күшейту үшін не қажет?",
+            "options": [
+              "қозған атомдардың толық болмауы",
+              "белсенді ортасыз тек жазық айна",
+              "затсыз вакуумдағы тұрақты ток",
+              "деңгейлердің инверсиялық қоныстануы"
+            ],
+            "correct": 3
+          },
+          {
+            "question": "Лазер сәулесінің аз шашырауы нені білдіреді?",
+            "options": [
+              "бірден барлық жаққа шашырайды",
+              "сәуле ұзақ қашықтыққа жіңішке шоқ болып таралады",
+              "энергия тасымалдамайды",
+              "толқын ұзындығы жоқ"
+            ],
+            "correct": 1
+          }
+        ]
+      }
+    },
+    "tasks": {
+      "optics-light-propagation-task-1": {
+        "topic_title": "Жарықтың таралуы",
+        "title": "Сыну көрсеткіші n = 1,33 судағы жарық жылдамдығын табыңыз.",
+        "problem_text": "Сыну көрсеткіші n = 1,33 судағы жарық жылдамдығын табыңыз.",
+        "given_data": "c = 3×10⁸ м/с\nn = 1,33",
+        "find_text": "v - ?",
+        "solution": "v = c/n = 3×10⁸/1,33 ≈ 2,26×10⁸ м/с.",
+        "answer": "2,26×10⁸ м/с."
+      },
+      "optics-light-propagation-task-2": {
+        "topic_title": "Жарықтың таралуы",
+        "title": "Жарық вакуумда 1,5×10⁸ м қашықтық өтеді. Бұл жол қанша уақытқа созылады?",
+        "problem_text": "Жарық вакуумда 1,5×10⁸ м қашықтық өтеді. Бұл жол қанша уақытқа созылады?",
+        "given_data": "s = 1,5×10⁸ м\nc = 3×10⁸ м/с",
+        "find_text": "t - ?",
+        "solution": "t = s/c = 1,5×10⁸ / 3×10⁸ = 0,5 с.",
+        "answer": "0,5 с."
+      },
+      "optics-light-propagation-task-3": {
+        "topic_title": "Жарықтың таралуы",
+        "title": "Шыныдағы жарық жылдамдығы 2×10⁸ м/с. Шынының сыну көрсеткішін табыңыз.",
+        "problem_text": "Шыныдағы жарық жылдамдығы 2×10⁸ м/с. Шынының сыну көрсеткішін табыңыз.",
+        "given_data": "c = 3×10⁸ м/с\nv = 2×10⁸ м/с",
+        "find_text": "n - ?",
+        "solution": "n = c/v = 3×10⁸ / 2×10⁸ = 1,5.",
+        "answer": "1,5."
+      },
+      "optics-light-propagation-task-4": {
+        "topic_title": "Жарықтың таралуы",
+        "title": "Жарық сәулесі ортада 6×10⁷ м жолды 0,3 с-та өтеді. Осы ортадағы жарық жылдамдығын және сыну көрсеткішін табыңыз.",
+        "problem_text": "Жарық сәулесі ортада 6×10⁷ м жолды 0,3 с-та өтеді. Осы ортадағы жарық жылдамдығын және сыну көрсеткішін табыңыз.",
+        "given_data": "s = 6×10⁷ м\nt = 0,3 с\nc = 3×10⁸ м/с",
+        "find_text": "v, n - ?",
+        "solution": "v = s/t = 6×10⁷/0,3 = 2×10⁸ м/с.\nn = c/v = 3×10⁸ / 2×10⁸ = 1,5.",
+        "answer": "v = 2×10⁸ м/с, n = 1,5."
+      },
+      "optics-light-propagation-task-5": {
+        "topic_title": "Жарықтың таралуы",
+        "title": "Бөлмеде мөлдір емес заттың артында неге көлеңке пайда болады?",
+        "problem_text": "Бөлмеде мөлдір емес заттың артында неге көлеңке пайда болады?",
+        "given_data": "мөлдір емес зат\nжарық көзі",
+        "find_text": "көлеңке себебі - ?",
+        "solution": "Мөлдір емес зат жарықты өткізбейді.\nБіртекті ортада жарық түзу сызық бойымен таралатындықтан, заттың артындағы аймақ тікелей сәулелермен жарықтанбайды.",
+        "answer": "Көлеңке жарықтың түзу сызықты таралуы және заттың жарықты жұтуы салдарынан пайда болады."
+      },
+      "optics-reflection-task-1": {
+        "topic_title": "Шағылу",
+        "title": "Сәуле айнаға перпендикулярға 42° бұрышпен түседі. Шағылу бұрышын табыңыз.",
+        "problem_text": "Сәуле айнаға перпендикулярға 42° бұрышпен түседі. Шағылу бұрышын табыңыз.",
+        "given_data": "α = 42°",
+        "find_text": "β - ?",
+        "solution": "Шағылу заңы бойынша β = α.\nβ = 42°.",
+        "answer": "42°."
+      },
+      "optics-reflection-task-2": {
+        "topic_title": "Шағылу",
+        "title": "Түскен және шағылған сәулелер арасындағы бұрыш 80°. Түсу бұрышын табыңыз.",
+        "problem_text": "Түскен және шағылған сәулелер арасындағы бұрыш 80°. Түсу бұрышын табыңыз.",
+        "given_data": "сәулелер арасындағы бұрыш = 80°",
+        "find_text": "α - ?",
+        "solution": "Түскен және шағылған сәулелер перпендикулярға қатысты симметриялы, сондықтан олардың арасындағы бұрыш 2α-ға тең.\nα = 80°/2 = 40°.",
+        "answer": "40°."
+      },
+      "optics-reflection-task-3": {
+        "topic_title": "Шағылу",
+        "title": "Сәуле айна бетіне 25° бұрышпен түседі. Түсу және шағылу бұрыштарын табыңыз.",
+        "problem_text": "Сәуле айна бетіне 25° бұрышпен түседі. Түсу және шағылу бұрыштарын табыңыз.",
+        "given_data": "бетпен жасайтын бұрыш = 25°",
+        "find_text": "α, β - ?",
+        "solution": "Түсу бұрышы перпендикулярдан өлшенеді, сондықтан α = 90° - 25° = 65°.\nβ = α = 65°.",
+        "answer": "α = 65°, β = 65°."
+      },
+      "optics-reflection-task-4": {
+        "topic_title": "Шағылу",
+        "title": "Адам жазық айнадан 1,8 м қашықтықта тұр. Оның кескіні адамнан қандай қашықтықта орналасқан?",
+        "problem_text": "Адам жазық айнадан 1,8 м қашықтықта тұр. Оның кескіні адамнан қандай қашықтықта орналасқан?",
+        "given_data": "d = 1,8 м",
+        "find_text": "кескінге дейінгі қашықтық - ?",
+        "solution": "Жазық айнада кескін айна артында дәл сондай қашықтықта орналасады.\nАдамнан кескінге дейін: 1,8 + 1,8 = 3,6 м.",
+        "answer": "3,6 м."
+      },
+      "optics-reflection-task-5": {
+        "topic_title": "Шағылу",
+        "title": "Айна 10°-қа бұрылды. Түскен сәуле өзгермесе, шағылған сәуле қандай бұрышқа бұрылады?",
+        "problem_text": "Айна 10°-қа бұрылды. Түскен сәуле өзгермесе, шағылған сәуле қандай бұрышқа бұрылады?",
+        "given_data": "айнаның бұрылуы = 10°",
+        "find_text": "шағылған сәуленің бұрылуы - ?",
+        "solution": "Айна φ бұрышқа бұрылса, нормаль да φ бұрышқа бұрылады.\nШағылған сәуле бағыты 2φ-қа өзгереді.\n2φ = 20°.",
+        "answer": "20°."
+      },
+      "optics-refraction-task-1": {
+        "topic_title": "Сыну",
+        "title": "Сәуле ауадан n = 1,5 шыныға өтеді. Түсу бұрышы 30°. Сыну бұрышының sin мәнін табыңыз.",
+        "problem_text": "Сәуле ауадан n = 1,5 шыныға өтеді. Түсу бұрышы 30°. Сыну бұрышының sin мәнін табыңыз.",
+        "given_data": "n₁ = 1\nn₂ = 1,5\nα = 30°",
+        "find_text": "sinβ - ?",
+        "solution": "n₁sinα = n₂sinβ.\nsinβ = n₁sinα/n₂ = 1 · 0,5/1,5 = 1/3 ≈ 0,333.",
+        "answer": "sinβ ≈ 0,333."
+      },
+      "optics-refraction-task-2": {
+        "topic_title": "Сыну",
+        "title": "Жарық n₁ = 1,5 шыныдан n₂ = 1 ауаға өтеді. Шекті бұрышты табыңыз.",
+        "problem_text": "Жарық n₁ = 1,5 шыныдан n₂ = 1 ауаға өтеді. Шекті бұрышты табыңыз.",
+        "given_data": "n₁ = 1,5\nn₂ = 1",
+        "find_text": "αкр - ?",
+        "solution": "sinαкр = n₂/n₁ = 1/1,5 = 0,667.\nαкр ≈ 42°.",
+        "answer": "шамамен 42°."
+      },
+      "optics-refraction-task-3": {
+        "topic_title": "Сыну",
+        "title": "n = 1,33 судан шыққан сәуле ауа шекарасына 60° бұрышпен түседі. Толық ішкі шағылу бола ма?",
+        "problem_text": "n = 1,33 судан шыққан сәуле ауа шекарасына 60° бұрышпен түседі. Толық ішкі шағылу бола ма?",
+        "given_data": "n₁ = 1,33\nn₂ = 1\nα = 60°",
+        "find_text": "толық шағылу бар ма - ?",
+        "solution": "sinαкр = n₂/n₁ = 1/1,33 ≈ 0,752.\nαкр ≈ 49°.\n60° > 49° болғандықтан, толық ішкі шағылу болады.",
+        "answer": "Иә, толық ішкі шағылу болады."
+      },
+      "optics-refraction-task-4": {
+        "topic_title": "Сыну",
+        "title": "Белгілі бір сұйықтағы жарық жылдамдығы 2,4×10⁸ м/с. Сыну көрсеткішін табыңыз.",
+        "problem_text": "Белгілі бір сұйықтағы жарық жылдамдығы 2,4×10⁸ м/с. Сыну көрсеткішін табыңыз.",
+        "given_data": "c = 3×10⁸ м/с\nv = 2,4×10⁸ м/с",
+        "find_text": "n - ?",
+        "solution": "n = c/v = 3×10⁸ / 2,4×10⁸ = 1,25.",
+        "answer": "1,25."
+      },
+      "optics-refraction-task-5": {
+        "topic_title": "Сыну",
+        "title": "Ауадан шыныға өткенде сәуле неге перпендикулярға жақындайды?",
+        "problem_text": "Ауадан шыныға өткенде сәуле неге перпендикулярға жақындайды?",
+        "given_data": "nшыны > nауа",
+        "find_text": "сыну бағытының себебі - ?",
+        "solution": "Шыныда жарық жылдамдығы ауадағыдан кіші.\nn₁sinα = n₂sinβ заңында n₂ > n₁ болса, sinβ < sinα, демек β < α.",
+        "answer": "Сәуле перпендикулярға жақындайды, себебі шыныда жарық баяуырақ таралады."
+      },
+      "optics-lenses-mirrors-task-1": {
+        "topic_title": "Линзалар және айналар",
+        "title": "Зат фокус қашықтығы 10 см жинағыш линзадан 30 см қашықтықта тұр. Кескінге дейінгі қашықтықты табыңыз.",
+        "problem_text": "Зат фокус қашықтығы 10 см жинағыш линзадан 30 см қашықтықта тұр. Кескінге дейінгі қашықтықты табыңыз.",
+        "given_data": "d = 30 см\nF = 10 см",
+        "find_text": "f - ?",
+        "solution": "1/F = 1/d + 1/f.\n1/f = 1/F - 1/d = 1/10 - 1/30 = 2/30 = 1/15.\nf = 15 см.",
+        "answer": "15 см."
+      },
+      "optics-lenses-mirrors-task-2": {
+        "topic_title": "Линзалар және айналар",
+        "title": "Линзаның фокус қашықтығы 0,25 м. Оның оптикалық күшін табыңыз.",
+        "problem_text": "Линзаның фокус қашықтығы 0,25 м. Оның оптикалық күшін табыңыз.",
+        "given_data": "F = 0,25 м",
+        "find_text": "D - ?",
+        "solution": "D = 1/F = 1/0,25 = 4 дптр.",
+        "answer": "4 дптр."
+      },
+      "optics-lenses-mirrors-task-3": {
+        "topic_title": "Линзалар және айналар",
+        "title": "Кескін линзадан 40 см, зат 20 см қашықтықта орналасқан. Үлкейтуді табыңыз.",
+        "problem_text": "Кескін линзадан 40 см, зат 20 см қашықтықта орналасқан. Үлкейтуді табыңыз.",
+        "given_data": "f = 40 см\nd = 20 см",
+        "find_text": "Γ - ?",
+        "solution": "Γ = f/d = 40/20 = 2.",
+        "answer": "Кескін 2 есе үлкейген."
+      },
+      "optics-lenses-mirrors-task-4": {
+        "topic_title": "Линзалар және айналар",
+        "title": "Линзаның оптикалық күші -2 дптр. Фокус қашықтығын және линза түрін табыңыз.",
+        "problem_text": "Линзаның оптикалық күші -2 дптр. Фокус қашықтығын және линза түрін табыңыз.",
+        "given_data": "D = -2 дптр",
+        "find_text": "F, түрі - ?",
+        "solution": "F = 1/D = 1/(-2) = -0,5 м.\nТеріс фокус қашықтығы шашыратқыш линзаға сәйкес келеді.",
+        "answer": "F = -0,5 м, линза шашыратқыш."
+      },
+      "optics-lenses-mirrors-task-5": {
+        "topic_title": "Линзалар және айналар",
+        "title": "Зат жинағыш линзаның фокусында орналасқан. Кескін қайда пайда болады?",
+        "problem_text": "Зат жинағыш линзаның фокусында орналасқан. Кескін қайда пайда болады?",
+        "given_data": "d = F",
+        "find_text": "кескін орны - ?",
+        "solution": "1/F = 1/d + 1/f.\nЕгер d = F болса, 1/f = 1/F - 1/F = 0.\nДемек f шексіздікке ұмтылады, линзадан кейін сәулелер параллель жүреді.",
+        "answer": "Кескін шексіздікте пайда болады."
+      },
+      "optics-optical-devices-task-1": {
+        "topic_title": "Оптикалық аспаптар",
+        "title": "Лупаның фокус қашықтығы 5 см. Оның бұрыштық үлкейтуін бағалаңыз.",
+        "problem_text": "Лупаның фокус қашықтығы 5 см. Оның бұрыштық үлкейтуін бағалаңыз.",
+        "given_data": "F = 5 см",
+        "find_text": "Γ - ?",
+        "solution": "Γ = 25 см/F = 25/5 = 5.",
+        "answer": "шамамен 5 есе."
+      },
+      "optics-optical-devices-task-2": {
+        "topic_title": "Оптикалық аспаптар",
+        "title": "Үлкейтуі 10 болатын лупа керек. Линзаның фокус қашықтығы қандай болуы тиіс?",
+        "problem_text": "Үлкейтуі 10 болатын лупа керек. Линзаның фокус қашықтығы қандай болуы тиіс?",
+        "given_data": "Γ = 10",
+        "find_text": "F - ?",
+        "solution": "Γ = 25 см/F, сондықтан F = 25 см/Γ.\nF = 25/10 = 2,5 см.",
+        "answer": "2,5 см."
+      },
+      "optics-optical-devices-task-3": {
+        "topic_title": "Оптикалық аспаптар",
+        "title": "Фотоаппарат объективінің фокус қашықтығы 50 мм. Алыс объектіні шексіздікте деп алуға болады. Кескін шамамен қайда пайда болады?",
+        "problem_text": "Фотоаппарат объективінің фокус қашықтығы 50 мм. Алыс объектіні шексіздікте деп алуға болады. Кескін шамамен қайда пайда болады?",
+        "given_data": "F = 50 мм\nd → ∞",
+        "find_text": "f - ?",
+        "solution": "Алыс объект үшін 1/d ≈ 0.\nЛинза формуласы бойынша 1/F = 1/f, демек f ≈ F.",
+        "answer": "объективтен шамамен 50 мм қашықтықта."
+      },
+      "optics-optical-devices-task-4": {
+        "topic_title": "Оптикалық аспаптар",
+        "title": "Микроскоп неге бір емес, екі линза қолданады?",
+        "problem_text": "Микроскоп неге бір емес, екі линза қолданады?",
+        "given_data": "объект өте кіші\nүлкен үлкейту қажет",
+        "find_text": "объектив пен окулярдың рөлі - ?",
+        "solution": "Объектив үлкейтілген нақты аралық кескін түзеді.\nОкуляр лупа сияқты жұмыс істеп, бұл кескінді көз үшін қосымша үлкейтеді.",
+        "answer": "Екі линза объектив пен окуляр үлкейтулерінің көбейтіндісін береді."
+      },
+      "optics-optical-devices-task-5": {
+        "topic_title": "Оптикалық аспаптар",
+        "title": "Объектив диаметрі үлкен телескоп неге әлсіз жұлдыздарды көруге мүмкіндік береді?",
+        "problem_text": "Объектив диаметрі үлкен телескоп неге әлсіз жұлдыздарды көруге мүмкіндік береді?",
+        "given_data": "объектив диаметрі үлкен\nобъектив ауданы үлкен",
+        "find_text": "жақсы көріну себебі - ?",
+        "solution": "Үлкен объектив ауданы үлкен болғандықтан көбірек жарық жинайды.\nКескінге көбірек жарық түседі, сондықтан әлсіз объектілер айқынырақ көрінеді.",
+        "answer": "Үлкен объектив көбірек жарық жинайды."
+      },
+      "optics-interference-task-1": {
+        "topic_title": "Интерференция",
+        "title": "Юнг тәжірибесінде λ = 600 нм, L = 2 м, d = 0,4 мм. Көршілес жолақтар арақашықтығын табыңыз.",
+        "problem_text": "Юнг тәжірибесінде λ = 600 нм, L = 2 м, d = 0,4 мм. Көршілес жолақтар арақашықтығын табыңыз.",
+        "given_data": "λ = 600 нм = 600×10⁻⁹ м\nL = 2 м\nd = 0,4 мм = 0,4×10⁻³ м",
+        "find_text": "Δx - ?",
+        "solution": "Δx = λL/d = 600×10⁻⁹ · 2 / (0,4×10⁻³) = 3×10⁻³ м.",
+        "answer": "3 мм."
+      },
+      "optics-interference-task-2": {
+        "topic_title": "Интерференция",
+        "title": "Екі толқынның жол айырымы 1,5 мкм, толқын ұзындығы 500 нм. Максимум ба, минимум ба?",
+        "problem_text": "Екі толқынның жол айырымы 1,5 мкм, толқын ұзындығы 500 нм. Максимум ба, минимум ба?",
+        "given_data": "Δ = 1,5 мкм = 1500 нм\nλ = 500 нм",
+        "find_text": "интерференция түрі - ?",
+        "solution": "Δ/λ = 1500/500 = 3.\nЖол айырымы толқын ұзындығының бүтін санына тең, яғни Δ = kλ.",
+        "answer": "Максимум, k = 3."
+      },
+      "optics-interference-task-3": {
+        "topic_title": "Интерференция",
+        "title": "λ = 400 нм жарық үшін минимум байқалатын бірінші жол айырымын табыңыз.",
+        "problem_text": "λ = 400 нм жарық үшін минимум байқалатын бірінші жол айырымын табыңыз.",
+        "given_data": "λ = 400 нм\nk = 0",
+        "find_text": "Δmin - ?",
+        "solution": "Минимум үшін Δ = (2k+1)λ/2.\nk = 0 кезінде: Δ = λ/2 = 200 нм.",
+        "answer": "200 нм."
+      },
+      "optics-interference-task-4": {
+        "topic_title": "Интерференция",
+        "title": "Юнг тәжірибесінде жолақтар арақашықтығы 2 мм, экран 1,5 м қашықтықта, λ = 500 нм. Саңылаулар арақашықтығын табыңыз.",
+        "problem_text": "Юнг тәжірибесінде жолақтар арақашықтығы 2 мм, экран 1,5 м қашықтықта, λ = 500 нм. Саңылаулар арақашықтығын табыңыз.",
+        "given_data": "Δx = 2 мм = 2×10⁻³ м\nL = 1,5 м\nλ = 500 нм = 500×10⁻⁹ м",
+        "find_text": "d - ?",
+        "solution": "Δx = λL/d, сондықтан d = λL/Δx.\nd = 500×10⁻⁹ · 1,5 / 2×10⁻³ = 3,75×10⁻⁴ м.",
+        "answer": "0,375 мм."
+      },
+      "optics-interference-task-5": {
+        "topic_title": "Интерференция",
+        "title": "Тұрақты интерференциялық сурет үшін неге когерентті көздер қажет?",
+        "problem_text": "Тұрақты интерференциялық сурет үшін неге когерентті көздер қажет?",
+        "given_data": "жарық интерференциясы",
+        "find_text": "когеренттіліктің рөлі - ?",
+        "solution": "Когерентті көздер фазалар айырымын тұрақты сақтайды.\nСонда максимумдар мен минимумдар бір орында қалады және сурет уақыт бойынша шайылмайды.",
+        "answer": "Когеренттілік тұрақты фаза айырымы және тұрақты жолақтар үшін қажет."
+      },
+      "optics-diffraction-task-1": {
+        "topic_title": "Дифракция",
+        "title": "Дифракциялық тор периоды d = 2 мкм. λ = 500 нм жарық бірінші реттік максимум береді. sinφ табыңыз.",
+        "problem_text": "Дифракциялық тор периоды d = 2 мкм. λ = 500 нм жарық бірінші реттік максимум береді. sinφ табыңыз.",
+        "given_data": "d = 2 мкм = 2×10⁻⁶ м\nλ = 500 нм = 5×10⁻⁷ м\nk = 1",
+        "find_text": "sinφ - ?",
+        "solution": "d·sinφ = kλ.\nsinφ = kλ/d = 5×10⁻⁷ / 2×10⁻⁶ = 0,25.",
+        "answer": "sinφ = 0,25."
+      },
+      "optics-diffraction-task-2": {
+        "topic_title": "Дифракция",
+        "title": "d = 1,5 мкм тор үшін екінші реттік максимум sinφ = 0,8 кезінде байқалады. Толқын ұзындығын табыңыз.",
+        "problem_text": "d = 1,5 мкм тор үшін екінші реттік максимум sinφ = 0,8 кезінде байқалады. Толқын ұзындығын табыңыз.",
+        "given_data": "d = 1,5 мкм\nk = 2\nsinφ = 0,8",
+        "find_text": "λ - ?",
+        "solution": "λ = d·sinφ/k = 1,5 · 0,8 / 2 = 0,6 мкм.",
+        "answer": "0,6 мкм = 600 нм."
+      },
+      "optics-diffraction-task-3": {
+        "topic_title": "Дифракция",
+        "title": "d = 1 мкм тор λ = 500 нм үшін үшінші реттік максимум бере ала ма?",
+        "problem_text": "d = 1 мкм тор λ = 500 нм үшін үшінші реттік максимум бере ала ма?",
+        "given_data": "d = 1 мкм\nλ = 0,5 мкм\nk = 3",
+        "find_text": "максимум мүмкін бе - ?",
+        "solution": "sinφ = kλ/d = 3 · 0,5 / 1 = 1,5.\nsinφ 1-ден үлкен бола алмайды, сондықтан мұндай максимум мүмкін емес.",
+        "answer": "Жоқ, үшінші реттік максимум мүмкін емес."
+      },
+      "optics-diffraction-task-4": {
+        "topic_title": "Дифракция",
+        "title": "Компакт-диск ақ жарықты неге түстерге бөледі?",
+        "problem_text": "Компакт-диск ақ жарықты неге түстерге бөледі?",
+        "given_data": "диск бетінде жиі орналасқан жолақтар бар\nақ жарықта әртүрлі λ бар",
+        "find_text": "түсті жолақтар себебі - ?",
+        "solution": "Диск жолақтары дифракциялық тор сияқты жұмыс істейді.\nӘртүрлі толқын ұзындықтары үшін d·sinφ = kλ шарты әртүрлі бұрыштарда орындалады, сондықтан түстер ажырайды.",
+        "answer": "Дискінің жүйелі жолақтарындағы дифракция салдарынан."
+      },
+      "optics-diffraction-task-5": {
+        "topic_title": "Дифракция",
+        "title": "Тор қызыл жарық үшін бірінші максимумды көк жарыққа қарағанда үлкен бұрышпен береді. Толқын ұзындықтары туралы не айтуға болады?",
+        "problem_text": "Тор қызыл жарық үшін бірінші максимумды көк жарыққа қарағанда үлкен бұрышпен береді. Толқын ұзындықтары туралы не айтуға болады?",
+        "given_data": "k бірдей\nd бірдей\nφқызыл > φкөк",
+        "find_text": "λ салыстыру - ?",
+        "solution": "d·sinφ = kλ бойынша d және k бірдей болса, толқын ұзындығы sinφ-ке пропорционал.\nҮлкен бұрыш үлкен толқын ұзындығын білдіреді.",
+        "answer": "Қызыл жарықтың толқын ұзындығы көк жарықтан үлкен."
+      },
+      "optics-polarization-task-1": {
+        "topic_title": "Поляризация",
+        "title": "Интенсивтігі 80 Вт/м² поляризацияланған жарық анализаторға түседі. Поляризация бағыты мен анализатор осі арасындағы бұрыш 60°. Анализатордан кейінгі интенсивтікті табыңыз.",
+        "problem_text": "Интенсивтігі 80 Вт/м² поляризацияланған жарық анализаторға түседі. Поляризация бағыты мен анализатор осі арасындағы бұрыш 60°. Анализатордан кейінгі интенсивтікті табыңыз.",
+        "given_data": "I₀ = 80 Вт/м²\nφ = 60°",
+        "find_text": "I - ?",
+        "solution": "I = I₀cos²φ = 80 · cos²60° = 80 · 0,25 = 20 Вт/м².",
+        "answer": "20 Вт/м²."
+      },
+      "optics-polarization-task-2": {
+        "topic_title": "Поляризация",
+        "title": "Анализатордан кейін поляризацияланған жарықтың бастапқы интенсивтігінің 25%-ы қалды. φ бұрышын табыңыз.",
+        "problem_text": "Анализатордан кейін поляризацияланған жарықтың бастапқы интенсивтігінің 25%-ы қалды. φ бұрышын табыңыз.",
+        "given_data": "I/I₀ = 0,25",
+        "find_text": "φ - ?",
+        "solution": "I/I₀ = cos²φ = 0,25.\ncosφ = 0,5, сондықтан φ = 60°.",
+        "answer": "60°."
+      },
+      "optics-polarization-task-3": {
+        "topic_title": "Поляризация",
+        "title": "Екі идеал поляризатор 90° бұрышпен айқастырылған. Неге жарық дерлік өтпейді?",
+        "problem_text": "Екі идеал поляризатор 90° бұрышпен айқастырылған. Неге жарық дерлік өтпейді?",
+        "given_data": "φ = 90°",
+        "find_text": "жарық өтпеу себебі - ?",
+        "solution": "Малюс заңы бойынша I = I₀cos²90°.\ncos90° = 0, сондықтан I = 0.",
+        "answer": "Екінші поляризатор өз осіне перпендикуляр тербелістерді өткізбейді."
+      },
+      "optics-polarization-task-4": {
+        "topic_title": "Поляризация",
+        "title": "Поляризацияланған жарық интенсивтігі 120 Вт/м². Анализатордан кейін 90 Вт/м² болды. cos²φ табыңыз.",
+        "problem_text": "Поляризацияланған жарық интенсивтігі 120 Вт/м². Анализатордан кейін 90 Вт/м² болды. cos²φ табыңыз.",
+        "given_data": "I₀ = 120 Вт/м²\nI = 90 Вт/м²",
+        "find_text": "cos²φ - ?",
+        "solution": "I = I₀cos²φ.\ncos²φ = I/I₀ = 90/120 = 0,75.",
+        "answer": "cos²φ = 0,75."
+      },
+      "optics-polarization-task-5": {
+        "topic_title": "Поляризация",
+        "title": "Судан шағылған жарық неге жиі жартылай поляризацияланған болады?",
+        "problem_text": "Судан шағылған жарық неге жиі жартылай поляризацияланған болады?",
+        "given_data": "су бетінен шағылу",
+        "find_text": "шағылыстың поляризациялану себебі - ?",
+        "solution": "Диэлектрик бетінен шағылғанда тербелістердің әртүрлі бағыттары бірдей шағылмайды.\nСондықтан шағылған жарықта бір бағыттағы тербелістер басым болады.",
+        "answer": "Судан шағылу электр өрісі тербелістерінің бағытын жартылай реттейді."
+      },
+      "optics-photoelectric-effect-task-1": {
+        "topic_title": "Фотоэффект",
+        "title": "Металдың шығу жұмысы 2 эВ, фотон энергиясы 5 эВ. Фотоэлектрондардың максимал кинетикалық энергиясын табыңыз.",
+        "problem_text": "Металдың шығу жұмысы 2 эВ, фотон энергиясы 5 эВ. Фотоэлектрондардың максимал кинетикалық энергиясын табыңыз.",
+        "given_data": "A = 2 эВ\nhν = 5 эВ",
+        "find_text": "Eк - ?",
+        "solution": "hν = A + Eк, демек Eк = hν - A.\nEк = 5 - 2 = 3 эВ.",
+        "answer": "3 эВ."
+      },
+      "optics-photoelectric-effect-task-2": {
+        "topic_title": "Фотоэффект",
+        "title": "Шығу жұмысы 3,2×10⁻¹⁹ Дж. Фотоэффектінің қызыл шекарасын табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "problem_text": "Шығу жұмысы 3,2×10⁻¹⁹ Дж. Фотоэффектінің қызыл шекарасын табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "given_data": "A = 3,2×10⁻¹⁹ Дж\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "ν₀ - ?",
+        "solution": "ν₀ = A/h = 3,2×10⁻¹⁹ / 6,63×10⁻³⁴ ≈ 4,83×10¹⁴ Гц.",
+        "answer": "4,83×10¹⁴ Гц."
+      },
+      "optics-photoelectric-effect-task-3": {
+        "topic_title": "Фотоэффект",
+        "title": "Шығу жұмысы 2,5 эВ металға энергиясы 2,0 эВ фотондар түседі. Фотоэффект бола ма?",
+        "problem_text": "Шығу жұмысы 2,5 эВ металға энергиясы 2,0 эВ фотондар түседі. Фотоэффект бола ма?",
+        "given_data": "A = 2,5 эВ\nhν = 2,0 эВ",
+        "find_text": "фотоэффект бар ма - ?",
+        "solution": "Фотоэффект hν ≥ A болғанда мүмкін.\nМұнда 2,0 эВ < 2,5 эВ, фотон энергиясы жеткіліксіз.",
+        "answer": "Фотоэффект болмайды."
+      },
+      "optics-photoelectric-effect-task-4": {
+        "topic_title": "Фотоэффект",
+        "title": "Металдың қызыл шекарасы ν₀ = 5×10¹⁴ Гц. Шығу жұмысын джоульмен табыңыз.",
+        "problem_text": "Металдың қызыл шекарасы ν₀ = 5×10¹⁴ Гц. Шығу жұмысын джоульмен табыңыз.",
+        "given_data": "ν₀ = 5×10¹⁴ Гц\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "A - ?",
+        "solution": "A = hν₀ = 6,63×10⁻³⁴ · 5×10¹⁴ = 3,315×10⁻¹⁹ Дж.",
+        "answer": "3,315×10⁻¹⁹ Дж."
+      },
+      "optics-photoelectric-effect-task-5": {
+        "topic_title": "Фотоэффект",
+        "title": "Қызыл шекарадан төмен жиіліктегі жарықтың жарықтығын арттыру неге фотоэффект тудырмайды?",
+        "problem_text": "Қызыл шекарадан төмен жиіліктегі жарықтың жарықтығын арттыру неге фотоэффект тудырмайды?",
+        "given_data": "ν < ν₀\nжарықтық арттырылады",
+        "find_text": "фотоэффект болмау себебі - ?",
+        "solution": "Бір фотон энергиясы hν-ға тең.\nЕгер hν шығу жұмысынан кіші болса, бір электрон бір фотоннан жеткілікті энергия ала алмайды. Жарықтық фотон санын арттырады, бірақ әр фотон энергиясын арттырмайды.",
+        "answer": "Фотоэффект болмайды, себебі әр фотон энергиясы шығу жұмысынан аз."
+      },
+      "optics-light-dualism-task-1": {
+        "topic_title": "Жарық дуализмі",
+        "title": "Жиілігі 6×10¹⁴ Гц фотон энергиясын табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "problem_text": "Жиілігі 6×10¹⁴ Гц фотон энергиясын табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "given_data": "ν = 6×10¹⁴ Гц\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "E - ?",
+        "solution": "E = hν = 6,63×10⁻³⁴ · 6×10¹⁴ = 3,978×10⁻¹⁹ Дж.",
+        "answer": "3,98×10⁻¹⁹ Дж."
+      },
+      "optics-light-dualism-task-2": {
+        "topic_title": "Жарық дуализмі",
+        "title": "Толқын ұзындығы 500 нм фотон импульсін табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "problem_text": "Толқын ұзындығы 500 нм фотон импульсін табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "given_data": "λ = 500 нм = 5×10⁻⁷ м\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "p - ?",
+        "solution": "p = h/λ = 6,63×10⁻³⁴ / 5×10⁻⁷ = 1,326×10⁻²⁷ кг·м/с.",
+        "answer": "1,33×10⁻²⁷ кг·м/с."
+      },
+      "optics-light-dualism-task-3": {
+        "topic_title": "Жарық дуализмі",
+        "title": "Қай фотонның энергиясы үлкен: ν = 4×10¹⁴ Гц қызыл ма, әлде ν = 7,5×10¹⁴ Гц күлгін бе?",
+        "problem_text": "Қай фотонның энергиясы үлкен: ν = 4×10¹⁴ Гц қызыл ма, әлде ν = 7,5×10¹⁴ Гц күлгін бе?",
+        "given_data": "νқ = 4×10¹⁴ Гц\nνкүлгін = 7,5×10¹⁴ Гц",
+        "find_text": "энергияларды салыстыру - ?",
+        "solution": "E = hν, сондықтан энергия жиілікке пропорционал.\n7,5×10¹⁴ > 4×10¹⁴ болғандықтан, күлгін фотон энергиясы үлкен.",
+        "answer": "Күлгін фотонның энергиясы үлкен."
+      },
+      "optics-light-dualism-task-4": {
+        "topic_title": "Жарық дуализмі",
+        "title": "Фотонның толқын ұзындығы 3 есе азайды. Оның импульсі қалай өзгерді?",
+        "problem_text": "Фотонның толқын ұзындығы 3 есе азайды. Оның импульсі қалай өзгерді?",
+        "given_data": "λ₂ = λ₁/3",
+        "find_text": "p₂/p₁ - ?",
+        "solution": "p = h/λ, сондықтан импульс толқын ұзындығына кері пропорционал.\nλ 3 есе азайса, p 3 есе артады.",
+        "answer": "Импульс 3 есе артты."
+      },
+      "optics-light-dualism-task-5": {
+        "topic_title": "Жарық дуализмі",
+        "title": "Интерференция мен фотоэффект бірге жарық дуализмін неге дәлелдейді?",
+        "problem_text": "Интерференция мен фотоэффект бірге жарық дуализмін неге дәлелдейді?",
+        "given_data": "интерференция\nфотоэффект",
+        "find_text": "дуализммен байланыс - ?",
+        "solution": "Интерференция жарықтың толқындық қасиеттерімен түсіндіріледі.\nФотоэффект жарықты энергиясы hν фотондар ағыны ретінде қарастыруды қажет етеді.",
+        "answer": "Жарық толқындық та, кванттық та қасиет көрсетеді."
+      },
+      "optics-emission-spectra-task-1": {
+        "topic_title": "Сәуле шығару спектрлері",
+        "title": "Электрон 5 эВ деңгейден 2 эВ деңгейге өтті. Шығарылған фотон энергиясын табыңыз.",
+        "problem_text": "Электрон 5 эВ деңгейден 2 эВ деңгейге өтті. Шығарылған фотон энергиясын табыңыз.",
+        "given_data": "E₂ = 5 эВ\nE₁ = 2 эВ",
+        "find_text": "hν - ?",
+        "solution": "hν = E₂ - E₁ = 5 - 2 = 3 эВ.",
+        "answer": "3 эВ."
+      },
+      "optics-emission-spectra-task-2": {
+        "topic_title": "Сәуле шығару спектрлері",
+        "title": "Атом өтуінің энергиясы 4×10⁻¹⁹ Дж. Сәуле жиілігін табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "problem_text": "Атом өтуінің энергиясы 4×10⁻¹⁹ Дж. Сәуле жиілігін табыңыз. h = 6,63×10⁻³⁴ Дж·с.",
+        "given_data": "ΔE = 4×10⁻¹⁹ Дж\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "ν - ?",
+        "solution": "ν = ΔE/h = 4×10⁻¹⁹ / 6,63×10⁻³⁴ ≈ 6,03×10¹⁴ Гц.",
+        "answer": "6,03×10¹⁴ Гц."
+      },
+      "optics-emission-spectra-task-3": {
+        "topic_title": "Сәуле шығару спектрлері",
+        "title": "Фотон энергиясы 3,0×10⁻¹⁹ Дж. Толқын ұзындығын табыңыз. h = 6,63×10⁻³⁴ Дж·с, c = 3×10⁸ м/с.",
+        "problem_text": "Фотон энергиясы 3,0×10⁻¹⁹ Дж. Толқын ұзындығын табыңыз. h = 6,63×10⁻³⁴ Дж·с, c = 3×10⁸ м/с.",
+        "given_data": "ΔE = 3,0×10⁻¹⁹ Дж\nh = 6,63×10⁻³⁴ Дж·с\nc = 3×10⁸ м/с",
+        "find_text": "λ - ?",
+        "solution": "λ = hc/ΔE = 6,63×10⁻³⁴ · 3×10⁸ / 3,0×10⁻¹⁹.\nλ = 6,63×10⁻⁷ м = 663 нм.",
+        "answer": "663 нм."
+      },
+      "optics-emission-spectra-task-4": {
+        "topic_title": "Сәуле шығару спектрлері",
+        "title": "Жұлдыз атмосферасының химиялық құрамын оның спектрі арқылы неге анықтауға болады?",
+        "problem_text": "Жұлдыз атмосферасының химиялық құрамын оның спектрі арқылы неге анықтауға болады?",
+        "given_data": "элементтердің спектрлік сызықтары әртүрлі",
+        "find_text": "спектрлік талдау себебі - ?",
+        "solution": "Әр элементтің өз энергетикалық деңгейлер жиыны бар.\nОлардың арасындағы өтулер сәуле шығару немесе жұтылудың сипаттық сызықтарын береді.",
+        "answer": "Спектрлік сызықтар химиялық элементтердің «іздері» сияқты жұмыс істейді."
+      },
+      "optics-emission-spectra-task-5": {
+        "topic_title": "Сәуле шығару спектрлері",
+        "title": "Екі өтудің энергиялары 2 эВ және 4 эВ. Қай өтуде сәуле толқын ұзындығы кіші болады?",
+        "problem_text": "Екі өтудің энергиялары 2 эВ және 4 эВ. Қай өтуде сәуле толқын ұзындығы кіші болады?",
+        "given_data": "ΔE₁ = 2 эВ\nΔE₂ = 4 эВ",
+        "find_text": "кіші λ - ?",
+        "solution": "λ = hc/ΔE, сондықтан толқын ұзындығы өту энергиясына кері пропорционал.\n4 эВ үлкен энергиясына кіші толқын ұзындығы сәйкес келеді.",
+        "answer": "4 эВ өтуінде."
+      },
+      "optics-lasers-task-1": {
+        "topic_title": "Лазерлер",
+        "title": "Лазер толқын ұзындығы 632 нм жарық шығарады. Бір фотон энергиясын табыңыз. h = 6,63×10⁻³⁴ Дж·с, c = 3×10⁸ м/с.",
+        "problem_text": "Лазер толқын ұзындығы 632 нм жарық шығарады. Бір фотон энергиясын табыңыз. h = 6,63×10⁻³⁴ Дж·с, c = 3×10⁸ м/с.",
+        "given_data": "λ = 632 нм = 632×10⁻⁹ м\nh = 6,63×10⁻³⁴ Дж·с\nc = 3×10⁸ м/с",
+        "find_text": "E - ?",
+        "solution": "E = hc/λ = 6,63×10⁻³⁴ · 3×10⁸ / 632×10⁻⁹.\nE ≈ 3,15×10⁻¹⁹ Дж.",
+        "answer": "3,15×10⁻¹⁹ Дж."
+      },
+      "optics-lasers-task-2": {
+        "topic_title": "Лазерлер",
+        "title": "Лазер сәулесінің жиілігі 5×10¹⁴ Гц. Фотон энергиясын табыңыз.",
+        "problem_text": "Лазер сәулесінің жиілігі 5×10¹⁴ Гц. Фотон энергиясын табыңыз.",
+        "given_data": "ν = 5×10¹⁴ Гц\nh = 6,63×10⁻³⁴ Дж·с",
+        "find_text": "E - ?",
+        "solution": "E = hν = 6,63×10⁻³⁴ · 5×10¹⁴ = 3,315×10⁻¹⁹ Дж.",
+        "answer": "3,315×10⁻¹⁹ Дж."
+      },
+      "optics-lasers-task-3": {
+        "topic_title": "Лазерлер",
+        "title": "Лазер қуаты 2 мВт, жұмыс уақыты 10 с. Лазер қандай энергия шығарды?",
+        "problem_text": "Лазер қуаты 2 мВт, жұмыс уақыты 10 с. Лазер қандай энергия шығарды?",
+        "given_data": "P = 2 мВт = 2×10⁻³ Вт\nt = 10 с",
+        "find_text": "W - ?",
+        "solution": "W = Pt = 2×10⁻³ · 10 = 2×10⁻² Дж.",
+        "answer": "0,02 Дж."
+      },
+      "optics-lasers-task-4": {
+        "topic_title": "Лазерлер",
+        "title": "Лазер сәулесі неге үлкен қашықтықта да жіңішке болып қала алады?",
+        "problem_text": "Лазер сәулесі неге үлкен қашықтықта да жіңішке болып қала алады?",
+        "given_data": "лазер сәулесі\nаз шашырау",
+        "find_text": "жіңішке шоқ себебі - ?",
+        "solution": "Лазерде фотондар үйлесімді және негізінен бір бағытта шығарылады.\nОптикалық резонатор оське жақын бағыттарды таңдайды, сондықтан шоқтың шашырауы аз.",
+        "answer": "Резонатордағы сәуленің бағытталуы мен когеренттілігі салдарынан."
+      },
+      "optics-lasers-task-5": {
+        "topic_title": "Лазерлер",
+        "title": "Лазер жұмысы үшін инверсиялық қоныстану неге қажет?",
+        "problem_text": "Лазер жұмысы үшін инверсиялық қоныстану неге қажет?",
+        "given_data": "лазердің белсенді ортасы\nеріксіз сәуле шығару",
+        "find_text": "инверсиялық қоныстанудың рөлі - ?",
+        "solution": "Жарық күшеюі үшін еріксіз сәуле шығару актілері жұтылудан көп болуы керек.\nОл үшін жоғарғы энергетикалық деңгейде төменгі деңгейге қарағанда көбірек бөлшек болуы тиіс.",
+        "answer": "Инверсиялық қоныстану жарықты жұтудың орнына күшейтуге мүмкіндік береді."
+      }
+    }
+  }
+}

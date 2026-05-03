@@ -275,6 +275,18 @@
       },
       "electro_done": {
         "name": "Электрик"
+      },
+      "optics_done": {
+        "name": "Оптик"
+      },
+      "atomic_done": {
+        "name": "Атомщик"
+      },
+      "relativity_done": {
+        "name": "Релятивист"
+      },
+      "astronomy_done": {
+        "name": "Астроном"
       }
     }
   },

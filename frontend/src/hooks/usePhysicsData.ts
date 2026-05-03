@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import api from '../services/api';
 import {
   PHYSICS_SECTIONS,
   getAllFormulas,
@@ -167,12 +168,49 @@ type PhysicsDataResult = {
 
 export function usePhysicsData(): PhysicsDataResult {
   const { currentLanguage } = useLanguage();
+  const [remoteSections, setRemoteSections] = useState<Record<string, Section> | null>(null);
+  const [remoteTopics, setRemoteTopics] = useState<Record<string, TopicContent> | null>(null);
 
   const tr = translationsMap[currentLanguage];
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadRemoteContent = async () => {
+      try {
+        const [sectionsResponse, topicsResponse] = await Promise.all([
+          api.get('/sections'),
+          api.get('/topics'),
+        ]);
+
+        const sections = sectionsResponse.data;
+        const topics = Array.isArray(topicsResponse.data) ? topicsResponse.data : [];
+        const topicsById = topics.reduce((acc: Record<string, TopicContent>, topic: TopicContent) => {
+          if (topic?.id) acc[topic.id] = topic;
+          return acc;
+        }, {});
+
+        if (!cancelled && sections && Object.keys(sections).length > 0) {
+          setRemoteSections(sections);
+          setRemoteTopics(Object.keys(topicsById).length > 0 ? topicsById : null);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setRemoteSections(null);
+          setRemoteTopics(null);
+        }
+      }
+    };
+
+    loadRemoteContent();
+    return () => {
+      cancelled = true;
+    };
+  }, [currentLanguage]);
+
   const translatedSections = useMemo(() => {
-    return applySectionTranslations(PHYSICS_SECTIONS, tr?.sections);
-  }, [tr]);
+    return applySectionTranslations(remoteSections || PHYSICS_SECTIONS, tr?.sections);
+  }, [remoteSections, tr]);
 
   const data = useMemo(() => {
     let topicsCache: Record<string, TopicContent> | null = null;
@@ -182,7 +220,7 @@ export function usePhysicsData(): PhysicsDataResult {
 
     const getAllTopicsTranslated = (): Record<string, TopicContent> => {
       if (topicsCache) return topicsCache;
-      topicsCache = applyTopicTranslations(getAllTopicsContent(), tr?.topics);
+      topicsCache = applyTopicTranslations(remoteTopics || getAllTopicsContent(), tr?.topics);
       return topicsCache;
     };
 
@@ -205,7 +243,7 @@ export function usePhysicsData(): PhysicsDataResult {
     };
 
     const getTopicById = (id: string): TopicContent | null => {
-      const topic = getTopicByIdRaw(id);
+      const topic = remoteTopics?.[id] || getTopicByIdRaw(id);
       if (!topic) return null;
 
       const tTr = tr?.topics?.[id];
@@ -250,7 +288,11 @@ export function usePhysicsData(): PhysicsDataResult {
     };
 
     const getTopicsBySubsection = (sectionId: string, subsectionId: string): TopicContent[] => {
-      const topics = getTopicsBySubsectionRaw(sectionId, subsectionId);
+      const topics = remoteTopics
+        ? Object.values(remoteTopics).filter((topic) => (
+            topic.section === sectionId && topic.subsection === subsectionId
+          ))
+        : getTopicsBySubsectionRaw(sectionId, subsectionId);
       return topics.map((topic) => {
         const tTr = tr?.topics?.[topic.id];
         if (!tTr) {
@@ -297,7 +339,7 @@ export function usePhysicsData(): PhysicsDataResult {
     });
 
     return result;
-  }, [currentLanguage, tr, translatedSections]);
+  }, [currentLanguage, remoteTopics, tr, translatedSections]);
 
   return data;
 }
