@@ -158,29 +158,57 @@ async def get_admin_content_overview(_: dict = Depends(require_admin)):
 
             sections = await conn.fetch(
                 """
+                WITH
+                    subsection_counts AS (
+                        SELECT section_id, COUNT(*) AS count
+                        FROM lesson_subsections
+                        GROUP BY section_id
+                    ),
+                    topic_counts AS (
+                        SELECT section_id, COUNT(*) AS count
+                        FROM lesson_topics
+                        GROUP BY section_id
+                    ),
+                    test_counts AS (
+                        SELECT section_id, COUNT(*) AS count
+                        FROM practice_tests
+                        GROUP BY section_id
+                    ),
+                    task_counts AS (
+                        SELECT section_id, COUNT(*) AS count
+                        FROM practice_tasks
+                        GROUP BY section_id
+                    ),
+                    formula_counts AS (
+                        SELECT section_id, COUNT(*) AS count
+                        FROM physics_formulas
+                        GROUP BY section_id
+                    )
                 SELECT
                     s.id,
                     s.name,
                     s.icon,
                     s.color,
                     s.is_published,
-                    COUNT(DISTINCT ss.id) AS subsection_count,
-                    COUNT(DISTINCT lt.id) AS topic_count,
-                    COUNT(DISTINCT pt.id) AS test_count,
-                    COUNT(DISTINCT ptask.id) AS task_count,
-                    COUNT(DISTINCT pf.id) AS formula_count
+                    COALESCE(sc.count, 0) AS subsection_count,
+                    COALESCE(tc.count, 0) AS topic_count,
+                    COALESCE(ptc.count, 0) AS test_count,
+                    COALESCE(ptaskc.count, 0) AS task_count,
+                    COALESCE(fc.count, 0) AS formula_count
                 FROM lesson_sections s
-                LEFT JOIN lesson_subsections ss ON ss.section_id = s.id
-                LEFT JOIN lesson_topics lt ON lt.section_id = s.id
-                LEFT JOIN practice_tests pt ON pt.section_id = s.id
-                LEFT JOIN practice_tasks ptask ON ptask.section_id = s.id
-                LEFT JOIN physics_formulas pf ON pf.section_id = s.id
-                GROUP BY s.id
+                LEFT JOIN subsection_counts sc ON sc.section_id = s.id
+                LEFT JOIN topic_counts tc ON tc.section_id = s.id
+                LEFT JOIN test_counts ptc ON ptc.section_id = s.id
+                LEFT JOIN task_counts ptaskc ON ptaskc.section_id = s.id
+                LEFT JOIN formula_counts fc ON fc.section_id = s.id
                 ORDER BY s.order_index, s.id
                 """
             )
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Admin overview failed: {exc}") from exc
+        raise HTTPException(
+            status_code=500,
+            detail=f"Admin overview failed: {type(exc).__name__}: {exc!r}",
+        ) from exc
 
     return {
         "totals": _serialize_record(row),
