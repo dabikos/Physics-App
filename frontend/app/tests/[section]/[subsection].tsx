@@ -129,7 +129,7 @@ export default function TestsSectionScreen() {
   const router = useRouter();
   const { section, subsection } = useLocalSearchParams<{ section: string; subsection: string }>();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS, getTestsBySection } = usePhysicsData();
   
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
@@ -219,7 +219,7 @@ export default function TestsSectionScreen() {
     return () => {
       cancelled = true;
     };
-  }, [section, subsection]);
+  }, [section, subsection, i18n.language]);
 
   const startTest = (test: Test) => {
     setSelectedTest(test);

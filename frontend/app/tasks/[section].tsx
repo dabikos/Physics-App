@@ -25,7 +25,7 @@ export default function TasksSubsectionsScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const [remoteTasks, setRemoteTasks] = useState<PracticeTaskListItem[]>([]);
 
@@ -50,7 +50,7 @@ export default function TasksSubsectionsScreen() {
     return () => {
       cancelled = true;
     };
-  }, [section]);
+  }, [section, i18n.language]);
 
   const countsBySubsection = useMemo(() => {
     const counts: Record<string, number> = {};

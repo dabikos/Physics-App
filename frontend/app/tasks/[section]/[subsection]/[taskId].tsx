@@ -33,7 +33,7 @@ export default function PracticeTaskDetailScreen() {
   const router = useRouter();
   const { taskId } = useLocalSearchParams<{ taskId: string }>();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [task, setTask] = useState<PracticeTask | null>(null);
   const [loading, setLoading] = useState(true);
   const [showHint, setShowHint] = useState(false);
@@ -71,7 +71,7 @@ export default function PracticeTaskDetailScreen() {
     return () => {
       cancelled = true;
     };
-  }, [taskId]);
+  }, [taskId, i18n.language]);
 
   const solutionSteps = useMemo(() => {
     if (!task?.solution) return [];

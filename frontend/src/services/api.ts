@@ -1,5 +1,5 @@
 import axios from 'axios';
-import i18next from 'i18next';
+import i18n from '../config/i18n';
 
 const API_PROFILES: Record<string, string> = {
   development: 'http://10.0.2.2:8000',
@@ -19,10 +19,16 @@ const api = axios.create({
   },
 });
 
-// Add Accept-Language header from current i18next language
+const getApiLanguage = () => {
+  const language = i18n.resolvedLanguage || i18n.language || 'ru';
+  if (language.startsWith('en')) return 'en';
+  if (language.startsWith('kk') || language.startsWith('kz')) return 'kk';
+  return 'ru';
+};
+
+// Add Accept-Language header from the app i18n instance.
 api.interceptors.request.use((config) => {
-  const lang = i18next.language || 'ru';
-  config.headers['Accept-Language'] = lang;
+  config.headers['Accept-Language'] = getApiLanguage();
   return config;
 });
 

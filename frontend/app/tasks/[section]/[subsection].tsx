@@ -32,7 +32,7 @@ export default function PracticeTasksListScreen() {
   const router = useRouter();
   const { section, subsection } = useLocalSearchParams<{ section: string; subsection: string }>();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const [tasks, setTasks] = useState<PracticeTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,7 @@ export default function PracticeTasksListScreen() {
     return () => {
       cancelled = true;
     };
-  }, [section, subsection]);
+  }, [section, subsection, i18n.language]);
 
   const groupedTasks = useMemo(() => {
     const groups: Record<string, PracticeTask[]> = {};

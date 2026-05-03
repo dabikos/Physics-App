@@ -26,7 +26,7 @@ export default function TestsSubsectionsScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams<{ section: string }>();
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const [remoteTests, setRemoteTests] = useState<PracticeTestListItem[]>([]);
 
@@ -51,7 +51,7 @@ export default function TestsSubsectionsScreen() {
     return () => {
       cancelled = true;
     };
-  }, [section]);
+  }, [section, i18n.language]);
 
   const countsBySubsection = useMemo(() => {
     const counts: Record<string, { tests: number; questions: number }> = {};
