@@ -49,6 +49,51 @@ class NotificationCampaignCreate(BaseModel):
     status: Optional[str] = Field(default="draft", pattern="^(draft|scheduled)$")
 
 
+class PracticeTestUpsert(BaseModel):
+    id: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    section_id: str = Field(min_length=1, max_length=120)
+    subsection_id: str = Field(min_length=1, max_length=160)
+    topic_id: Optional[str] = Field(default=None, max_length=200)
+    title: str = Field(min_length=1, max_length=300)
+    difficulty: str = Field(default="basic", min_length=1, max_length=60)
+    questions: list[dict[str, Any]] = Field(default_factory=list)
+    translations: dict[str, Any] = Field(default_factory=dict)
+    time_limit: int = Field(default=300, ge=0)
+    order_index: int = 0
+    is_published: bool = True
+
+
+class PracticeTaskUpsert(BaseModel):
+    id: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    section_id: str = Field(min_length=1, max_length=120)
+    subsection_id: str = Field(min_length=1, max_length=160)
+    topic_id: Optional[str] = Field(default=None, max_length=200)
+    topic_title: Optional[str] = Field(default=None, max_length=300)
+    title: str = Field(min_length=1, max_length=300)
+    problem_text: str = Field(min_length=1)
+    given_data: str = ""
+    find_text: str = ""
+    solution: str = ""
+    answer: str = ""
+    difficulty: str = Field(default="medium", min_length=1, max_length=60)
+    translations: dict[str, Any] = Field(default_factory=dict)
+    order_index: int = 0
+    is_published: bool = True
+
+
+class FormulaUpsert(BaseModel):
+    id: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    section_id: str = Field(min_length=1, max_length=120)
+    name: str = Field(min_length=1, max_length=300)
+    formula: str = Field(min_length=1)
+    description: str = ""
+    variables: dict[str, Any] = Field(default_factory=dict)
+    unit: str = ""
+    translations: dict[str, Any] = Field(default_factory=dict)
+    order_index: int = 0
+    is_published: bool = True
+
+
 def require_admin(current_user: dict = Depends(get_current_user)) -> dict:
     admin_emails = {
         email.strip().lower()
@@ -71,6 +116,10 @@ def _serialize_record(record: Any) -> dict[str, Any]:
         elif isinstance(value, (datetime, date)):
             item[key] = value.isoformat()
     return item
+
+
+def _jsonb(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False)
 
 
 @router.get("/health/postgres")
@@ -298,6 +347,259 @@ async def get_admin_formulas(
         )
 
     return {"total": int(total or 0), "items": [_serialize_record(row) for row in rows]}
+
+
+@router.post("/admin/content/tests")
+async def create_admin_test(payload: PracticeTestUpsert, _: dict = Depends(require_admin)):
+    item_id = payload.id or payload.title.lower().strip().replace(" ", "-")
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO practice_tests (
+                id, section_id, subsection_id, topic_id, title, difficulty, questions,
+                translations, time_limit, order_index, is_published, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8::jsonb, $9, $10, $11, 'admin')
+            RETURNING *
+            """,
+            item_id,
+            payload.section_id,
+            payload.subsection_id,
+            payload.topic_id,
+            payload.title,
+            payload.difficulty,
+            _jsonb(payload.questions),
+            _jsonb(payload.translations),
+            payload.time_limit,
+            payload.order_index,
+            payload.is_published,
+        )
+    return {"item": _serialize_record(row)}
+
+
+@router.put("/admin/content/tests/{test_id}")
+async def update_admin_test(
+    test_id: str,
+    payload: PracticeTestUpsert,
+    _: dict = Depends(require_admin),
+):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            UPDATE practice_tests
+            SET
+                section_id = $2,
+                subsection_id = $3,
+                topic_id = $4,
+                title = $5,
+                difficulty = $6,
+                questions = $7::jsonb,
+                translations = $8::jsonb,
+                time_limit = $9,
+                order_index = $10,
+                is_published = $11,
+                source = CASE WHEN source = 'seed' THEN source ELSE 'admin' END,
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING *
+            """,
+            test_id,
+            payload.section_id,
+            payload.subsection_id,
+            payload.topic_id,
+            payload.title,
+            payload.difficulty,
+            _jsonb(payload.questions),
+            _jsonb(payload.translations),
+            payload.time_limit,
+            payload.order_index,
+            payload.is_published,
+        )
+    if row is None:
+        raise HTTPException(status_code=404, detail="Test not found")
+    return {"item": _serialize_record(row)}
+
+
+@router.delete("/admin/content/tests/{test_id}")
+async def delete_admin_test(test_id: str, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        status = await conn.execute("DELETE FROM practice_tests WHERE id = $1", test_id)
+    return {"success": status.endswith("1")}
+
+
+@router.post("/admin/content/tasks")
+async def create_admin_task(payload: PracticeTaskUpsert, _: dict = Depends(require_admin)):
+    item_id = payload.id or payload.title.lower().strip().replace(" ", "-")
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO practice_tasks (
+                id, section_id, subsection_id, topic_id, topic_title, title,
+                problem_text, given_data, find_text, solution, answer, difficulty,
+                translations, order_index, is_published, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::jsonb, $14, $15, 'admin')
+            RETURNING *
+            """,
+            item_id,
+            payload.section_id,
+            payload.subsection_id,
+            payload.topic_id,
+            payload.topic_title,
+            payload.title,
+            payload.problem_text,
+            payload.given_data,
+            payload.find_text,
+            payload.solution,
+            payload.answer,
+            payload.difficulty,
+            _jsonb(payload.translations),
+            payload.order_index,
+            payload.is_published,
+        )
+    return {"item": _serialize_record(row)}
+
+
+@router.put("/admin/content/tasks/{task_id}")
+async def update_admin_task(
+    task_id: str,
+    payload: PracticeTaskUpsert,
+    _: dict = Depends(require_admin),
+):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            UPDATE practice_tasks
+            SET
+                section_id = $2,
+                subsection_id = $3,
+                topic_id = $4,
+                topic_title = $5,
+                title = $6,
+                problem_text = $7,
+                given_data = $8,
+                find_text = $9,
+                solution = $10,
+                answer = $11,
+                difficulty = $12,
+                translations = $13::jsonb,
+                order_index = $14,
+                is_published = $15,
+                source = CASE WHEN source = 'seed' THEN source ELSE 'admin' END,
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING *
+            """,
+            task_id,
+            payload.section_id,
+            payload.subsection_id,
+            payload.topic_id,
+            payload.topic_title,
+            payload.title,
+            payload.problem_text,
+            payload.given_data,
+            payload.find_text,
+            payload.solution,
+            payload.answer,
+            payload.difficulty,
+            _jsonb(payload.translations),
+            payload.order_index,
+            payload.is_published,
+        )
+    if row is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {"item": _serialize_record(row)}
+
+
+@router.delete("/admin/content/tasks/{task_id}")
+async def delete_admin_task(task_id: str, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        status = await conn.execute("DELETE FROM practice_tasks WHERE id = $1", task_id)
+    return {"success": status.endswith("1")}
+
+
+@router.post("/admin/content/formulas")
+async def create_admin_formula(payload: FormulaUpsert, _: dict = Depends(require_admin)):
+    item_id = payload.id or payload.name.lower().strip().replace(" ", "-")
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO physics_formulas (
+                id, section_id, name, formula, description, variables, unit,
+                translations, order_index, is_published, source
+            )
+            VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8::jsonb, $9, $10, 'admin')
+            RETURNING *
+            """,
+            item_id,
+            payload.section_id,
+            payload.name,
+            payload.formula,
+            payload.description,
+            _jsonb(payload.variables),
+            payload.unit,
+            _jsonb(payload.translations),
+            payload.order_index,
+            payload.is_published,
+        )
+    return {"item": _serialize_record(row)}
+
+
+@router.put("/admin/content/formulas/{formula_id}")
+async def update_admin_formula(
+    formula_id: str,
+    payload: FormulaUpsert,
+    _: dict = Depends(require_admin),
+):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            UPDATE physics_formulas
+            SET
+                section_id = $2,
+                name = $3,
+                formula = $4,
+                description = $5,
+                variables = $6::jsonb,
+                unit = $7,
+                translations = $8::jsonb,
+                order_index = $9,
+                is_published = $10,
+                source = CASE WHEN source = 'seed' THEN source ELSE 'admin' END,
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING *
+            """,
+            formula_id,
+            payload.section_id,
+            payload.name,
+            payload.formula,
+            payload.description,
+            _jsonb(payload.variables),
+            payload.unit,
+            _jsonb(payload.translations),
+            payload.order_index,
+            payload.is_published,
+        )
+    if row is None:
+        raise HTTPException(status_code=404, detail="Formula not found")
+    return {"item": _serialize_record(row)}
+
+
+@router.delete("/admin/content/formulas/{formula_id}")
+async def delete_admin_formula(formula_id: str, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        status = await conn.execute("DELETE FROM physics_formulas WHERE id = $1", formula_id)
+    return {"success": status.endswith("1")}
 
 
 @router.put("/admin/settings/{key}")
