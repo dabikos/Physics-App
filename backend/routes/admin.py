@@ -20,7 +20,7 @@ from postgres import (
 
 router = APIRouter()
 
-JSON_COLUMNS = {"translations", "formulas", "variables", "questions"}
+JSON_COLUMNS = {"translations", "formulas", "variables", "questions", "video"}
 
 
 class AppSettingUpsert(BaseModel):
@@ -90,6 +90,39 @@ class FormulaUpsert(BaseModel):
     variables: dict[str, Any] = Field(default_factory=dict)
     unit: str = ""
     translations: dict[str, Any] = Field(default_factory=dict)
+    order_index: int = 0
+    is_published: bool = True
+
+
+class LessonSectionUpsert(BaseModel):
+    id: Optional[str] = Field(default=None, min_length=1, max_length=120)
+    name: str = Field(min_length=1, max_length=300)
+    translations: dict[str, Any] = Field(default_factory=dict)
+    icon: Optional[str] = None
+    color: Optional[str] = None
+    order_index: int = 0
+    is_published: bool = True
+
+
+class LessonSubsectionUpsert(BaseModel):
+    id: Optional[str] = Field(default=None, min_length=1, max_length=160)
+    section_id: str = Field(min_length=1, max_length=120)
+    name: str = Field(min_length=1, max_length=300)
+    translations: dict[str, Any] = Field(default_factory=dict)
+    order_index: int = 0
+    is_published: bool = True
+
+
+class LessonTopicUpsert(BaseModel):
+    id: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    section_id: str = Field(min_length=1, max_length=120)
+    subsection_id: str = Field(min_length=1, max_length=160)
+    title: str = Field(min_length=1, max_length=300)
+    brief_info: str = ""
+    example_problem: str = ""
+    formulas: list[Any] = Field(default_factory=list)
+    translations: dict[str, Any] = Field(default_factory=dict)
+    video: Optional[dict[str, Any]] = None
     order_index: int = 0
     is_published: bool = True
 
@@ -236,7 +269,9 @@ async def get_admin_lessons(_: dict = Depends(require_admin)):
         )
         topics = await conn.fetch(
             """
-            SELECT id, section_id, subsection_id, title, translations, order_index, is_published, source, updated_at
+            SELECT
+                id, section_id, subsection_id, title, brief_info, example_problem, formulas,
+                translations, video, order_index, is_published, source, updated_at
             FROM lesson_topics
             ORDER BY section_id, subsection_id, order_index, id
             """
@@ -247,6 +282,206 @@ async def get_admin_lessons(_: dict = Depends(require_admin)):
         "subsections": [_serialize_record(item) for item in subsections],
         "topics": [_serialize_record(item) for item in topics],
     }
+
+
+@router.post("/admin/content/lessons/sections")
+async def create_admin_lesson_section(payload: LessonSectionUpsert, _: dict = Depends(require_admin)):
+    item_id = payload.id or payload.name.lower().strip().replace(" ", "-")
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO lesson_sections (
+                id, name, translations, icon, color, order_index, is_published, source
+            ) VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7, 'admin')
+            RETURNING id, name, translations, icon, color, order_index, is_published, source, updated_at
+            """,
+            item_id,
+            payload.name,
+            _jsonb(payload.translations),
+            payload.icon,
+            payload.color,
+            payload.order_index,
+            payload.is_published,
+        )
+    return {"item": _serialize_record(row)}
+
+
+@router.put("/admin/content/lessons/sections/{section_id}")
+async def update_admin_lesson_section(section_id: str, payload: LessonSectionUpsert, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            UPDATE lesson_sections
+            SET name = $2,
+                translations = $3::jsonb,
+                icon = $4,
+                color = $5,
+                order_index = $6,
+                is_published = $7,
+                source = 'admin',
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING id, name, translations, icon, color, order_index, is_published, source, updated_at
+            """,
+            section_id,
+            payload.name,
+            _jsonb(payload.translations),
+            payload.icon,
+            payload.color,
+            payload.order_index,
+            payload.is_published,
+        )
+    if not row:
+        raise HTTPException(status_code=404, detail="Lesson section not found")
+    return {"item": _serialize_record(row)}
+
+
+@router.delete("/admin/content/lessons/sections/{section_id}")
+async def delete_admin_lesson_section(section_id: str, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        result = await conn.execute("DELETE FROM lesson_sections WHERE id = $1", section_id)
+    return {"deleted": result.endswith("1")}
+
+
+@router.post("/admin/content/lessons/subsections")
+async def create_admin_lesson_subsection(payload: LessonSubsectionUpsert, _: dict = Depends(require_admin)):
+    item_id = payload.id or payload.name.lower().strip().replace(" ", "-")
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO lesson_subsections (
+                id, section_id, name, translations, order_index, is_published, source
+            ) VALUES ($1, $2, $3, $4::jsonb, $5, $6, 'admin')
+            RETURNING id, section_id, name, translations, order_index, is_published, source, updated_at
+            """,
+            item_id,
+            payload.section_id,
+            payload.name,
+            _jsonb(payload.translations),
+            payload.order_index,
+            payload.is_published,
+        )
+    return {"item": _serialize_record(row)}
+
+
+@router.put("/admin/content/lessons/subsections/{subsection_id}")
+async def update_admin_lesson_subsection(subsection_id: str, payload: LessonSubsectionUpsert, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            UPDATE lesson_subsections
+            SET section_id = $2,
+                name = $3,
+                translations = $4::jsonb,
+                order_index = $5,
+                is_published = $6,
+                source = 'admin',
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING id, section_id, name, translations, order_index, is_published, source, updated_at
+            """,
+            subsection_id,
+            payload.section_id,
+            payload.name,
+            _jsonb(payload.translations),
+            payload.order_index,
+            payload.is_published,
+        )
+    if not row:
+        raise HTTPException(status_code=404, detail="Lesson subsection not found")
+    return {"item": _serialize_record(row)}
+
+
+@router.delete("/admin/content/lessons/subsections/{subsection_id}")
+async def delete_admin_lesson_subsection(subsection_id: str, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        result = await conn.execute("DELETE FROM lesson_subsections WHERE id = $1", subsection_id)
+    return {"deleted": result.endswith("1")}
+
+
+@router.post("/admin/content/lessons/topics")
+async def create_admin_lesson_topic(payload: LessonTopicUpsert, _: dict = Depends(require_admin)):
+    item_id = payload.id or payload.title.lower().strip().replace(" ", "-")
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            INSERT INTO lesson_topics (
+                id, section_id, subsection_id, title, brief_info, example_problem,
+                formulas, translations, video, order_index, is_published, source
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8::jsonb, $9::jsonb, $10, $11, 'admin')
+            RETURNING
+                id, section_id, subsection_id, title, brief_info, example_problem, formulas,
+                translations, video, order_index, is_published, source, updated_at
+            """,
+            item_id,
+            payload.section_id,
+            payload.subsection_id,
+            payload.title,
+            payload.brief_info,
+            payload.example_problem,
+            _jsonb(payload.formulas),
+            _jsonb(payload.translations),
+            _jsonb(payload.video) if payload.video is not None else None,
+            payload.order_index,
+            payload.is_published,
+        )
+    return {"item": _serialize_record(row)}
+
+
+@router.put("/admin/content/lessons/topics/{topic_id}")
+async def update_admin_lesson_topic(topic_id: str, payload: LessonTopicUpsert, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            UPDATE lesson_topics
+            SET section_id = $2,
+                subsection_id = $3,
+                title = $4,
+                brief_info = $5,
+                example_problem = $6,
+                formulas = $7::jsonb,
+                translations = $8::jsonb,
+                video = $9::jsonb,
+                order_index = $10,
+                is_published = $11,
+                source = 'admin',
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING
+                id, section_id, subsection_id, title, brief_info, example_problem, formulas,
+                translations, video, order_index, is_published, source, updated_at
+            """,
+            topic_id,
+            payload.section_id,
+            payload.subsection_id,
+            payload.title,
+            payload.brief_info,
+            payload.example_problem,
+            _jsonb(payload.formulas),
+            _jsonb(payload.translations),
+            _jsonb(payload.video) if payload.video is not None else None,
+            payload.order_index,
+            payload.is_published,
+        )
+    if not row:
+        raise HTTPException(status_code=404, detail="Lesson topic not found")
+    return {"item": _serialize_record(row)}
+
+
+@router.delete("/admin/content/lessons/topics/{topic_id}")
+async def delete_admin_lesson_topic(topic_id: str, _: dict = Depends(require_admin)):
+    pool = await get_postgres_pool()
+    async with pool.acquire() as conn:
+        result = await conn.execute("DELETE FROM lesson_topics WHERE id = $1", topic_id)
+    return {"deleted": result.endswith("1")}
 
 
 @router.get("/admin/content/tests")
