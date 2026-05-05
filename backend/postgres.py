@@ -817,6 +817,19 @@ def _topic_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
     }
 
 
+def _topic_summary_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "section": row["section_id"],
+        "subsection": row["subsection_id"],
+        "title": _localized_value(row["translations"], lang, "title", row["title"]),
+        "brief_info": _localized_value(row["translations"], lang, "brief_info", row["brief_info"]),
+        "example_problem": "",
+        "formulas": [],
+        "video": None,
+    }
+
+
 async def list_lesson_sections(lang: str | None = None) -> dict[str, Any]:
     pool = await get_postgres_pool()
     rows = await pool.fetch(
@@ -892,8 +905,24 @@ async def list_lesson_topics(
     section_id: str | None = None,
     subsection_id: str | None = None,
     lang: str | None = None,
+    summary: bool = False,
 ) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
+    if summary:
+        rows = await pool.fetch(
+            """
+            SELECT id, section_id, subsection_id, title, brief_info, translations
+            FROM lesson_topics
+            WHERE is_published = TRUE
+                AND ($1::text IS NULL OR section_id = $1)
+                AND ($2::text IS NULL OR subsection_id = $2)
+            ORDER BY section_id, subsection_id, order_index, id
+            """,
+            section_id,
+            subsection_id,
+        )
+        return [_topic_summary_row(row, lang) for row in rows]
+
     rows = await pool.fetch(
         """
         SELECT *
@@ -922,8 +951,24 @@ async def get_lesson_topic(topic_id: str, lang: str | None = None) -> Optional[d
     return _topic_row(row, lang) if row else None
 
 
-async def list_physics_formulas(section_id: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
+async def list_physics_formulas(section_id: str | None = None, lang: str | None = None, summary: bool = False) -> list[dict[str, Any]]:
     pool = await get_postgres_pool()
+    if summary:
+        rows = await pool.fetch(
+            """
+            SELECT id, section_id, name, formula, description, '{}'::jsonb AS variables, unit, translations, created_at, updated_at
+            FROM physics_formulas
+            WHERE is_published = TRUE
+                AND ($1::text IS NULL OR section_id = $1)
+            ORDER BY section_id, order_index, id
+            """,
+            section_id,
+        )
+        items = [_formula_row(row, lang) for row in rows]
+        for item in items:
+            item["variables"] = {}
+        return items
+
     rows = await pool.fetch(
         """
         SELECT *

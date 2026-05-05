@@ -452,6 +452,105 @@ export function TeacherProfileSection({
   )
 }
 
+export function TeacherProfileOverview({
+  user,
+  profileData,
+  teacherData,
+  colors,
+  t,
+  onOpenEdit,
+  onOpenClasses,
+  onOpenWebPanel,
+}: {
+  user: any
+  profileData: any
+  teacherData: any
+  colors: any
+  t: TranslateFn
+  onOpenEdit: () => void
+  onOpenClasses: () => void
+  onOpenWebPanel: () => void
+}) {
+  return (
+    <Animated.View>
+      <View style={styles.header}>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('profile.title')}</Text>
+        <TouchableOpacity onPress={onOpenEdit}>
+          <Ionicons name="create-outline" size={24} color={colors.accent} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.userCardRow}>
+        <View style={[styles.userCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+          <TouchableOpacity onPress={onOpenEdit}>
+            <LinearGradient colors={['#667EEA', '#764BA2']} style={styles.avatarCircle}>
+              <Text style={styles.avatarText}>{profileData?.user?.avatar || user?.avatar || 'рџ§‘вЂЌрџЋ“'}</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          <View style={styles.userInfo}>
+            <Text style={[styles.userName, { color: colors.text }]}>{user.name || t('profile.user')}</Text>
+            <Text style={[styles.userEmail, { color: colors.textTertiary }]}>{user.email}</Text>
+            <View style={[styles.gradeBadge, { backgroundColor: '#DBEAFE' }]}>
+              <Ionicons name="school" size={12} color="#3B82F6" />
+              <Text style={[styles.gradeBadgeText, { color: '#3B82F6' }]}>{t('teacher.role')}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.statsSection}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile.statistics')}</Text>
+        <View style={styles.statsGrid}>
+          {[
+            { icon: 'people', value: teacherData?.totalStudents || 0, label: t('teacher.totalStudents'), bg: colors.infoBg, color: colors.accentText },
+            { icon: 'layers', value: teacherData?.totalClasses || 0, label: t('teacher.totalClasses'), bg: colors.warningBg, color: colors.warning },
+            { icon: 'document-text', value: teacherData?.totalTests || 0, label: t('teacher.assignedTests'), bg: colors.successBg, color: colors.success },
+            { icon: 'stats-chart', value: teacherData?.avgScore || 0, label: t('teacher.avgScore'), bg: colors.errorBg, color: colors.error },
+          ].map((item) => (
+            <View key={`${item.icon}-${item.label}`} style={[styles.statCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
+              <View style={[styles.statIcon, { backgroundColor: item.bg }]}>
+                <Ionicons name={item.icon as any} size={24} color={item.color} />
+              </View>
+              <Text style={[styles.statValue, { color: colors.text }]}>{item.value}</Text>
+              <Text style={[styles.statLabel, { color: colors.textTertiary }]}>{item.label}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      <View style={{ paddingHorizontal: 16, marginBottom: 8 }}>
+        <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]} onPress={onOpenClasses}>
+          <View style={styles.settingLeft}>
+            <View style={[styles.settingIcon, { backgroundColor: colors.accentLight }]}>
+              <Ionicons name="analytics-outline" size={20} color={colors.accentText} />
+            </View>
+            <View>
+              <Text style={[styles.settingText, { color: colors.text }]}>{t('teacher.myClasses')}</Text>
+              <Text style={{ fontSize: 12, color: colors.textTertiary, marginTop: 2 }}>
+                Ученики, классы и результаты тестов
+              </Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]} onPress={onOpenWebPanel}>
+          <View style={styles.settingLeft}>
+            <View style={[styles.settingIcon, { backgroundColor: '#DBEAFE' }]}>
+              <Ionicons name="desktop-outline" size={20} color="#3B82F6" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.settingText, { color: colors.text }]}>{t('teacher.webPanel')}</Text>
+              <Text style={{ fontSize: 12, color: colors.textTertiary, marginTop: 2 }}>{t('teacher.webPanelDesc')}</Text>
+            </View>
+          </View>
+          <Ionicons name="open-outline" size={20} color={colors.textMuted} />
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
+  )
+}
+
 export function ProfileSettingsSection({
   colors,
   isDark,
@@ -462,6 +561,7 @@ export function ProfileSettingsSection({
   t,
   onEditProfile,
   onNotifications,
+  onSubscription,
   onAbout,
 }: {
   colors: any
@@ -473,6 +573,7 @@ export function ProfileSettingsSection({
   t: TranslateFn
   onEditProfile: () => void
   onNotifications: () => void
+  onSubscription: () => void
   onAbout: () => void
 }) {
   return (
@@ -541,6 +642,16 @@ export function ProfileSettingsSection({
             <Ionicons name="notifications" size={20} color={colors.warning} />
           </View>
           <Text style={[styles.settingText, { color: colors.textSecondary }]}>{t('profile.notifications')}</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]} onPress={onSubscription}>
+        <View style={styles.settingLeft}>
+          <View style={[styles.settingIcon, { backgroundColor: colors.accentLight }]}>
+            <Ionicons name="sparkles" size={20} color={colors.accentText} />
+          </View>
+          <Text style={[styles.settingText, { color: colors.textSecondary }]}>Physics AI Pro</Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
       </TouchableOpacity>

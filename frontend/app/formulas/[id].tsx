@@ -12,7 +12,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
-import type { Formula } from '../../src/data/physicsData';
+import type { Formula } from '../../src/types/physics';
 import { MathText } from '../../src/components/MathText';
 import { useTheme } from '../../src/context/ThemeContext';
 import api from '../../src/services/api';

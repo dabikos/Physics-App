@@ -18,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../../src/context/ThemeContext';
 import { useLanguage } from '../../../../src/context/LanguageContext';
+import api from '../../../../src/services/api';
+import type { TopicContent } from '../../../../src/types/physics';
 
 const CACHE_PREFIX = 'expanded_topic_';
 const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 дней
@@ -25,9 +27,11 @@ export default function ExpandedTopicScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { PHYSICS_SECTIONS, getTopicById } = usePhysicsData();
+  const { PHYSICS_SECTIONS, getTopicById, isLoading: physicsDataLoading } = usePhysicsData();
+  const [remoteTopic, setRemoteTopic] = useState<TopicContent | null>(null);
+  const [topicLoading, setTopicLoading] = useState(false);
   
-  const topic = id ? getTopicById(id) : null;
+  const topic = remoteTopic || (id ? getTopicById(id) : null);
   const sectionInfo = topic ? PHYSICS_SECTIONS[topic.section] : null;
   const sectionColor = sectionInfo?.color || '#6C63FF';
   const sectionName = sectionInfo?.name || 'Физика';
@@ -39,6 +43,29 @@ export default function ExpandedTopicScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTopic = async () => {
+      if (!id) return;
+      setTopicLoading(true);
+      try {
+        const response = await api.get(`/topics/${id}`);
+        if (!cancelled) setRemoteTopic(response.data || null);
+      } catch (error) {
+        console.log('Expanded topic detail load error:', error);
+        if (!cancelled) setRemoteTopic(null);
+      } finally {
+        if (!cancelled) setTopicLoading(false);
+      }
+    };
+
+    loadTopic();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   const loadContent = useCallback(async (forceRefresh = false) => {
     if (!topic) return;
@@ -108,6 +135,23 @@ export default function ExpandedTopicScreen() {
     setIsRefreshing(true);
     loadContent(true);
   };
+
+  if (!topic && (physicsDataLoading || topicLoading)) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('lessons.title')}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.accent} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!topic) {
     return (

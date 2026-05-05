@@ -13,178 +13,29 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
-import type { Formula } from '../../src/data/physicsData';
+import type { Formula } from '../../src/types/physics';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
 import api from '../../src/services/api';
 
-// Компонент для красивого отображения формулы в LaTeX
-const convertToLatex = (formula: string): string => {
-    let result = formula;
-
-    result = result
-      .replace(/\u0394([a-zA-Z0-9])/g, '\\Delta $1')
-      .replace(/\u0394/g, '\\Delta')
-      .replace(/\u03BD([a-zA-Z0-9])/g, '\\nu $1')
-      .replace(/\u03BD/g, '\\nu')
-      .replace(/\u03BB([a-zA-Z0-9])/g, '\\lambda $1')
-      .replace(/\u03BB/g, '\\lambda')
-      .replace(/\u03C0([a-zA-Z0-9])/g, '\\pi $1')
-      .replace(/\u03C0/g, '\\pi')
-      .replace(/\u03B1([a-zA-Z0-9])/g, '\\alpha $1')
-      .replace(/\u03B1/g, '\\alpha')
-      .replace(/\u03B2([a-zA-Z0-9])/g, '\\beta $1')
-      .replace(/\u03B2/g, '\\beta')
-      .replace(/\u03B3([a-zA-Z0-9])/g, '\\gamma $1')
-      .replace(/\u03B3/g, '\\gamma')
-      .replace(/\u03B8([a-zA-Z0-9])/g, '\\theta $1')
-      .replace(/\u03B8/g, '\\theta')
-      .replace(/\u03C3([a-zA-Z0-9])/g, '\\sigma $1')
-      .replace(/\u03C3/g, '\\sigma')
-      .replace(/\u2211/g, '\\sum')
-      .replace(/\u222B/g, '\\int')
-      .replace(/\u221E/g, '\\infty')
-      .replace(/\u2192/g, '\\rightarrow')
-      .replace(/\u00B2/g, '^2')
-      .replace(/\u00B3/g, '^3')
-      .replace(/\u2074/g, '^4')
-      .replace(/\u2080/g, '_0')
-      .replace(/\u2081/g, '_1')
-      .replace(/\u2082/g, '_2')
-      .replace(/\u2083/g, '_3')
-      .replace(/\u00B7/g, ' \\cdot ')
-      .replace(/\u00D7/g, ' \\times ')
-      .replace(/\u00F7/g, ' \\div ');
-
-    result = result.replace(/\u221A\(([^)]+)\)/g, (match, expr) => {
-      const inner = expr.replace(/\//g, ' \\div ');
-      return `\\sqrt{${inner}}`;
-    });
-    
-    // ВАЖНО: Сначала заменяем греческие буквы
-    // Добавляем пробелы после них, если следующая буква/цифра (чтобы LaTeX правильно разделил команду и переменную)
-    result = result
-      .replace(/Δ([a-zA-Z0-9])/g, '\\Delta $1')  // Delta перед буквой/цифрой
-      .replace(/Δ/g, '\\Delta')                   // Delta в остальных случаях
-      .replace(/ν([a-zA-Z0-9])/g, '\\nu $1')      // nu перед буквой/цифрой
-      .replace(/ν/g, '\\nu')                       // nu в остальных случаях
-      .replace(/λ([a-zA-Z0-9])/g, '\\lambda $1') // lambda перед буквой/цифрой
-      .replace(/λ/g, '\\lambda')                   // lambda в остальных случаях
-      .replace(/π([a-zA-Z0-9])/g, '\\pi $1')
-      .replace(/π/g, '\\pi')
-      .replace(/α([a-zA-Z0-9])/g, '\\alpha $1')
-      .replace(/α/g, '\\alpha')
-      .replace(/β([a-zA-Z0-9])/g, '\\beta $1')
-      .replace(/β/g, '\\beta')
-      .replace(/γ([a-zA-Z0-9])/g, '\\gamma $1')
-      .replace(/γ/g, '\\gamma')
-      .replace(/δ([a-zA-Z0-9])/g, '\\delta $1')
-      .replace(/δ/g, '\\delta')
-      .replace(/θ([a-zA-Z0-9])/g, '\\theta $1')
-      .replace(/θ/g, '\\theta')
-      .replace(/μ([a-zA-Z0-9])/g, '\\mu $1')
-      .replace(/μ/g, '\\mu')
-      .replace(/ρ([a-zA-Z0-9])/g, '\\rho $1')
-      .replace(/ρ/g, '\\rho')
-      .replace(/ω([a-zA-Z0-9])/g, '\\omega $1')
-      .replace(/ω/g, '\\omega')
-      .replace(/Ω([a-zA-Z0-9])/g, '\\Omega $1')
-      .replace(/Ω/g, '\\Omega')
-      .replace(/Σ([a-zA-Z0-9])/g, '\\Sigma $1')
-      .replace(/Σ/g, '\\Sigma')
-      .replace(/∑/g, '\\sum')
-      .replace(/∫/g, '\\int')
-      .replace(/∞/g, '\\infty')
-      .replace(/→/g, '\\rightarrow');
-    
-    // Затем обрабатываем корни с выражениями в скобках: √(x) -> \sqrt{x}
-    result = result.replace(/√\(([^)]+)\)/g, (match, expr) => {
-      // Конвертируем выражение внутри корня
-      const inner = expr.replace(/\//g, ' \\div ');
-      return `\\sqrt{${inner}}`;
-    });
-    
-    // Обрабатываем простые дроби вида x / y или x/y
-    // ВАЖНО: проверяем, что в числителе/знаменателе НЕТ обратных слешей (LaTeX команд)
-    result = result.replace(/([a-zA-Z0-9_]+)\s*\/\s*([a-zA-Z0-9_]+)/g, (match, num, den) => {
-      // Пропускаем если это часть уже обработанной конструкции
-      if (match.includes('\\sqrt') || match.includes('\\frac') || match.includes('\\cdot')) {
-        return match;
-      }
-      // Пропускаем если в числителе или знаменателе есть обратный слеш (LaTeX команда)
-      if (num.includes('\\') || den.includes('\\')) {
-        return match;
-      }
-      return `\\frac{${num}}{${den}}`;
-    });
-    
-    // Обрабатываем дроби со скобками: (x) / (y)
-    result = result.replace(/\(([^)]+)\)\s*\/\s*\(([^)]+)\)/g, (match, num, den) => {
-      if (match.includes('\\sqrt') || match.includes('\\frac')) {
-        return match;
-      }
-      // Пропускаем если есть LaTeX команды
-      if (num.includes('\\') || den.includes('\\')) {
-        return match;
-      }
-      return `\\frac{${num}}{${den}}`;
-    });
-    
-    // Степени
-    result = result
-      .replace(/²/g, '^2')
-      .replace(/³/g, '^3')
-      .replace(/⁴/g, '^4');
-    
-    // Индексы
-    result = result
-      .replace(/₀/g, '_0')
-      .replace(/₁/g, '_1')
-      .replace(/₂/g, '_2')
-      .replace(/₃/g, '_3');
-    
-    // Операторы
-    result = result
-      .replace(/·/g, ' \\cdot ')
-      .replace(/×/g, ' \\times ')
-      .replace(/÷/g, ' \\div ');
-    
-    // Обрабатываем cos, sin и другие функции
-    result = result.replace(/\bcos\b/g, '\\cos');
-    result = result.replace(/\bsin\b/g, '\\sin');
-    result = result.replace(/\blg\b/g, '\\lg');
-    
-    return result;
-};
-
-const FormulaDisplay: React.FC<{ formula: string; color?: string }> = ({
-  formula,
-  color = '#4338CA',
-}) => {
-  return (
-    <View style={{ minHeight: 40, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ color, fontSize: 18, fontWeight: '600', textAlign: 'center' }}>{formula || ''}</Text>
-    </View>
-  );
-};
 export default function FormulasScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
-  const [remoteFormulas, setRemoteFormulas] = useState<Formula[]>([]);
+  const [remoteFormulas, setRemoteFormulas] = useState<Formula[] | null>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { colors } = useTheme();
   const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
-  const formulasData = remoteFormulas.length > 0 ? remoteFormulas : FORMULAS_DATA;
+  const formulasData = remoteFormulas ?? FORMULAS_DATA;
 
   useEffect(() => {
     let cancelled = false;
 
     const loadFormulas = async () => {
       try {
-        const response = await api.get('/formulas');
+        const response = await api.get('/formulas', { params: { summary: true, section: selectedSection || undefined } });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setRemoteFormulas(items);
       } catch (error) {
@@ -197,7 +48,7 @@ export default function FormulasScreen() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [selectedSection]);
 
   const filteredFormulas = useMemo(() => formulasData.filter((formula) => {
     const matchesSearch = formula.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

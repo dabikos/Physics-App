@@ -1328,6 +1328,7 @@ async def get_section(section_id: str, accept_language: str | None = Header(defa
 async def get_topics(
     section: Optional[str] = None,
     subsection: Optional[str] = None,
+    summary: bool = False,
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     if is_postgres_configured():
@@ -1336,6 +1337,7 @@ async def get_topics(
                 section_id=section,
                 subsection_id=subsection,
                 lang=parse_accept_language(accept_language),
+                summary=summary,
             )
         except Exception as exc:
             logger.warning("Failed to load topics from PostgreSQL: %s", exc)
@@ -1354,7 +1356,35 @@ async def get_topics(
             filtered = [t for t in filtered if t["section"] == section]
         if subsection:
             filtered = [t for t in filtered if t["subsection"] == subsection]
+        if summary:
+            return [
+                {
+                    "id": t["id"],
+                    "section": t.get("section"),
+                    "subsection": t.get("subsection"),
+                    "title": t.get("title"),
+                    "brief_info": t.get("brief_info", ""),
+                    "example_problem": "",
+                    "formulas": [],
+                    "video": None,
+                }
+                for t in filtered
+            ]
         return filtered
+    if summary:
+        return [
+            {
+                "id": t["id"],
+                "section": t.get("section"),
+                "subsection": t.get("subsection"),
+                "title": t.get("title"),
+                "brief_info": t.get("brief_info", ""),
+                "example_problem": "",
+                "formulas": [],
+                "video": None,
+            }
+            for t in topics
+        ]
     return topics
 
 @api_router.get("/topics/{topic_id}")
@@ -1876,11 +1906,12 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
 @api_router.get("/formulas")
 async def get_formulas(
     section: Optional[str] = None,
+    summary: bool = False,
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     if is_postgres_configured():
         try:
-            return {"items": await list_physics_formulas(section_id=section, lang=parse_accept_language(accept_language))}
+            return {"items": await list_physics_formulas(section_id=section, lang=parse_accept_language(accept_language), summary=summary)}
         except Exception as exc:
             logger.warning("Failed to load formulas from PostgreSQL: %s", exc)
 
@@ -1893,7 +1924,11 @@ async def get_formulas(
         filtered = INITIAL_FORMULAS
         if section:
             filtered = [f for f in filtered if f["section"] == section]
+        if summary:
+            filtered = [{**f, "variables": {}} for f in filtered]
         return {"items": filtered}
+    if summary:
+        formulas = [{**f, "variables": {}} for f in formulas]
     return {"items": formulas}
 
 @api_router.get("/formulas/{formula_id}")

@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../src/context/AuthContext';
 import api from '../../../src/services/api';
 import { initializeMobileAds, showLearnMoreInterstitialAd } from '../../../src/services/adService';
+import type { TopicContent } from '../../../src/types/physics';
 
 // Компонент для отображения LaTeX формулы с красивым оформлением
 const BeautifulFormula: React.FC<{
@@ -141,9 +142,11 @@ export default function TopicScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { PHYSICS_SECTIONS, getTopicById } = usePhysicsData();
+  const { PHYSICS_SECTIONS, getTopicById, isLoading: physicsDataLoading } = usePhysicsData();
+  const [remoteTopic, setRemoteTopic] = useState<TopicContent | null>(null);
+  const [topicLoading, setTopicLoading] = useState(false);
   
-  const topic = id ? getTopicById(id) : null;
+  const topic = remoteTopic || (id ? getTopicById(id) : null);
   const sectionColor = topic ? PHYSICS_SECTIONS[topic.section]?.color || '#6C63FF' : '#6C63FF';
   
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -160,6 +163,29 @@ export default function TopicScreen() {
   useEffect(() => {
     initializeMobileAds().catch(() => {});
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTopic = async () => {
+      if (!id) return;
+      setTopicLoading(true);
+      try {
+        const response = await api.get(`/topics/${id}`);
+        if (!cancelled) setRemoteTopic(response.data || null);
+      } catch (error) {
+        console.log('Topic detail load error:', error);
+        if (!cancelled) setRemoteTopic(null);
+      } finally {
+        if (!cancelled) setTopicLoading(false);
+      }
+    };
+
+    loadTopic();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   // Sync notes when they finish loading from server
   useEffect(() => {
@@ -234,6 +260,23 @@ export default function TopicScreen() {
       setOpeningLearnMore(false);
     }
   };
+
+  if (!topic && (physicsDataLoading || topicLoading)) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('lessons.title')}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+          <ActivityIndicator color={colors.accent} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!topic) {
     return (

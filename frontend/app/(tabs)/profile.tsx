@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, Alert, Animated, RefreshControl } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Alert, Animated, RefreshControl, Linking } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../src/context/AuthContext'
 import { useTheme } from '../../src/context/ThemeContext'
@@ -15,7 +14,7 @@ import {
   LoadingProfileState,
   ProfileSettingsSection,
   StudentProfileSection,
-  TeacherProfileSection,
+  TeacherProfileOverview,
 } from '../../src/features/profile/sections'
 import { profileStyles as styles } from '../../src/features/profile/styles'
 
@@ -33,10 +32,6 @@ export default function ProfileScreen() {
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [showAllAchievements, setShowAllAchievements] = useState(false)
   const [teacherData, setTeacherData] = useState<any>(null)
-  const [selectedClass, setSelectedClass] = useState<string | null>(null)
-  const [selectedStudent, setSelectedStudent] = useState<any>(null)
-  const [studentResults, setStudentResults] = useState<any[]>([])
-  const [loadingStudentResults, setLoadingStudentResults] = useState(false)
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const isTeacher = user?.role === 'teacher'
@@ -107,20 +102,6 @@ export default function ProfileScreen() {
       console.log('Teacher data error:', error)
     }
   }, [])
-
-  const loadStudentResults = async (student: any) => {
-    setSelectedStudent(student)
-    setLoadingStudentResults(true)
-
-    try {
-      const response = await api.get(`/teacher/students/${student.id}/results`)
-      setStudentResults(Array.isArray(response.data) ? response.data : [])
-    } catch {
-      setStudentResults([])
-    } finally {
-      setLoadingStudentResults(false)
-    }
-  }
 
   useEffect(() => {
     if (user) {
@@ -200,42 +181,15 @@ export default function ProfileScreen() {
       >
         {isTeacher ? (
           <Animated.View style={{ opacity: fadeAnim }}>
-            <View style={styles.header}>
-              <Text style={[styles.headerTitle, { color: colors.text }]}>{t('profile.title')}</Text>
-              <TouchableOpacity onPress={() => setEditModalVisible(true)}>
-                <Ionicons name="create-outline" size={24} color={colors.accent} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.userCardRow}>
-              <View style={[styles.userCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-                <TouchableOpacity onPress={() => setEditModalVisible(true)}>
-                  <LinearGradient colors={['#667EEA', '#764BA2']} style={styles.avatarCircle}>
-                    <Text style={styles.avatarText}>{profileData?.user?.avatar || user?.avatar || '🧑‍🎓'}</Text>
-                  </LinearGradient>
-                </TouchableOpacity>
-                <View style={styles.userInfo}>
-                  <Text style={[styles.userName, { color: colors.text }]}>{user.name || t('profile.user')}</Text>
-                  <Text style={[styles.userEmail, { color: colors.textTertiary }]}>{user.email}</Text>
-                  <View style={[styles.gradeBadge, { backgroundColor: '#DBEAFE' }]}>
-                    <Ionicons name="school" size={12} color="#3B82F6" />
-                    <Text style={[styles.gradeBadgeText, { color: '#3B82F6' }]}>{t('teacher.role')}</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            <TeacherProfileSection
+            <TeacherProfileOverview
+              user={user}
+              profileData={profileData}
               teacherData={teacherData}
-              selectedClass={selectedClass}
-              setSelectedClass={setSelectedClass}
-              selectedStudent={selectedStudent}
-              setSelectedStudent={setSelectedStudent}
-              studentResults={studentResults}
-              loadingStudentResults={loadingStudentResults}
-              loadStudentResults={loadStudentResults}
               colors={colors}
               t={t}
+              onOpenEdit={() => setEditModalVisible(true)}
+              onOpenClasses={() => router.push('/teacher/classes' as any)}
+              onOpenWebPanel={() => Linking.openURL('https://www.physicsai.me/lesson')}
             />
           </Animated.View>
         ) : (
@@ -261,6 +215,7 @@ export default function ProfileScreen() {
           t={t}
           onEditProfile={() => setEditModalVisible(true)}
           onNotifications={() => router.push('/notifications')}
+          onSubscription={() => router.push('/subscription' as any)}
           onAbout={() => router.push('/about')}
         />
 

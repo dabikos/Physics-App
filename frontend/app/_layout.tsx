@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { LanguageProvider } from '../src/context/LanguageContext';
+import { SubscriptionProvider } from '../src/context/SubscriptionContext';
 import { usePushNotifications } from '../src/hooks/usePushNotifications';
 import '../src/config/i18n';
 
@@ -83,6 +84,8 @@ function RootLayoutNav() {
         <Stack.Screen name="games" options={{ headerShown: false }} />
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
         <Stack.Screen name="about" options={{ headerShown: false }} />
+        <Stack.Screen name="subscription" options={{ headerShown: false }} />
+        <Stack.Screen name="teacher" options={{ headerShown: false }} />
       </Stack>
     </>
   );
@@ -94,7 +97,9 @@ export default function RootLayout() {
       <ThemeProvider>
         <LanguageProvider>
           <AuthProvider>
-            <RootLayoutNav />
+            <SubscriptionProvider>
+              <RootLayoutNav />
+            </SubscriptionProvider>
           </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>

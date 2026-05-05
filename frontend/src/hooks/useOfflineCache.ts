@@ -1,22 +1,24 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { usePhysicsData } from './usePhysicsData';
-
-const OFFLINE_CACHE_KEY = 'physics_offline_cache';
-const OFFLINE_CACHED_AT_KEY = 'physics_offline_cached_at';
-
-interface OfflineCacheData {
-  sections: any;
-  topics: any;
-  formulas: any;
-}
+import {
+  getOfflineContentCache,
+  getOfflineContentCachedAt,
+  saveOfflineContentCache,
+} from '../services/offlineContentCache';
+import api from '../services/api';
 
 export function useOfflineCache() {
   const [isOnline, setIsOnline] = useState(true);
   const [isCached, setIsCached] = useState(false);
   const [cachedAt, setCachedAt] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { PHYSICS_SECTIONS, TOPICS_CONTENT, FORMULAS_DATA } = usePhysicsData();
+  const {
+    PHYSICS_SECTIONS,
+    TOPICS_CONTENT,
+    FORMULAS_DATA,
+    hasRemoteContent,
+    isLoading,
+  } = usePhysicsData();
 
   // Simple connectivity check via a lightweight fetch
   const checkOnline = useCallback(async () => {
@@ -38,7 +40,7 @@ export function useOfflineCache() {
     checkOnline();
     intervalRef.current = setInterval(checkOnline, 30000); // check every 30s
 
-    AsyncStorage.getItem(OFFLINE_CACHED_AT_KEY).then((val) => {
+    getOfflineContentCachedAt().then((val) => {
       if (val) {
         setIsCached(true);
         setCachedAt(val);
@@ -52,14 +54,27 @@ export function useOfflineCache() {
 
   const cacheForOffline = useCallback(async () => {
     try {
-      const data: OfflineCacheData = {
+      if (isLoading || !hasRemoteContent || Object.keys(TOPICS_CONTENT).length === 0) {
+        return false;
+      }
+
+      const [topicsResponse, formulasResponse] = await Promise.all([
+        api.get('/topics'),
+        api.get('/formulas'),
+      ]);
+      const remoteTopics = Array.isArray(topicsResponse.data) ? topicsResponse.data : [];
+      const remoteFormulas = Array.isArray(formulasResponse.data?.items) ? formulasResponse.data.items : [];
+      const topicsById = remoteTopics.reduce((acc, topic) => {
+        if (topic?.id) acc[topic.id] = topic;
+        return acc;
+      }, {} as typeof TOPICS_CONTENT);
+
+      const data = {
         sections: PHYSICS_SECTIONS,
-        topics: TOPICS_CONTENT,
-        formulas: FORMULAS_DATA,
+        topics: Object.keys(topicsById).length > 0 ? topicsById : TOPICS_CONTENT,
+        formulas: remoteFormulas.length > 0 ? remoteFormulas : FORMULAS_DATA,
       };
-      await AsyncStorage.setItem(OFFLINE_CACHE_KEY, JSON.stringify(data));
-      const now = new Date().toISOString();
-      await AsyncStorage.setItem(OFFLINE_CACHED_AT_KEY, now);
+      const now = await saveOfflineContentCache(data);
       setIsCached(true);
       setCachedAt(now);
       return true;
@@ -67,13 +82,11 @@ export function useOfflineCache() {
       console.log('Cache error:', e);
       return false;
     }
-  }, [PHYSICS_SECTIONS, TOPICS_CONTENT, FORMULAS_DATA]);
+  }, [FORMULAS_DATA, PHYSICS_SECTIONS, TOPICS_CONTENT, hasRemoteContent, isLoading]);
 
-  const getCachedData = useCallback(async (): Promise<OfflineCacheData | null> => {
+  const getCachedData = useCallback(async () => {
     try {
-      const cached = await AsyncStorage.getItem(OFFLINE_CACHE_KEY);
-      if (cached) return JSON.parse(cached);
-      return null;
+      return await getOfflineContentCache();
     } catch {
       return null;
     }
