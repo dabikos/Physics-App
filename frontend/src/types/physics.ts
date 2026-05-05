@@ -1,6 +1,8 @@
 export interface Topic {
   id: string;
   name: string;
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }
 
 export interface Subsection {
@@ -25,6 +27,8 @@ export interface TopicContent {
   example_problem: string;
   formulas: string[];
   video?: string | number | null;
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }
 
 export interface Formula {
@@ -35,6 +39,8 @@ export interface Formula {
   description: string;
   variables: Record<string, string>;
   unit: string;
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }
 
 export interface Task {
@@ -46,6 +52,8 @@ export interface Task {
   correct_answer: number;
   explanation: string;
   difficulty: 'easy' | 'medium' | 'hard';
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }
 
 export interface TestQuestion {
@@ -62,5 +70,8 @@ export interface Test {
   title: string;
   difficulty: TestDifficulty;
   questions: TestQuestion[];
+  question_count?: number;
   time_limit: number;
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }

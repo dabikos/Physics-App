@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, Alert, Animated, RefreshControl, Linking } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Alert, Animated, RefreshControl } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
@@ -31,7 +31,6 @@ export default function ProfileScreen() {
   const [refreshing, setRefreshing] = useState(false)
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [showAllAchievements, setShowAllAchievements] = useState(false)
-  const [teacherData, setTeacherData] = useState<any>(null)
 
   const fadeAnim = useRef(new Animated.Value(0)).current
   const isTeacher = user?.role === 'teacher'
@@ -63,63 +62,17 @@ export default function ProfileScreen() {
     }
   }, [fadeAnim, updateUser])
 
-  const fetchTeacherData = useCallback(async () => {
-    try {
-      const [classesRes, studentsRes, testsRes] = await Promise.all([
-        api.get('/teacher/classes'),
-        api.get('/teacher/students'),
-        api.get('/teacher/tests'),
-      ])
-
-      const classes = classesRes.data?.classes || []
-      const allStudents = Array.isArray(studentsRes.data) ? studentsRes.data : []
-      const tests = Array.isArray(testsRes.data) ? testsRes.data : []
-      const classStats = classes.map((classId: string) => {
-        const classStudents = allStudents.filter((student: any) => student.class_id === classId)
-        const scores = classStudents.map((student: any) => student.total_with_adjustment ?? student.total_score ?? 0)
-        const avgScore = scores.length > 0 ? Math.round(scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length) : 0
-
-        return {
-          id: classId,
-          studentCount: classStudents.length,
-          avgScore,
-        }
-      })
-
-      const allScores = allStudents.map((student: any) => student.total_with_adjustment ?? student.total_score ?? 0)
-      const avgScore = allScores.length > 0 ? Math.round(allScores.reduce((sum: number, score: number) => sum + score, 0) / allScores.length) : 0
-
-      setTeacherData({
-        classes: classStats,
-        students: allStudents,
-        tests,
-        totalStudents: allStudents.length,
-        totalClasses: classes.length,
-        totalTests: tests.length,
-        avgScore,
-      })
-    } catch (error) {
-      console.log('Teacher data error:', error)
-    }
-  }, [])
-
   useEffect(() => {
     if (user) {
       fetchProfileStats()
-      if (user.role === 'teacher') {
-        fetchTeacherData()
-      }
     } else {
       setLoading(false)
     }
-  }, [currentLanguage, fetchProfileStats, fetchTeacherData, user])
+  }, [currentLanguage, fetchProfileStats, user])
 
   const onRefresh = () => {
     setRefreshing(true)
     fetchProfileStats()
-    if (user?.role === 'teacher') {
-      fetchTeacherData()
-    }
   }
 
   const handleLogout = () => {
@@ -184,12 +137,11 @@ export default function ProfileScreen() {
             <TeacherProfileOverview
               user={user}
               profileData={profileData}
-              teacherData={teacherData}
               colors={colors}
               t={t}
               onOpenEdit={() => setEditModalVisible(true)}
               onOpenClasses={() => router.push('/teacher/classes' as any)}
-              onOpenWebPanel={() => Linking.openURL('https://www.physicsai.me/lesson')}
+              onSubscription={() => router.push('/subscription' as any)}
             />
           </Animated.View>
         ) : (
@@ -202,6 +154,7 @@ export default function ProfileScreen() {
             showAllAchievements={showAllAchievements}
             setShowAllAchievements={setShowAllAchievements}
             onOpenEdit={() => setEditModalVisible(true)}
+            onSubscription={() => router.push('/subscription' as any)}
           />
         )}
 
@@ -215,7 +168,6 @@ export default function ProfileScreen() {
           t={t}
           onEditProfile={() => setEditModalVisible(true)}
           onNotifications={() => router.push('/notifications')}
-          onSubscription={() => router.push('/subscription' as any)}
           onAbout={() => router.push('/about')}
         />
 

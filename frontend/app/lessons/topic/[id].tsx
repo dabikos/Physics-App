@@ -173,7 +173,11 @@ export default function TopicScreen() {
       try {
         const response = await api.get(`/topics/${id}`);
         if (!cancelled) setRemoteTopic(response.data || null);
-      } catch (error) {
+      } catch (error: any) {
+        if (error?.response?.status === 403 && error?.response?.data?.detail?.code === 'PRO_REQUIRED') {
+          router.replace('/subscription');
+          return;
+        }
         console.log('Topic detail load error:', error);
         if (!cancelled) setRemoteTopic(null);
       } finally {
@@ -185,7 +189,7 @@ export default function TopicScreen() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, router]);
 
   // Sync notes when they finish loading from server
   useEffect(() => {

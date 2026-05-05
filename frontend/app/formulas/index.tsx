@@ -76,11 +76,16 @@ export default function FormulasScreen() {
 
   const renderFormulaCard = ({ item: formula }: { item: Formula }) => {
     const sectionColor = PHYSICS_SECTIONS[formula.section]?.color || '#4338CA';
+    const isLocked = formula.is_locked || formula.requires_pro;
 
     return (
       <TouchableOpacity
-        style={[styles.formulaCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-        onPress={() => router.push(`/formulas/${formula.id}`)}
+        style={[
+          styles.formulaCard,
+          { backgroundColor: colors.card, borderColor: colors.border },
+          isLocked && styles.lockedCard,
+        ]}
+        onPress={() => router.push(isLocked ? '/subscription' : `/formulas/${formula.id}`)}
         activeOpacity={0.82}
       >
         <View style={styles.formulaCardHeader}>
@@ -94,23 +99,32 @@ export default function FormulasScreen() {
               </Text>
             )}
           </View>
-          <TouchableOpacity
-            onPress={() => toggleFavorite(formula.id, 'formula')}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          >
-            <Ionicons
-              name={isFavorite(formula.id, 'formula') ? 'heart' : 'heart-outline'}
-              size={20}
-              color={isFavorite(formula.id, 'formula') ? '#EF4444' : '#D1D5DB'}
-            />
-          </TouchableOpacity>
+          {isLocked ? (
+            <View style={styles.lockBadge}>
+              <Ionicons name="lock-closed" size={14} color="#FFFFFF" />
+              <Text style={styles.lockBadgeText}>Pro</Text>
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => toggleFavorite(formula.id, 'formula')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Ionicons
+                name={isFavorite(formula.id, 'formula') ? 'heart' : 'heart-outline'}
+                size={20}
+                color={isFavorite(formula.id, 'formula') ? '#EF4444' : '#D1D5DB'}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
-        <View style={[styles.formulaPreviewBox, { backgroundColor: sectionColor + '12' }]}>
-          <Text style={[styles.formulaPreviewText, { color: sectionColor }]} numberOfLines={1}>
-            {formula.formula}
-          </Text>
-        </View>
+        {!isLocked && (
+          <View style={[styles.formulaPreviewBox, { backgroundColor: sectionColor + '12' }]}>
+            <Text style={[styles.formulaPreviewText, { color: sectionColor }]} numberOfLines={1}>
+              {formula.formula}
+            </Text>
+          </View>
+        )}
       </TouchableOpacity>
     );
   };
@@ -327,6 +341,23 @@ const styles = StyleSheet.create({
     padding: 13,
     marginBottom: 9,
     borderWidth: 1,
+  },
+  lockedCard: {
+    opacity: 0.72,
+  },
+  lockBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: '#111827',
+  },
+  lockBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
   },
   formulaCardHeader: {
     flexDirection: 'row',

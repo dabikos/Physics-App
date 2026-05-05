@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Purchases, {
   CustomerInfo,
   CustomerInfoUpdateListener,
@@ -7,6 +7,7 @@ import Purchases, {
 } from 'react-native-purchases';
 import { useAuth } from './AuthContext';
 import { RevenueCatProductId } from '../config/revenueCat';
+import api from '../services/api';
 import {
   configureRevenueCat,
   findPackageByProductId,
@@ -52,18 +53,43 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
+  const lastSyncedSignatureRef = useRef<string | null>(null);
+
+  const syncSubscriptionToBackend = useCallback(
+    async (info: CustomerInfo | null) => {
+      if (!user) return;
+
+      const activeEntitlements = Object.keys(info?.entitlements?.active || {});
+      const pro = isProCustomer(info);
+      const signature = `${user.id}:${pro}:${activeEntitlements.sort().join(',')}`;
+      if (lastSyncedSignatureRef.current === signature) return;
+
+      try {
+        await api.post('/subscription/sync', {
+          is_pro: pro,
+          active_entitlements: activeEntitlements,
+          source: 'revenuecat',
+        });
+        lastSyncedSignatureRef.current = signature;
+      } catch (err) {
+        console.log('Subscription sync error:', getRevenueCatErrorMessage(err));
+      }
+    },
+    [user],
+  );
 
   const refreshCustomerInfo = useCallback(async () => {
     try {
       setError(null);
       const info = await getRevenueCatCustomerInfo();
       setCustomerInfo(info);
+      await syncSubscriptionToBackend(info);
       return info;
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
       return null;
     }
-  }, []);
+  }, [syncSubscriptionToBackend]);
 
   const refreshOfferings = useCallback(async () => {
     try {
@@ -127,6 +153,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
     const listener: CustomerInfoUpdateListener = (info) => {
       setCustomerInfo(info);
+      syncSubscriptionToBackend(info);
     };
 
     Purchases.addCustomerInfoUpdateListener(listener);
@@ -134,7 +161,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     return () => {
       Purchases.removeCustomerInfoUpdateListener(listener);
     };
-  }, [configured]);
+  }, [configured, syncSubscriptionToBackend]);
 
   useEffect(() => {
     if (authLoading || user || !configured) return;
@@ -150,6 +177,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         setError(null);
         const result = await purchaseRevenueCatPackage(packageToPurchase);
         setCustomerInfo(result.customerInfo);
+        await syncSubscriptionToBackend(result.customerInfo);
         return isProCustomer(result.customerInfo);
       } catch (err: any) {
         if (!err?.userCancelled) {
@@ -158,7 +186,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         return false;
       }
     },
-    [],
+    [syncSubscriptionToBackend],
   );
 
   const purchaseProduct = useCallback(
@@ -180,12 +208,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setError(null);
       const info = await restoreRevenueCatPurchases();
       setCustomerInfo(info);
+      await syncSubscriptionToBackend(info);
       return isProCustomer(info);
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
       return false;
     }
-  }, []);
+  }, [syncSubscriptionToBackend]);
 
   const presentPaywall = useCallback(async () => {
     try {

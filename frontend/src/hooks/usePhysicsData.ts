@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSubscription } from '../context/SubscriptionContext';
 import api from '../services/api';
 import { getOfflineContentCache } from '../services/offlineContentCache';
 import type {
@@ -67,6 +68,7 @@ const emptyTests: Test[] = [];
 
 export function usePhysicsData(): PhysicsDataResult {
   const { currentLanguage } = useLanguage();
+  const { isPro } = useSubscription();
   const language = normalizeLanguage(currentLanguage);
   const [sections, setSections] = useState<Record<string, Section>>(
     FALLBACK_SECTIONS_BY_LANG[language] || FALLBACK_SECTIONS_BY_LANG.ru
@@ -130,7 +132,7 @@ export function usePhysicsData(): PhysicsDataResult {
     return () => {
       cancelled = true;
     };
-  }, [language]);
+  }, [language, isPro]);
 
   return useMemo(() => {
     const getTopicById = (id: string): TopicContent | null => topics[id] || null;

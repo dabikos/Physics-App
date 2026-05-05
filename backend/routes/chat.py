@@ -14,6 +14,7 @@ from server import (
     _consume_chat_credit,
     _utc_day_key,
     call_ai,
+    is_user_pro,
 )
 from postgres import get_ai_prompt
 
@@ -52,7 +53,11 @@ async def chat_with_ai(
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     try:
-        allowance = await _consume_chat_credit(current_user["id"])
+        allowance = (
+            {"allowed": True, "quota": await _get_chat_quota(current_user["id"])}
+            if is_user_pro(current_user)
+            else await _consume_chat_credit(current_user["id"])
+        )
         if not allowance["allowed"]:
             raise HTTPException(
                 status_code=429,

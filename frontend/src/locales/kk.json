@@ -604,5 +604,26 @@
     "privacy": "Құпиялылық саясаты",
     "madeWith": "Оқушылар мен мұғалімдер үшін ❤️ жасалды",
     "telegram": "Telegram"
+  },
+  "subscription": {
+    "proBadge": "PRO қолжетімділік",
+    "activeBadge": "Pro белсенді",
+    "heroTitle": "Physics AI толық нұсқасын ашыңыз",
+    "heroSubtitle": "Жарнамасыз оқыңыз, барлық материалды ашыңыз және физикаға арналған кеңейтілген AI құралдарын пайдаланыңыз.",
+    "includes": "Не кіреді",
+    "benefitNoAds": "Оқу кезінде жарнама жоқ",
+    "benefitFullAccess": "Барлық сабақтар, тесттер, есептер және формулалар",
+    "benefitAiTools": "Тест құру және кеңейтілген оқу",
+    "benefitSolutions": "Түсіндірмесі бар толық есеп шешімдері",
+    "monthly": "Айлық",
+    "yearly": "Жылдық",
+    "bestValue": "ТИІМДІ",
+    "ctaButton": "Pro қосу",
+    "manageButton": "Pro басқару",
+    "restore": "Сатып алуды қалпына келтіру",
+    "loading": "Жазылым жүктелуде...",
+    "expoGoTitle": "Expo Go алдын ала қарау",
+    "expoGoText": "Сатып алу және paywall тек development build немесе Google Play жинағында жұмыс істейді.",
+    "footer": "Жазылымды Google Play баптауларында тоқтатуға болады. Pro қолжетімділігі аккаунтыңызға қосылады."
   }
 }

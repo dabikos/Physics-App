@@ -141,6 +141,7 @@ export default function SectionScreen() {
                 <View style={styles.topicsList}>
                   {topics.map((topic) => {
                     const isCompleted = completedLessons.has(topic.id);
+                    const isLocked = topic.is_locked || topic.requires_pro;
                     return (
                     <TouchableOpacity
                       key={topic.id}
@@ -148,8 +149,9 @@ export default function SectionScreen() {
                         styles.topicCard,
                         { borderLeftColor: isCompleted ? '#10B981' : sectionData.color, backgroundColor: colors.card, shadowColor: colors.shadowColor },
                         isCompleted && { opacity: 0.65 },
+                        isLocked && { opacity: 0.72 },
                       ]}
-                      onPress={() => router.push(`/lessons/topic/${topic.id}`)}
+                      onPress={() => router.push(isLocked ? '/subscription' : `/lessons/topic/${topic.id}`)}
                       activeOpacity={0.8}
                     >
                       <View style={styles.topicContent}>
@@ -158,7 +160,12 @@ export default function SectionScreen() {
                           {topic.brief_info}
                         </Text>
                       </View>
-                      {isCompleted ? (
+                      {isLocked ? (
+                        <View style={styles.lockBadge}>
+                          <Ionicons name="lock-closed" size={16} color="#FFFFFF" />
+                          <Text style={styles.lockBadgeText}>Pro</Text>
+                        </View>
+                      ) : isCompleted ? (
                         <Text style={styles.completedMedal}>🏅</Text>
                       ) : (
                       <TouchableOpacity
@@ -320,6 +327,21 @@ const styles = StyleSheet.create({
   favButton: {
     padding: 4,
     marginLeft: 8,
+  },
+  lockBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 999,
+    backgroundColor: '#111827',
+    marginLeft: 8,
+  },
+  lockBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
   },
   completedMedal: {
     fontSize: 22,

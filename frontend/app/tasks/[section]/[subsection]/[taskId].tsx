@@ -59,7 +59,11 @@ export default function PracticeTaskDetailScreen() {
         const response = await api.get(`/practice/tasks/${taskId}`);
         const item = response.data?.item || null;
         if (!cancelled) setTask(item);
-      } catch (error) {
+      } catch (error: any) {
+        if (error?.response?.status === 403 && error?.response?.data?.detail?.code === 'PRO_REQUIRED') {
+          router.replace('/subscription');
+          return;
+        }
         console.log('Practice task detail load error:', error);
         if (!cancelled) setTask(null);
       } finally {
@@ -71,7 +75,7 @@ export default function PracticeTaskDetailScreen() {
     return () => {
       cancelled = true;
     };
-  }, [taskId, i18n.language]);
+  }, [taskId, i18n.language, router]);
 
   const solutionSteps = useMemo(() => {
     if (!task?.solution) return [];

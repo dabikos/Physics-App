@@ -25,6 +25,8 @@ type PracticeTask = {
   title: string;
   problem_text: string;
   difficulty: 'easy' | 'medium' | 'hard' | string;
+  is_locked?: boolean;
+  requires_pro?: boolean;
 };
 
 export default function PracticeTasksListScreen() {
@@ -119,8 +121,12 @@ export default function PracticeTasksListScreen() {
               {topicTasks.map((task, index) => (
                 <TouchableOpacity
                   key={task.id}
-                  style={[styles.taskCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-                  onPress={() => router.push(`/tasks/${section}/${subsection}/${task.id}`)}
+                  style={[
+                    styles.taskCard,
+                    { backgroundColor: colors.card, shadowColor: colors.shadowColor },
+                    (task.is_locked || task.requires_pro) && styles.lockedCard,
+                  ]}
+                  onPress={() => router.push(task.is_locked || task.requires_pro ? '/subscription' : `/tasks/${section}/${subsection}/${task.id}`)}
                   activeOpacity={0.78}
                 >
                   <View style={[styles.taskNumber, { backgroundColor: sectionData.color + '18' }]}>
@@ -134,7 +140,11 @@ export default function PracticeTasksListScreen() {
                       {task.problem_text}
                     </Text>
                   </View>
-                  <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+                  <Ionicons
+                    name={task.is_locked || task.requires_pro ? 'lock-closed' : 'chevron-forward'}
+                    size={20}
+                    color={task.is_locked || task.requires_pro ? '#111827' : colors.textMuted}
+                  />
                 </TouchableOpacity>
               ))}
             </View>
@@ -241,6 +251,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 2,
+  },
+  lockedCard: {
+    opacity: 0.72,
   },
   taskNumber: {
     width: 42,

@@ -10,7 +10,7 @@ import logging
 import asyncio
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr
-from typing import List, Optional, Dict, Any, Literal
+from typing import Callable, List, Optional, Dict, Any, Literal
 import uuid
 import hashlib
 import random
@@ -115,6 +115,7 @@ app = FastAPI(title="Physics AI App")
 api_router = APIRouter(prefix="/api")
 
 security = HTTPBearer()
+optional_security = HTTPBearer(auto_error=False)
 
 # Configure logging
 logging.basicConfig(
@@ -301,6 +302,11 @@ class ProfileUpdate(BaseModel):
     avatar: Optional[str] = None  # emoji or identifier
     grade: Optional[str] = None  # class/grade
 
+class SubscriptionSyncRequest(BaseModel):
+    is_pro: bool = False
+    active_entitlements: List[str] = []
+    source: Optional[str] = "revenuecat"
+
 class DemoTestSubmit(BaseModel):
     answers: List[int]
 
@@ -466,6 +472,109 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise HTTPException(status_code=401, detail="Token expired")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+async def get_optional_current_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(optional_security),
+):
+    if not credentials:
+        return None
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("sub")
+        if not user_id:
+            return None
+        return await db.users.find_one({"id": user_id})
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None
+
+
+FREE_TOPICS_PER_SUBSECTION = 2
+FREE_TESTS_PER_SUBSECTION = 2
+FREE_TASKS_PER_SUBSECTION = 2
+FREE_FORMULAS_PER_SECTION = 5
+
+
+def is_user_pro(user: Optional[dict]) -> bool:
+    subscription = user.get("subscription", {}) if user else {}
+    return bool(user and (user.get("is_pro") or subscription.get("is_pro")))
+
+
+def pro_required_detail(resource: str) -> dict:
+    return {
+        "code": "PRO_REQUIRED",
+        "resource": resource,
+        "message": "Physics AI Pro is required to open this content.",
+    }
+
+
+def apply_group_access_locks(
+    items: list[dict],
+    group_key: str,
+    free_limit: int,
+    pro: bool,
+    *,
+    strip_locked: Optional[Callable[[dict], dict]] = None,
+) -> list[dict]:
+    counts: dict[str, int] = {}
+    result: list[dict] = []
+    for item in items:
+        group = str(item.get(group_key) or item.get(group_key.replace("_id", "")) or "default")
+        index = counts.get(group, 0)
+        counts[group] = index + 1
+        locked = not pro and index >= free_limit
+        next_item = dict(item)
+        next_item["is_locked"] = locked
+        next_item["requires_pro"] = locked
+        if locked and strip_locked:
+            next_item = strip_locked(next_item)
+        result.append(next_item)
+    return result
+
+
+def apply_sections_access_locks(sections: dict, pro: bool) -> dict:
+    result = {}
+    for section_id, section_data in sections.items():
+        next_section = dict(section_data)
+        next_subsections = []
+        for subsection in section_data.get("subsections", []):
+            next_subsection = dict(subsection)
+            topics = []
+            for index, topic in enumerate(subsection.get("topics", [])):
+                locked = not pro and index >= FREE_TOPICS_PER_SUBSECTION
+                topics.append({**topic, "is_locked": locked, "requires_pro": locked})
+            next_subsection["topics"] = topics
+            next_subsections.append(next_subsection)
+        next_section["subsections"] = next_subsections
+        result[section_id] = next_section
+    return result
+
+
+def is_item_locked(items: list[dict], item_id: str, group_key: str, free_limit: int, pro: bool) -> bool:
+    if pro:
+        return False
+    grouped_items = apply_group_access_locks(items, group_key, free_limit, pro)
+    for item in grouped_items:
+        if item.get("id") == item_id:
+            return bool(item.get("is_locked"))
+    return False
+
+
+def strip_locked_test(item: dict) -> dict:
+    item["question_count"] = len(item.get("questions") or [])
+    item["questions"] = []
+    return item
+
+
+def strip_locked_task(item: dict) -> dict:
+    item["solution"] = ""
+    item["answer"] = ""
+    return item
+
+
+def strip_locked_formula(item: dict) -> dict:
+    item["formula"] = ""
+    item["variables"] = {}
+    return item
 
 
 async def resolve_topic_section(topic_id: str) -> str | None:
@@ -1300,27 +1409,35 @@ INITIAL_TESTS = [
 # ==================== Sections Routes ====================
 
 @api_router.get("/sections")
-async def get_sections(accept_language: str | None = Header(default=None, alias="Accept-Language")):
+async def get_sections(
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
+):
     if is_postgres_configured():
         try:
-            return await list_lesson_sections(lang=parse_accept_language(accept_language))
+            sections = await list_lesson_sections(lang=parse_accept_language(accept_language))
+            return apply_sections_access_locks(sections, is_user_pro(current_user))
         except Exception as exc:
             logger.warning("Failed to load sections from PostgreSQL: %s", exc)
-    return PHYSICS_SECTIONS
+    return apply_sections_access_locks(PHYSICS_SECTIONS, is_user_pro(current_user))
 
 @api_router.get("/sections/{section_id}")
-async def get_section(section_id: str, accept_language: str | None = Header(default=None, alias="Accept-Language")):
+async def get_section(
+    section_id: str,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
+):
     if is_postgres_configured():
         try:
             sections = await list_lesson_sections(lang=parse_accept_language(accept_language))
             if section_id in sections:
-                return sections[section_id]
+                return apply_sections_access_locks({section_id: sections[section_id]}, is_user_pro(current_user))[section_id]
         except Exception as exc:
             logger.warning("Failed to load section '%s' from PostgreSQL: %s", section_id, exc)
 
     if section_id not in PHYSICS_SECTIONS:
         raise HTTPException(status_code=404, detail="Раздел не найден")
-    return PHYSICS_SECTIONS[section_id]
+    return apply_sections_access_locks({section_id: PHYSICS_SECTIONS[section_id]}, is_user_pro(current_user))[section_id]
 
 # ==================== Topics/Lessons Routes ====================
 
@@ -1330,14 +1447,21 @@ async def get_topics(
     subsection: Optional[str] = None,
     summary: bool = False,
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
 ):
     if is_postgres_configured():
         try:
-            return await list_lesson_topics(
+            topics = await list_lesson_topics(
                 section_id=section,
                 subsection_id=subsection,
                 lang=parse_accept_language(accept_language),
                 summary=summary,
+            )
+            return apply_group_access_locks(
+                topics,
+                "subsection",
+                FREE_TOPICS_PER_SUBSECTION,
+                is_user_pro(current_user),
             )
         except Exception as exc:
             logger.warning("Failed to load topics from PostgreSQL: %s", exc)
@@ -1385,15 +1509,41 @@ async def get_topics(
             }
             for t in topics
         ]
-    return topics
+    return apply_group_access_locks(
+        topics,
+        "subsection",
+        FREE_TOPICS_PER_SUBSECTION,
+        is_user_pro(current_user),
+    )
 
 @api_router.get("/topics/{topic_id}")
-async def get_topic(topic_id: str, accept_language: str | None = Header(default=None, alias="Accept-Language")):
+async def get_topic(
+    topic_id: str,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
+):
+    lang = parse_accept_language(accept_language)
     if is_postgres_configured():
         try:
-            item = await get_lesson_topic(topic_id, lang=parse_accept_language(accept_language))
+            item = await get_lesson_topic(topic_id, lang=lang)
             if item:
+                sibling_items = await list_lesson_topics(
+                    section_id=item.get("section"),
+                    subsection_id=item.get("subsection"),
+                    lang=lang,
+                    summary=True,
+                )
+                if is_item_locked(
+                    sibling_items,
+                    topic_id,
+                    "subsection",
+                    FREE_TOPICS_PER_SUBSECTION,
+                    is_user_pro(current_user),
+                ):
+                    raise HTTPException(status_code=403, detail=pro_required_detail("topic"))
                 return item
+        except HTTPException:
+            raise
         except Exception as exc:
             logger.warning("Failed to load topic '%s' from PostgreSQL: %s", topic_id, exc)
 
@@ -1413,6 +1563,9 @@ async def generate_topic_content(
     current_user: dict = Depends(get_current_user),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
+    if not is_user_pro(current_user):
+        raise HTTPException(status_code=403, detail=pro_required_detail("ai_generation"))
+
     topic = await db.topics.find_one({"id": topic_id})
     if not topic:
         for t in INITIAL_TOPICS:
@@ -1564,6 +1717,9 @@ async def submit_task_answer(task_id: str, answer: Dict[str, int], current_user:
 @api_router.post("/tasks/generate")
 async def generate_task(request: GenerateTaskRequest, current_user: dict = Depends(get_current_user)):
     """Generate a new task using AI"""
+    if not is_user_pro(current_user):
+        raise HTTPException(status_code=403, detail=pro_required_detail("ai_generation"))
+
     section_names = {
         "mechanics": "Механика",
         "thermodynamics": "Термодинамика", 
@@ -1660,6 +1816,9 @@ async def generate_test(
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     """Generate a new test using AI"""
+    if not is_user_pro(current_user):
+        raise HTTPException(status_code=403, detail=pro_required_detail("ai_generation"))
+
     section_names = {
         "mechanics": "Механика",
         "thermodynamics": "Термодинамика",
@@ -1803,6 +1962,21 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
     if not test and is_postgres_configured():
         try:
             test = await get_practice_test(test_id)
+            if test:
+                sibling_items = await list_practice_tests(
+                    section_id=test.get("section_id") or test.get("section"),
+                    subsection_id=test.get("subsection_id"),
+                )
+                if is_item_locked(
+                    sibling_items,
+                    test_id,
+                    "subsection_id",
+                    FREE_TESTS_PER_SUBSECTION,
+                    is_user_pro(current_user),
+                ):
+                    raise HTTPException(status_code=403, detail=pro_required_detail("practice_test"))
+        except HTTPException:
+            raise
         except Exception as exc:
             logger.warning("Failed to load practice test '%s' from PostgreSQL: %s", test_id, exc)
 
@@ -1908,10 +2082,24 @@ async def get_formulas(
     section: Optional[str] = None,
     summary: bool = False,
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
 ):
     if is_postgres_configured():
         try:
-            return {"items": await list_physics_formulas(section_id=section, lang=parse_accept_language(accept_language), summary=summary)}
+            items = await list_physics_formulas(
+                section_id=section,
+                lang=parse_accept_language(accept_language),
+                summary=summary,
+            )
+            return {
+                "items": apply_group_access_locks(
+                    items,
+                    "section",
+                    FREE_FORMULAS_PER_SECTION,
+                    is_user_pro(current_user),
+                    strip_locked=strip_locked_formula,
+                )
+            }
         except Exception as exc:
             logger.warning("Failed to load formulas from PostgreSQL: %s", exc)
 
@@ -1926,18 +2114,50 @@ async def get_formulas(
             filtered = [f for f in filtered if f["section"] == section]
         if summary:
             filtered = [{**f, "variables": {}} for f in filtered]
-        return {"items": filtered}
+        return {
+            "items": apply_group_access_locks(
+                filtered,
+                "section",
+                FREE_FORMULAS_PER_SECTION,
+                is_user_pro(current_user),
+                strip_locked=strip_locked_formula,
+            )
+        }
     if summary:
         formulas = [{**f, "variables": {}} for f in formulas]
-    return {"items": formulas}
+    return {
+        "items": apply_group_access_locks(
+            formulas,
+            "section",
+            FREE_FORMULAS_PER_SECTION,
+            is_user_pro(current_user),
+            strip_locked=strip_locked_formula,
+        )
+    }
 
 @api_router.get("/formulas/{formula_id}")
-async def get_formula(formula_id: str, accept_language: str | None = Header(default=None, alias="Accept-Language")):
+async def get_formula(
+    formula_id: str,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: Optional[dict] = Depends(get_optional_current_user),
+):
+    lang = parse_accept_language(accept_language)
     if is_postgres_configured():
         try:
-            item = await get_physics_formula(formula_id, lang=parse_accept_language(accept_language))
+            item = await get_physics_formula(formula_id, lang=lang)
             if item:
+                sibling_items = await list_physics_formulas(section_id=item.get("section"), lang=lang, summary=True)
+                if is_item_locked(
+                    sibling_items,
+                    formula_id,
+                    "section",
+                    FREE_FORMULAS_PER_SECTION,
+                    is_user_pro(current_user),
+                ):
+                    raise HTTPException(status_code=403, detail=pro_required_detail("formula"))
                 return {"item": item}
+        except HTTPException:
+            raise
         except Exception as exc:
             logger.warning("Failed to load formula '%s' from PostgreSQL: %s", formula_id, exc)
 
@@ -2726,6 +2946,25 @@ async def update_profile(payload: ProfileUpdate, current_user: dict = Depends(ge
             "role": updated_user.get("role"),
         }
     }
+
+
+@api_router.post("/subscription/sync")
+async def sync_subscription(
+    payload: SubscriptionSyncRequest,
+    current_user: dict = Depends(get_current_user),
+):
+    entitlements = [str(item) for item in payload.active_entitlements[:20]]
+    subscription = {
+        "is_pro": bool(payload.is_pro),
+        "active_entitlements": entitlements,
+        "source": payload.source or "revenuecat",
+        "updated_at": datetime.utcnow(),
+    }
+    await db.users.update_one(
+        {"id": current_user["id"]},
+        {"$set": {"subscription": subscription, "is_pro": bool(payload.is_pro)}},
+    )
+    return {"success": True, "is_pro": bool(payload.is_pro), "active_entitlements": entitlements}
 
 
 # ==================== Favorites ====================

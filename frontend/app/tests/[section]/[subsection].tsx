@@ -200,8 +200,11 @@ export default function TestsSectionScreen() {
           title: item.title || 'Тест',
           difficulty: (item.difficulty || 'basic') as TestDifficulty,
           questions: Array.isArray(item.questions) ? item.questions : [],
+          question_count: item.question_count,
           time_limit: item.time_limit || 300,
-        })).filter((item: Test) => item.questions.length > 0);
+          is_locked: item.is_locked,
+          requires_pro: item.requires_pro,
+        })).filter((item: Test) => item.questions.length > 0 || item.is_locked || item.requires_pro);
 
         if (!cancelled) {
           setRemoteTests(mapped);
@@ -222,6 +225,11 @@ export default function TestsSectionScreen() {
   }, [section, subsection, i18n.language]);
 
   const startTest = (test: Test) => {
+    if (test.is_locked || test.requires_pro) {
+      router.push('/subscription');
+      return;
+    }
+
     setSelectedTest(test);
     setCurrentQuestionIndex(0);
     setAnswers(new Array(test.questions.length).fill(-1));
@@ -656,11 +664,17 @@ export default function TestsSectionScreen() {
 
   function renderTestCard(test: Test) {
     const difficultyInfo = getDifficultyInfo(test.difficulty, t);
+    const isLocked = test.is_locked || test.requires_pro;
+    const questionCount = test.question_count ?? test.questions.length;
     
     return (
       <TouchableOpacity
         key={test.id}
-        style={[styles.testCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor, borderLeftColor: difficultyInfo.color }]}
+        style={[
+          styles.testCard,
+          { backgroundColor: colors.card, shadowColor: colors.shadowColor, borderLeftColor: difficultyInfo.color },
+          isLocked && styles.lockedCard,
+        ]}
         onPress={() => startTest(test)}
         activeOpacity={0.8}
       >
@@ -675,7 +689,7 @@ export default function TestsSectionScreen() {
               </View>
               <View style={styles.testMetaItem}>
                 <Ionicons name="help-circle-outline" size={14} color={colors.textTertiary} />
-                <Text style={[styles.testMetaText, { color: colors.textTertiary }]}>{test.questions.length} {t('tests.questions')}</Text>
+                <Text style={[styles.testMetaText, { color: colors.textTertiary }]}>{questionCount} {t('tests.questions')}</Text>
               </View>
               <View style={styles.testMetaItem}>
                 <Ionicons name="time-outline" size={14} color={colors.textTertiary} />
@@ -683,8 +697,8 @@ export default function TestsSectionScreen() {
               </View>
             </View>
           </View>
-          <View style={[styles.startButton, { backgroundColor: difficultyInfo.color }]}>
-            <Ionicons name="play" size={18} color="#FFFFFF" />
+          <View style={[styles.startButton, { backgroundColor: isLocked ? '#111827' : difficultyInfo.color }]}>
+            <Ionicons name={isLocked ? 'lock-closed' : 'play'} size={18} color="#FFFFFF" />
           </View>
         </View>
       </TouchableOpacity>
@@ -815,6 +829,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+  },
+  lockedCard: {
+    opacity: 0.72,
   },
   testContent: {
     flexDirection: 'row',

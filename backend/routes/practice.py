@@ -6,7 +6,21 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel
 
-from server import db, get_current_user, parse_accept_language, record_daily_activity
+from server import (
+    FREE_TASKS_PER_SUBSECTION,
+    FREE_TESTS_PER_SUBSECTION,
+    apply_group_access_locks,
+    db,
+    get_current_user,
+    get_optional_current_user,
+    is_item_locked,
+    is_user_pro,
+    parse_accept_language,
+    pro_required_detail,
+    record_daily_activity,
+    strip_locked_task,
+    strip_locked_test,
+)
 
 from postgres import (
     get_practice_task,
@@ -80,6 +94,7 @@ async def get_practice_tests(
     subsection: str | None = Query(default=None),
     topic: str | None = Query(default=None),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: dict | None = Depends(get_optional_current_user),
 ):
     ensure_postgres_configured()
     try:
@@ -89,7 +104,15 @@ async def get_practice_tests(
             topic_id=topic,
             lang=parse_accept_language(accept_language),
         )
-        return {"items": items}
+        return {
+            "items": apply_group_access_locks(
+                items,
+                "subsection_id",
+                FREE_TESTS_PER_SUBSECTION,
+                is_user_pro(current_user),
+                strip_locked=strip_locked_test,
+            )
+        }
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Practice tests unavailable: {exc}") from exc
 
@@ -159,6 +182,7 @@ async def create_random_practice_test(
 async def get_practice_test_by_id(
     test_id: str,
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: dict | None = Depends(get_optional_current_user),
 ):
     ensure_postgres_configured()
     try:
@@ -168,6 +192,19 @@ async def get_practice_test_by_id(
 
     if not item:
         raise HTTPException(status_code=404, detail="Practice test not found")
+    sibling_items = await list_practice_tests(
+        section_id=item.get("section_id") or item.get("section"),
+        subsection_id=item.get("subsection_id"),
+        lang=parse_accept_language(accept_language),
+    )
+    if is_item_locked(
+        sibling_items,
+        test_id,
+        "subsection_id",
+        FREE_TESTS_PER_SUBSECTION,
+        is_user_pro(current_user),
+    ):
+        raise HTTPException(status_code=403, detail=pro_required_detail("practice_test"))
     return {"item": item}
 
 
@@ -177,6 +214,7 @@ async def get_practice_tasks(
     subsection: str | None = Query(default=None),
     topic: str | None = Query(default=None),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: dict | None = Depends(get_optional_current_user),
 ):
     ensure_postgres_configured()
     try:
@@ -186,7 +224,15 @@ async def get_practice_tasks(
             topic_id=topic,
             lang=parse_accept_language(accept_language),
         )
-        return {"items": items}
+        return {
+            "items": apply_group_access_locks(
+                items,
+                "subsection_id",
+                FREE_TASKS_PER_SUBSECTION,
+                is_user_pro(current_user),
+                strip_locked=strip_locked_task,
+            )
+        }
     except Exception as exc:
         raise HTTPException(status_code=503, detail=f"Practice tasks unavailable: {exc}") from exc
 
@@ -195,6 +241,7 @@ async def get_practice_tasks(
 async def get_practice_task_by_id(
     task_id: str,
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    current_user: dict | None = Depends(get_optional_current_user),
 ):
     ensure_postgres_configured()
     try:
@@ -204,6 +251,19 @@ async def get_practice_task_by_id(
 
     if not item:
         raise HTTPException(status_code=404, detail="Practice task not found")
+    sibling_items = await list_practice_tasks(
+        section_id=item.get("section_id") or item.get("section"),
+        subsection_id=item.get("subsection_id"),
+        lang=parse_accept_language(accept_language),
+    )
+    if is_item_locked(
+        sibling_items,
+        task_id,
+        "subsection_id",
+        FREE_TASKS_PER_SUBSECTION,
+        is_user_pro(current_user),
+    ):
+        raise HTTPException(status_code=403, detail=pro_required_detail("practice_task"))
     return {"item": item}
 
 
@@ -221,6 +281,12 @@ async def submit_practice_task(
 
     if not item:
         raise HTTPException(status_code=404, detail="Practice task not found")
+    sibling_items = await list_practice_tasks(
+        section_id=item.get("section_id") or item.get("section"),
+        subsection_id=item.get("subsection_id"),
+    )
+    if is_item_locked(sibling_items, task_id, "subsection_id", FREE_TASKS_PER_SUBSECTION, is_user_pro(current_user)):
+        raise HTTPException(status_code=403, detail=pro_required_detail("practice_task"))
 
     correct = is_answer_correct(payload.answer, item.get("answer", ""))
     if correct:

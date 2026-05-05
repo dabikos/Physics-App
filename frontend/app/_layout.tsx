@@ -85,7 +85,7 @@ function RootLayoutNav() {
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
         <Stack.Screen name="about" options={{ headerShown: false }} />
         <Stack.Screen name="subscription" options={{ headerShown: false }} />
-        <Stack.Screen name="teacher" options={{ headerShown: false }} />
+        <Stack.Screen name="teacher/classes" options={{ headerShown: false }} />
       </Stack>
     </>
   );

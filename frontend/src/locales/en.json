@@ -604,5 +604,26 @@
     "privacy": "Privacy Policy",
     "madeWith": "Made with ❤️ for students and teachers",
     "telegram": "Telegram"
+  },
+  "subscription": {
+    "proBadge": "PRO access",
+    "activeBadge": "Pro active",
+    "heroTitle": "Unlock full Physics AI",
+    "heroSubtitle": "Learn without ads, unlock all content, and use advanced AI tools for physics.",
+    "includes": "Included",
+    "benefitNoAds": "No ads while studying",
+    "benefitFullAccess": "All lessons, tests, problems and formulas",
+    "benefitAiTools": "Test generation and extended learning",
+    "benefitSolutions": "Full problem solutions with explanations",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "bestValue": "BEST VALUE",
+    "ctaButton": "Start Pro",
+    "manageButton": "Manage Pro",
+    "restore": "Restore purchase",
+    "loading": "Loading subscription...",
+    "expoGoTitle": "Expo Go preview",
+    "expoGoText": "Purchases and the paywall work only in a development build or Google Play build.",
+    "footer": "You can cancel the subscription in Google Play settings. Pro access is applied to your account."
   }
 }

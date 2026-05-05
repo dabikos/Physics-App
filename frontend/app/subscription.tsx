@@ -1,61 +1,73 @@
 import React from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../src/context/ThemeContext';
 import { useSubscription } from '../src/context/SubscriptionContext';
 
 export default function SubscriptionScreen() {
   const router = useRouter();
   const { colors } = useTheme();
+  const { t } = useTranslation();
+  const isExpoGo = Constants.appOwnership === 'expo';
   const {
     loading,
     error,
     isPro,
     packages,
-    purchaseProduct,
     restorePurchases,
     presentPaywall,
-    presentCustomerCenter,
-    refreshCustomerInfo,
-    refreshOfferings,
   } = useSubscription();
 
-  const reload = async () => {
-    await Promise.all([refreshCustomerInfo(), refreshOfferings()]);
-  };
+  const benefits = [
+    { icon: 'ban', text: t('subscription.benefitNoAds') },
+    { icon: 'library', text: t('subscription.benefitFullAccess') },
+    { icon: 'sparkles', text: t('subscription.benefitAiTools') },
+    { icon: 'bulb', text: t('subscription.benefitSolutions') },
+  ];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={26} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]}>Physics AI Pro</Text>
-        <TouchableOpacity style={styles.backButton} onPress={reload}>
-          <Ionicons name="refresh" size={22} color={colors.text} />
-        </TouchableOpacity>
+        <View style={styles.backButton} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <LinearGradient colors={['#111827', '#4338CA', '#06B6D4']} style={styles.hero}>
+        <LinearGradient colors={['#10172F', '#312E81', '#0891B2']} style={styles.hero}>
+          <View style={styles.heroGlow} />
           <View style={styles.proBadge}>
             <Ionicons name="sparkles" size={18} color="#FDE68A" />
-            <Text style={styles.proBadgeText}>{isPro ? 'Active Pro' : 'Upgrade available'}</Text>
+            <Text style={styles.proBadgeText}>
+              {isPro ? t('subscription.activeBadge') : t('subscription.proBadge')}
+            </Text>
           </View>
-          <Text style={styles.heroTitle}>Unlock full Physics AI</Text>
-          <Text style={styles.heroText}>
-            Premium removes ads, unlocks full content access and enables advanced AI learning tools.
-          </Text>
+          <Text style={styles.heroTitle}>{t('subscription.heroTitle')}</Text>
+          <Text style={styles.heroText}>{t('subscription.heroSubtitle')}</Text>
         </LinearGradient>
 
-        {loading ? (
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
+        {isExpoGo ? (
+          <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Ionicons name="phone-portrait" size={20} color={colors.accent} />
+            <View style={styles.infoTextBlock}>
+              <Text style={[styles.infoTitle, { color: colors.text }]}>{t('subscription.expoGoTitle')}</Text>
+              <Text style={[styles.mutedText, { color: colors.textSecondary }]}>{t('subscription.expoGoText')}</Text>
+            </View>
+          </View>
+        ) : null}
+
+        {loading && !isExpoGo ? (
+          <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <ActivityIndicator color={colors.accent} />
-            <Text style={[styles.mutedText, { color: colors.textSecondary }]}>Loading subscription data...</Text>
+            <Text style={[styles.mutedText, { color: colors.textSecondary }]}>{t('subscription.loading')}</Text>
           </View>
         ) : null}
 
@@ -66,61 +78,63 @@ export default function SubscriptionScreen() {
           </View>
         ) : null}
 
-        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Plans</Text>
-          {packages.length > 0 ? (
-            packages.map((item) => (
-              <View key={item.identifier} style={[styles.planRow, { borderColor: colors.border }]}>
-                <View style={styles.planInfo}>
-                  <Text style={[styles.planTitle, { color: colors.text }]}>
-                    {item.product.title || item.identifier}
-                  </Text>
-                  <Text style={[styles.planSubtitle, { color: colors.textSecondary }]}>
-                    {item.product.description || item.product.identifier}
-                  </Text>
-                </View>
-                <Text style={[styles.price, { color: colors.accentText }]}>
-                  {item.product.priceString}
-                </Text>
+        <View style={[styles.benefitsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('subscription.includes')}</Text>
+          {benefits.map((item) => (
+            <View key={item.text} style={styles.benefitRow}>
+              <View style={styles.benefitIcon}>
+                <Ionicons name={item.icon as any} size={18} color="#FFFFFF" />
               </View>
-            ))
-          ) : (
-            <Text style={[styles.mutedText, { color: colors.textSecondary }]}>
-              No RevenueCat offering found. Create an offering with monthly and yearly products in the RevenueCat dashboard.
-            </Text>
-          )}
+              <Text style={[styles.benefitText, { color: colors.text }]}>{item.text}</Text>
+            </View>
+          ))}
         </View>
+
+        {packages.length > 0 ? (
+          <View style={styles.planGrid}>
+            {packages.slice(0, 2).map((item) => {
+              const id = `${item.identifier} ${item.product.identifier}`.toLowerCase();
+              const isYearly = id.includes('annual') || id.includes('year');
+              return (
+                <View
+                  key={item.identifier}
+                  style={[
+                    styles.planChip,
+                    { backgroundColor: colors.card, borderColor: isYearly ? '#22D3EE' : colors.border },
+                  ]}
+                >
+                  {isYearly ? <Text style={styles.bestBadge}>{t('subscription.bestValue')}</Text> : null}
+                  <Text style={[styles.planTitle, { color: colors.text }]}>
+                    {isYearly ? t('subscription.yearly') : t('subscription.monthly')}
+                  </Text>
+                  <Text style={[styles.price, { color: colors.accentText }]}>{item.product.priceString}</Text>
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
 
         <View style={styles.actions}>
-          <TouchableOpacity style={[styles.primaryButton, { backgroundColor: colors.accent }]} onPress={presentPaywall}>
-            <Ionicons name="card" size={20} color="#FFFFFF" />
-            <Text style={styles.primaryButtonText}>Show RevenueCat Paywall</Text>
+          <TouchableOpacity
+            style={[styles.primaryButton, isExpoGo && styles.disabledButton]}
+            onPress={presentPaywall}
+            disabled={isExpoGo}
+            activeOpacity={0.9}
+          >
+            <LinearGradient colors={['#6366F1', '#06B6D4']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.primaryButtonGradient}>
+              <Ionicons name={isPro ? 'settings' : 'lock-open'} size={20} color="#FFFFFF" />
+              <Text style={styles.primaryButtonText}>
+                {isPro ? t('subscription.manageButton') : t('subscription.ctaButton')}
+              </Text>
+            </LinearGradient>
           </TouchableOpacity>
 
-          <View style={styles.actionGrid}>
-            <TouchableOpacity style={[styles.secondaryButton, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => purchaseProduct('monthly')}>
-              <Text style={[styles.secondaryButtonText, { color: colors.text }]}>Buy monthly</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.secondaryButton, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={() => purchaseProduct('yearly')}>
-              <Text style={[styles.secondaryButtonText, { color: colors.text }]}>Buy yearly</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity style={[styles.secondaryWideButton, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={restorePurchases}>
-            <Text style={[styles.secondaryButtonText, { color: colors.text }]}>Restore purchases</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.secondaryWideButton, { backgroundColor: colors.card, borderColor: colors.border }]} onPress={presentCustomerCenter}>
-            <Text style={[styles.secondaryButtonText, { color: colors.text }]}>Open Customer Center</Text>
+          <TouchableOpacity style={styles.restoreButton} onPress={restorePurchases} disabled={isExpoGo}>
+            <Text style={[styles.restoreText, { color: colors.textSecondary }]}>{t('subscription.restore')}</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Access rules</Text>
-          <Text style={[styles.bullet, { color: colors.textSecondary }]}>• Entitlement: Physics AI Pro</Text>
-          <Text style={[styles.bullet, { color: colors.textSecondary }]}>• Product IDs: monthly, yearly</Text>
-          <Text style={[styles.bullet, { color: colors.textSecondary }]}>• Use requirePro() before premium-only actions.</Text>
-        </View>
+        <Text style={[styles.footerText, { color: colors.textTertiary }]}>{t('subscription.footer')}</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -136,7 +150,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
   },
   backButton: {
     width: 44,
@@ -146,7 +159,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 22,
-    fontWeight: '800',
+    fontWeight: '900',
   },
   content: {
     padding: 20,
@@ -154,10 +167,20 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   hero: {
-    borderRadius: 28,
+    borderRadius: 30,
     padding: 24,
-    minHeight: 190,
+    minHeight: 230,
     justifyContent: 'space-between',
+    overflow: 'hidden',
+  },
+  heroGlow: {
+    position: 'absolute',
+    right: -46,
+    top: -28,
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255,255,255,0.16)',
   },
   proBadge: {
     alignSelf: 'flex-start',
@@ -171,17 +194,17 @@ const styles = StyleSheet.create({
   },
   proBadgeText: {
     color: '#FFFFFF',
-    fontWeight: '800',
+    fontWeight: '900',
   },
   heroTitle: {
     color: '#FFFFFF',
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: '900',
-    lineHeight: 38,
+    lineHeight: 40,
     marginTop: 26,
   },
   heroText: {
-    color: 'rgba(255,255,255,0.82)',
+    color: 'rgba(255,255,255,0.84)',
     fontSize: 15,
     lineHeight: 22,
     marginTop: 10,
@@ -203,43 +226,97 @@ const styles = StyleSheet.create({
     flex: 1,
     fontWeight: '700',
   },
-  sectionTitle: {
-    fontSize: 18,
+  infoCard: {
+    borderWidth: 1,
+    borderRadius: 22,
+    padding: 16,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  infoTextBlock: {
+    flex: 1,
+    gap: 6,
+  },
+  infoTitle: {
+    fontSize: 15,
     fontWeight: '900',
   },
   mutedText: {
     fontSize: 14,
     lineHeight: 21,
   },
-  planRow: {
+  benefitsCard: {
     borderWidth: 1,
-    borderRadius: 18,
-    padding: 14,
+    borderRadius: 24,
+    padding: 18,
+    gap: 14,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  benefitRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  planInfo: {
+  benefitIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 12,
+    backgroundColor: '#6366F1',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  benefitText: {
     flex: 1,
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: '700',
+  },
+  planGrid: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  planChip: {
+    flex: 1,
+    minHeight: 94,
+    borderWidth: 2,
+    borderRadius: 22,
+    padding: 14,
+    justifyContent: 'center',
   },
   planTitle: {
     fontSize: 16,
     fontWeight: '900',
   },
-  planSubtitle: {
-    fontSize: 13,
-    marginTop: 4,
-  },
   price: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '900',
+    marginTop: 8,
+  },
+  bestBadge: {
+    position: 'absolute',
+    top: -10,
+    alignSelf: 'center',
+    backgroundColor: '#22D3EE',
+    color: '#0F172A',
+    fontSize: 10,
+    fontWeight: '900',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 999,
   },
   actions: {
-    gap: 12,
+    gap: 10,
   },
   primaryButton: {
-    height: 56,
-    borderRadius: 18,
+    height: 58,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  primaryButtonGradient: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -250,34 +327,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '900',
   },
-  actionGrid: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  secondaryButton: {
-    flex: 1,
-    minHeight: 52,
-    borderWidth: 1,
-    borderRadius: 16,
+  restoreButton: {
+    paddingVertical: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 10,
   },
-  secondaryWideButton: {
-    minHeight: 52,
-    borderWidth: 1,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-  },
-  secondaryButtonText: {
+  restoreText: {
     fontSize: 14,
-    fontWeight: '900',
+    fontWeight: '800',
     textAlign: 'center',
   },
-  bullet: {
-    fontSize: 14,
-    lineHeight: 22,
+  disabledButton: {
+    opacity: 0.45,
+  },
+  footerText: {
+    textAlign: 'center',
+    fontSize: 12,
+    lineHeight: 18,
+    paddingHorizontal: 14,
   },
 });

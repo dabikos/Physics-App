@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 import Purchases, {
   CustomerInfo,
   LOG_LEVEL,
@@ -17,6 +18,12 @@ import {
 
 let configurePromise: Promise<boolean> | null = null;
 let loggedInAppUserId: string | null = null;
+let attributesPromise: Promise<void> | null = null;
+let lastAttributesKey: string | null = null;
+
+export function isRevenueCatExpoGoPreview() {
+  return Platform.OS !== 'web' && Constants.appOwnership === 'expo';
+}
 
 export function isProCustomer(customerInfo: CustomerInfo | null | undefined) {
   return Boolean(customerInfo?.entitlements.active[REVENUECAT_ENTITLEMENT_ID]);
@@ -31,6 +38,10 @@ export function getRevenueCatErrorMessage(error: unknown) {
 }
 
 export async function configureRevenueCat(appUserId?: string | null) {
+  if (isRevenueCatExpoGoPreview()) {
+    return false;
+  }
+
   if (Platform.OS !== 'android' && Platform.OS !== 'ios' && Platform.OS !== 'web') {
     return false;
   }
@@ -81,31 +92,55 @@ export async function setRevenueCatUserAttributes(user?: {
   name?: string | null;
   role?: string | null;
 }) {
-  if (!user) return;
+  if (!user || isRevenueCatExpoGoPreview()) return;
 
-  try {
-    if (user.email) {
-      await Purchases.setEmail(user.email);
-    }
+  const attributesKey = JSON.stringify({
+    email: user.email || '',
+    name: user.name || '',
+    role: user.role || '',
+  });
 
-    if (user.name) {
-      await Purchases.setDisplayName(user.name);
-    }
+  if (attributesKey === lastAttributesKey) return;
 
-    if (user.role) {
-      await Purchases.setAttributes({ role: user.role });
+  attributesPromise = (attributesPromise || Promise.resolve()).then(async () => {
+    try {
+      if (attributesKey === lastAttributesKey) return;
+
+      if (user.email) {
+        await Purchases.setEmail(user.email);
+      }
+
+      if (user.name) {
+        await Purchases.setDisplayName(user.name);
+      }
+
+      if (user.role) {
+        await Purchases.setAttributes({ role: user.role });
+      }
+
+      lastAttributesKey = attributesKey;
+    } catch (error) {
+      console.warn('RevenueCat attributes failed:', getRevenueCatErrorMessage(error));
     }
-  } catch (error) {
-    console.warn('RevenueCat attributes failed:', getRevenueCatErrorMessage(error));
-  }
+  });
+
+  return attributesPromise;
 }
 
 export async function getRevenueCatCustomerInfo() {
+  if (isRevenueCatExpoGoPreview()) {
+    return null;
+  }
+
   await configureRevenueCat();
   return Purchases.getCustomerInfo();
 }
 
 export async function getRevenueCatOfferings(): Promise<PurchasesOfferings> {
+  if (isRevenueCatExpoGoPreview()) {
+    return { current: null, all: {} };
+  }
+
   await configureRevenueCat();
   return Purchases.getOfferings();
 }
@@ -132,16 +167,28 @@ export function findPackageByProductId(
 }
 
 export async function purchaseRevenueCatPackage(packageToPurchase: PurchasesPackage) {
+  if (isRevenueCatExpoGoPreview()) {
+    throw new Error('RevenueCat purchases are not available in Expo Go. Use a development build or Google Play build.');
+  }
+
   await configureRevenueCat();
   return Purchases.purchasePackage(packageToPurchase);
 }
 
 export async function restoreRevenueCatPurchases() {
+  if (isRevenueCatExpoGoPreview()) {
+    throw new Error('RevenueCat restore is not available in Expo Go. Use a development build or Google Play build.');
+  }
+
   await configureRevenueCat();
   return Purchases.restorePurchases();
 }
 
 export async function logOutRevenueCat() {
+  if (isRevenueCatExpoGoPreview()) {
+    return null;
+  }
+
   try {
     const configured = await Purchases.isConfigured().catch(() => false);
     if (!configured) return null;
@@ -155,6 +202,11 @@ export async function logOutRevenueCat() {
 }
 
 export async function presentRevenueCatPaywall(offering?: PurchasesOffering | null) {
+  if (isRevenueCatExpoGoPreview()) {
+    console.warn('RevenueCat paywall is not available in Expo Go. Use a development build or Google Play build.');
+    return false;
+  }
+
   await configureRevenueCat();
 
   const result = await RevenueCatUI.presentPaywallIfNeeded({
@@ -167,6 +219,11 @@ export async function presentRevenueCatPaywall(offering?: PurchasesOffering | nu
 }
 
 export async function presentRevenueCatCustomerCenter() {
+  if (isRevenueCatExpoGoPreview()) {
+    console.warn('RevenueCat Customer Center is not available in Expo Go. Use a development build or Google Play build.');
+    return;
+  }
+
   await configureRevenueCat();
 
   await RevenueCatUI.presentCustomerCenter({

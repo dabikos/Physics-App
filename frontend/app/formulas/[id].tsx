@@ -168,7 +168,11 @@ export default function FormulaDetailScreen() {
         const response = await api.get(`/formulas/${id}`);
         const item = response.data?.item || null;
         if (!cancelled) setRemoteFormula(item);
-      } catch (error) {
+      } catch (error: any) {
+        if (error?.response?.status === 403 && error?.response?.data?.detail?.code === 'PRO_REQUIRED') {
+          router.replace('/subscription');
+          return;
+        }
         console.log('Formula detail load error:', error);
         if (!cancelled) setRemoteFormula(null);
       } finally {
@@ -180,7 +184,7 @@ export default function FormulaDetailScreen() {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, router]);
 
   const formula = remoteFormula || localFormula;
 

@@ -604,5 +604,26 @@
     "privacy": "Политика конфиденциальности",
     "madeWith": "Сделано с ❤️ для учеников и учителей",
     "telegram": "Telegram"
+  },
+  "subscription": {
+    "proBadge": "PRO-доступ",
+    "activeBadge": "Pro активен",
+    "heroTitle": "Открой полный Physics AI",
+    "heroSubtitle": "Учись без рекламы, открой весь материал и используй расширенные AI-инструменты для физики.",
+    "includes": "Что входит",
+    "benefitNoAds": "Без рекламы во время обучения",
+    "benefitFullAccess": "Все уроки, тесты, задачи и формулы",
+    "benefitAiTools": "Генерация тестов и расширенное изучение",
+    "benefitSolutions": "Полные решения задач с объяснениями",
+    "monthly": "Месяц",
+    "yearly": "Год",
+    "bestValue": "ВЫГОДНО",
+    "ctaButton": "Оформить Pro",
+    "manageButton": "Управлять Pro",
+    "restore": "Восстановить покупку",
+    "loading": "Загрузка подписки...",
+    "expoGoTitle": "Предпросмотр в Expo Go",
+    "expoGoText": "Покупки и paywall работают только в development build или сборке из Google Play.",
+    "footer": "Подписку можно отменить в настройках Google Play. Доступ Pro применяется к вашему аккаунту."
   }
 }
