@@ -14,7 +14,7 @@ export const REVENUECAT_PRODUCTS = {
 export type RevenueCatProductId = keyof typeof REVENUECAT_PRODUCTS;
 
 const ANDROID_API_KEY =
-  process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY || 'test_fRSfnFYKOMGqPzUbDUhzdHMdExR';
+  process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY || '';
 
 const IOS_API_KEY = process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY || '';
 const WEB_API_KEY = process.env.EXPO_PUBLIC_REVENUECAT_WEB_API_KEY || '';
