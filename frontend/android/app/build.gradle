@@ -68,6 +68,20 @@ react {
  */
 def enableMinifyInReleaseBuilds = (findProperty('android.enableMinifyInReleaseBuilds') ?: false).toBoolean()
 
+def uploadStoreFilePath = findProperty('MYAPP_UPLOAD_STORE_FILE') ?: System.getenv('MYAPP_UPLOAD_STORE_FILE')
+def uploadStorePassword = findProperty('MYAPP_UPLOAD_STORE_PASSWORD') ?: System.getenv('MYAPP_UPLOAD_STORE_PASSWORD')
+def uploadKeyAlias = findProperty('MYAPP_UPLOAD_KEY_ALIAS') ?: System.getenv('MYAPP_UPLOAD_KEY_ALIAS')
+def uploadKeyPassword = findProperty('MYAPP_UPLOAD_KEY_PASSWORD') ?: System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
+def hasUploadSigning = uploadStoreFilePath && uploadStorePassword && uploadKeyAlias && uploadKeyPassword
+
+def resolveUploadStoreFile = { String storePath ->
+    def projectRelative = file(storePath)
+    if (projectRelative.exists()) {
+        return projectRelative
+    }
+    return new File(rootDir.getParentFile(), storePath)
+}
+
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
  *
@@ -104,6 +118,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        if (hasUploadSigning) {
+            upload {
+                storeFile resolveUploadStoreFile(uploadStoreFilePath)
+                storePassword uploadStorePassword
+                keyAlias uploadKeyAlias
+                keyPassword uploadKeyPassword
+            }
+        }
     }
     buildTypes {
         debug {
@@ -112,7 +134,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig hasUploadSigning ? signingConfigs.upload : signingConfigs.debug
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds
