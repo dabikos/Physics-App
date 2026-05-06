@@ -73,6 +73,8 @@ def uploadStorePassword = findProperty('MYAPP_UPLOAD_STORE_PASSWORD') ?: System.
 def uploadKeyAlias = findProperty('MYAPP_UPLOAD_KEY_ALIAS') ?: System.getenv('MYAPP_UPLOAD_KEY_ALIAS')
 def uploadKeyPassword = findProperty('MYAPP_UPLOAD_KEY_PASSWORD') ?: System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
 def hasUploadSigning = uploadStoreFilePath && uploadStorePassword && uploadKeyAlias && uploadKeyPassword
+def appVersionCode = (findProperty('VERSION_CODE') ?: System.getenv('VERSION_CODE') ?: '1').toInteger()
+def appVersionName = findProperty('VERSION_NAME') ?: System.getenv('VERSION_NAME') ?: "1.0.0"
 
 def resolveUploadStoreFile = { String storePath ->
     def projectRelative = file(storePath)
@@ -106,8 +108,8 @@ android {
         applicationId 'com.physicsai.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode appVersionCode
+        versionName appVersionName
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
     }
