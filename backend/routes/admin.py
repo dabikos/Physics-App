@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 from server import get_current_user
 from postgres import (
+    clear_postgres_content_cache,
     create_notification_campaign,
     get_postgres_pool,
     list_ai_prompts,
@@ -304,6 +305,7 @@ async def create_admin_lesson_section(payload: LessonSectionUpsert, _: dict = De
             payload.order_index,
             payload.is_published,
         )
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -335,6 +337,7 @@ async def update_admin_lesson_section(section_id: str, payload: LessonSectionUps
         )
     if not row:
         raise HTTPException(status_code=404, detail="Lesson section not found")
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -343,6 +346,7 @@ async def delete_admin_lesson_section(section_id: str, _: dict = Depends(require
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         result = await conn.execute("DELETE FROM lesson_sections WHERE id = $1", section_id)
+    clear_postgres_content_cache()
     return {"deleted": result.endswith("1")}
 
 
@@ -365,6 +369,7 @@ async def create_admin_lesson_subsection(payload: LessonSubsectionUpsert, _: dic
             payload.order_index,
             payload.is_published,
         )
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -394,6 +399,7 @@ async def update_admin_lesson_subsection(subsection_id: str, payload: LessonSubs
         )
     if not row:
         raise HTTPException(status_code=404, detail="Lesson subsection not found")
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -402,6 +408,7 @@ async def delete_admin_lesson_subsection(subsection_id: str, _: dict = Depends(r
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         result = await conn.execute("DELETE FROM lesson_subsections WHERE id = $1", subsection_id)
+    clear_postgres_content_cache()
     return {"deleted": result.endswith("1")}
 
 
@@ -432,6 +439,7 @@ async def create_admin_lesson_topic(payload: LessonTopicUpsert, _: dict = Depend
             payload.order_index,
             payload.is_published,
         )
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -473,6 +481,7 @@ async def update_admin_lesson_topic(topic_id: str, payload: LessonTopicUpsert, _
         )
     if not row:
         raise HTTPException(status_code=404, detail="Lesson topic not found")
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -481,6 +490,7 @@ async def delete_admin_lesson_topic(topic_id: str, _: dict = Depends(require_adm
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         result = await conn.execute("DELETE FROM lesson_topics WHERE id = $1", topic_id)
+    clear_postgres_content_cache()
     return {"deleted": result.endswith("1")}
 
 
@@ -641,6 +651,7 @@ async def create_admin_test(payload: PracticeTestUpsert, _: dict = Depends(requi
             payload.order_index,
             payload.is_published,
         )
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -685,6 +696,7 @@ async def update_admin_test(
         )
     if row is None:
         raise HTTPException(status_code=404, detail="Test not found")
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -693,6 +705,7 @@ async def delete_admin_test(test_id: str, _: dict = Depends(require_admin)):
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         status = await conn.execute("DELETE FROM practice_tests WHERE id = $1", test_id)
+    clear_postgres_content_cache()
     return {"success": status.endswith("1")}
 
 
@@ -727,6 +740,7 @@ async def create_admin_task(payload: PracticeTaskUpsert, _: dict = Depends(requi
             payload.order_index,
             payload.is_published,
         )
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -779,6 +793,7 @@ async def update_admin_task(
         )
     if row is None:
         raise HTTPException(status_code=404, detail="Task not found")
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -787,6 +802,7 @@ async def delete_admin_task(task_id: str, _: dict = Depends(require_admin)):
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         status = await conn.execute("DELETE FROM practice_tasks WHERE id = $1", task_id)
+    clear_postgres_content_cache()
     return {"success": status.endswith("1")}
 
 
@@ -815,6 +831,7 @@ async def create_admin_formula(payload: FormulaUpsert, _: dict = Depends(require
             payload.order_index,
             payload.is_published,
         )
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -857,6 +874,7 @@ async def update_admin_formula(
         )
     if row is None:
         raise HTTPException(status_code=404, detail="Formula not found")
+    clear_postgres_content_cache()
     return {"item": _serialize_record(row)}
 
 
@@ -865,6 +883,7 @@ async def delete_admin_formula(formula_id: str, _: dict = Depends(require_admin)
     pool = await get_postgres_pool()
     async with pool.acquire() as conn:
         status = await conn.execute("DELETE FROM physics_formulas WHERE id = $1", formula_id)
+    clear_postgres_content_cache()
     return {"success": status.endswith("1")}
 
 

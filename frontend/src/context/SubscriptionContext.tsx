@@ -39,7 +39,7 @@ interface SubscriptionContextValue {
   purchaseProduct: (productId: RevenueCatProductId) => Promise<boolean>;
   restorePurchases: () => Promise<boolean>;
   presentPaywall: () => Promise<boolean>;
-  presentCustomerCenter: () => Promise<void>;
+  presentCustomerCenter: () => Promise<boolean>;
   requirePro: () => Promise<boolean>;
 }
 
@@ -54,14 +54,20 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const lastSyncedSignatureRef = useRef<string | null>(null);
+  const hasInitializedRef = useRef(false);
+  const userId = user?.id || null;
+  const userProfile = useMemo(
+    () => (user ? { email: user.email, name: user.name, role: user.role } : undefined),
+    [user?.email, user?.name, user?.role],
+  );
 
   const syncSubscriptionToBackend = useCallback(
     async (info: CustomerInfo | null) => {
-      if (!user) return;
+      if (!userId) return;
 
       const activeEntitlements = Object.keys(info?.entitlements?.active || {});
       const pro = isProCustomer(info);
-      const signature = `${user.id}:${pro}:${activeEntitlements.sort().join(',')}`;
+      const signature = `${userId}:${pro}:${activeEntitlements.sort().join(',')}`;
       if (lastSyncedSignatureRef.current === signature) return;
 
       try {
@@ -75,7 +81,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         console.log('Subscription sync error:', getRevenueCatErrorMessage(err));
       }
     },
-    [user],
+    [userId],
   );
 
   const refreshCustomerInfo = useCallback(async () => {
@@ -113,17 +119,19 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     const init = async () => {
       if (authLoading) return;
 
-      setLoading(true);
+      if (!hasInitializedRef.current) {
+        setLoading(true);
+      }
       setError(null);
 
       try {
-        const isConfigured = await configureRevenueCat(user?.id);
+        const isConfigured = await configureRevenueCat(userId);
         if (!mounted) return;
 
         setConfigured(isConfigured);
 
         if (isConfigured) {
-          await setRevenueCatUserAttributes(user || undefined);
+          await setRevenueCatUserAttributes(userProfile);
           await Promise.all([refreshCustomerInfo(), refreshOfferings()]);
         } else {
           setCustomerInfo(null);
@@ -136,6 +144,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         }
       } finally {
         if (mounted) {
+          hasInitializedRef.current = true;
           setLoading(false);
         }
       }
@@ -146,7 +155,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
     };
-  }, [authLoading, refreshCustomerInfo, refreshOfferings, user]);
+  }, [authLoading, refreshCustomerInfo, refreshOfferings, userId, userProfile]);
 
   useEffect(() => {
     if (!configured) return;
@@ -164,12 +173,12 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   }, [configured, syncSubscriptionToBackend]);
 
   useEffect(() => {
-    if (authLoading || user || !configured) return;
+    if (authLoading || userId || !configured) return;
 
     logOutRevenueCat().then((info) => {
       setCustomerInfo(info);
     });
-  }, [authLoading, configured, user]);
+  }, [authLoading, configured, userId]);
 
   const purchasePackage = useCallback(
     async (packageToPurchase: PurchasesPackage) => {
@@ -233,8 +242,10 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setError(null);
       await presentRevenueCatCustomerCenter();
       await refreshCustomerInfo();
+      return true;
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
+      return false;
     }
   }, [refreshCustomerInfo]);
 

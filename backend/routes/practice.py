@@ -93,6 +93,7 @@ async def get_practice_tests(
     section: str | None = Query(default=None),
     subsection: str | None = Query(default=None),
     topic: str | None = Query(default=None),
+    summary: bool = Query(default=False),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
     current_user: dict | None = Depends(get_optional_current_user),
 ):
@@ -103,6 +104,7 @@ async def get_practice_tests(
             subsection_id=subsection,
             topic_id=topic,
             lang=parse_accept_language(accept_language),
+            summary=summary,
         )
         return {
             "items": apply_group_access_locks(
@@ -196,6 +198,7 @@ async def get_practice_test_by_id(
         section_id=item.get("section_id") or item.get("section"),
         subsection_id=item.get("subsection_id"),
         lang=parse_accept_language(accept_language),
+        summary=True,
     )
     if is_item_locked(
         sibling_items,
@@ -213,6 +216,7 @@ async def get_practice_tasks(
     section: str | None = Query(default=None),
     subsection: str | None = Query(default=None),
     topic: str | None = Query(default=None),
+    summary: bool = Query(default=False),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
     current_user: dict | None = Depends(get_optional_current_user),
 ):
@@ -223,6 +227,7 @@ async def get_practice_tasks(
             subsection_id=subsection,
             topic_id=topic,
             lang=parse_accept_language(accept_language),
+            summary=summary,
         )
         return {
             "items": apply_group_access_locks(
@@ -255,6 +260,7 @@ async def get_practice_task_by_id(
         section_id=item.get("section_id") or item.get("section"),
         subsection_id=item.get("subsection_id"),
         lang=parse_accept_language(accept_language),
+        summary=True,
     )
     if is_item_locked(
         sibling_items,
@@ -284,6 +290,7 @@ async def submit_practice_task(
     sibling_items = await list_practice_tasks(
         section_id=item.get("section_id") or item.get("section"),
         subsection_id=item.get("subsection_id"),
+        summary=True,
     )
     if is_item_locked(sibling_items, task_id, "subsection_id", FREE_TASKS_PER_SUBSECTION, is_user_pro(current_user)):
         raise HTTPException(status_code=403, detail=pro_required_detail("practice_task"))

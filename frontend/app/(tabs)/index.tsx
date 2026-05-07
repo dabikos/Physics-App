@@ -527,7 +527,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} />
+      {searchVisible ? <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} /> : null}
     </SafeAreaView>
   );
 }

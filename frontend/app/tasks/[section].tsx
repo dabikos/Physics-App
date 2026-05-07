@@ -37,7 +37,7 @@ export default function TasksSubsectionsScreen() {
     const loadTasks = async () => {
       if (!section) return;
       try {
-        const response = await api.get('/practice/tasks', { params: { section } });
+        const response = await api.get('/practice/tasks', { params: { section, summary: true } });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setRemoteTasks(items);
       } catch (error) {

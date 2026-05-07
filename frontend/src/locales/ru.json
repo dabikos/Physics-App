@@ -624,6 +624,14 @@
     "loading": "Загрузка подписки...",
     "expoGoTitle": "Предпросмотр в Expo Go",
     "expoGoText": "Покупки и paywall работают только в development build или сборке из Google Play.",
+    "purchaseSuccessTitle": "Pro активен",
+    "purchaseSuccessText": "Подписка применена к вашему аккаунту.",
+    "restoreSuccessTitle": "Покупка восстановлена",
+    "restoreSuccessText": "Pro-доступ активен для вашего аккаунта.",
+    "restoreEmptyTitle": "Активная подписка не найдена",
+    "restoreEmptyText": "Проверьте, что вы вошли в тот же Google Play аккаунт, где оформляли подписку.",
+    "manageFallbackTitle": "Откройте Google Play",
+    "manageFallbackText": "Управлять подпиской можно в разделе подписок Google Play.",
     "footer": "Подписку можно отменить в настройках Google Play. Доступ Pro применяется к вашему аккаунту."
   }
 }

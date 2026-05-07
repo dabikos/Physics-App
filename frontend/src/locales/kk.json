@@ -624,6 +624,14 @@
     "loading": "Жазылым жүктелуде...",
     "expoGoTitle": "Expo Go алдын ала қарау",
     "expoGoText": "Сатып алу және paywall тек development build немесе Google Play жинағында жұмыс істейді.",
+    "purchaseSuccessTitle": "Pro белсенді",
+    "purchaseSuccessText": "Жазылым аккаунтыңызға қолданылды.",
+    "restoreSuccessTitle": "Сатып алу қалпына келтірілді",
+    "restoreSuccessText": "Pro қолжетімділігі аккаунтыңызда белсенді.",
+    "restoreEmptyTitle": "Белсенді жазылым табылмады",
+    "restoreEmptyText": "Жазылым сатып алынған Google Play аккаунтымен кіргеніңізді тексеріңіз.",
+    "manageFallbackTitle": "Google Play ашыңыз",
+    "manageFallbackText": "Жазылымды Google Play жазылымдар бөлімінде басқаруға болады.",
     "footer": "Жазылымды Google Play баптауларында тоқтатуға болады. Pro қолжетімділігі аккаунтыңызға қосылады."
   }
 }

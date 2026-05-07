@@ -3,6 +3,7 @@ import logging
 import os
 from pathlib import Path
 from string import Formatter
+from time import monotonic
 from typing import Any, Optional
 
 import asyncpg
@@ -12,10 +13,35 @@ ROOT_DIR = Path(__file__).parent
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 _pool: Optional[asyncpg.Pool] = None
+_CACHE_TTL_SECONDS = int(os.environ.get("POSTGRES_CONTENT_CACHE_TTL_SECONDS", "300"))
+_cache: dict[tuple[Any, ...], tuple[float, Any]] = {}
 
 
 def is_postgres_configured() -> bool:
     return bool(DATABASE_URL)
+
+
+def clear_postgres_content_cache() -> None:
+    _cache.clear()
+
+
+def _cache_get(key: tuple[Any, ...]) -> Any:
+    if _CACHE_TTL_SECONDS <= 0:
+        return None
+    item = _cache.get(key)
+    if not item:
+        return None
+    expires_at, value = item
+    if expires_at < monotonic():
+        _cache.pop(key, None)
+        return None
+    return value
+
+
+def _cache_set(key: tuple[Any, ...], value: Any) -> Any:
+    if _CACHE_TTL_SECONDS > 0:
+        _cache[key] = (monotonic() + _CACHE_TTL_SECONDS, value)
+    return value
 
 
 async def get_postgres_pool() -> asyncpg.Pool:
@@ -49,6 +75,13 @@ def _decode_jsonb(value: Any) -> Any:
     if isinstance(value, str):
         return json.loads(value)
     return value
+
+
+def _record_value(row: asyncpg.Record, key: str, default: Any = None) -> Any:
+    try:
+        return row[key]
+    except (KeyError, IndexError):
+        return default
 
 
 async def init_postgres_schema() -> None:
@@ -238,13 +271,36 @@ async def init_postgres_schema() -> None:
         await conn.execute("ALTER TABLE practice_tasks ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb")
         await conn.execute("ALTER TABLE physics_formulas ENABLE ROW LEVEL SECURITY")
         await conn.execute("ALTER TABLE ai_prompts ADD COLUMN IF NOT EXISTS user_template TEXT")
-        await seed_default_ai_prompts(conn)
-        await seed_lesson_content(conn)
-        await seed_lesson_translations(conn)
-        await seed_formula_content(conn)
-        await seed_formula_translations(conn)
-        await seed_practice_content(conn)
-        await seed_practice_translations(conn)
+        seed_mode = os.environ.get("POSTGRES_SEED_ON_STARTUP", "auto").strip().lower()
+        should_seed = seed_mode in {"1", "true", "yes", "always"}
+        if seed_mode in {"0", "false", "no", "never"}:
+            should_seed = False
+        elif not should_seed:
+            counts = await conn.fetchrow(
+                """
+                SELECT
+                    (SELECT COUNT(*) FROM lesson_sections) AS sections,
+                    (SELECT COUNT(*) FROM lesson_topics) AS topics,
+                    (SELECT COUNT(*) FROM physics_formulas) AS formulas,
+                    (SELECT COUNT(*) FROM practice_tests) AS tests,
+                    (SELECT COUNT(*) FROM practice_tasks) AS tasks
+                """
+            )
+            should_seed = any(int(counts[key] or 0) == 0 for key in ("sections", "topics", "formulas", "tests", "tasks"))
+
+        if should_seed:
+            logger.info("Seeding PostgreSQL content on startup (mode=%s)", seed_mode)
+            await seed_default_ai_prompts(conn)
+            await seed_lesson_content(conn)
+            await seed_lesson_translations(conn)
+            await seed_formula_content(conn)
+            await seed_formula_translations(conn)
+            await seed_practice_content(conn)
+            await seed_practice_translations(conn)
+            clear_postgres_content_cache()
+        else:
+            await seed_default_ai_prompts(conn)
+            logger.info("PostgreSQL content seed skipped on startup (mode=%s)", seed_mode)
 
 
 async def seed_default_ai_prompts(conn: asyncpg.Connection) -> None:
@@ -760,6 +816,21 @@ def _practice_test_row(row: asyncpg.Record, lang: str | None = None) -> dict[str
     }
 
 
+def _practice_test_summary_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "section": row["section_id"],
+        "section_id": row["section_id"],
+        "subsection_id": row["subsection_id"],
+        "topic_id": row["topic_id"],
+        "title": _record_value(row, "localized_title") or row["title"],
+        "difficulty": row["difficulty"],
+        "questions": [],
+        "question_count": int(row["question_count"] or 0),
+        "time_limit": row["time_limit"],
+    }
+
+
 def _practice_task_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
     localized = _localized_dict(row["translations"], lang)
     return {
@@ -774,6 +845,20 @@ def _practice_task_row(row: asyncpg.Record, lang: str | None = None) -> dict[str
         "answer": localized.get("answer") or row["answer"],
         "created_at": row["created_at"].isoformat(),
         "updated_at": row["updated_at"].isoformat(),
+    }
+
+
+def _practice_task_summary_row(row: asyncpg.Record, lang: str | None = None) -> dict[str, Any]:
+    return {
+        "id": row["id"],
+        "section": row["section_id"],
+        "section_id": row["section_id"],
+        "subsection_id": row["subsection_id"],
+        "topic_id": row["topic_id"],
+        "topic_title": _record_value(row, "localized_topic_title") or row["topic_title"],
+        "title": _record_value(row, "localized_title") or row["title"],
+        "problem_text": _record_value(row, "localized_problem_text") or row["problem_text"],
+        "difficulty": row["difficulty"],
     }
 
 
@@ -831,6 +916,11 @@ def _topic_summary_row(row: asyncpg.Record, lang: str | None = None) -> dict[str
 
 
 async def list_lesson_sections(lang: str | None = None) -> dict[str, Any]:
+    cache_key = ("lesson_sections", lang or "ru")
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     pool = await get_postgres_pool()
     rows = await pool.fetch(
         """
@@ -898,7 +988,7 @@ async def list_lesson_sections(lang: str | None = None) -> dict[str, Any]:
                 }
             )
 
-    return sections
+    return _cache_set(cache_key, sections)
 
 
 async def list_lesson_topics(
@@ -907,6 +997,11 @@ async def list_lesson_topics(
     lang: str | None = None,
     summary: bool = False,
 ) -> list[dict[str, Any]]:
+    cache_key = ("lesson_topics", section_id or "", subsection_id or "", lang or "ru", bool(summary))
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     pool = await get_postgres_pool()
     if summary:
         rows = await pool.fetch(
@@ -921,11 +1016,11 @@ async def list_lesson_topics(
             section_id,
             subsection_id,
         )
-        return [_topic_summary_row(row, lang) for row in rows]
+        return _cache_set(cache_key, [_topic_summary_row(row, lang) for row in rows])
 
     rows = await pool.fetch(
         """
-        SELECT *
+        SELECT id, section_id, subsection_id, title, brief_info, example_problem, formulas, translations, video, created_at, updated_at
         FROM lesson_topics
         WHERE is_published = TRUE
             AND ($1::text IS NULL OR section_id = $1)
@@ -935,7 +1030,7 @@ async def list_lesson_topics(
         section_id,
         subsection_id,
     )
-    return [_topic_row(row, lang) for row in rows]
+    return _cache_set(cache_key, [_topic_row(row, lang) for row in rows])
 
 
 async def get_lesson_topic(topic_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
@@ -952,6 +1047,11 @@ async def get_lesson_topic(topic_id: str, lang: str | None = None) -> Optional[d
 
 
 async def list_physics_formulas(section_id: str | None = None, lang: str | None = None, summary: bool = False) -> list[dict[str, Any]]:
+    cache_key = ("physics_formulas", section_id or "", lang or "ru", bool(summary))
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     pool = await get_postgres_pool()
     if summary:
         rows = await pool.fetch(
@@ -967,11 +1067,11 @@ async def list_physics_formulas(section_id: str | None = None, lang: str | None 
         items = [_formula_row(row, lang) for row in rows]
         for item in items:
             item["variables"] = {}
-        return items
+        return _cache_set(cache_key, items)
 
     rows = await pool.fetch(
         """
-        SELECT *
+        SELECT id, section_id, name, formula, description, variables, unit, translations, created_at, updated_at
         FROM physics_formulas
         WHERE is_published = TRUE
             AND ($1::text IS NULL OR section_id = $1)
@@ -979,7 +1079,7 @@ async def list_physics_formulas(section_id: str | None = None, lang: str | None 
         """,
         section_id,
     )
-    return [_formula_row(row, lang) for row in rows]
+    return _cache_set(cache_key, [_formula_row(row, lang) for row in rows])
 
 
 async def get_physics_formula(formula_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
@@ -1000,11 +1100,39 @@ async def list_practice_tests(
     subsection_id: str | None = None,
     topic_id: str | None = None,
     lang: str | None = None,
+    summary: bool = False,
 ) -> list[dict[str, Any]]:
+    cache_key = ("practice_tests", section_id or "", subsection_id or "", topic_id or "", lang or "ru", bool(summary))
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     pool = await get_postgres_pool()
+    if summary:
+        rows = await pool.fetch(
+            """
+            SELECT
+                id, section_id, subsection_id, topic_id, title, difficulty,
+                jsonb_array_length(questions) AS question_count,
+                CASE WHEN $4::text IS NULL OR $4::text = 'ru' THEN NULL ELSE translations -> $4::text ->> 'title' END AS localized_title,
+                time_limit
+            FROM practice_tests
+            WHERE is_published = TRUE
+                AND ($1::text IS NULL OR section_id = $1)
+                AND ($2::text IS NULL OR subsection_id = $2)
+                AND ($3::text IS NULL OR topic_id = $3)
+            ORDER BY section_id, subsection_id, order_index, id
+            """,
+            section_id,
+            subsection_id,
+            topic_id,
+            lang,
+        )
+        return _cache_set(cache_key, [_practice_test_summary_row(row, lang) for row in rows])
+
     rows = await pool.fetch(
         """
-        SELECT *
+        SELECT id, section_id, subsection_id, topic_id, title, difficulty, questions, translations, time_limit, created_at, updated_at
         FROM practice_tests
         WHERE is_published = TRUE
             AND ($1::text IS NULL OR section_id = $1)
@@ -1016,7 +1144,7 @@ async def list_practice_tests(
         subsection_id,
         topic_id,
     )
-    return [_practice_test_row(row, lang) for row in rows]
+    return _cache_set(cache_key, [_practice_test_row(row, lang) for row in rows])
 
 
 async def list_random_practice_questions(
@@ -1100,11 +1228,43 @@ async def list_practice_tasks(
     subsection_id: str | None = None,
     topic_id: str | None = None,
     lang: str | None = None,
+    summary: bool = False,
 ) -> list[dict[str, Any]]:
+    cache_key = ("practice_tasks", section_id or "", subsection_id or "", topic_id or "", lang or "ru", bool(summary))
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached
+
     pool = await get_postgres_pool()
+    if summary:
+        rows = await pool.fetch(
+            """
+            SELECT
+                id, section_id, subsection_id, topic_id, topic_title, title, problem_text, difficulty,
+                CASE WHEN $4::text IS NULL OR $4::text = 'ru' THEN NULL ELSE translations -> $4::text ->> 'topic_title' END AS localized_topic_title,
+                CASE WHEN $4::text IS NULL OR $4::text = 'ru' THEN NULL ELSE translations -> $4::text ->> 'title' END AS localized_title,
+                CASE WHEN $4::text IS NULL OR $4::text = 'ru' THEN NULL ELSE translations -> $4::text ->> 'problem_text' END AS localized_problem_text
+            FROM practice_tasks
+            WHERE is_published = TRUE
+                AND ($1::text IS NULL OR section_id = $1)
+                AND ($2::text IS NULL OR subsection_id = $2)
+                AND ($3::text IS NULL OR topic_id = $3)
+            ORDER BY section_id, subsection_id, order_index, id
+            """,
+            section_id,
+            subsection_id,
+            topic_id,
+            lang,
+        )
+        return _cache_set(cache_key, [_practice_task_summary_row(row, lang) for row in rows])
+
     rows = await pool.fetch(
         """
-        SELECT *
+        SELECT
+            id, section_id, subsection_id, topic_id, topic_title, title,
+            problem_text, given_data, find_text, solution, answer,
+            difficulty, translations, raw_text, order_index, is_published,
+            created_at, updated_at
         FROM practice_tasks
         WHERE is_published = TRUE
             AND ($1::text IS NULL OR section_id = $1)
@@ -1116,7 +1276,7 @@ async def list_practice_tasks(
         subsection_id,
         topic_id,
     )
-    return [_practice_task_row(row, lang) for row in rows]
+    return _cache_set(cache_key, [_practice_task_row(row, lang) for row in rows])
 
 
 async def get_practice_task(task_id: str, lang: str | None = None) -> Optional[dict[str, Any]]:
