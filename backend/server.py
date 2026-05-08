@@ -560,7 +560,7 @@ def is_item_locked(items: list[dict], item_id: str, group_key: str, free_limit: 
 
 
 def strip_locked_test(item: dict) -> dict:
-    item["question_count"] = len(item.get("questions") or [])
+    item["question_count"] = item.get("question_count") or len(item.get("questions") or [])
     item["questions"] = []
     return item
 
@@ -1966,6 +1966,7 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
                 sibling_items = await list_practice_tests(
                     section_id=test.get("section_id") or test.get("section"),
                     subsection_id=test.get("subsection_id"),
+                    summary=True,
                 )
                 if is_item_locked(
                     sibling_items,

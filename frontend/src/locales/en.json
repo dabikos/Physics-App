@@ -624,6 +624,14 @@
     "loading": "Loading subscription...",
     "expoGoTitle": "Expo Go preview",
     "expoGoText": "Purchases and the paywall work only in a development build or Google Play build.",
+    "purchaseSuccessTitle": "Pro is active",
+    "purchaseSuccessText": "The subscription has been applied to your account.",
+    "restoreSuccessTitle": "Purchase restored",
+    "restoreSuccessText": "Pro access is active for your account.",
+    "restoreEmptyTitle": "No active subscription found",
+    "restoreEmptyText": "Make sure you are using the same Google Play account that purchased the subscription.",
+    "manageFallbackTitle": "Open Google Play",
+    "manageFallbackText": "You can manage the subscription in Google Play subscriptions.",
     "footer": "You can cancel the subscription in Google Play settings. Pro access is applied to your account."
   }
 }

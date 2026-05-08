@@ -66,6 +66,16 @@ const emptyRecord = {} as Record<string, TopicContent>;
 const emptyTasks: Task[] = [];
 const emptyTests: Test[] = [];
 
+type RemotePhysicsPayload = {
+  sections: Record<string, Section>;
+  topics: Record<string, TopicContent>;
+  formulas: Formula[];
+  hasRemoteContent: boolean;
+};
+
+const remotePhysicsCache = new Map<string, RemotePhysicsPayload>();
+const remotePhysicsRequests = new Map<string, Promise<RemotePhysicsPayload>>();
+
 export function usePhysicsData(): PhysicsDataResult {
   const { currentLanguage } = useLanguage();
   const { isPro } = useSubscription();
@@ -80,8 +90,23 @@ export function usePhysicsData(): PhysicsDataResult {
 
   useEffect(() => {
     let cancelled = false;
+    const cacheKey = `${language}:${isPro ? 'pro' : 'free'}`;
+
+    const applyPayload = (payload: RemotePhysicsPayload) => {
+      setSections(payload.sections);
+      setTopics(payload.topics);
+      setFormulas(payload.formulas);
+      setHasRemoteContent(payload.hasRemoteContent);
+    };
 
     const loadRemoteContent = async () => {
+      const cached = remotePhysicsCache.get(cacheKey);
+      if (cached) {
+        applyPayload(cached);
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       setSections(FALLBACK_SECTIONS_BY_LANG[language] || FALLBACK_SECTIONS_BY_LANG.ru);
       setTopics(emptyRecord);
@@ -89,28 +114,41 @@ export function usePhysicsData(): PhysicsDataResult {
       setHasRemoteContent(false);
 
       try {
-        const [sectionsResponse, topicsResponse, formulasResponse] = await Promise.all([
-          api.get('/sections'),
-          api.get('/topics', { params: { summary: true } }),
-          api.get('/formulas', { params: { summary: true } }),
-        ]);
+        let request = remotePhysicsRequests.get(cacheKey);
+        if (!request) {
+          request = Promise.all([
+            api.get('/sections'),
+            api.get('/topics', { params: { summary: true } }),
+            api.get('/formulas', { params: { summary: true } }),
+          ]).then(([sectionsResponse, topicsResponse, formulasResponse]) => {
+            const remoteSections = sectionsResponse.data || {};
+            const remoteTopics = Array.isArray(topicsResponse.data) ? topicsResponse.data : [];
+            const remoteFormulas = Array.isArray(formulasResponse.data?.items) ? formulasResponse.data.items : [];
+            const topicsById = remoteTopics.reduce((acc: Record<string, TopicContent>, topic: TopicContent) => {
+              if (topic?.id) acc[topic.id] = topic;
+              return acc;
+            }, {});
+
+            return {
+              sections: Object.keys(remoteSections).length > 0
+                ? remoteSections
+                : FALLBACK_SECTIONS_BY_LANG[language] || FALLBACK_SECTIONS_BY_LANG.ru,
+              topics: topicsById,
+              formulas: remoteFormulas,
+              hasRemoteContent: Object.keys(remoteSections).length > 0,
+            };
+          }).finally(() => {
+            remotePhysicsRequests.delete(cacheKey);
+          });
+          remotePhysicsRequests.set(cacheKey, request);
+        }
+
+        const payload = await request;
 
         if (cancelled) return;
 
-        const remoteSections = sectionsResponse.data || {};
-        const remoteTopics = Array.isArray(topicsResponse.data) ? topicsResponse.data : [];
-        const remoteFormulas = Array.isArray(formulasResponse.data?.items) ? formulasResponse.data.items : [];
-        const topicsById = remoteTopics.reduce((acc: Record<string, TopicContent>, topic: TopicContent) => {
-          if (topic?.id) acc[topic.id] = topic;
-          return acc;
-        }, {});
-
-        if (Object.keys(remoteSections).length > 0) {
-          setSections(remoteSections);
-          setHasRemoteContent(true);
-        }
-        setTopics(topicsById);
-        setFormulas(remoteFormulas);
+        remotePhysicsCache.set(cacheKey, payload);
+        applyPayload(payload);
       } catch (error) {
         console.log('Physics content load error:', error);
         try {

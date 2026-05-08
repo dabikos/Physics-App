@@ -50,7 +50,7 @@ export default function PracticeTasksListScreen() {
       setLoading(true);
       try {
         const response = await api.get('/practice/tasks', {
-          params: { section, subsection },
+          params: { section, subsection, summary: true },
         });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setTasks(items);

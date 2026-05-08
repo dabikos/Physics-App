@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { usePhysicsData } from './usePhysicsData';
 import {
   getOfflineContentCache,
   getOfflineContentCachedAt,
@@ -12,13 +11,6 @@ export function useOfflineCache() {
   const [isCached, setIsCached] = useState(false);
   const [cachedAt, setCachedAt] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const {
-    PHYSICS_SECTIONS,
-    TOPICS_CONTENT,
-    FORMULAS_DATA,
-    hasRemoteContent,
-    isLoading,
-  } = usePhysicsData();
 
   // Simple connectivity check via a lightweight fetch
   const checkOnline = useCallback(async () => {
@@ -54,25 +46,27 @@ export function useOfflineCache() {
 
   const cacheForOffline = useCallback(async () => {
     try {
-      if (isLoading || !hasRemoteContent || Object.keys(TOPICS_CONTENT).length === 0) {
-        return false;
-      }
-
-      const [topicsResponse, formulasResponse] = await Promise.all([
+      const [sectionsResponse, topicsResponse, formulasResponse] = await Promise.all([
+        api.get('/sections'),
         api.get('/topics'),
         api.get('/formulas'),
       ]);
+      const remoteSections = sectionsResponse.data || {};
       const remoteTopics = Array.isArray(topicsResponse.data) ? topicsResponse.data : [];
       const remoteFormulas = Array.isArray(formulasResponse.data?.items) ? formulasResponse.data.items : [];
       const topicsById = remoteTopics.reduce((acc, topic) => {
         if (topic?.id) acc[topic.id] = topic;
         return acc;
-      }, {} as typeof TOPICS_CONTENT);
+      }, {} as Record<string, any>);
+
+      if (Object.keys(remoteSections).length === 0 || Object.keys(topicsById).length === 0) {
+        return false;
+      }
 
       const data = {
-        sections: PHYSICS_SECTIONS,
-        topics: Object.keys(topicsById).length > 0 ? topicsById : TOPICS_CONTENT,
-        formulas: remoteFormulas.length > 0 ? remoteFormulas : FORMULAS_DATA,
+        sections: remoteSections,
+        topics: topicsById,
+        formulas: remoteFormulas,
       };
       const now = await saveOfflineContentCache(data);
       setIsCached(true);
@@ -82,7 +76,7 @@ export function useOfflineCache() {
       console.log('Cache error:', e);
       return false;
     }
-  }, [FORMULAS_DATA, PHYSICS_SECTIONS, TOPICS_CONTENT, hasRemoteContent, isLoading]);
+  }, []);
 
   const getCachedData = useCallback(async () => {
     try {

@@ -38,7 +38,7 @@ export default function TestsSubsectionsScreen() {
     const loadTests = async () => {
       if (!section) return;
       try {
-        const response = await api.get('/practice/tests', { params: { section } });
+        const response = await api.get('/practice/tests', { params: { section, summary: true } });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setRemoteTests(items);
       } catch (error) {

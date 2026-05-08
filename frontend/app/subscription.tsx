@@ -1,5 +1,5 @@
-import React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, Alert, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,7 +21,9 @@ export default function SubscriptionScreen() {
     packages,
     restorePurchases,
     presentPaywall,
+    presentCustomerCenter,
   } = useSubscription();
+  const [actionLoading, setActionLoading] = useState(false);
 
   const benefits = [
     { icon: 'ban', text: t('subscription.benefitNoAds') },
@@ -29,6 +31,55 @@ export default function SubscriptionScreen() {
     { icon: 'sparkles', text: t('subscription.benefitAiTools') },
     { icon: 'bulb', text: t('subscription.benefitSolutions') },
   ];
+
+  const openStoreSubscriptionSettings = useCallback(async () => {
+    const url = Platform.OS === 'android'
+      ? 'https://play.google.com/store/account/subscriptions?package=com.physicsai.app'
+      : 'https://apps.apple.com/account/subscriptions';
+
+    try {
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(t('subscription.manageFallbackTitle'), t('subscription.manageFallbackText'));
+    }
+  }, [t]);
+
+  const handlePrimaryAction = useCallback(async () => {
+    if (actionLoading || isExpoGo) return;
+
+    setActionLoading(true);
+    try {
+      if (isPro) {
+        const opened = await presentCustomerCenter();
+        if (!opened) {
+          await openStoreSubscriptionSettings();
+        }
+        return;
+      }
+
+      const purchased = await presentPaywall();
+      if (purchased) {
+        Alert.alert(t('subscription.purchaseSuccessTitle'), t('subscription.purchaseSuccessText'));
+      }
+    } finally {
+      setActionLoading(false);
+    }
+  }, [actionLoading, isExpoGo, isPro, openStoreSubscriptionSettings, presentCustomerCenter, presentPaywall, t]);
+
+  const handleRestore = useCallback(async () => {
+    if (actionLoading || isExpoGo) return;
+
+    setActionLoading(true);
+    try {
+      const restored = await restorePurchases();
+      Alert.alert(
+        restored ? t('subscription.restoreSuccessTitle') : t('subscription.restoreEmptyTitle'),
+        restored ? t('subscription.restoreSuccessText') : t('subscription.restoreEmptyText'),
+      );
+    } finally {
+      setActionLoading(false);
+    }
+  }, [actionLoading, isExpoGo, restorePurchases, t]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
@@ -116,20 +167,20 @@ export default function SubscriptionScreen() {
 
         <View style={styles.actions}>
           <TouchableOpacity
-            style={[styles.primaryButton, isExpoGo && styles.disabledButton]}
-            onPress={presentPaywall}
-            disabled={isExpoGo}
+            style={[styles.primaryButton, (isExpoGo || actionLoading) && styles.disabledButton]}
+            onPress={handlePrimaryAction}
+            disabled={isExpoGo || actionLoading}
             activeOpacity={0.9}
           >
             <LinearGradient colors={['#6366F1', '#06B6D4']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.primaryButtonGradient}>
-              <Ionicons name={isPro ? 'settings' : 'lock-open'} size={20} color="#FFFFFF" />
+              {actionLoading ? <ActivityIndicator color="#FFFFFF" /> : <Ionicons name={isPro ? 'settings' : 'lock-open'} size={20} color="#FFFFFF" />}
               <Text style={styles.primaryButtonText}>
                 {isPro ? t('subscription.manageButton') : t('subscription.ctaButton')}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.restoreButton} onPress={restorePurchases} disabled={isExpoGo}>
+          <TouchableOpacity style={styles.restoreButton} onPress={handleRestore} disabled={isExpoGo || actionLoading}>
             <Text style={[styles.restoreText, { color: colors.textSecondary }]}>{t('subscription.restore')}</Text>
           </TouchableOpacity>
         </View>
