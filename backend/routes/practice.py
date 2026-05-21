@@ -10,16 +10,17 @@ from server import (
     FREE_TASKS_PER_SUBSECTION,
     FREE_TESTS_PER_SUBSECTION,
     apply_group_access_locks,
+    consume_ai_generation_credit,
     db,
     get_current_user,
     get_optional_current_user,
     is_item_locked,
-    is_user_pro,
     parse_accept_language,
     pro_required_detail,
     record_daily_activity,
     strip_locked_task,
     strip_locked_test,
+    user_has_full_content_access,
 )
 
 from postgres import (
@@ -111,7 +112,7 @@ async def get_practice_tests(
                 items,
                 "subsection_id",
                 FREE_TESTS_PER_SUBSECTION,
-                is_user_pro(current_user),
+                user_has_full_content_access(current_user),
                 strip_locked=strip_locked_test,
             )
         }
@@ -133,6 +134,18 @@ async def create_random_practice_test(
     section_ids = [section.strip() for section in payload.section_ids if section.strip()]
     if not section_ids:
         raise HTTPException(status_code=400, detail="Select at least one section")
+
+    allowance = await consume_ai_generation_credit(current_user, "random_test")
+    if not allowance["allowed"]:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "code": "AI_GENERATION_LIMIT_REACHED",
+                "resource": "random_test",
+                "message": "Daily random test limit reached.",
+                "quota": allowance["quota"],
+            },
+        )
 
     try:
         questions = await list_random_practice_questions(
@@ -205,7 +218,7 @@ async def get_practice_test_by_id(
         test_id,
         "subsection_id",
         FREE_TESTS_PER_SUBSECTION,
-        is_user_pro(current_user),
+        user_has_full_content_access(current_user),
     ):
         raise HTTPException(status_code=403, detail=pro_required_detail("practice_test"))
     return {"item": item}
@@ -234,7 +247,7 @@ async def get_practice_tasks(
                 items,
                 "subsection_id",
                 FREE_TASKS_PER_SUBSECTION,
-                is_user_pro(current_user),
+                user_has_full_content_access(current_user),
                 strip_locked=strip_locked_task,
             )
         }
@@ -267,7 +280,7 @@ async def get_practice_task_by_id(
         task_id,
         "subsection_id",
         FREE_TASKS_PER_SUBSECTION,
-        is_user_pro(current_user),
+        user_has_full_content_access(current_user),
     ):
         raise HTTPException(status_code=403, detail=pro_required_detail("practice_task"))
     return {"item": item}
@@ -292,7 +305,7 @@ async def submit_practice_task(
         subsection_id=item.get("subsection_id"),
         summary=True,
     )
-    if is_item_locked(sibling_items, task_id, "subsection_id", FREE_TASKS_PER_SUBSECTION, is_user_pro(current_user)):
+    if is_item_locked(sibling_items, task_id, "subsection_id", FREE_TASKS_PER_SUBSECTION, user_has_full_content_access(current_user)):
         raise HTTPException(status_code=403, detail=pro_required_detail("practice_task"))
 
     correct = is_answer_correct(payload.answer, item.get("answer", ""))

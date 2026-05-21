@@ -14,6 +14,7 @@ import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useOfflineCache } from '../../src/hooks/useOfflineCache';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { useAdGate } from '../../src/hooks/useAdGate';
 export default function LessonsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function LessonsScreen() {
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const { isOnline, isCached, cacheForOffline } = useOfflineCache();
+  const { showContentAdIfNeeded } = useAdGate();
 
   const handleCacheOffline = async () => {
     const success = await cacheForOffline();
@@ -84,7 +86,10 @@ export default function LessonsScreen() {
           <TouchableOpacity
             key={key}
             style={[styles.sectionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-            onPress={() => router.push(`/lessons/${key}`)}
+            onPress={async () => {
+              await showContentAdIfNeeded();
+              router.push(`/lessons/${key}`);
+            }}
             activeOpacity={0.8}
           >
             <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>

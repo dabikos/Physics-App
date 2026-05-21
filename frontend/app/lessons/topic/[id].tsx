@@ -26,7 +26,8 @@ import { useTheme } from '../../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../src/context/AuthContext';
 import api from '../../../src/services/api';
-import { initializeMobileAds, showLearnMoreInterstitialAd } from '../../../src/services/adService';
+import { initializeMobileAds } from '../../../src/services/adService';
+import { useAdGate } from '../../../src/hooks/useAdGate';
 import type { TopicContent } from '../../../src/types/physics';
 
 // Компонент для отображения LaTeX формулы с красивым оформлением
@@ -154,6 +155,7 @@ export default function TopicScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { requireRewardedAdForFeature } = useAdGate();
   const [noteText, setNoteText] = useState('');
   const [noteExpanded, setNoteExpanded] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
@@ -252,8 +254,8 @@ export default function TopicScreen() {
     if (!id || openingLearnMore) return;
     setOpeningLearnMore(true);
     try {
-      const adShown = await showLearnMoreInterstitialAd();
-      if (!adShown) {
+      const allowed = await requireRewardedAdForFeature();
+      if (!allowed) {
         Alert.alert(t('common.error'), t('lessons.loadErrorMessage'));
         return;
       }

@@ -84,6 +84,13 @@ OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
 OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
 openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=60.0)
 FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '3'))
+BASIC_CHAT_DAILY_LIMIT = int(os.environ.get('BASIC_CHAT_DAILY_LIMIT', '10'))
+PRO_CHAT_DAILY_LIMIT = int(os.environ.get('PRO_CHAT_DAILY_LIMIT', '30'))
+FREE_AI_GENERATION_DAILY_LIMIT = int(os.environ.get('FREE_AI_GENERATION_DAILY_LIMIT', '1'))
+BASIC_AI_GENERATION_DAILY_LIMIT = int(os.environ.get('BASIC_AI_GENERATION_DAILY_LIMIT', '5'))
+PRO_AI_GENERATION_DAILY_LIMIT = int(os.environ.get('PRO_AI_GENERATION_DAILY_LIMIT', '15'))
+REVENUECAT_PRO_ENTITLEMENT_ID = os.environ.get('REVENUECAT_PRO_ENTITLEMENT_ID', 'Physics AI Pro')
+REVENUECAT_BASIC_ENTITLEMENT_ID = os.environ.get('REVENUECAT_BASIC_ENTITLEMENT_ID', 'Physics AI Basic')
 
 async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096, temperature: float = 0.7) -> str:
     """OpenAI chat completion (gpt-5-nano by default)."""
@@ -304,6 +311,8 @@ class ProfileUpdate(BaseModel):
 
 class SubscriptionSyncRequest(BaseModel):
     is_pro: bool = False
+    is_basic: bool = False
+    subscription_tier: Optional[Literal["free", "basic", "pro"]] = None
     active_entitlements: List[str] = []
     source: Optional[str] = "revenuecat"
 
@@ -488,15 +497,55 @@ async def get_optional_current_user(
         return None
 
 
-FREE_TOPICS_PER_SUBSECTION = 2
-FREE_TESTS_PER_SUBSECTION = 2
-FREE_TASKS_PER_SUBSECTION = 2
-FREE_FORMULAS_PER_SECTION = 5
+FREE_SECTIONS = 3
+FREE_SUBSECTIONS_PER_SECTION = 3
+FREE_TOPICS_PER_SUBSECTION = 3
+FREE_TESTS_PER_SUBSECTION = 3
+FREE_TASKS_PER_SUBSECTION = 3
+FREE_FORMULAS_PER_SECTION = 3
+
+
+def get_subscription_tier(user: Optional[dict]) -> Literal["free", "basic", "pro"]:
+    if not user:
+        return "free"
+
+    subscription = user.get("subscription", {}) or {}
+    explicit_tier = subscription.get("tier") or user.get("subscription_tier")
+    if explicit_tier in {"free", "basic", "pro"}:
+        return explicit_tier
+
+    entitlements = set(subscription.get("active_entitlements") or [])
+    if user.get("is_pro") or subscription.get("is_pro") or REVENUECAT_PRO_ENTITLEMENT_ID in entitlements:
+        return "pro"
+    if subscription.get("is_basic") or REVENUECAT_BASIC_ENTITLEMENT_ID in entitlements:
+        return "basic"
+    return "free"
 
 
 def is_user_pro(user: Optional[dict]) -> bool:
-    subscription = user.get("subscription", {}) if user else {}
-    return bool(user and (user.get("is_pro") or subscription.get("is_pro")))
+    return get_subscription_tier(user) == "pro"
+
+
+def user_has_full_content_access(user: Optional[dict]) -> bool:
+    return get_subscription_tier(user) in {"basic", "pro"}
+
+
+def get_chat_daily_limit(user: Optional[dict]) -> int:
+    tier = get_subscription_tier(user)
+    if tier == "pro":
+        return PRO_CHAT_DAILY_LIMIT
+    if tier == "basic":
+        return BASIC_CHAT_DAILY_LIMIT
+    return FREE_CHAT_DAILY_LIMIT
+
+
+def get_ai_generation_daily_limit(user: Optional[dict]) -> int:
+    tier = get_subscription_tier(user)
+    if tier == "pro":
+        return PRO_AI_GENERATION_DAILY_LIMIT
+    if tier == "basic":
+        return BASIC_AI_GENERATION_DAILY_LIMIT
+    return FREE_AI_GENERATION_DAILY_LIMIT
 
 
 def pro_required_detail(resource: str) -> dict:
@@ -531,16 +580,20 @@ def apply_group_access_locks(
     return result
 
 
-def apply_sections_access_locks(sections: dict, pro: bool) -> dict:
+def apply_sections_access_locks(sections: dict, has_full_content: bool) -> dict:
     result = {}
-    for section_id, section_data in sections.items():
+    for section_index, (section_id, section_data) in enumerate(sections.items()):
+        if not has_full_content and section_index >= FREE_SECTIONS:
+            continue
         next_section = dict(section_data)
         next_subsections = []
-        for subsection in section_data.get("subsections", []):
+        for subsection_index, subsection in enumerate(section_data.get("subsections", [])):
+            if not has_full_content and subsection_index >= FREE_SUBSECTIONS_PER_SECTION:
+                continue
             next_subsection = dict(subsection)
             topics = []
             for index, topic in enumerate(subsection.get("topics", [])):
-                locked = not pro and index >= FREE_TOPICS_PER_SUBSECTION
+                locked = not has_full_content and index >= FREE_TOPICS_PER_SUBSECTION
                 topics.append({**topic, "is_locked": locked, "requires_pro": locked})
             next_subsection["topics"] = topics
             next_subsections.append(next_subsection)
@@ -549,10 +602,10 @@ def apply_sections_access_locks(sections: dict, pro: bool) -> dict:
     return result
 
 
-def is_item_locked(items: list[dict], item_id: str, group_key: str, free_limit: int, pro: bool) -> bool:
-    if pro:
+def is_item_locked(items: list[dict], item_id: str, group_key: str, free_limit: int, has_full_content: bool) -> bool:
+    if has_full_content:
         return False
-    grouped_items = apply_group_access_locks(items, group_key, free_limit, pro)
+    grouped_items = apply_group_access_locks(items, group_key, free_limit, has_full_content)
     for item in grouped_items:
         if item.get("id") == item_id:
             return bool(item.get("is_locked"))
@@ -1416,10 +1469,10 @@ async def get_sections(
     if is_postgres_configured():
         try:
             sections = await list_lesson_sections(lang=parse_accept_language(accept_language))
-            return apply_sections_access_locks(sections, is_user_pro(current_user))
+            return apply_sections_access_locks(sections, user_has_full_content_access(current_user))
         except Exception as exc:
             logger.warning("Failed to load sections from PostgreSQL: %s", exc)
-    return apply_sections_access_locks(PHYSICS_SECTIONS, is_user_pro(current_user))
+    return apply_sections_access_locks(PHYSICS_SECTIONS, user_has_full_content_access(current_user))
 
 @api_router.get("/sections/{section_id}")
 async def get_section(
@@ -1431,13 +1484,13 @@ async def get_section(
         try:
             sections = await list_lesson_sections(lang=parse_accept_language(accept_language))
             if section_id in sections:
-                return apply_sections_access_locks({section_id: sections[section_id]}, is_user_pro(current_user))[section_id]
+                return apply_sections_access_locks({section_id: sections[section_id]}, user_has_full_content_access(current_user))[section_id]
         except Exception as exc:
             logger.warning("Failed to load section '%s' from PostgreSQL: %s", section_id, exc)
 
     if section_id not in PHYSICS_SECTIONS:
         raise HTTPException(status_code=404, detail="Раздел не найден")
-    return apply_sections_access_locks({section_id: PHYSICS_SECTIONS[section_id]}, is_user_pro(current_user))[section_id]
+    return apply_sections_access_locks({section_id: PHYSICS_SECTIONS[section_id]}, user_has_full_content_access(current_user))[section_id]
 
 # ==================== Topics/Lessons Routes ====================
 
@@ -1461,7 +1514,7 @@ async def get_topics(
                 topics,
                 "subsection",
                 FREE_TOPICS_PER_SUBSECTION,
-                is_user_pro(current_user),
+                user_has_full_content_access(current_user),
             )
         except Exception as exc:
             logger.warning("Failed to load topics from PostgreSQL: %s", exc)
@@ -1513,7 +1566,7 @@ async def get_topics(
         topics,
         "subsection",
         FREE_TOPICS_PER_SUBSECTION,
-        is_user_pro(current_user),
+        user_has_full_content_access(current_user),
     )
 
 @api_router.get("/topics/{topic_id}")
@@ -1538,7 +1591,7 @@ async def get_topic(
                     topic_id,
                     "subsection",
                     FREE_TOPICS_PER_SUBSECTION,
-                    is_user_pro(current_user),
+                    user_has_full_content_access(current_user),
                 ):
                     raise HTTPException(status_code=403, detail=pro_required_detail("topic"))
                 return item
@@ -1563,18 +1616,32 @@ async def generate_topic_content(
     current_user: dict = Depends(get_current_user),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
-    if not is_user_pro(current_user):
-        raise HTTPException(status_code=403, detail=pro_required_detail("ai_generation"))
-
     topic = await db.topics.find_one({"id": topic_id})
     if not topic:
         for t in INITIAL_TOPICS:
             if t["id"] == topic_id:
                 topic = t
                 break
+    if not topic and is_postgres_configured():
+        try:
+            topic = await get_lesson_topic(topic_id, lang=parse_accept_language(accept_language))
+        except Exception as exc:
+            logger.warning("Failed to load topic '%s' for AI generation from PostgreSQL: %s", topic_id, exc)
     
     if not topic:
         raise HTTPException(status_code=404, detail="Тема не найдена")
+
+    allowance = await consume_ai_generation_credit(current_user, "learn_more")
+    if not allowance["allowed"]:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "code": "AI_GENERATION_LIMIT_REACHED",
+                "resource": "learn_more",
+                "message": "Daily learn-more generation limit reached.",
+                "quota": allowance["quota"],
+            },
+        )
     
     try:
         lang_code = parse_accept_language(accept_language)
@@ -1717,8 +1784,17 @@ async def submit_task_answer(task_id: str, answer: Dict[str, int], current_user:
 @api_router.post("/tasks/generate")
 async def generate_task(request: GenerateTaskRequest, current_user: dict = Depends(get_current_user)):
     """Generate a new task using AI"""
-    if not is_user_pro(current_user):
-        raise HTTPException(status_code=403, detail=pro_required_detail("ai_generation"))
+    allowance = await consume_ai_generation_credit(current_user, "task_generation")
+    if not allowance["allowed"]:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "code": "AI_GENERATION_LIMIT_REACHED",
+                "resource": "task_generation",
+                "message": "Daily task generation limit reached.",
+                "quota": allowance["quota"],
+            },
+        )
 
     section_names = {
         "mechanics": "Механика",
@@ -1816,8 +1892,17 @@ async def generate_test(
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     """Generate a new test using AI"""
-    if not is_user_pro(current_user):
-        raise HTTPException(status_code=403, detail=pro_required_detail("ai_generation"))
+    allowance = await consume_ai_generation_credit(current_user, "test_generation")
+    if not allowance["allowed"]:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "code": "AI_GENERATION_LIMIT_REACHED",
+                "resource": "test_generation",
+                "message": "Daily test generation limit reached.",
+                "quota": allowance["quota"],
+            },
+        )
 
     section_names = {
         "mechanics": "Механика",
@@ -1973,7 +2058,7 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
                     test_id,
                     "subsection_id",
                     FREE_TESTS_PER_SUBSECTION,
-                    is_user_pro(current_user),
+                    user_has_full_content_access(current_user),
                 ):
                     raise HTTPException(status_code=403, detail=pro_required_detail("practice_test"))
         except HTTPException:
@@ -2097,7 +2182,7 @@ async def get_formulas(
                     items,
                     "section",
                     FREE_FORMULAS_PER_SECTION,
-                    is_user_pro(current_user),
+                    user_has_full_content_access(current_user),
                     strip_locked=strip_locked_formula,
                 )
             }
@@ -2120,7 +2205,7 @@ async def get_formulas(
                 filtered,
                 "section",
                 FREE_FORMULAS_PER_SECTION,
-                is_user_pro(current_user),
+                user_has_full_content_access(current_user),
                 strip_locked=strip_locked_formula,
             )
         }
@@ -2131,7 +2216,7 @@ async def get_formulas(
             formulas,
             "section",
             FREE_FORMULAS_PER_SECTION,
-            is_user_pro(current_user),
+            user_has_full_content_access(current_user),
             strip_locked=strip_locked_formula,
         )
     }
@@ -2153,7 +2238,7 @@ async def get_formula(
                     formula_id,
                     "section",
                     FREE_FORMULAS_PER_SECTION,
-                    is_user_pro(current_user),
+                    user_has_full_content_access(current_user),
                 ):
                     raise HTTPException(status_code=403, detail=pro_required_detail("formula"))
                 return {"item": item}
@@ -2204,22 +2289,25 @@ async def _normalize_chat_usage_day(user_id: str, day_key: str) -> Dict[str, Any
 
     return await db.chat_usage.find_one({"_id": primary["_id"]}) or {}
 
-async def _get_chat_quota(user_id: str) -> Dict[str, Any]:
+async def _get_chat_quota(user_id: str, user: Optional[dict] = None) -> Dict[str, Any]:
     day_key = _utc_day_key()
     usage = await _normalize_chat_usage_day(user_id, day_key)
+    daily_limit = get_chat_daily_limit(user)
     free_used = int(usage.get("free_used", 0))
     rewarded_credits = int(usage.get("rewarded_credits", 0))
     return {
         "day": day_key,
-        "free_limit": FREE_CHAT_DAILY_LIMIT,
+        "tier": get_subscription_tier(user),
+        "free_limit": daily_limit,
         "free_used": free_used,
-        "free_remaining": max(FREE_CHAT_DAILY_LIMIT - free_used, 0),
+        "free_remaining": max(daily_limit - free_used, 0),
         "rewarded_credits": max(rewarded_credits, 0),
     }
 
-async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
+async def _consume_chat_credit(user_id: str, user: Optional[dict] = None) -> Dict[str, Any]:
     now = datetime.utcnow()
     day_key = _utc_day_key()
+    daily_limit = get_chat_daily_limit(user)
 
     await _normalize_chat_usage_day(user_id, day_key)
 
@@ -2242,7 +2330,7 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
         {
             "user_id": user_id,
             "day": day_key,
-            "free_used": {"$lt": FREE_CHAT_DAILY_LIMIT},
+            "free_used": {"$lt": daily_limit},
         },
         {
             "$set": {"updated_at": now},
@@ -2252,7 +2340,7 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
         return_document=ReturnDocument.AFTER,
     )
     if free_doc:
-        return {"allowed": True, "source": "free", "quota": await _get_chat_quota(user_id)}
+        return {"allowed": True, "source": "free", "quota": await _get_chat_quota(user_id, user)}
 
     # 2) If free quota is exhausted, consume rewarded credit
     rewarded_doc = await db.chat_usage.find_one_and_update(
@@ -2269,9 +2357,80 @@ async def _consume_chat_credit(user_id: str) -> Dict[str, Any]:
         return_document=ReturnDocument.AFTER,
     )
     if rewarded_doc:
-        return {"allowed": True, "source": "rewarded", "quota": await _get_chat_quota(user_id)}
+        return {"allowed": True, "source": "rewarded", "quota": await _get_chat_quota(user_id, user)}
 
-    return {"allowed": False, "source": "none", "quota": await _get_chat_quota(user_id)}
+    return {"allowed": False, "source": "none", "quota": await _get_chat_quota(user_id, user)}
+
+
+async def _normalize_ai_generation_usage_day(user_id: str, day_key: str, feature: str) -> Dict[str, Any]:
+    docs = await db.ai_generation_usage.find(
+        {"user_id": user_id, "day": day_key, "feature": feature}
+    ).sort("updated_at", -1).to_list(20)
+    if not docs:
+        return {}
+    if len(docs) == 1:
+        return docs[0]
+
+    merged_used = sum(max(int(d.get("used", 0)), 0) for d in docs)
+    primary = docs[0]
+    now = datetime.utcnow()
+
+    await db.ai_generation_usage.update_one(
+        {"_id": primary["_id"]},
+        {"$set": {"used": merged_used, "updated_at": now}},
+    )
+    duplicate_ids = [d["_id"] for d in docs[1:]]
+    if duplicate_ids:
+        await db.ai_generation_usage.delete_many({"_id": {"$in": duplicate_ids}})
+
+    return await db.ai_generation_usage.find_one({"_id": primary["_id"]}) or {}
+
+
+async def get_ai_generation_quota(user: dict, feature: str) -> Dict[str, Any]:
+    day_key = _utc_day_key()
+    usage = await _normalize_ai_generation_usage_day(user["id"], day_key, feature)
+    daily_limit = get_ai_generation_daily_limit(user)
+    used = int(usage.get("used", 0))
+    return {
+        "day": day_key,
+        "feature": feature,
+        "tier": get_subscription_tier(user),
+        "limit": daily_limit,
+        "used": used,
+        "remaining": max(daily_limit - used, 0),
+    }
+
+
+async def consume_ai_generation_credit(user: dict, feature: str) -> Dict[str, Any]:
+    now = datetime.utcnow()
+    day_key = _utc_day_key()
+    daily_limit = get_ai_generation_daily_limit(user)
+
+    await _normalize_ai_generation_usage_day(user["id"], day_key, feature)
+    await db.ai_generation_usage.update_one(
+        {"user_id": user["id"], "day": day_key, "feature": feature},
+        {
+            "$setOnInsert": {"created_at": now, "used": 0},
+            "$set": {"updated_at": now},
+        },
+        upsert=True,
+    )
+
+    usage_doc = await db.ai_generation_usage.find_one_and_update(
+        {
+            "user_id": user["id"],
+            "day": day_key,
+            "feature": feature,
+            "used": {"$lt": daily_limit},
+        },
+        {"$set": {"updated_at": now}, "$inc": {"used": 1}},
+        upsert=False,
+        return_document=ReturnDocument.AFTER,
+    )
+    if usage_doc:
+        return {"allowed": True, "quota": await get_ai_generation_quota(user, feature)}
+
+    return {"allowed": False, "quota": await get_ai_generation_quota(user, feature)}
 
 # Chat routes moved to routes/chat.py
 
@@ -2955,17 +3114,44 @@ async def sync_subscription(
     current_user: dict = Depends(get_current_user),
 ):
     entitlements = [str(item) for item in payload.active_entitlements[:20]]
+    entitlement_set = set(entitlements)
+    if payload.subscription_tier in {"free", "basic", "pro"}:
+        tier = payload.subscription_tier
+    elif payload.is_pro or REVENUECAT_PRO_ENTITLEMENT_ID in entitlement_set:
+        tier = "pro"
+    elif payload.is_basic or REVENUECAT_BASIC_ENTITLEMENT_ID in entitlement_set:
+        tier = "basic"
+    else:
+        tier = "free"
+
+    is_pro = tier == "pro"
+    is_basic = tier == "basic"
     subscription = {
-        "is_pro": bool(payload.is_pro),
+        "tier": tier,
+        "is_pro": is_pro,
+        "is_basic": is_basic,
         "active_entitlements": entitlements,
         "source": payload.source or "revenuecat",
         "updated_at": datetime.utcnow(),
     }
     await db.users.update_one(
         {"id": current_user["id"]},
-        {"$set": {"subscription": subscription, "is_pro": bool(payload.is_pro)}},
+        {
+            "$set": {
+                "subscription": subscription,
+                "subscription_tier": tier,
+                "is_pro": is_pro,
+                "is_basic": is_basic,
+            }
+        },
     )
-    return {"success": True, "is_pro": bool(payload.is_pro), "active_entitlements": entitlements}
+    return {
+        "success": True,
+        "tier": tier,
+        "is_pro": is_pro,
+        "is_basic": is_basic,
+        "active_entitlements": entitlements,
+    }
 
 
 # ==================== Favorites ====================

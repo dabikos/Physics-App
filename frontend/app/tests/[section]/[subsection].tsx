@@ -27,6 +27,7 @@ import { SuccessModal } from '../../../src/components/SuccessModal';
 import { MathContent } from '../../../src/components/MathContent';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../src/context/ThemeContext';
+import { useAdGate } from '../../../src/hooks/useAdGate';
 
 const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => string) => {
   switch (difficulty) {
@@ -131,6 +132,7 @@ export default function TestsSectionScreen() {
   const { colors } = useTheme();
   const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS, getTestsBySection } = usePhysicsData();
+  const { showContentAdIfNeeded } = useAdGate();
   
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
   const subsectionData = sectionData?.subsections.find((item) => item.id === subsection);
@@ -230,6 +232,8 @@ export default function TestsSectionScreen() {
       router.push('/subscription');
       return;
     }
+
+    await showContentAdIfNeeded();
 
     let playableTest = test;
     if (playableTest.questions.length === 0) {
