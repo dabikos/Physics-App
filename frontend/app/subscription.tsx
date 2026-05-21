@@ -17,7 +17,8 @@ export default function SubscriptionScreen() {
   const {
     loading,
     error,
-    isPro,
+    hasFullContent,
+    subscriptionTier,
     packages,
     restorePurchases,
     presentPaywall,
@@ -49,7 +50,7 @@ export default function SubscriptionScreen() {
 
     setActionLoading(true);
     try {
-      if (isPro) {
+      if (hasFullContent) {
         const opened = await presentCustomerCenter();
         if (!opened) {
           await openStoreSubscriptionSettings();
@@ -64,7 +65,7 @@ export default function SubscriptionScreen() {
     } finally {
       setActionLoading(false);
     }
-  }, [actionLoading, isExpoGo, isPro, openStoreSubscriptionSettings, presentCustomerCenter, presentPaywall, t]);
+  }, [actionLoading, hasFullContent, isExpoGo, openStoreSubscriptionSettings, presentCustomerCenter, presentPaywall, t]);
 
   const handleRestore = useCallback(async () => {
     if (actionLoading || isExpoGo) return;
@@ -88,7 +89,7 @@ export default function SubscriptionScreen() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={26} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Physics AI Pro</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Physics AI</Text>
         <View style={styles.backButton} />
       </View>
 
@@ -98,7 +99,9 @@ export default function SubscriptionScreen() {
           <View style={styles.proBadge}>
             <Ionicons name="sparkles" size={18} color="#FDE68A" />
             <Text style={styles.proBadgeText}>
-              {isPro ? t('subscription.activeBadge') : t('subscription.proBadge')}
+              {hasFullContent
+                ? `${t('subscription.activeBadge')} ${subscriptionTier === 'basic' ? 'Basic' : 'Pro'}`
+                : t('subscription.proBadge')}
             </Text>
           </View>
           <Text style={styles.heroTitle}>{t('subscription.heroTitle')}</Text>
@@ -173,9 +176,9 @@ export default function SubscriptionScreen() {
             activeOpacity={0.9}
           >
             <LinearGradient colors={['#6366F1', '#06B6D4']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.primaryButtonGradient}>
-              {actionLoading ? <ActivityIndicator color="#FFFFFF" /> : <Ionicons name={isPro ? 'settings' : 'lock-open'} size={20} color="#FFFFFF" />}
+              {actionLoading ? <ActivityIndicator color="#FFFFFF" /> : <Ionicons name={hasFullContent ? 'settings' : 'lock-open'} size={20} color="#FFFFFF" />}
               <Text style={styles.primaryButtonText}>
-                {isPro ? t('subscription.manageButton') : t('subscription.ctaButton')}
+                {hasFullContent ? t('subscription.manageButton') : t('subscription.ctaButton')}
               </Text>
             </LinearGradient>
           </TouchableOpacity>

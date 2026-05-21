@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useLanguage } from '../../src/context/LanguageContext';
 import api from '../../src/services/api';
+import { useAdGate } from '../../src/hooks/useAdGate';
 
 type Difficulty = 'basic' | 'standard' | 'advanced' | 'olympiad';
 
@@ -35,6 +36,7 @@ export default function TestsScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const { getAILanguageName } = useLanguage();
+  const { requireRewardedAdForFeature, showContentAdIfNeeded } = useAdGate();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const DIFFICULTIES = DIFFICULTY_DATA.map(d => ({ ...d, label: t(`difficulty.${d.key}`) }));
@@ -72,6 +74,13 @@ export default function TestsScreen() {
     setError(null);
     setIsGenerating(true);
 
+    const allowed = await requireRewardedAdForFeature();
+    if (!allowed) {
+      setError(t('aiChat.adNotFinishedMessage'));
+      setIsGenerating(false);
+      return;
+    }
+
     const sectionData = PHYSICS_SECTIONS[selectedSection];
     const result = await generateTest(
       sectionData.name,
@@ -80,7 +89,6 @@ export default function TestsScreen() {
       selectedCount,
       getAILanguageName()
     );
-
     setIsGenerating(false);
 
     if (result.success && result.test) {
@@ -127,6 +135,11 @@ export default function TestsScreen() {
     setRandomError(null);
     setIsRandomizing(true);
     try {
+      const allowed = await requireRewardedAdForFeature();
+      if (!allowed) {
+        setRandomError(t('aiChat.adNotFinishedMessage'));
+        return;
+      }
       const response = await api.post('/practice/tests/random', {
         section_ids: selectedRandomSections,
         question_count: selectedRandomCount,
@@ -138,7 +151,8 @@ export default function TestsScreen() {
         params: { testData: JSON.stringify(test) },
       });
     } catch (error: any) {
-      setRandomError(error.response?.data?.detail || t('tests.randomLoadError'));
+      const detail = error.response?.data?.detail;
+      setRandomError((typeof detail === 'string' ? detail : detail?.message) || t('tests.randomLoadError'));
     } finally {
       setIsRandomizing(false);
     }
@@ -218,7 +232,10 @@ export default function TestsScreen() {
           <TouchableOpacity
             key={key}
             style={[styles.sectionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-            onPress={() => router.push(`/tests/${key}`)}
+            onPress={async () => {
+              await showContentAdIfNeeded();
+              router.push(`/tests/${key}`);
+            }}
             activeOpacity={0.8}
           >
             <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>

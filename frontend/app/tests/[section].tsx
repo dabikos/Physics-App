@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '../../src/context/ThemeContext';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
+import { useAdGate } from '../../src/hooks/useAdGate';
 import api from '../../src/services/api';
 
 type PracticeTestListItem = {
@@ -28,6 +29,7 @@ export default function TestsSubsectionsScreen() {
   const { colors } = useTheme();
   const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
+  const { showContentAdIfNeeded } = useAdGate();
   const [remoteTests, setRemoteTests] = useState<PracticeTestListItem[]>([]);
 
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
@@ -99,7 +101,10 @@ export default function TestsSubsectionsScreen() {
             <TouchableOpacity
               key={subsection.id}
               style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-              onPress={() => router.push(`/tests/${section}/${subsection.id}`)}
+              onPress={async () => {
+                await showContentAdIfNeeded();
+                router.push(`/tests/${section}/${subsection.id}`);
+              }}
               activeOpacity={0.82}
             >
               <View style={[styles.iconContainer, { backgroundColor: sectionData.color + '20' }]}>

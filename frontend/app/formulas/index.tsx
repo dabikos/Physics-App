@@ -16,6 +16,7 @@ import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import type { Formula } from '../../src/types/physics';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
+import { useAdGate } from '../../src/hooks/useAdGate';
 import api from '../../src/services/api';
 
 export default function FormulasScreen() {
@@ -28,6 +29,7 @@ export default function FormulasScreen() {
   const { isFavorite, toggleFavorite } = useFavorites();
   const { colors } = useTheme();
   const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
+  const { showContentAdIfNeeded } = useAdGate();
   const formulasData = remoteFormulas ?? FORMULAS_DATA;
 
   useEffect(() => {
@@ -85,7 +87,10 @@ export default function FormulasScreen() {
           { backgroundColor: colors.card, borderColor: colors.border },
           isLocked && styles.lockedCard,
         ]}
-        onPress={() => router.push(isLocked ? '/subscription' : `/formulas/${formula.id}`)}
+        onPress={async () => {
+          if (!isLocked) await showContentAdIfNeeded();
+          router.push(isLocked ? '/subscription' : `/formulas/${formula.id}`);
+        }}
         activeOpacity={0.82}
       >
         <View style={styles.formulaCardHeader}>

@@ -14,7 +14,6 @@ from server import (
     _consume_chat_credit,
     _utc_day_key,
     call_ai,
-    is_user_pro,
 )
 from postgres import get_ai_prompt
 
@@ -24,7 +23,7 @@ router = APIRouter()
 
 @router.get("/chat/quota")
 async def get_chat_quota(current_user: dict = Depends(get_current_user)):
-    return await _get_chat_quota(current_user["id"])
+    return await _get_chat_quota(current_user["id"], current_user)
 
 @router.post("/chat/rewarded/claim")
 async def claim_chat_rewarded_credit(
@@ -43,7 +42,7 @@ async def claim_chat_rewarded_credit(
         upsert=True,
         return_document=ReturnDocument.AFTER,
     )
-    quota = await _get_chat_quota(current_user["id"])
+    quota = await _get_chat_quota(current_user["id"], current_user)
     return {"success": True, "quota": quota}
 
 @router.post("/chat")
@@ -53,11 +52,7 @@ async def chat_with_ai(
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
     try:
-        allowance = (
-            {"allowed": True, "quota": await _get_chat_quota(current_user["id"])}
-            if is_user_pro(current_user)
-            else await _consume_chat_credit(current_user["id"])
-        )
+        allowance = await _consume_chat_credit(current_user["id"], current_user)
         if not allowance["allowed"]:
             raise HTTPException(
                 status_code=429,

@@ -10,7 +10,9 @@ import Purchases, {
 import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
 import {
   REVENUECAT_ENTITLEMENT_ID,
+  REVENUECAT_BASIC_ENTITLEMENT_ID,
   REVENUECAT_OFFERING_ID,
+  REVENUECAT_PRO_ENTITLEMENT_ID,
   REVENUECAT_PRODUCTS,
   RevenueCatProductId,
   getRevenueCatApiKey,
@@ -26,7 +28,23 @@ export function isRevenueCatExpoGoPreview() {
 }
 
 export function isProCustomer(customerInfo: CustomerInfo | null | undefined) {
-  return Boolean(customerInfo?.entitlements.active[REVENUECAT_ENTITLEMENT_ID]);
+  return Boolean(customerInfo?.entitlements.active[REVENUECAT_PRO_ENTITLEMENT_ID]);
+}
+
+export function isBasicCustomer(customerInfo: CustomerInfo | null | undefined) {
+  return Boolean(customerInfo?.entitlements.active[REVENUECAT_BASIC_ENTITLEMENT_ID]);
+}
+
+export type SubscriptionTier = 'free' | 'basic' | 'pro';
+
+export function getSubscriptionTier(customerInfo: CustomerInfo | null | undefined): SubscriptionTier {
+  if (isProCustomer(customerInfo)) return 'pro';
+  if (isBasicCustomer(customerInfo)) return 'basic';
+  return 'free';
+}
+
+export function hasFullContentCustomer(customerInfo: CustomerInfo | null | undefined) {
+  return getSubscriptionTier(customerInfo) !== 'free';
 }
 
 export function getRevenueCatErrorMessage(error: unknown) {
@@ -209,11 +227,16 @@ export async function presentRevenueCatPaywall(offering?: PurchasesOffering | nu
 
   await configureRevenueCat();
 
-  const result = await RevenueCatUI.presentPaywallIfNeeded({
-    requiredEntitlementIdentifier: REVENUECAT_ENTITLEMENT_ID,
-    offering: offering || undefined,
-    displayCloseButton: true,
-  });
+  const result = typeof (RevenueCatUI as any).presentPaywall === 'function'
+    ? await (RevenueCatUI as any).presentPaywall({
+        offering: offering || undefined,
+        displayCloseButton: true,
+      })
+    : await RevenueCatUI.presentPaywallIfNeeded({
+        requiredEntitlementIdentifier: REVENUECAT_ENTITLEMENT_ID,
+        offering: offering || undefined,
+        displayCloseButton: true,
+      });
 
   return result === PAYWALL_RESULT.PURCHASED || result === PAYWALL_RESULT.RESTORED;
 }

@@ -12,12 +12,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { useAdGate } from '../../src/hooks/useAdGate';
 export default function TasksScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
+  const { showContentAdIfNeeded } = useAdGate();
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
     const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -54,7 +56,10 @@ export default function TasksScreen() {
           <TouchableOpacity
             key={key}
             style={[styles.sectionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-            onPress={() => router.push(`/tasks/${key}`)}
+            onPress={async () => {
+              await showContentAdIfNeeded();
+              router.push(`/tasks/${key}`);
+            }}
             activeOpacity={0.8}
           >
             <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>

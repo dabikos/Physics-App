@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Alert,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -312,7 +314,6 @@ export default function AIChatScreen() {
           style={[styles.input, { backgroundColor: colors.inputBg, color: colors.text }]}
           value={inputText}
           onChangeText={setInputText}
-          onFocus={() => setIsKeyboardVisible(true)}
           placeholder={t('aiChat.placeholder')}
           placeholderTextColor={colors.textMuted}
           multiline
@@ -384,9 +385,15 @@ export default function AIChatScreen() {
         </View>
       )}
 
-      <View style={styles.chatContainer}>
-        {chatBody}
-      </View>
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
+      >
+        <View style={styles.chatContainer}>
+          {chatBody}
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -435,6 +442,9 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   chatContainer: {
+    flex: 1,
+  },
+  keyboardAvoidingView: {
     flex: 1,
   },
   chatContentArea: {

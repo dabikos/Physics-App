@@ -78,7 +78,7 @@ const remotePhysicsRequests = new Map<string, Promise<RemotePhysicsPayload>>();
 
 export function usePhysicsData(): PhysicsDataResult {
   const { currentLanguage } = useLanguage();
-  const { isPro } = useSubscription();
+  const { hasFullContent, subscriptionTier } = useSubscription();
   const language = normalizeLanguage(currentLanguage);
   const [sections, setSections] = useState<Record<string, Section>>(
     FALLBACK_SECTIONS_BY_LANG[language] || FALLBACK_SECTIONS_BY_LANG.ru
@@ -90,7 +90,7 @@ export function usePhysicsData(): PhysicsDataResult {
 
   useEffect(() => {
     let cancelled = false;
-    const cacheKey = `${language}:${isPro ? 'pro' : 'free'}`;
+    const cacheKey = `${language}:${hasFullContent ? 'full' : 'free'}:${subscriptionTier}`;
 
     const applyPayload = (payload: RemotePhysicsPayload) => {
       setSections(payload.sections);
@@ -170,7 +170,7 @@ export function usePhysicsData(): PhysicsDataResult {
     return () => {
       cancelled = true;
     };
-  }, [language, isPro]);
+  }, [language, hasFullContent, subscriptionTier]);
 
   return useMemo(() => {
     const getTopicById = (id: string): TopicContent | null => topics[id] || null;
