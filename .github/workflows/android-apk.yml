@@ -49,6 +49,7 @@ jobs:
       - name: Build APK
         env:
           NODE_ENV: production
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError"
           EXPO_PUBLIC_API_PROFILE: production
           EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
           EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID: Physics AI Pro
@@ -58,9 +59,13 @@ jobs:
           EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID: monthly
           EXPO_PUBLIC_REVENUECAT_YEARLY_PRODUCT_ID: yearly
         run: |
+          {
+            echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError"
+            echo "org.gradle.daemon.performance.disable-logging=true"
+          } >> android/gradle.properties
           chmod +x android/gradlew
           cd android
-          ./gradlew assembleRelease -PVERSION_CODE=${{ inputs.version_code }} -PVERSION_NAME=${{ inputs.version_name }} --no-daemon
+          ./gradlew assembleRelease -PVERSION_CODE=${{ inputs.version_code }} -PVERSION_NAME=${{ inputs.version_name }} -PreactNativeArchitectures=arm64-v8a --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
