@@ -9,9 +9,9 @@ import {
   ActivityIndicator,
   Alert,
   Keyboard,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
+import { useKeyboardHandler } from 'react-native-keyboard-controller';
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { claimRewardedChatCredit, ChatQuota, getChatQuota, sendChatMessage } from '../../src/services/aiService';
@@ -20,6 +20,9 @@ import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
 import { CHAT_REWARDED_AD_UNIT_ID, initializeMobileAds, showRewardedChatAd } from '../../src/services/adService';
+
+const TAB_BAR_HEIGHT = 64;
+const INPUT_DOCK_GAP = 8;
 
 interface Message {
   id: string;
@@ -37,7 +40,6 @@ export default function AIChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   const [chatQuota, setChatQuota] = useState<ChatQuota | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -47,11 +49,39 @@ export default function AIChatScreen() {
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
   const insets = useSafeAreaInsets();
-  const tabBarBottomOffset = insets.bottom;
-  const tabBarHeight = 64;
-  const chatBottomClearance = tabBarBottomOffset + tabBarHeight;
-  const inputDockGap = 8;
-  const inputBottomOffset = isKeyboardVisible ? 0 : chatBottomClearance + inputDockGap;
+  const inputClosedOffset = TAB_BAR_HEIGHT + insets.bottom + INPUT_DOCK_GAP;
+  const keyboardHeight = useSharedValue(0);
+  const closedSpacerHeight = useSharedValue(inputClosedOffset);
+
+  useEffect(() => {
+    closedSpacerHeight.value = inputClosedOffset;
+  }, [closedSpacerHeight, inputClosedOffset]);
+
+  useKeyboardHandler(
+    {
+      onStart: (event) => {
+        'worklet';
+        keyboardHeight.value = event.height;
+      },
+      onMove: (event) => {
+        'worklet';
+        keyboardHeight.value = event.height;
+      },
+      onInteractive: (event) => {
+        'worklet';
+        keyboardHeight.value = event.height;
+      },
+      onEnd: (event) => {
+        'worklet';
+        keyboardHeight.value = event.height;
+      },
+    },
+    []
+  );
+
+  const keyboardSpacerStyle = useAnimatedStyle(() => ({
+    height: keyboardHeight.value > 0 ? keyboardHeight.value : closedSpacerHeight.value,
+  }));
 
 
   const legacySendMessage = async () => {
@@ -109,22 +139,6 @@ export default function AIChatScreen() {
       }
     });
   }, []);
-
-  useEffect(() => {
-    const showSub = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardVisible(true);
-    });
-    const hideSub = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardVisible(false);
-    });
-
-    return () => {
-      showSub.remove();
-      hideSub.remove();
-    };
-  }, []);
-
-
 
   const scrollToEnd = () => {
     setTimeout(() => {
@@ -220,7 +234,6 @@ export default function AIChatScreen() {
     const textToSend = inputText.trim();
     setInputText('');
     Keyboard.dismiss();
-    setIsKeyboardVisible(false);
     await sendPreparedMessage(textToSend);
   };
 
@@ -302,12 +315,6 @@ export default function AIChatScreen() {
           {
             backgroundColor: colors.headerBg,
             borderColor: colors.border,
-            marginBottom: inputBottomOffset,
-            marginHorizontal: isKeyboardVisible ? 0 : 10,
-            borderRadius: isKeyboardVisible ? 0 : 18,
-            borderLeftWidth: isKeyboardVisible ? 0 : 1,
-            borderRightWidth: isKeyboardVisible ? 0 : 1,
-            borderBottomWidth: isKeyboardVisible ? 0 : 1,
             shadowColor: colors.shadowColor,
           },
         ]}
@@ -333,6 +340,7 @@ export default function AIChatScreen() {
           <Ionicons name="send" size={20} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
+      <Animated.View style={keyboardSpacerStyle} />
     </>
   );
 
@@ -387,15 +395,9 @@ export default function AIChatScreen() {
         </View>
       )}
 
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={0}
-      >
-        <View style={styles.chatContainer}>
-          {chatBody}
-        </View>
-      </KeyboardAvoidingView>
+      <View style={styles.chatContainer}>
+        {chatBody}
+      </View>
     </SafeAreaView>
   );
 }
@@ -444,9 +446,6 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   chatContainer: {
-    flex: 1,
-  },
-  keyboardAvoidingView: {
     flex: 1,
   },
   chatContentArea: {
@@ -591,6 +590,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 18,
     height: 64,
+    marginHorizontal: 10,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 16,
