@@ -49,13 +49,21 @@ jobs:
       - name: Restore upload keystore
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ] || [ -z "$ANDROID_KEY_ALIAS" ] || [ -z "$ANDROID_KEYSTORE_PASSWORD" ] || [ -z "$ANDROID_KEY_PASSWORD" ]; then
+            echo "::error::Missing Android signing secrets. Required: ANDROID_KEYSTORE_BASE64, ANDROID_KEY_ALIAS, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_PASSWORD."
+            exit 1
+          fi
           mkdir -p credentials/android
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > credentials/android/keystore.jks
 
       - name: Build signed app bundle
         env:
           NODE_ENV: production
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError"
           EXPO_PUBLIC_API_PROFILE: production
           EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
           EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID: Physics AI Pro
@@ -69,6 +77,10 @@ jobs:
           MYAPP_UPLOAD_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           MYAPP_UPLOAD_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
+          {
+            echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError"
+            echo "org.gradle.daemon.performance.disable-logging=true"
+          } >> android/gradle.properties
           chmod +x android/gradlew
           cd android
           ./gradlew bundleRelease -PVERSION_CODE=${{ inputs.version_code }} -PVERSION_NAME=${{ inputs.version_name }} --no-daemon
