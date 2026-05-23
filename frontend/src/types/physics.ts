@@ -9,6 +9,8 @@ export interface Subsection {
   id: string;
   name: string;
   topics: Topic[];
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }
 
 export interface Section {
@@ -16,6 +18,8 @@ export interface Section {
   icon: string;
   color: string;
   subsections: Subsection[];
+  is_locked?: boolean;
+  requires_pro?: boolean;
 }
 
 export interface TopicContent {

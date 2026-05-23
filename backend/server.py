@@ -583,17 +583,21 @@ def apply_group_access_locks(
 def apply_sections_access_locks(sections: dict, has_full_content: bool) -> dict:
     result = {}
     for section_index, (section_id, section_data) in enumerate(sections.items()):
-        if not has_full_content and section_index >= FREE_SECTIONS:
-            continue
+        section_locked = not has_full_content and section_index >= FREE_SECTIONS
         next_section = dict(section_data)
+        next_section["is_locked"] = section_locked
+        next_section["requires_pro"] = section_locked
         next_subsections = []
         for subsection_index, subsection in enumerate(section_data.get("subsections", [])):
-            if not has_full_content and subsection_index >= FREE_SUBSECTIONS_PER_SECTION:
-                continue
+            subsection_locked = section_locked or (
+                not has_full_content and subsection_index >= FREE_SUBSECTIONS_PER_SECTION
+            )
             next_subsection = dict(subsection)
+            next_subsection["is_locked"] = subsection_locked
+            next_subsection["requires_pro"] = subsection_locked
             topics = []
             for index, topic in enumerate(subsection.get("topics", [])):
-                locked = not has_full_content and index >= FREE_TOPICS_PER_SUBSECTION
+                locked = subsection_locked or (not has_full_content and index >= FREE_TOPICS_PER_SUBSECTION)
                 topics.append({**topic, "is_locked": locked, "requires_pro": locked})
             next_subsection["topics"] = topics
             next_subsections.append(next_subsection)
@@ -1484,13 +1488,13 @@ async def get_section(
         try:
             sections = await list_lesson_sections(lang=parse_accept_language(accept_language))
             if section_id in sections:
-                return apply_sections_access_locks({section_id: sections[section_id]}, user_has_full_content_access(current_user))[section_id]
+                return apply_sections_access_locks(sections, user_has_full_content_access(current_user))[section_id]
         except Exception as exc:
             logger.warning("Failed to load section '%s' from PostgreSQL: %s", section_id, exc)
 
     if section_id not in PHYSICS_SECTIONS:
         raise HTTPException(status_code=404, detail="Раздел не найден")
-    return apply_sections_access_locks({section_id: PHYSICS_SECTIONS[section_id]}, user_has_full_content_access(current_user))[section_id]
+    return apply_sections_access_locks(PHYSICS_SECTIONS, user_has_full_content_access(current_user))[section_id]
 
 # ==================== Topics/Lessons Routes ====================
 

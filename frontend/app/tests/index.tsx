@@ -228,26 +228,33 @@ export default function TestsScreen() {
 
         <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('tests.readyTests')}</Text>
         
-        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
-          <TouchableOpacity
-            key={key}
-            style={[styles.sectionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-            onPress={async () => {
-              await showContentAdIfNeeded();
-              router.push(`/tests/${key}`);
-            }}
-            activeOpacity={0.8}
-          >
-            <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>
-              <Ionicons name={getIconName(section.icon)} size={28} color={section.color} />
-            </View>
-            <View style={styles.sectionInfo}>
-              <Text style={[styles.sectionName, { color: colors.text }]}>{section.name}</Text>
-              <Text style={[styles.sectionDescription, { color: colors.textTertiary }]}>{t('tests.checkKnowledge')}</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={24} color={colors.textMuted} />
-          </TouchableOpacity>
-        ))}
+        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
+          const isLocked = section.is_locked || section.requires_pro;
+          return (
+            <TouchableOpacity
+              key={key}
+              style={[
+                styles.sectionCard,
+                { backgroundColor: colors.card, shadowColor: colors.shadowColor },
+                isLocked && styles.lockedCard,
+              ]}
+              onPress={async () => {
+                if (!isLocked) await showContentAdIfNeeded();
+                router.push(isLocked ? '/subscription' : `/tests/${key}`);
+              }}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>
+                <Ionicons name={isLocked ? 'lock-closed' : getIconName(section.icon)} size={28} color={isLocked ? colors.textMuted : section.color} />
+              </View>
+              <View style={styles.sectionInfo}>
+                <Text style={[styles.sectionName, { color: isLocked ? colors.textMuted : colors.text }]}>{section.name}</Text>
+                <Text style={[styles.sectionDescription, { color: colors.textTertiary }]}>{t('tests.checkKnowledge')}</Text>
+              </View>
+              <Ionicons name={isLocked ? 'lock-closed' : 'chevron-forward'} size={24} color={colors.textMuted} />
+            </TouchableOpacity>
+          );
+        })}
 
         <View style={styles.bottomPadding} />
       </ScrollView>
@@ -603,6 +610,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 2,
+  },
+  lockedCard: {
+    opacity: 0.58,
   },
   iconContainer: {
     width: 56,

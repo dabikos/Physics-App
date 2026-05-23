@@ -219,6 +219,8 @@ export default function AIChatScreen() {
     if (!inputText.trim() || isLoading) return;
     const textToSend = inputText.trim();
     setInputText('');
+    Keyboard.dismiss();
+    setIsKeyboardVisible(false);
     await sendPreparedMessage(textToSend);
   };
 
@@ -387,7 +389,7 @@ export default function AIChatScreen() {
 
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={0}
       >
         <View style={styles.chatContainer}>

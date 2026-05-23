@@ -14,8 +14,8 @@ export const REVENUECAT_OFFERING_ID =
 
 export const REVENUECAT_PRODUCTS = {
   basic: process.env.EXPO_PUBLIC_REVENUECAT_BASIC_PRODUCT_ID || 'basic',
-  monthly: 'monthly',
-  yearly: 'yearly',
+  monthly: process.env.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID || 'monthly',
+  yearly: process.env.EXPO_PUBLIC_REVENUECAT_YEARLY_PRODUCT_ID || 'yearly',
 } as const;
 
 export type RevenueCatProductId = keyof typeof REVENUECAT_PRODUCTS;

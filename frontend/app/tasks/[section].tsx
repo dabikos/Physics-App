@@ -91,27 +91,32 @@ export default function TasksSubsectionsScreen() {
         {sectionData.subsections.map((subsection) => {
           const fallbackCount = subsection.topics.length * 5;
           const taskCount = countsBySubsection[subsection.id] ?? fallbackCount;
+          const isLocked = subsection.is_locked || subsection.requires_pro;
 
           return (
             <TouchableOpacity
               key={subsection.id}
-              style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+              style={[
+                styles.card,
+                { backgroundColor: colors.card, shadowColor: colors.shadowColor },
+                isLocked && styles.lockedCard,
+              ]}
               onPress={async () => {
-                await showContentAdIfNeeded();
-                router.push(`/tasks/${section}/${subsection.id}`);
+                if (!isLocked) await showContentAdIfNeeded();
+                router.push(isLocked ? '/subscription' : `/tasks/${section}/${subsection.id}`);
               }}
               activeOpacity={0.82}
             >
               <View style={[styles.iconContainer, { backgroundColor: sectionData.color + '20' }]}>
-                <Ionicons name="layers-outline" size={26} color={sectionData.color} />
+                <Ionicons name={isLocked ? 'lock-closed' : 'layers-outline'} size={26} color={isLocked ? colors.textMuted : sectionData.color} />
               </View>
               <View style={styles.cardInfo}>
-                <Text style={[styles.cardTitle, { color: colors.text }]}>{subsection.name}</Text>
+                <Text style={[styles.cardTitle, { color: isLocked ? colors.textMuted : colors.text }]}>{subsection.name}</Text>
                 <Text style={[styles.cardSubtitle, { color: colors.textTertiary }]}>
                   {t('tasks.countSummary', { count: taskCount })}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={22} color={colors.textMuted} />
+              <Ionicons name={isLocked ? 'lock-closed' : 'chevron-forward'} size={22} color={colors.textMuted} />
             </TouchableOpacity>
           );
         })}
@@ -191,6 +196,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 2,
+  },
+  lockedCard: {
+    opacity: 0.58,
   },
   iconContainer: {
     width: 52,

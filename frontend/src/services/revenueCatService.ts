@@ -177,10 +177,14 @@ export function findPackageByProductId(
   productId: RevenueCatProductId,
 ) {
   const productIdentifier = REVENUECAT_PRODUCTS[productId];
+  const normalizedProductIdentifier = productIdentifier.toLowerCase();
+  const normalizedProductId = productId.toLowerCase();
 
   return (
     packages.find((item) => item.product.identifier === productIdentifier) ||
-    packages.find((item) => item.identifier.toLowerCase().includes(productId))
+    packages.find((item) => item.product.identifier.toLowerCase().startsWith(`${normalizedProductIdentifier}:`)) ||
+    packages.find((item) => item.product.identifier.toLowerCase().includes(normalizedProductIdentifier)) ||
+    packages.find((item) => item.identifier.toLowerCase().includes(normalizedProductId))
   );
 }
 
