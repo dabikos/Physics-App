@@ -10,10 +10,9 @@ import {
   Alert,
   Keyboard,
 } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { claimRewardedChatCredit, ChatQuota, getChatQuota, sendChatMessage } from '../../src/services/aiService';
 import { MathText } from '../../src/components/MathText';
@@ -21,6 +20,9 @@ import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
 import { CHAT_REWARDED_AD_UNIT_ID, initializeMobileAds, showRewardedChatAd } from '../../src/services/adService';
+
+const TAB_BAR_HEIGHT = 64;
+const INPUT_DOCK_GAP = 8;
 
 interface Message {
   id: string;
@@ -46,9 +48,8 @@ export default function AIChatScreen() {
   void isDark;
   const { t } = useTranslation();
   const { getAILanguageName } = useLanguage();
-  const tabBarHeight = useBottomTabBarHeight();
-  const inputDockGap = 8;
-  const inputClosedOffset = tabBarHeight + inputDockGap;
+  const insets = useSafeAreaInsets();
+  const inputClosedOffset = TAB_BAR_HEIGHT + insets.bottom + INPUT_DOCK_GAP;
   const keyboardHeight = useSharedValue(0);
   const closedSpacerHeight = useSharedValue(inputClosedOffset);
 
