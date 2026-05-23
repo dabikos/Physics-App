@@ -97,6 +97,7 @@ export default function SectionScreen() {
           const topics = getTopicsBySubsection(section!, subsection.id);
           const completedCount = topics.filter(t => completedLessons.has(t.id)).length;
           const allCompleted = completedCount === topics.length && topics.length > 0;
+          const isSubsectionLocked = subsection.is_locked || subsection.requires_pro;
           
           return (
             <View key={subsection.id}>
@@ -104,23 +105,28 @@ export default function SectionScreen() {
                 style={[
                   styles.subsectionCard,
                   { backgroundColor: colors.card, shadowColor: colors.shadowColor },
-                  selectedSubsection === subsection.id && { backgroundColor: colors.accentLight },
+                  selectedSubsection === subsection.id && !isSubsectionLocked && { backgroundColor: colors.accentLight },
+                  isSubsectionLocked && styles.lockedCard,
                 ]}
-                onPress={() =>
+                onPress={() => {
+                  if (isSubsectionLocked) {
+                    router.push('/subscription');
+                    return;
+                  }
                   setSelectedSubsection(
                     selectedSubsection === subsection.id ? null : subsection.id
-                  )
-                }
+                  );
+                }}
                 activeOpacity={0.8}
               >
                 <View
                   style={[
                     styles.subsectionDot,
-                    { backgroundColor: allCompleted ? '#10B981' : sectionData.color },
+                    { backgroundColor: isSubsectionLocked ? colors.textMuted : allCompleted ? '#10B981' : sectionData.color },
                   ]}
                 />
                 <View style={styles.subsectionInfo}>
-                  <Text style={[styles.subsectionName, { color: colors.text }]}>{subsection.name}</Text>
+                  <Text style={[styles.subsectionName, { color: isSubsectionLocked ? colors.textMuted : colors.text }]}>{subsection.name}</Text>
                   <View style={styles.subsectionMeta}>
                     <Text style={[styles.topicsCount, { color: colors.textTertiary }]}>{t('lessons.topicsCount', { count: subsection.topics.length })}</Text>
                     {completedCount > 0 && (
@@ -133,7 +139,7 @@ export default function SectionScreen() {
                   </View>
                 </View>
                 <Ionicons
-                  name={selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
+                  name={isSubsectionLocked ? 'lock-closed' : selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
                   size={20}
                   color={colors.textTertiary}
                 />
@@ -332,6 +338,9 @@ const styles = StyleSheet.create({
   favButton: {
     padding: 4,
     marginLeft: 8,
+  },
+  lockedCard: {
+    opacity: 0.58,
   },
   lockBadge: {
     flexDirection: 'row',
