@@ -11,6 +11,11 @@ on:
         description: "Android versionName shown in Google Play."
         required: true
         default: "1.0.0"
+  push:
+    branches:
+      - codex/pro-subscription-access
+    paths:
+      - .github/workflows/android-release.yml
 
 permissions:
   contents: read
@@ -66,6 +71,8 @@ jobs:
       - name: Build signed app bundle
         env:
           NODE_ENV: production
+          RELEASE_VERSION_CODE: ${{ github.event.inputs.version_code || '18' }}
+          RELEASE_VERSION_NAME: ${{ github.event.inputs.version_name || '1.0.1' }}
           GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=1g -XX:+HeapDumpOnOutOfMemoryError"
           EXPO_PUBLIC_API_PROFILE: production
           EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY: ${{ secrets.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY }}
@@ -86,7 +93,7 @@ jobs:
           } >> android/gradle.properties
           chmod +x android/gradlew
           cd android
-          ./gradlew bundleRelease -PVERSION_CODE=${{ inputs.version_code }} -PVERSION_NAME=${{ inputs.version_name }} --no-daemon
+          ./gradlew bundleRelease -PVERSION_CODE="$RELEASE_VERSION_CODE" -PVERSION_NAME="$RELEASE_VERSION_NAME" --no-daemon
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
