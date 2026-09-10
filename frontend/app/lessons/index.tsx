@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   Text,
@@ -6,111 +6,283 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useOfflineCache } from '../../src/hooks/useOfflineCache';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import { useAdGate } from '../../src/hooks/useAdGate';
+
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  try {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(style);
+    }
+  } catch {}
+};
+
+const SECTION_GRADIENTS: Record<string, [string, string]> = {
+  mechanics: ['#3B82F6', '#1D4ED8'],
+  thermodynamics: ['#F97316', '#C2410C'],
+  electromagnetism: ['#8B5CF6', '#6D28D9'],
+  optics: ['#10B981', '#047857'],
+  atomic: ['#EC4899', '#BE185D'],
+  relativity: ['#6366F1', '#4338CA'],
+  astronomy: ['#F59E0B', '#D97706'],
+};
+
+interface SectionCardProps {
+  sectionKey: string;
+  section: any;
+  topicCount: number;
+  gradient: [string, string];
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress: () => void;
+  index: number;
+  cardBg: string;
+  borderColor: string;
+  textColor: string;
+  textSecondary: string;
+  shadowColor: string;
+}
+
+const SectionCardItem: React.FC<SectionCardProps> = ({
+  section,
+  topicCount,
+  gradient,
+  icon,
+  onPress,
+  cardBg,
+  borderColor,
+  textColor,
+  textSecondary,
+  shadowColor,
+}) => {
+  const scale = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    Animated.spring(scale, { toValue: 0.97, friction: 6, tension: 100, useNativeDriver: true }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, { toValue: 1, friction: 6, tension: 100, useNativeDriver: true }).start();
+  };
+
+  return (
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <TouchableOpacity
+        style={[
+          styles.sectionCard,
+          {
+            backgroundColor: cardBg,
+            borderColor,
+            shadowColor,
+          },
+        ]}
+        onPress={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+          onPress();
+        }}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={1}
+      >
+        <LinearGradient
+          colors={gradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.iconGradient}
+        >
+          <Ionicons name={icon} size={26} color="#FFFFFF" />
+        </LinearGradient>
+
+        <View style={styles.sectionInfo}>
+          <Text style={[styles.sectionName, { color: textColor }]}>{section.name}</Text>
+          <View style={styles.tagsRow}>
+            <View style={[styles.subCountPill, { backgroundColor: gradient[0] + '18' }]}>
+              <Text style={[styles.subCountText, { color: gradient[0] }]}>
+                {section.subsections.length} подраздела
+              </Text>
+            </View>
+            <Text style={[styles.topicCountLabel, { color: textSecondary }]}>
+              • {topicCount} тем
+            </Text>
+          </View>
+        </View>
+
+        <View style={[styles.arrowCircle, { backgroundColor: cardBg, borderColor }]}>
+          <Ionicons name="chevron-forward" size={18} color={textSecondary} />
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
 export default function LessonsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const { isOnline, isCached, cacheForOffline } = useOfflineCache();
-  const { showContentAdIfNeeded } = useAdGate();
 
   const handleCacheOffline = async () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     const success = await cacheForOffline();
     if (success) {
-      Alert.alert(t('common.done'), t('lessons.offlineSaved'));
+      Alert.alert(t('common.done', { defaultValue: 'Готово' }), t('lessons.offlineSaved', { defaultValue: 'Все уроки сохранены для оффлайн доступа.' }));
     } else {
-      Alert.alert(t('common.error'), t('lessons.offlineSaveError'));
+      Alert.alert(t('common.error', { defaultValue: 'Ошибка' }), t('lessons.offlineSaveError', { defaultValue: 'Не удалось сохранить уроки.' }));
     }
   };
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
     const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
-      speedometer: 'speedometer',
-      thermometer: 'thermometer',
-      flash: 'flash',
-      eye: 'eye',
-      planet: 'planet',
-      infinite: 'infinite',
-      moon: 'moon',
+      speedometer: 'speedometer-outline',
+      thermometer: 'thermometer-outline',
+      flash: 'flash-outline',
+      eye: 'eye-outline',
+      planet: 'planet-outline',
+      infinite: 'infinite-outline',
+      moon: 'moon-outline',
     };
-    return iconMap[icon] || 'book';
+    return iconMap[icon] || 'book-outline';
   };
 
-  // Подсчёт общего количества тем
   const countTopics = (sectionKey: string): number => {
     const section = PHYSICS_SECTIONS[sectionKey];
-    return section.subsections.reduce((acc, sub) => acc + sub.topics.length, 0);
+    if (!section?.subsections) return 0;
+    return section.subsections.reduce((acc, sub) => acc + (sub.topics?.length || 0), 0);
   };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+      {/* ==================== Top Header ==================== */}
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
+          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            router.back();
+          }}
+          activeOpacity={0.8}
         >
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+          <Ionicons name="arrow-back" size={20} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('lessons.title')}</Text>
-        <View style={styles.headerPlaceholder} />
+
+        <View style={styles.headerTitleWrap}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
+            {t('lessons.title', { defaultValue: 'Уроки физики' })}
+          </Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
+            7 разделов • 142 темы
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.cachePillBtn,
+            {
+              backgroundColor: isCached
+                ? isDark ? 'rgba(16, 185, 129, 0.15)' : '#D1FAE5'
+                : colors.accentLight,
+              borderColor: isCached ? '#10B981' : colors.border,
+            },
+          ]}
+          onPress={handleCacheOffline}
+          activeOpacity={0.8}
+        >
+          <Ionicons
+            name={isCached ? 'checkmark-circle' : 'cloud-download-outline'}
+            size={16}
+            color={isCached ? '#10B981' : colors.accent}
+          />
+          <Text
+            style={[
+              styles.cachePillText,
+              { color: isCached ? '#10B981' : colors.accent },
+            ]}
+          >
+            {isCached ? 'В кэше' : 'Оффлайн'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
+      {/* ==================== Content ==================== */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 30 }]}
+      >
         {!isOnline && (
           <View style={[styles.offlineBanner, { backgroundColor: colors.warningBg, borderColor: colors.warning }]}>
-            <Text style={[styles.offlineBannerText, { color: colors.warning }]}>{t('common.offlineMode')}</Text>
-            {isCached && <Text style={[styles.offlineBannerSub, { color: colors.warning }]}>{t('common.offlineData')}</Text>}
+            <Ionicons name="cloud-offline-outline" size={18} color={colors.warning} />
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.offlineBannerText, { color: colors.warning }]}>
+                {t('common.offlineMode', { defaultValue: 'Оффлайн-режим' })}
+              </Text>
+              {isCached && (
+                <Text style={[styles.offlineBannerSub, { color: colors.warning }]}>
+                  {t('common.offlineData', { defaultValue: 'Данные загружаются из локального кэша' })}
+                </Text>
+              )}
+            </View>
           </View>
         )}
-        
-        <View style={styles.sectionTitleRow}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('lessons.selectSection')}</Text>
-          <TouchableOpacity style={[styles.cacheButton, { backgroundColor: colors.accentLight }]} onPress={handleCacheOffline}>
-            <Ionicons name="download-outline" size={18} color={colors.accent} />
-            <Text style={[styles.cacheButtonText, { color: colors.accent }]}>{isCached ? t('common.update') : t('common.offline')}</Text>
-          </TouchableOpacity>
+
+        {/* Section Intro Card */}
+        <LinearGradient
+          colors={['#4F46E5', '#6366F1']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.heroSummaryCard}
+        >
+          <View style={styles.heroContent}>
+            <Text style={styles.heroSummaryTitle}>Полный школьный курс</Text>
+            <Text style={styles.heroSummarySubtitle}>
+              Интерактивная теория, формулы с разбором величин и симуляции физических процессов.
+            </Text>
+          </View>
+          <View style={styles.heroIconWrap}>
+            <Ionicons name="school-outline" size={48} color="rgba(255, 255, 255, 0.25)" />
+          </View>
+        </LinearGradient>
+
+        <Text style={[styles.listHeaderTitle, { color: colors.text }]}>
+          {t('lessons.selectSection', { defaultValue: 'Выберите раздел для изучения' })}
+        </Text>
+
+        <View style={styles.cardsList}>
+          {Object.entries(PHYSICS_SECTIONS).map(([key, section], idx) => {
+            const gradient = SECTION_GRADIENTS[key] || ['#6366F1', '#4F46E5'];
+            const iconName = getIconName(section.icon);
+            const topicCount = countTopics(key);
+
+            return (
+              <SectionCardItem
+                key={key}
+                sectionKey={key}
+                section={section}
+                topicCount={topicCount}
+                gradient={gradient}
+                icon={iconName}
+                onPress={() => router.push(`/lessons/${key}`)}
+                index={idx}
+                cardBg={colors.card}
+                borderColor={colors.border}
+                textColor={colors.text}
+                textSecondary={colors.textTertiary}
+                shadowColor={colors.shadowColor}
+              />
+            );
+          })}
         </View>
-        
-        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
-          const isLocked = section.is_locked || section.requires_pro;
-          return (
-            <TouchableOpacity
-              key={key}
-              style={[
-                styles.sectionCard,
-                { backgroundColor: colors.card, shadowColor: colors.shadowColor },
-                isLocked && styles.lockedCard,
-              ]}
-              onPress={async () => {
-                if (!isLocked) await showContentAdIfNeeded();
-                router.push(isLocked ? '/subscription' : `/lessons/${key}`);
-              }}
-              activeOpacity={0.8}
-            >
-              <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>
-                <Ionicons name={isLocked ? 'lock-closed' : getIconName(section.icon)} size={28} color={isLocked ? colors.textMuted : section.color} />
-              </View>
-              <View style={styles.sectionInfo}>
-                <Text style={[styles.sectionName, { color: isLocked ? colors.textMuted : colors.text }]}>{section.name}</Text>
-                <Text style={[styles.subsectionCount, { color: colors.textTertiary }]}>
-                  {t('lessons.subsectionsCount', { subsections: section.subsections.length, topics: countTopics(key) })}
-                </Text>
-              </View>
-              <Ionicons name={isLocked ? 'lock-closed' : 'chevron-forward'} size={24} color={colors.textMuted} />
-            </TouchableOpacity>
-          );
-        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -119,7 +291,6 @@ export default function LessonsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
   },
   header: {
     flexDirection: 'row',
@@ -127,109 +298,158 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
-  backButton: {
-    width: 44,
-    height: 44,
+  navBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+  headerTitleWrap: {
+    alignItems: 'center',
   },
-  headerPlaceholder: {
-    width: 44,
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+  },
+  headerSubtitle: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  cachePillBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  cachePillText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   content: {
-    flex: 1,
     padding: 16,
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1F2937',
-  },
-  sectionTitleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  cacheButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#EEF2FF',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-    gap: 4,
-  },
-  cacheButtonText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#6C63FF',
-  },
   offlineBanner: {
-    backgroundColor: '#FEF3C7',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#FCD34D',
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
+    padding: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    marginBottom: 16,
   },
   offlineBannerText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#92400E',
+    fontSize: 13,
+    fontWeight: '700',
   },
   offlineBannerSub: {
-    fontSize: 12,
-    color: '#92400E',
+    fontSize: 11,
     marginTop: 2,
+  },
+  heroSummaryCard: {
+    borderRadius: 20,
+    padding: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+  },
+  heroContent: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  heroSummaryTitle: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 4,
+    letterSpacing: -0.2,
+  },
+  heroSummarySubtitle: {
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  heroIconWrap: {
+    width: 50,
+    alignItems: 'center',
+  },
+  listHeaderTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    marginBottom: 14,
+    letterSpacing: -0.2,
+  },
+  cardsList: {
+    gap: 12,
   },
   sectionCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
+    padding: 14,
+    borderRadius: 20,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
     shadowRadius: 8,
-    elevation: 2,
   },
-  lockedCard: {
-    opacity: 0.58,
-  },
-  iconContainer: {
-    width: 56,
-    height: 56,
+  iconGradient: {
+    width: 50,
+    height: 50,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   sectionInfo: {
     flex: 1,
-    marginLeft: 16,
+    marginLeft: 14,
   },
   sectionName: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+    marginBottom: 4,
   },
-  subsectionCount: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 4,
+  tagsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  subCountPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  subCountText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  topicCountLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  arrowCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
-
-

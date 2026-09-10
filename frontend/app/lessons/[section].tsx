@@ -16,7 +16,6 @@ import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/context/AuthContext';
 import api from '../../src/services/api';
-import { useAdGate } from '../../src/hooks/useAdGate';
 export default function SectionScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -28,7 +27,6 @@ export default function SectionScreen() {
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS, getTopicsBySubsection } = usePhysicsData();
   const { user } = useAuth();
-  const { showContentAdIfNeeded } = useAdGate();
 
   // Load completed lessons on every focus (from server + local storage)
   useFocusEffect(
@@ -97,7 +95,6 @@ export default function SectionScreen() {
           const topics = getTopicsBySubsection(section!, subsection.id);
           const completedCount = topics.filter(t => completedLessons.has(t.id)).length;
           const allCompleted = completedCount === topics.length && topics.length > 0;
-          const isSubsectionLocked = subsection.is_locked || subsection.requires_pro;
           
           return (
             <View key={subsection.id}>
@@ -105,28 +102,23 @@ export default function SectionScreen() {
                 style={[
                   styles.subsectionCard,
                   { backgroundColor: colors.card, shadowColor: colors.shadowColor },
-                  selectedSubsection === subsection.id && !isSubsectionLocked && { backgroundColor: colors.accentLight },
-                  isSubsectionLocked && styles.lockedCard,
+                  selectedSubsection === subsection.id && { backgroundColor: colors.accentLight },
                 ]}
-                onPress={() => {
-                  if (isSubsectionLocked) {
-                    router.push('/subscription');
-                    return;
-                  }
+                onPress={() =>
                   setSelectedSubsection(
                     selectedSubsection === subsection.id ? null : subsection.id
-                  );
-                }}
+                  )
+                }
                 activeOpacity={0.8}
               >
                 <View
                   style={[
                     styles.subsectionDot,
-                    { backgroundColor: isSubsectionLocked ? colors.textMuted : allCompleted ? '#10B981' : sectionData.color },
+                    { backgroundColor: allCompleted ? '#10B981' : sectionData.color },
                   ]}
                 />
                 <View style={styles.subsectionInfo}>
-                  <Text style={[styles.subsectionName, { color: isSubsectionLocked ? colors.textMuted : colors.text }]}>{subsection.name}</Text>
+                  <Text style={[styles.subsectionName, { color: colors.text }]}>{subsection.name}</Text>
                   <View style={styles.subsectionMeta}>
                     <Text style={[styles.topicsCount, { color: colors.textTertiary }]}>{t('lessons.topicsCount', { count: subsection.topics.length })}</Text>
                     {completedCount > 0 && (
@@ -139,7 +131,7 @@ export default function SectionScreen() {
                   </View>
                 </View>
                 <Ionicons
-                  name={isSubsectionLocked ? 'lock-closed' : selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
+                  name={selectedSubsection === subsection.id ? 'chevron-down' : 'chevron-forward'}
                   size={20}
                   color={colors.textTertiary}
                 />
@@ -159,10 +151,7 @@ export default function SectionScreen() {
                         isCompleted && { opacity: 0.65 },
                         isLocked && { opacity: 0.72 },
                       ]}
-                      onPress={async () => {
-                        if (!isLocked) await showContentAdIfNeeded();
-                        router.push(isLocked ? '/subscription' : `/lessons/topic/${topic.id}`);
-                      }}
+                      onPress={() => router.push((isLocked ? '/subscription' : `/lessons/topic/${topic.id}`) as any)}
                       activeOpacity={0.8}
                     >
                       <View style={styles.topicContent}>
@@ -338,9 +327,6 @@ const styles = StyleSheet.create({
   favButton: {
     padding: 4,
     marginLeft: 8,
-  },
-  lockedCard: {
-    opacity: 0.58,
   },
   lockBadge: {
     flexDirection: 'row',

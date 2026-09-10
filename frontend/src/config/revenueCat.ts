@@ -3,19 +3,12 @@ import { Platform } from 'react-native';
 export const REVENUECAT_ENTITLEMENT_ID =
   process.env.EXPO_PUBLIC_REVENUECAT_ENTITLEMENT_ID || 'Physics AI Pro';
 
-export const REVENUECAT_PRO_ENTITLEMENT_ID =
-  process.env.EXPO_PUBLIC_REVENUECAT_PRO_ENTITLEMENT_ID || REVENUECAT_ENTITLEMENT_ID;
-
-export const REVENUECAT_BASIC_ENTITLEMENT_ID =
-  process.env.EXPO_PUBLIC_REVENUECAT_BASIC_ENTITLEMENT_ID || 'Physics AI Basic';
-
 export const REVENUECAT_OFFERING_ID =
   process.env.EXPO_PUBLIC_REVENUECAT_OFFERING_ID || 'default';
 
 export const REVENUECAT_PRODUCTS = {
-  basic: process.env.EXPO_PUBLIC_REVENUECAT_BASIC_PRODUCT_ID || 'basic',
-  monthly: process.env.EXPO_PUBLIC_REVENUECAT_MONTHLY_PRODUCT_ID || 'monthly',
-  yearly: process.env.EXPO_PUBLIC_REVENUECAT_YEARLY_PRODUCT_ID || 'yearly',
+  monthly: 'monthly',
+  yearly: 'yearly',
 } as const;
 
 export type RevenueCatProductId = keyof typeof REVENUECAT_PRODUCTS;

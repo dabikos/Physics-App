@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,28 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { generateTest } from '../../src/services/aiService';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useLanguage } from '../../src/context/LanguageContext';
 import api from '../../src/services/api';
-import { useAdGate } from '../../src/hooks/useAdGate';
+
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  try {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(style);
+    }
+  } catch {}
+};
 
 type Difficulty = 'basic' | 'standard' | 'advanced' | 'olympiad';
 
@@ -31,21 +41,37 @@ const DIFFICULTY_DATA: { key: Difficulty; color: string; emoji: string }[] = [
 
 const QUESTION_COUNTS = [5, 10, 15, 20];
 const RANDOM_QUESTION_COUNTS = [5, 10, 15, 20, 30];
+
+const SECTION_GRADIENTS: Record<string, [string, string]> = {
+  mechanics: ['#3B82F6', '#1D4ED8'],
+  thermodynamics: ['#F97316', '#C2410C'],
+  electromagnetism: ['#8B5CF6', '#6D28D9'],
+  optics: ['#10B981', '#047857'],
+  atomic: ['#EC4899', '#BE185D'],
+  relativity: ['#6366F1', '#4338CA'],
+  astronomy: ['#F59E0B', '#D97706'],
+};
+
 export default function TestsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { getAILanguageName } = useLanguage();
-  const { requireRewardedAdForFeature, showContentAdIfNeeded } = useAdGate();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
-  const DIFFICULTIES = DIFFICULTY_DATA.map(d => ({ ...d, label: t(`difficulty.${d.key}`) }));
+
+  const DIFFICULTIES = DIFFICULTY_DATA.map((d) => ({
+    ...d,
+    label: t(`difficulty.${d.key}`, { defaultValue: d.key }),
+  }));
+
   const [showModal, setShowModal] = useState(false);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('standard');
   const [selectedCount, setSelectedCount] = useState(10);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [showRandomModal, setShowRandomModal] = useState(false);
   const [selectedRandomSections, setSelectedRandomSections] = useState<string[]>([]);
   const [selectedRandomCount, setSelectedRandomCount] = useState(10);
@@ -54,32 +80,26 @@ export default function TestsScreen() {
 
   const getIconName = (icon: string): keyof typeof Ionicons.glyphMap => {
     const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
-      speedometer: 'speedometer',
-      thermometer: 'thermometer',
-      flash: 'flash',
-      eye: 'eye',
-      planet: 'planet',
-      infinite: 'infinite',
-      moon: 'moon',
+      speedometer: 'speedometer-outline',
+      thermometer: 'thermometer-outline',
+      flash: 'flash-outline',
+      eye: 'eye-outline',
+      planet: 'planet-outline',
+      infinite: 'infinite-outline',
+      moon: 'moon-outline',
     };
-    return iconMap[icon] || 'checkbox';
+    return iconMap[icon] || 'checkbox-outline';
   };
 
   const handleGenerateTest = async () => {
     if (!selectedSection) {
-      setError(t('tests.selectSection'));
+      setError(t('tests.selectSection', { defaultValue: 'Выберите раздел' }));
       return;
     }
 
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     setError(null);
     setIsGenerating(true);
-
-    const allowed = await requireRewardedAdForFeature();
-    if (!allowed) {
-      setError(t('aiChat.adNotFinishedMessage'));
-      setIsGenerating(false);
-      return;
-    }
 
     const sectionData = PHYSICS_SECTIONS[selectedSection];
     const result = await generateTest(
@@ -89,21 +109,22 @@ export default function TestsScreen() {
       selectedCount,
       getAILanguageName()
     );
+
     setIsGenerating(false);
 
     if (result.success && result.test) {
       setShowModal(false);
-      // Навигация на экран с AI тестом
       router.push({
         pathname: '/tests/ai-test',
         params: { testData: JSON.stringify(result.test) },
       });
     } else {
-      setError(result.error || t('common.error'));
+      setError(result.error || t('common.error', { defaultValue: 'Ошибка генерации' }));
     }
   };
 
   const openModal = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
     setSelectedSection(null);
     setSelectedDifficulty('standard');
     setSelectedCount(10);
@@ -112,6 +133,7 @@ export default function TestsScreen() {
   };
 
   const openRandomModal = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
     setSelectedRandomSections([]);
     setSelectedRandomCount(10);
     setRandomError(null);
@@ -119,27 +141,24 @@ export default function TestsScreen() {
   };
 
   const toggleRandomSection = (sectionKey: string) => {
-    setSelectedRandomSections((current) => (
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    setSelectedRandomSections((current) =>
       current.includes(sectionKey)
         ? current.filter((key) => key !== sectionKey)
         : [...current, sectionKey]
-    ));
+    );
   };
 
   const handleRandomTest = async () => {
     if (selectedRandomSections.length === 0) {
-      setRandomError(t('tests.selectRandomSection'));
+      setRandomError(t('tests.selectRandomSection', { defaultValue: 'Выберите хотя бы один раздел' }));
       return;
     }
 
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     setRandomError(null);
     setIsRandomizing(true);
     try {
-      const allowed = await requireRewardedAdForFeature();
-      if (!allowed) {
-        setRandomError(t('aiChat.adNotFinishedMessage'));
-        return;
-      }
       const response = await api.post('/practice/tests/random', {
         section_ids: selectedRandomSections,
         question_count: selectedRandomCount,
@@ -150,9 +169,8 @@ export default function TestsScreen() {
         pathname: '/tests/ai-test',
         params: { testData: JSON.stringify(test) },
       });
-    } catch (error: any) {
-      const detail = error.response?.data?.detail;
-      setRandomError((typeof detail === 'string' ? detail : detail?.message) || t('tests.randomLoadError'));
+    } catch (err: any) {
+      setRandomError(err.response?.data?.detail || t('tests.randomLoadError', { defaultValue: 'Не удалось загрузить тест' }));
     } finally {
       setIsRandomizing(false);
     }
@@ -160,291 +178,215 @@ export default function TestsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+      {/* ==================== Header ==================== */}
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
+          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            router.back();
+          }}
+          activeOpacity={0.8}
         >
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+          <Ionicons name="arrow-back" size={20} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('tests.title')}</Text>
-        <View style={styles.headerPlaceholder} />
+
+        <View style={styles.headerTitleWrap}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
+            {t('tests.title', { defaultValue: 'Тесты и Проверка' })}
+          </Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
+            142 теста • AI Генератор
+          </Text>
+        </View>
+
+        <View style={styles.navBtnPlaceholder} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }} style={styles.content}>
-        {/* Кнопка генерации AI теста */}
-        <TouchableOpacity
-          style={styles.generateButton}
-          onPress={openModal}
-          activeOpacity={0.9}
-        >
-          <LinearGradient
-            colors={['#8B5CF6', '#6366F1']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.generateButtonGradient}
+      {/* ==================== Content ==================== */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 30 }]}
+      >
+        {/* Generator Cards Bento */}
+        <View style={styles.generatorsGrid}>
+          {/* AI Generator Card */}
+          <TouchableOpacity
+            style={styles.heroActionCard}
+            onPress={openModal}
+            activeOpacity={0.9}
           >
-            <View style={styles.generateButtonContent}>
-              <View style={styles.generateIconContainer}>
-                <Ionicons name="sparkles" size={28} color="#FFFFFF" />
-              </View>
-              <View style={styles.generateTextContainer}>
-                <Text style={styles.generateTitle}>{t('tests.generateButton')}</Text>
-                <Text style={styles.generateSubtitle}>
-                  {t('tests.generateSubtitle')}
-                </Text>
-              </View>
-              <Ionicons name="add-circle" size={32} color="rgba(255,255,255,0.9)" />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.generateButton, styles.randomButton]}
-          onPress={openRandomModal}
-          activeOpacity={0.9}
-        >
-          <LinearGradient
-            colors={['#0EA5E9', '#14B8A6']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.generateButtonGradient}
-          >
-            <View style={styles.generateButtonContent}>
-              <View style={styles.generateIconContainer}>
-                <Ionicons name="shuffle" size={28} color="#FFFFFF" />
-              </View>
-              <View style={styles.generateTextContainer}>
-                <Text style={styles.generateTitle}>{t('tests.randomButton')}</Text>
-                <Text style={styles.generateSubtitle}>
-                  {t('tests.randomSubtitle')}
-                </Text>
-              </View>
-              <Ionicons name="dice" size={32} color="rgba(255,255,255,0.9)" />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
-
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('tests.readyTests')}</Text>
-        
-        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
-          const isLocked = section.is_locked || section.requires_pro;
-          return (
-            <TouchableOpacity
-              key={key}
-              style={[
-                styles.sectionCard,
-                { backgroundColor: colors.card, shadowColor: colors.shadowColor },
-                isLocked && styles.lockedCard,
-              ]}
-              onPress={async () => {
-                if (!isLocked) await showContentAdIfNeeded();
-                router.push(isLocked ? '/subscription' : `/tests/${key}`);
-              }}
-              activeOpacity={0.8}
+            <LinearGradient
+              colors={['#8B5CF6', '#6366F1']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.heroActionGradient}
             >
-              <View style={[styles.iconContainer, { backgroundColor: section.color + '20' }]}>
-                <Ionicons name={isLocked ? 'lock-closed' : getIconName(section.icon)} size={28} color={isLocked ? colors.textMuted : section.color} />
+              <View style={styles.heroActionTop}>
+                <View style={styles.heroActionIconBadge}>
+                  <Ionicons name="sparkles" size={24} color="#FFFFFF" />
+                </View>
+                <View style={styles.heroPillBadge}>
+                  <Text style={styles.heroPillText}>GPT-4o</Text>
+                </View>
               </View>
-              <View style={styles.sectionInfo}>
-                <Text style={[styles.sectionName, { color: isLocked ? colors.textMuted : colors.text }]}>{section.name}</Text>
-                <Text style={[styles.sectionDescription, { color: colors.textTertiary }]}>{t('tests.checkKnowledge')}</Text>
-              </View>
-              <Ionicons name={isLocked ? 'lock-closed' : 'chevron-forward'} size={24} color={colors.textMuted} />
-            </TouchableOpacity>
-          );
-        })}
 
-        <View style={styles.bottomPadding} />
+              <Text style={styles.heroActionTitle}>
+                {t('tests.generateButton', { defaultValue: 'AI Генератор тестов' })}
+              </Text>
+              <Text style={styles.heroActionSubtitle}>
+                {t('tests.generateSubtitle', { defaultValue: 'Создать уникальный тест под любой уровень сложности' })}
+              </Text>
+
+              <View style={styles.heroCtaRow}>
+                <Text style={styles.heroCtaLabel}>Сгенерировать</Text>
+                <Ionicons name="arrow-forward-circle" size={22} color="#FFFFFF" />
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Random Blitz Test Card */}
+          <TouchableOpacity
+            style={styles.heroActionCard}
+            onPress={openRandomModal}
+            activeOpacity={0.9}
+          >
+            <LinearGradient
+              colors={['#0EA5E9', '#0D9488']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.heroActionGradient}
+            >
+              <View style={styles.heroActionTop}>
+                <View style={styles.heroActionIconBadge}>
+                  <Ionicons name="shuffle" size={24} color="#FFFFFF" />
+                </View>
+                <View style={styles.heroPillBadge}>
+                  <Text style={styles.heroPillText}>Блиц</Text>
+                </View>
+              </View>
+
+              <Text style={styles.heroActionTitle}>
+                {t('tests.randomButton', { defaultValue: 'Случайный экспресс-тест' })}
+              </Text>
+              <Text style={styles.heroActionSubtitle}>
+                {t('tests.randomSubtitle', { defaultValue: 'Смешанные вопросы по выбранным разделам' })}
+              </Text>
+
+              <View style={styles.heroCtaRow}>
+                <Text style={styles.heroCtaLabel}>Начать блиц</Text>
+                <Ionicons name="play-circle" size={22} color="#FFFFFF" />
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+
+        {/* Section Title */}
+        <View style={styles.sectionHeaderRow}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {t('tests.readyTests', { defaultValue: 'Готовые тесты по разделам' })}
+          </Text>
+          <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>7 разделов</Text>
+        </View>
+
+        {/* Ready Tests List */}
+        <View style={styles.testsList}>
+          {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
+            const gradient = SECTION_GRADIENTS[key] || ['#6366F1', '#4F46E5'];
+            const iconName = getIconName(section.icon);
+
+            return (
+              <TouchableOpacity
+                key={key}
+                style={[
+                  styles.testCard,
+                  {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    shadowColor: colors.shadowColor,
+                  },
+                ]}
+                onPress={() => {
+                  triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                  router.push(`/tests/${key}`);
+                }}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={gradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.testIconGradient}
+                >
+                  <Ionicons name={iconName} size={24} color="#FFFFFF" />
+                </LinearGradient>
+
+                <View style={styles.testCardInfo}>
+                  <Text style={[styles.testCardTitle, { color: colors.text }]}>{section.name}</Text>
+                  <Text style={[styles.testCardSub, { color: colors.textTertiary }]}>
+                    {section.subsections?.length || 0} тем с тестами
+                  </Text>
+                </View>
+
+                <View style={[styles.arrowCircle, { borderColor: colors.border }]}>
+                  <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </ScrollView>
 
-      {/* Модальное окно генерации теста */}
-      <Modal
-        visible={showModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowModal(false)}
-      >
+      {/* ==================== AI Test Generator Modal ==================== */}
+      <Modal visible={showModal} animationType="slide" transparent onRequestClose={() => setShowModal(false)}>
         <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
           <View style={[styles.modalContainer, { backgroundColor: colors.modalBg }]}>
             <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('tests.settingsTitle')}</Text>
+              <View>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>
+                  {t('tests.settingsTitle', { defaultValue: 'AI Генератор тестов' })}
+                </Text>
+                <Text style={[styles.modalSubtitle, { color: colors.textTertiary }]}>
+                  Настройте параметры квиза
+                </Text>
+              </View>
               <TouchableOpacity
-                style={[styles.modalCloseButton, { backgroundColor: colors.inputBg }]}
+                style={[styles.modalCloseBtn, { backgroundColor: colors.inputBg }]}
                 onPress={() => setShowModal(false)}
               >
-                <Ionicons name="close" size={24} color={colors.textTertiary} />
+                <Ionicons name="close" size={20} color={colors.text} />
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
-              {/* Выбор раздела */}
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.sectionLabel')}</Text>
-              <View style={styles.optionsGrid}>
-                {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
-                  <TouchableOpacity
-                    key={key}
-                    style={[
-                      styles.optionChip,
-                      { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      selectedSection === key && { 
-                        backgroundColor: section.color,
-                        borderColor: section.color,
-                      },
-                    ]}
-                    onPress={() => setSelectedSection(key)}
-                  >
-                    <Text style={[
-                      styles.optionChipText,
-                      { color: colors.textSecondary },
-                      selectedSection === key && styles.optionChipTextSelected,
-                    ]}>
-                      {section.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/* Выбор сложности */}
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.difficultyLabel')}</Text>
-              <View style={styles.difficultyOptions}>
-                {DIFFICULTIES.map((diff) => (
-                  <TouchableOpacity
-                    key={diff.key}
-                    style={[
-                      styles.difficultyOption,
-                      { backgroundColor: colors.cardAlt, borderColor: colors.border },
-                      selectedDifficulty === diff.key && {
-                        backgroundColor: diff.color + '20',
-                        borderColor: diff.color,
-                      },
-                    ]}
-                    onPress={() => setSelectedDifficulty(diff.key)}
-                  >
-                    <Text style={styles.difficultyEmoji}>{diff.emoji}</Text>
-                    <Text style={[
-                      styles.difficultyLabel,
-                      { color: colors.textSecondary },
-                      selectedDifficulty === diff.key && { color: diff.color },
-                    ]}>
-                      {diff.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/* Выбор количества вопросов */}
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.questionCountLabel')}</Text>
-              <View style={styles.countOptions}>
-                {QUESTION_COUNTS.map((count) => (
-                  <TouchableOpacity
-                    key={count}
-                    style={[
-                      styles.countOption,
-                      { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      selectedCount === count && styles.countOptionSelected,
-                    ]}
-                    onPress={() => setSelectedCount(count)}
-                  >
-                    <Text style={[
-                      styles.countText,
-                      { color: colors.textSecondary },
-                      selectedCount === count && styles.countTextSelected,
-                    ]}>
-                      {count}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/* Ошибка */}
-              {error && (
-                <View style={[styles.errorContainer, { backgroundColor: colors.errorBg }]}>
-                  <Ionicons name="alert-circle" size={20} color={colors.error} />
-                  <Text style={[styles.errorText, { color: colors.error }]}>{error}</Text>
-                </View>
-              )}
-
-              {/* Кнопка генерации */}
-              <TouchableOpacity
-                style={[
-                  styles.generateTestButton,
-                  (!selectedSection || isGenerating) && styles.generateTestButtonDisabled,
-                ]}
-                onPress={handleGenerateTest}
-                disabled={!selectedSection || isGenerating}
-              >
-                {isGenerating ? (
-                  <>
-                    <ActivityIndicator color="#FFFFFF" size="small" />
-                    <Text style={styles.generateTestButtonText}>
-                      {t('tests.generating')}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <Ionicons name="sparkles" size={20} color="#FFFFFF" />
-                    <Text style={styles.generateTestButtonText}>
-                      {t('tests.createTest')}
-                    </Text>
-                  </>
-                )}
-              </TouchableOpacity>
-
-              {isGenerating && (
-                <Text style={[styles.generatingHint, { color: colors.textTertiary }]}>
-                  {t('tests.generatingSubtext')}
-                </Text>
-              )}
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        visible={showRandomModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowRandomModal(false)}
-      >
-        <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
-          <View style={[styles.modalContainer, { backgroundColor: colors.modalBg }]}>
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('tests.randomSettingsTitle')}</Text>
-              <TouchableOpacity
-                style={[styles.modalCloseButton, { backgroundColor: colors.inputBg }]}
-                onPress={() => setShowRandomModal(false)}
-              >
-                <Ionicons name="close" size={24} color={colors.textTertiary} />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.randomSectionsLabel')}</Text>
-              <View style={styles.optionsGrid}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
+              {/* Section Select */}
+              <Text style={[styles.modalFieldLabel, { color: colors.textSecondary }]}>
+                {t('tests.sectionLabel', { defaultValue: 'Выберите раздел:' })}
+              </Text>
+              <View style={styles.chipsWrap}>
                 {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
-                  const selected = selectedRandomSections.includes(key);
+                  const isSelected = selectedSection === key;
                   return (
                     <TouchableOpacity
                       key={key}
                       style={[
-                        styles.optionChip,
-                        { backgroundColor: colors.inputBg, borderColor: colors.border },
-                        selected && {
-                          backgroundColor: section.color,
-                          borderColor: section.color,
+                        styles.chip,
+                        {
+                          backgroundColor: isSelected ? '#6366F1' : colors.inputBg,
+                          borderColor: isSelected ? '#6366F1' : colors.border,
                         },
                       ]}
-                      onPress={() => toggleRandomSection(key)}
+                      onPress={() => {
+                        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                        setSelectedSection(key);
+                      }}
                     >
-                      <Text style={[
-                        styles.optionChipText,
-                        { color: colors.textSecondary },
-                        selected && styles.optionChipTextSelected,
-                      ]}>
+                      <Text
+                        style={[
+                          styles.chipText,
+                          { color: isSelected ? '#FFFFFF' : colors.text },
+                        ]}
+                      >
                         {section.name}
                       </Text>
                     </TouchableOpacity>
@@ -452,60 +394,248 @@ export default function TestsScreen() {
                 })}
               </View>
 
-              <Text style={[styles.modalSectionTitle, { color: colors.textSecondary }]}>{t('tests.questionCountLabel')}</Text>
-              <View style={styles.countOptionsWrap}>
-                {RANDOM_QUESTION_COUNTS.map((count) => (
-                  <TouchableOpacity
-                    key={count}
-                    style={[
-                      styles.countOption,
-                      { backgroundColor: colors.inputBg, borderColor: colors.border },
-                      selectedRandomCount === count && styles.randomCountOptionSelected,
-                    ]}
-                    onPress={() => setSelectedRandomCount(count)}
-                  >
-                    <Text style={[
-                      styles.countText,
-                      { color: colors.textSecondary },
-                      selectedRandomCount === count && styles.countTextSelected,
-                    ]}>
-                      {count}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+              {/* Difficulty */}
+              <Text style={[styles.modalFieldLabel, { color: colors.textSecondary }]}>
+                {t('tests.difficultyLabel', { defaultValue: 'Сложность:' })}
+              </Text>
+              <View style={styles.diffRow}>
+                {DIFFICULTIES.map((d) => {
+                  const isSelected = selectedDifficulty === d.key;
+                  return (
+                    <TouchableOpacity
+                      key={d.key}
+                      style={[
+                        styles.diffCard,
+                        {
+                          backgroundColor: isSelected ? d.color + '20' : colors.inputBg,
+                          borderColor: isSelected ? d.color : colors.border,
+                        },
+                      ]}
+                      onPress={() => {
+                        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                        setSelectedDifficulty(d.key);
+                      }}
+                    >
+                      <Text style={{ fontSize: 16 }}>{d.emoji}</Text>
+                      <Text
+                        style={[
+                          styles.diffLabel,
+                          { color: isSelected ? d.color : colors.text },
+                        ]}
+                      >
+                        {d.label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              {/* Count */}
+              <Text style={[styles.modalFieldLabel, { color: colors.textSecondary }]}>
+                {t('tests.questionCountLabel', { defaultValue: 'Количество вопросов:' })}
+              </Text>
+              <View style={styles.countsRow}>
+                {QUESTION_COUNTS.map((cnt) => {
+                  const isSelected = selectedCount === cnt;
+                  return (
+                    <TouchableOpacity
+                      key={cnt}
+                      style={[
+                        styles.countPill,
+                        {
+                          backgroundColor: isSelected ? '#6366F1' : colors.inputBg,
+                          borderColor: isSelected ? '#6366F1' : colors.border,
+                        },
+                      ]}
+                      onPress={() => {
+                        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                        setSelectedCount(cnt);
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.countPillText,
+                          { color: isSelected ? '#FFFFFF' : colors.text },
+                        ]}
+                      >
+                        {cnt}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              {/* Error */}
+              {error && (
+                <View style={[styles.errorBox, { backgroundColor: colors.errorBg }]}>
+                  <Ionicons name="alert-circle" size={18} color={colors.error} />
+                  <Text style={[styles.errorText, { color: colors.error }]}>{error}</Text>
+                </View>
+              )}
+
+              {/* Submit CTA */}
+              <TouchableOpacity
+                style={[
+                  styles.modalSubmitBtn,
+                  (!selectedSection || isGenerating) && styles.btnDisabled,
+                ]}
+                onPress={handleGenerateTest}
+                disabled={!selectedSection || isGenerating}
+                activeOpacity={0.85}
+              >
+                <LinearGradient
+                  colors={['#8B5CF6', '#6366F1']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.modalSubmitGradient}
+                >
+                  {isGenerating ? (
+                    <>
+                      <ActivityIndicator color="#FFFFFF" size="small" />
+                      <Text style={styles.modalSubmitText}>
+                        {t('tests.generating', { defaultValue: 'Генерация вопросов...' })}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Ionicons name="sparkles" size={18} color="#FFFFFF" />
+                      <Text style={styles.modalSubmitText}>
+                        {t('tests.createTest', { defaultValue: 'Создать тест' })}
+                      </Text>
+                    </>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ==================== Random Blitz Modal ==================== */}
+      <Modal visible={showRandomModal} animationType="slide" transparent onRequestClose={() => setShowRandomModal(false)}>
+        <View style={[styles.modalOverlay, { backgroundColor: colors.modalOverlay }]}>
+          <View style={[styles.modalContainer, { backgroundColor: colors.modalBg }]}>
+            <View style={styles.modalHeader}>
+              <View>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>
+                  {t('tests.randomSettingsTitle', { defaultValue: 'Случайный блиц-квиз' })}
+                </Text>
+                <Text style={[styles.modalSubtitle, { color: colors.textTertiary }]}>
+                  Выберите разделы для смешивания
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.modalCloseBtn, { backgroundColor: colors.inputBg }]}
+                onPress={() => setShowRandomModal(false)}
+              >
+                <Ionicons name="close" size={20} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
+              <Text style={[styles.modalFieldLabel, { color: colors.textSecondary }]}>
+                {t('tests.randomSectionsLabel', { defaultValue: 'Разделы для квиза:' })}
+              </Text>
+              <View style={styles.chipsWrap}>
+                {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
+                  const isSelected = selectedRandomSections.includes(key);
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      style={[
+                        styles.chip,
+                        {
+                          backgroundColor: isSelected ? '#0EA5E9' : colors.inputBg,
+                          borderColor: isSelected ? '#0EA5E9' : colors.border,
+                        },
+                      ]}
+                      onPress={() => toggleRandomSection(key)}
+                    >
+                      <Text
+                        style={[
+                          styles.chipText,
+                          { color: isSelected ? '#FFFFFF' : colors.text },
+                        ]}
+                      >
+                        {section.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <Text style={[styles.modalFieldLabel, { color: colors.textSecondary }]}>
+                {t('tests.questionCountLabel', { defaultValue: 'Количество вопросов:' })}
+              </Text>
+              <View style={styles.countsRow}>
+                {RANDOM_QUESTION_COUNTS.map((cnt) => {
+                  const isSelected = selectedRandomCount === cnt;
+                  return (
+                    <TouchableOpacity
+                      key={cnt}
+                      style={[
+                        styles.countPill,
+                        {
+                          backgroundColor: isSelected ? '#0EA5E9' : colors.inputBg,
+                          borderColor: isSelected ? '#0EA5E9' : colors.border,
+                        },
+                      ]}
+                      onPress={() => {
+                        triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                        setSelectedRandomCount(cnt);
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.countPillText,
+                          { color: isSelected ? '#FFFFFF' : colors.text },
+                        ]}
+                      >
+                        {cnt}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
 
               {randomError && (
-                <View style={[styles.errorContainer, { backgroundColor: colors.errorBg }]}>
-                  <Ionicons name="alert-circle" size={20} color={colors.error} />
+                <View style={[styles.errorBox, { backgroundColor: colors.errorBg }]}>
+                  <Ionicons name="alert-circle" size={18} color={colors.error} />
                   <Text style={[styles.errorText, { color: colors.error }]}>{randomError}</Text>
                 </View>
               )}
 
               <TouchableOpacity
                 style={[
-                  styles.generateTestButton,
-                  styles.randomTestButton,
-                  (selectedRandomSections.length === 0 || isRandomizing) && styles.generateTestButtonDisabled,
+                  styles.modalSubmitBtn,
+                  (selectedRandomSections.length === 0 || isRandomizing) && styles.btnDisabled,
                 ]}
                 onPress={handleRandomTest}
                 disabled={selectedRandomSections.length === 0 || isRandomizing}
+                activeOpacity={0.85}
               >
-                {isRandomizing ? (
-                  <>
-                    <ActivityIndicator color="#FFFFFF" size="small" />
-                    <Text style={styles.generateTestButtonText}>
-                      {t('tests.randomizing')}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <Ionicons name="shuffle" size={20} color="#FFFFFF" />
-                    <Text style={styles.generateTestButtonText}>
-                      {t('tests.startRandomTest')}
-                    </Text>
-                  </>
-                )}
+                <LinearGradient
+                  colors={['#0EA5E9', '#0D9488']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.modalSubmitGradient}
+                >
+                  {isRandomizing ? (
+                    <>
+                      <ActivityIndicator color="#FFFFFF" size="small" />
+                      <Text style={styles.modalSubmitText}>
+                        {t('tests.randomizing', { defaultValue: 'Сборка теста...' })}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Ionicons name="play" size={18} color="#FFFFFF" />
+                      <Text style={styles.modalSubmitText}>
+                        {t('tests.startRandomTest', { defaultValue: 'Начать тест' })}
+                      </Text>
+                    </>
+                  )}
+                </LinearGradient>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -518,7 +648,6 @@ export default function TestsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
   },
   header: {
     flexDirection: 'row',
@@ -526,278 +655,275 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
-  backButton: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  headerPlaceholder: {
-    width: 44,
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  generateButton: {
-    marginBottom: 24,
-    borderRadius: 20,
-    overflow: 'hidden',
-    shadowColor: '#8B5CF6',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  randomButton: {
-    marginTop: -12,
-    shadowColor: '#0EA5E9',
-  },
-  generateButtonGradient: {
-    borderRadius: 20,
-  },
-  generateButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-  },
-  generateIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  generateTextContainer: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  generateTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  generateSubtitle: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.85)',
-    marginTop: 4,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 16,
-  },
-  sectionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  lockedCard: {
-    opacity: 0.58,
-  },
-  iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sectionInfo: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  sectionName: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  sectionDescription: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 4,
-  },
-  bottomPadding: {
-    height: 40,
-  },
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContainer: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    maxHeight: '85%',
-    padding: 20,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1F2937',
-  },
-  modalCloseButton: {
+  navBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  modalSectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#374151',
-    marginTop: 16,
+  navBtnPlaceholder: {
+    width: 40,
+  },
+  headerTitleWrap: {
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+  },
+  headerSubtitle: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  content: {
+    padding: 16,
+  },
+  generatorsGrid: {
+    gap: 14,
+    marginBottom: 24,
+  },
+  heroActionCard: {
+    borderRadius: 22,
+    overflow: 'hidden',
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+  },
+  heroActionGradient: {
+    padding: 20,
+  },
+  heroActionTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 12,
   },
-  optionsGrid: {
+  heroActionIconBadge: {
+    width: 46,
+    height: 46,
+    borderRadius: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heroPillBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  heroPillText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  heroActionTitle: {
+    color: '#FFFFFF',
+    fontSize: 19,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+    marginBottom: 6,
+  },
+  heroActionSubtitle: {
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  heroCtaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  heroCtaLabel: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginBottom: 14,
+    paddingHorizontal: 2,
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    letterSpacing: -0.2,
+  },
+  sectionSubtitle: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  testsList: {
+    gap: 12,
+  },
+  testCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 20,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+  },
+  testIconGradient: {
+    width: 48,
+    height: 48,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  testCardInfo: {
+    flex: 1,
+    marginLeft: 14,
+  },
+  testCardTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 3,
+  },
+  testCardSub: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  arrowCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    maxHeight: '85%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 19,
+    fontWeight: '800',
+  },
+  modalSubtitle: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  modalCloseBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalFieldLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  chipsWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+    marginBottom: 12,
   },
-  optionChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-  },
-  optionChipText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
-  },
-  optionChipTextSelected: {
-    color: '#FFFFFF',
-  },
-  difficultyOptions: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  difficultyOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  chip: {
     paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 12,
-    backgroundColor: '#F9FAFB',
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-    gap: 6,
+    paddingVertical: 9,
+    borderRadius: 14,
+    borderWidth: 1,
   },
-  difficultyEmoji: {
-    fontSize: 16,
-  },
-  difficultyLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#374151',
-  },
-  countOptions: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  countOptionsWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  countOption: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: '#F3F4F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-  },
-  countOptionSelected: {
-    backgroundColor: '#6366F1',
-    borderColor: '#6366F1',
-  },
-  randomCountOptionSelected: {
-    backgroundColor: '#0EA5E9',
-    borderColor: '#0EA5E9',
-  },
-  countText: {
-    fontSize: 18,
+  chipText: {
+    fontSize: 13,
     fontWeight: '600',
-    color: '#374151',
   },
-  countTextSelected: {
-    color: '#FFFFFF',
+  diffRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
   },
-  errorContainer: {
+  diffCard: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    gap: 4,
+  },
+  diffLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  countsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  countPill: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  countPillText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  errorBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEE2E2',
+    gap: 8,
     padding: 12,
     borderRadius: 12,
-    marginTop: 16,
-    gap: 8,
+    marginBottom: 14,
   },
   errorText: {
-    flex: 1,
-    fontSize: 14,
-    color: '#B91C1C',
+    fontSize: 13,
+    fontWeight: '600',
   },
-  generateTestButton: {
+  modalSubmitBtn: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginTop: 8,
+  },
+  modalSubmitGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#6366F1',
+    gap: 8,
     paddingVertical: 16,
-    borderRadius: 14,
-    marginTop: 24,
-    gap: 10,
   },
-  generateTestButtonDisabled: {
-    backgroundColor: '#D1D5DB',
-  },
-  randomTestButton: {
-    backgroundColor: '#0EA5E9',
-  },
-  generateTestButtonText: {
-    fontSize: 17,
-    fontWeight: '600',
+  modalSubmitText: {
     color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
   },
-  generatingHint: {
-    fontSize: 13,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginTop: 12,
+  btnDisabled: {
+    opacity: 0.5,
   },
 });
-
-

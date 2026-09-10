@@ -218,7 +218,7 @@ export default function VerifyEmailScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  gradient: { ...StyleSheet.absoluteFillObject },
+  gradient: { ...StyleSheet.absoluteFill },
   safeArea: { flex: 1, paddingHorizontal: 24 },
   backButton: {
     width: 44, height: 44, borderRadius: 22,

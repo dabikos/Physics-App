@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import Purchases, {
   CustomerInfo,
+  CustomerInfoUpdateListener,
   LOG_LEVEL,
   PurchasesOffering,
   PurchasesOfferings,
@@ -10,9 +11,7 @@ import Purchases, {
 import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
 import {
   REVENUECAT_ENTITLEMENT_ID,
-  REVENUECAT_BASIC_ENTITLEMENT_ID,
   REVENUECAT_OFFERING_ID,
-  REVENUECAT_PRO_ENTITLEMENT_ID,
   REVENUECAT_PRODUCTS,
   RevenueCatProductId,
   getRevenueCatApiKey,
@@ -28,23 +27,7 @@ export function isRevenueCatExpoGoPreview() {
 }
 
 export function isProCustomer(customerInfo: CustomerInfo | null | undefined) {
-  return Boolean(customerInfo?.entitlements.active[REVENUECAT_PRO_ENTITLEMENT_ID]);
-}
-
-export function isBasicCustomer(customerInfo: CustomerInfo | null | undefined) {
-  return Boolean(customerInfo?.entitlements.active[REVENUECAT_BASIC_ENTITLEMENT_ID]);
-}
-
-export type SubscriptionTier = 'free' | 'basic' | 'pro';
-
-export function getSubscriptionTier(customerInfo: CustomerInfo | null | undefined): SubscriptionTier {
-  if (isProCustomer(customerInfo)) return 'pro';
-  if (isBasicCustomer(customerInfo)) return 'basic';
-  return 'free';
-}
-
-export function hasFullContentCustomer(customerInfo: CustomerInfo | null | undefined) {
-  return getSubscriptionTier(customerInfo) !== 'free';
+  return Boolean(customerInfo?.entitlements.active[REVENUECAT_ENTITLEMENT_ID]);
 }
 
 export function getRevenueCatErrorMessage(error: unknown) {
@@ -177,14 +160,12 @@ export function findPackageByProductId(
   productId: RevenueCatProductId,
 ) {
   const productIdentifier = REVENUECAT_PRODUCTS[productId];
-  const normalizedProductIdentifier = productIdentifier.toLowerCase();
-  const normalizedProductId = productId.toLowerCase();
 
   return (
     packages.find((item) => item.product.identifier === productIdentifier) ||
-    packages.find((item) => item.product.identifier.toLowerCase().startsWith(`${normalizedProductIdentifier}:`)) ||
-    packages.find((item) => item.product.identifier.toLowerCase().includes(normalizedProductIdentifier)) ||
-    packages.find((item) => item.identifier.toLowerCase().includes(normalizedProductId))
+    packages.find((item) => item.product.identifier.startsWith(productId)) ||
+    packages.find((item) => item.identifier.toLowerCase().includes(productId)) ||
+    packages.find((item) => item.product.identifier.toLowerCase().includes(productId))
   );
 }
 
@@ -231,16 +212,11 @@ export async function presentRevenueCatPaywall(offering?: PurchasesOffering | nu
 
   await configureRevenueCat();
 
-  const result = typeof (RevenueCatUI as any).presentPaywall === 'function'
-    ? await (RevenueCatUI as any).presentPaywall({
-        offering: offering || undefined,
-        displayCloseButton: true,
-      })
-    : await RevenueCatUI.presentPaywallIfNeeded({
-        requiredEntitlementIdentifier: REVENUECAT_ENTITLEMENT_ID,
-        offering: offering || undefined,
-        displayCloseButton: true,
-      });
+  const result = await RevenueCatUI.presentPaywallIfNeeded({
+    requiredEntitlementIdentifier: REVENUECAT_ENTITLEMENT_ID,
+    offering: offering || undefined,
+    displayCloseButton: true,
+  });
 
   return result === PAYWALL_RESULT.PURCHASED || result === PAYWALL_RESULT.RESTORED;
 }
@@ -263,4 +239,14 @@ export async function presentRevenueCatCustomerCenter() {
       },
     },
   });
+}
+
+export function addRevenueCatCustomerInfoUpdateListener(listener: CustomerInfoUpdateListener) {
+  if (isRevenueCatExpoGoPreview()) return;
+  Purchases.addCustomerInfoUpdateListener(listener);
+}
+
+export function removeRevenueCatCustomerInfoUpdateListener(listener: CustomerInfoUpdateListener) {
+  if (isRevenueCatExpoGoPreview()) return;
+  Purchases.removeCustomerInfoUpdateListener(listener);
 }

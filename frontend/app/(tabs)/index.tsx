@@ -10,12 +10,14 @@ import {
   Modal,
   FlatList,
   ActivityIndicator,
+  Platform,
+  Linking,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AnimatedIcon } from '../../src/components/AnimatedIcon';
+import * as Haptics from 'expo-haptics';
 import { useAuth } from '../../src/context/AuthContext';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useSearch, SearchResult } from '../../src/hooks/useSearch';
@@ -23,6 +25,15 @@ import { useOfflineCache } from '../../src/hooks/useOfflineCache';
 import api from '../../src/services/api';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
+
+// Safe haptic feedback wrapper
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  try {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(style);
+    }
+  } catch {}
+};
 
 // ==================== Types ====================
 interface DailyChallenge {
@@ -38,7 +49,7 @@ interface DailyChallenge {
 
 interface ProfileBannerData {
   streak: { current: number };
-  stats: { lessons_completed: number; tests_completed: number };
+  stats: { lessons_completed: number; tests_completed: number; tasks_solved?: number };
   section_progress: { section: string; name: string; percentage: number }[];
 }
 
@@ -58,35 +69,37 @@ const getDailyChallengeGradient = (date: string): [string, string] => {
   return DAILY_CHALLENGE_GRADIENTS[hash % DAILY_CHALLENGE_GRADIENTS.length];
 };
 
-// ==================== Menu Card ====================
+// ==================== Modern Bento Menu Card ====================
 interface MenuCardProps {
   title: string;
   subtitle: string;
+  badge?: string;
   icon: keyof typeof Ionicons.glyphMap;
-  color: string;
+  gradient: [string, string];
   onPress: () => void;
   index: number;
-  animation: 'bounce' | 'pulse' | 'rotate' | 'shake';
   cardBg: string;
   textColor: string;
   subtitleColor: string;
+  borderColor: string;
   shadowColor: string;
 }
 
 const MenuCard: React.FC<MenuCardProps> = ({
   title,
   subtitle,
+  badge,
   icon,
-  color,
+  gradient,
   onPress,
   index,
-  animation,
   cardBg,
   textColor,
   subtitleColor,
-  shadowColor: shadowCol,
+  borderColor,
+  shadowColor,
 }) => {
-  const translateY = useRef(new Animated.Value(50)).current;
+  const translateY = useRef(new Animated.Value(30)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
 
@@ -94,45 +107,147 @@ const MenuCard: React.FC<MenuCardProps> = ({
     Animated.parallel([
       Animated.spring(translateY, {
         toValue: 0,
-        friction: 8,
-        tension: 40,
+        friction: 7,
+        tension: 45,
         useNativeDriver: true,
-        delay: index * 100,
+        delay: index * 60,
       }),
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 400,
-        delay: index * 100,
+        duration: 350,
+        delay: index * 60,
         useNativeDriver: true,
       }),
     ]).start();
   }, [index, opacity, translateY]);
 
   const handlePressIn = () => {
-    Animated.spring(scale, { toValue: 0.95, friction: 5, useNativeDriver: true }).start();
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    Animated.spring(scale, { toValue: 0.96, friction: 6, tension: 100, useNativeDriver: true }).start();
   };
+
   const handlePressOut = () => {
-    Animated.spring(scale, { toValue: 1, friction: 5, useNativeDriver: true }).start();
+    Animated.spring(scale, { toValue: 1, friction: 6, tension: 100, useNativeDriver: true }).start();
   };
 
   return (
     <Animated.View
-      style={[styles.cardWrapper, { transform: [{ translateY }, { scale }], opacity }]}
+      style={[
+        styles.cardWrapper,
+        { transform: [{ translateY }, { scale }], opacity },
+      ]}
     >
       <TouchableOpacity
-        style={[styles.card, { backgroundColor: cardBg, shadowColor: shadowCol }]}
-        onPress={onPress}
+        style={[
+          styles.card,
+          {
+            backgroundColor: cardBg,
+            borderColor: borderColor,
+            shadowColor: shadowColor,
+          },
+        ]}
+        onPress={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+          onPress();
+        }}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={1}
       >
-        <View style={[styles.iconContainer, { backgroundColor: color + '20' }]}>
-          <AnimatedIcon name={icon} size={28} color={color} animation={animation} delay={index * 200 + 500} />
+        <View style={styles.cardTopRow}>
+          <LinearGradient
+            colors={gradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.iconGradientContainer}
+          >
+            <Ionicons name={icon} size={24} color="#FFFFFF" />
+          </LinearGradient>
+
+          {badge && (
+            <View style={styles.cardBadge}>
+              <Text style={styles.cardBadgeText}>{badge}</Text>
+            </View>
+          )}
         </View>
-        <Text style={[styles.cardTitle, { color: textColor }]}>{title}</Text>
-        <Text style={[styles.cardSubtitle, { color: subtitleColor }]}>{subtitle}</Text>
+
+        <View style={styles.cardTextContainer}>
+          <Text style={[styles.cardTitle, { color: textColor }]} numberOfLines={1}>
+            {title}
+          </Text>
+          <Text style={[styles.cardSubtitle, { color: subtitleColor }]} numberOfLines={1}>
+            {subtitle}
+          </Text>
+        </View>
+
+        <View style={styles.cardArrowRow}>
+          <Ionicons name="arrow-forward" size={14} color={subtitleColor} />
+        </View>
       </TouchableOpacity>
     </Animated.View>
+  );
+};
+
+// ==================== Daily Challenge Card ====================
+const DailyChallengeCard: React.FC<{ challenge: DailyChallenge | null; onPress?: () => void }> = ({
+  challenge,
+  onPress,
+}) => {
+  const { t } = useTranslation();
+  if (!challenge) return null;
+
+  const progressPercent = challenge.target > 0 ? Math.min(100, (challenge.progress / challenge.target) * 100) : 0;
+  const localizedTitle = t(`home.dailyChallengeTitles.${challenge.type}`, {
+    count: challenge.target,
+    section: t(`physics.${challenge.section}`, { defaultValue: challenge.section }),
+    defaultValue: challenge.title,
+  });
+  const gradientColors: [string, string] = challenge.completed
+    ? ['#10B981', '#059669']
+    : getDailyChallengeGradient(challenge.date);
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={onPress}
+      style={dcStyles.container}
+    >
+      <LinearGradient
+        colors={gradientColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={dcStyles.gradient}
+      >
+        <View style={dcStyles.topRow}>
+          <View style={dcStyles.tagRow}>
+            <View style={dcStyles.badge}>
+              <Text style={dcStyles.badgeText}>
+                {challenge.completed
+                  ? t('home.dailyChallengeDone', { defaultValue: 'ВЫПОЛНЕНО' })
+                  : t('home.dailyChallengeBadge', { defaultValue: 'КВЕСТ ДНЯ' })}
+              </Text>
+            </View>
+          </View>
+          <View style={dcStyles.xpPill}>
+            <Ionicons name="flash" size={13} color="#FBBF24" style={{ marginRight: 3 }} />
+            <Text style={dcStyles.xpText}>+{challenge.xp_reward} XP</Text>
+          </View>
+        </View>
+
+        <Text style={dcStyles.title} numberOfLines={2}>
+          {localizedTitle}
+        </Text>
+
+        <View style={dcStyles.progressSection}>
+          <View style={dcStyles.progressBarTrack}>
+            <View style={[dcStyles.progressBarFill, { width: `${progressPercent}%` }]} />
+          </View>
+          <Text style={dcStyles.progressCounter}>
+            {challenge.progress} / {challenge.target}
+          </Text>
+        </View>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 };
 
@@ -203,7 +318,7 @@ const SearchModal: React.FC<{ visible: boolean; onClose: () => void }> = ({ visi
             )}
           </View>
           <TouchableOpacity onPress={onClose} style={searchStyles.cancelBtn}>
-            <Text style={[searchStyles.cancelText, { color: colors.accent }]}>{t('search.cancel')}</Text>
+            <Text style={[searchStyles.cancelText, { color: colors.accent }]}>{t('common.cancel')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -224,7 +339,10 @@ const SearchModal: React.FC<{ visible: boolean; onClose: () => void }> = ({ visi
           data={results}
           keyExtractor={(item) => `${item.type}-${item.id}`}
           renderItem={({ item }) => (
-            <TouchableOpacity style={[searchStyles.resultItem, { backgroundColor: colors.card, borderBottomColor: colors.borderLight }]} onPress={() => handleSelect(item)}>
+            <TouchableOpacity
+              style={[searchStyles.resultItem, { backgroundColor: colors.card, borderBottomColor: colors.borderLight }]}
+              onPress={() => handleSelect(item)}
+            >
               <View style={[searchStyles.resultIcon, { backgroundColor: colors.accentLight }]}>
                 <Ionicons name={getIconName(item.icon)} size={20} color={colors.accent} />
               </View>
@@ -244,69 +362,18 @@ const SearchModal: React.FC<{ visible: boolean; onClose: () => void }> = ({ visi
   );
 };
 
-// ==================== Daily Challenge Card ====================
-const DailyChallengeCard: React.FC<{ challenge: DailyChallenge | null }> = ({ challenge }) => {
-  const { t } = useTranslation();
-  if (!challenge) return null;
-
-  const progressPercent = challenge.target > 0 ? Math.min(100, (challenge.progress / challenge.target) * 100) : 0;
-  const localizedTitle = t(`home.dailyChallengeTitles.${challenge.type}`, {
-    count: challenge.target,
-    section: t(`physics.${challenge.section}`, { defaultValue: challenge.section }),
-    defaultValue: challenge.title,
-  });
-  const gradientColors: [string, string] = challenge.completed
-    ? ['#10B981', '#059669']
-    : getDailyChallengeGradient(challenge.date);
-
-  return (
-    <View style={dcStyles.container}>
-      <LinearGradient
-        colors={gradientColors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={dcStyles.gradient}
-      >
-        <View style={dcStyles.header}>
-          <View style={dcStyles.headerLeft}>
-            <Text style={dcStyles.emoji}>{challenge.completed ? '✅' : '🎯'}</Text>
-            <Text style={dcStyles.label}>{t('home.dailyChallenge')}</Text>
-          </View>
-          <View style={dcStyles.xpBadge}>
-            <Text style={dcStyles.xpText}>+{challenge.xp_reward} XP</Text>
-          </View>
-        </View>
-
-        <Text style={dcStyles.title}>{localizedTitle}</Text>
-
-        <View style={dcStyles.progressRow}>
-          <View style={dcStyles.progressBarBg}>
-            <View style={[dcStyles.progressBarFill, { width: `${progressPercent}%` }]} />
-          </View>
-          <Text style={dcStyles.progressText}>
-            {challenge.progress}/{challenge.target}
-          </Text>
-        </View>
-
-        {challenge.completed && (
-          <Text style={dcStyles.completedText}>{t('home.dailyChallengeCompleted')}</Text>
-        )}
-      </LinearGradient>
-    </View>
-  );
-};
-
-// ==================== Home Screen ====================
+// ==================== Main Screen ====================
 export default function HomeScreen() {
   const router = useRouter();
   const { user } = useAuth();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
   const insets = useSafeAreaInsets();
   const { isOnline } = useOfflineCache();
-  const bannerScale = useRef(new Animated.Value(0.9)).current;
-  const bannerOpacity = useRef(new Animated.Value(0)).current;
+
+  const heroScale = useRef(new Animated.Value(0.95)).current;
+  const heroOpacity = useRef(new Animated.Value(0)).current;
 
   const [bannerData, setBannerData] = useState<ProfileBannerData | null>(null);
   const [dailyChallenge, setDailyChallenge] = useState<DailyChallenge | null>(null);
@@ -349,185 +416,357 @@ export default function HomeScreen() {
 
   useEffect(() => {
     Animated.parallel([
-      Animated.spring(bannerScale, { toValue: 1, friction: 6, useNativeDriver: true }),
-      Animated.timing(bannerOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.spring(heroScale, { toValue: 1, friction: 7, tension: 50, useNativeDriver: true }),
+      Animated.timing(heroOpacity, { toValue: 1, duration: 400, useNativeDriver: true }),
     ]).start();
-  }, [bannerOpacity, bannerScale]);
+  }, [heroOpacity, heroScale]);
 
   useEffect(() => {
     fetchHomeData();
   }, [fetchHomeData]);
 
-  // Build personalized banner text
-  const firstName = user?.name?.split(' ')[0] || t('auth.student');
+  // Calculations
+  const firstName = user?.name?.split(' ')[0] || t('auth.student', { defaultValue: 'Ученик' });
   const streak = bannerData?.streak?.current || 0;
+  const userXp = (user as any)?.xp ?? (bannerData?.stats as any)?.xp ?? 0;
+  const userLevel = Math.floor(userXp / 100) + 1;
+  const xpInCurrentLevel = userXp % 100;
 
-  let bannerTitle = t('home.hello', { name: firstName });
-  let bannerSubtitle = t('home.defaultSubtitle');
+  // Active section to continue
+  const inProgressSection = bannerData?.section_progress?.find(
+    (s) => s.percentage > 0 && s.percentage < 100
+  );
 
-  if (streak >= 3) {
-    bannerTitle = t('home.helloStreak', { name: firstName });
-    bannerSubtitle = t('home.streakSubtitle', { count: streak, word: getDayWord(streak, currentLanguage) });
-  } else if (bannerData?.section_progress) {
-    const inProgress = bannerData.section_progress.find((s) => s.percentage > 0 && s.percentage < 100);
-    if (inProgress) {
-      // Используем ключ секции для перевода вместо русского названия
-      const sectionName = t(`physics.${inProgress.section}`, { defaultValue: inProgress.name }).toLowerCase();
-      bannerSubtitle = t('home.continueSubtitle', { section: sectionName, percent: inProgress.percentage });
-    }
-  }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
       >
-        {/* Header with search */}
-        <View style={styles.header}>
-          <Text style={[styles.appTitle, { color: colors.accent }]}>{t('home.appTitle')}</Text>
-          <View style={styles.headerRight}>
-            {!isOnline && (
-              <View style={[styles.offlineBadge, { backgroundColor: colors.warningBg, borderColor: colors.warning }]}>
-                <Text style={[styles.offlineText, { color: colors.warning }]}>{'📶 ' + t('common.offline')}</Text>
-              </View>
-            )}
-            <TouchableOpacity style={[styles.searchButton, { backgroundColor: colors.accentLight }]} onPress={() => setSearchVisible(true)}>
-              <Ionicons name="search" size={22} color={colors.accent} />
+        {/* ==================== Top Header ==================== */}
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            style={styles.profileHeaderBtn}
+            onPress={() => {
+              triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+              router.push('/(tabs)/profile');
+            }}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={['#6366F1', '#8B5CF6']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.avatarCircle}
+            >
+              <Text style={styles.avatarText}>{firstName.charAt(0).toUpperCase()}</Text>
+            </LinearGradient>
+            <View>
+              <Text style={[styles.greetingLabel, { color: colors.textTertiary }]}>
+                {t('home.greeting', { defaultValue: 'Привет 👋' })}
+              </Text>
+              <Text style={[styles.userName, { color: colors.text }]}>{firstName}</Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.topActionsRow}>
+            {/* Streak Counter */}
+            <TouchableOpacity
+              style={[styles.streakBadge, { backgroundColor: isDark ? 'rgba(245, 158, 11, 0.15)' : '#FFFBEB', borderColor: '#FDE68A' }]}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/(tabs)/profile');
+              }}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.streakEmoji}>🔥</Text>
+              <Text style={styles.streakCount}>{streak}</Text>
+            </TouchableOpacity>
+
+            {/* Telegram Community */}
+            <TouchableOpacity
+              style={[
+                styles.iconActionBtn,
+                {
+                  backgroundColor: isDark ? 'rgba(34, 158, 217, 0.15)' : '#E0F2FE',
+                  borderColor: isDark ? 'rgba(34, 158, 217, 0.35)' : '#BAE6FD',
+                  shadowColor: colors.shadowColor,
+                },
+              ]}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                Linking.openURL('https://t.me/+4nopjpXt51w0YjMy').catch(() => {});
+              }}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="paper-plane" size={17} color="#0284C7" />
+            </TouchableOpacity>
+
+            {/* Notifications */}
+            <TouchableOpacity
+              style={[styles.iconActionBtn, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/notifications');
+              }}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="notifications-outline" size={20} color={colors.text} />
+            </TouchableOpacity>
+
+            {/* Search */}
+            <TouchableOpacity
+              style={[styles.iconActionBtn, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                setSearchVisible(true);
+              }}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="search" size={20} color={colors.text} />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Personalized Banner */}
+        {/* Offline Badge */}
+        {!isOnline && (
+          <View style={[styles.offlineNotice, { backgroundColor: colors.warningBg, borderColor: colors.warning }]}>
+            <Ionicons name="cloud-offline" size={16} color={colors.warning} />
+            <Text style={[styles.offlineNoticeText, { color: colors.warning }]}>
+              {t('common.offlineMode', { defaultValue: 'Оффлайн режим • Данные сохранены локально' })}
+            </Text>
+          </View>
+        )}
+
+        {/* ==================== Hero Bento Card ==================== */}
         <Animated.View
           style={[
-            styles.bannerContainer,
-            { transform: [{ scale: bannerScale }], opacity: bannerOpacity },
+            styles.heroCardContainer,
+            { transform: [{ scale: heroScale }], opacity: heroOpacity },
           ]}
         >
           <LinearGradient
-            colors={['#6C63FF', '#4A90D9']}
+            colors={['#4F46E5', '#6366F1', '#3B82F6']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.banner}
+            style={styles.heroGradient}
           >
-            <View style={styles.bannerContent}>
-              <Text style={styles.bannerTitle}>{bannerTitle}</Text>
-              <Text style={styles.bannerSubtitle}>{bannerSubtitle}</Text>
-              {streak > 0 && (
-                <View style={styles.streakRow}>
-                  <Text style={styles.streakEmoji}>🔥</Text>
-                  <Text style={styles.streakText}>{streak} {getDayWord(streak, currentLanguage)}</Text>
-                </View>
-              )}
+            {/* Ambient Background Graphic */}
+            <View style={styles.heroAmbientCircle} />
+            <View style={styles.heroPlanetGlow}>
+              <Ionicons name="planet" size={130} color="rgba(255, 255, 255, 0.09)" />
             </View>
-            <View style={styles.bannerImageContainer}>
-              <AnimatedIcon name="planet" size={80} color="rgba(255,255,255,0.4)" animation="rotate" />
+
+            <View style={styles.heroTopRow}>
+              <View style={styles.levelPill}>
+                <Ionicons name="ribbon-outline" size={14} color="#FBBF24" />
+                <Text style={styles.levelPillText}>
+                  {t('home.level', { level: userLevel, defaultValue: `Уровень ${userLevel}` })}
+                </Text>
+              </View>
+
+              <View style={styles.heroXpRow}>
+                <Ionicons name="flash" size={14} color="#FBBF24" />
+                <Text style={styles.heroXpText}>{userXp} XP</Text>
+              </View>
             </View>
+
+            {/* Headline */}
+            <Text style={styles.heroTitle}>
+              {streak >= 3
+                ? `🔥 ${streak} ${getDayWord(streak, currentLanguage)} подряд!`
+                : inProgressSection
+                ? t('home.heroContinue', { name: inProgressSection.name, defaultValue: `Продолжим: ${inProgressSection.name}` })
+                : t('home.heroReady', { defaultValue: 'Готов покорять физику?' })}
+            </Text>
+
+            <Text style={styles.heroSubtitle}>
+              {inProgressSection
+                ? t('home.heroContinueSub', { percent: inProgressSection.percentage, defaultValue: `Пройдено ${inProgressSection.percentage}% темы. Нажми, чтобы продолжить.` })
+                : t('home.heroDefaultSub', { defaultValue: 'Изучай интерактивные уроки, решай формулы и тренируйся с AI.' })}
+            </Text>
+
+            {/* Level Progress Bar */}
+            <View style={styles.levelProgressContainer}>
+              <View style={styles.levelTrack}>
+                <View style={[styles.levelFill, { width: `${xpInCurrentLevel}%` }]} />
+              </View>
+              <Text style={styles.levelRatioText}>{xpInCurrentLevel}/100 XP</Text>
+            </View>
+
+            {/* CTA Button */}
+            <TouchableOpacity
+              style={styles.heroCtaBtn}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+                if (inProgressSection) {
+                  router.push(`/lessons/${inProgressSection.section}`);
+                } else {
+                  router.push('/lessons');
+                }
+              }}
+              activeOpacity={0.88}
+            >
+              <Text style={styles.heroCtaText}>
+                {inProgressSection
+                  ? t('home.continueLesson', { defaultValue: 'Продолжить урок' })
+                  : t('home.startLearning', { defaultValue: 'Начать обучение' })}
+              </Text>
+              <Ionicons name="arrow-forward" size={16} color="#4F46E5" />
+            </TouchableOpacity>
           </LinearGradient>
         </Animated.View>
 
-        {/* Daily Challenge */}
-        <View style={styles.dailyChallengeContainer}>
-          <DailyChallengeCard challenge={dailyChallenge} />
-        </View>
+        {/* ==================== Daily Challenge ==================== */}
+        {dailyChallenge && (
+          <View style={styles.sectionWrap}>
+            <DailyChallengeCard
+              challenge={dailyChallenge}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                if (dailyChallenge.type === 'test') {
+                  router.push(`/tests/${dailyChallenge.section}`);
+                } else if (dailyChallenge.type === 'solve') {
+                  router.push('/tasks');
+                } else {
+                  router.push(`/lessons/${dailyChallenge.section}`);
+                }
+              }}
+            />
+          </View>
+        )}
 
-        {/* Quick Search Bar */}
-        <TouchableOpacity style={[styles.searchBar, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]} onPress={() => setSearchVisible(true)} activeOpacity={0.7}>
+        {/* ==================== Quick Search Bar ==================== */}
+        <TouchableOpacity
+          style={[styles.quickSearchBar, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            setSearchVisible(true);
+          }}
+          activeOpacity={0.8}
+        >
           <Ionicons name="search" size={18} color={colors.textMuted} />
-          <Text style={[styles.searchBarText, { color: colors.textMuted }]}>{t('home.searchPlaceholder')}</Text>
+          <Text style={[styles.quickSearchPlaceholder, { color: colors.textMuted }]}>
+            {t('home.searchPlaceholder', { defaultValue: 'Поиск тем, формул и задач...' })}
+          </Text>
+          <View style={[styles.searchKeyboardHint, { backgroundColor: colors.inputBg }]}>
+            <Text style={[styles.searchKeyboardHintText, { color: colors.textTertiary }]}>⌘K</Text>
+          </View>
         </TouchableOpacity>
 
-        {/* Menu */}
-        <View style={styles.menuContainer}>
+        {/* ==================== Section Title ==================== */}
+        <View style={styles.sectionTitleRow}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {t('home.sectionsTitle', { defaultValue: 'Разделы обучения' })}
+          </Text>
+          <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>
+            {t('home.sectionsSubtitle', { defaultValue: 'Выбери режим' })}
+          </Text>
+        </View>
+
+        {/* ==================== Bento Grid Menu ==================== */}
+        <View style={styles.menuGrid}>
+          {/* Row 1 */}
           <View style={styles.menuRow}>
             <MenuCard
-              title={t('home.lessons')}
-              subtitle={t('home.lessonsSubtitle')}
+              title={t('home.lessons', { defaultValue: 'Уроки' })}
+              subtitle={t('home.lessonsCount', { defaultValue: '142 темы' })}
+              badge={t('home.lessonsBadge', { defaultValue: 'База' })}
               icon="book"
-              color="#4A90D9"
+              gradient={['#3B82F6', '#1D4ED8']}
               onPress={() => router.push('/lessons')}
               index={0}
-              animation="bounce"
               cardBg={colors.card}
               textColor={colors.text}
               subtitleColor={colors.textTertiary}
+              borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
             <MenuCard
-              title={t('home.tasks')}
-              subtitle={t('home.tasksSubtitle')}
+              title={t('home.tasks', { defaultValue: 'Задачи' })}
+              subtitle={t('home.tasksCount', { defaultValue: '710 заданий' })}
+              badge={t('home.tasksBadge', { defaultValue: 'Практика' })}
               icon="calculator"
-              color="#E74C3C"
+              gradient={['#EF4444', '#B91C1C']}
               onPress={() => router.push('/tasks')}
               index={1}
-              animation="shake"
               cardBg={colors.card}
               textColor={colors.text}
               subtitleColor={colors.textTertiary}
+              borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
           </View>
+
+          {/* Row 2 */}
           <View style={styles.menuRow}>
             <MenuCard
-              title={t('home.tests')}
-              subtitle={t('home.testsSubtitle')}
+              title={t('home.tests', { defaultValue: 'Тесты' })}
+              subtitle={t('home.testsCount', { defaultValue: 'Проверка знаний' })}
+              badge={t('home.testsBadge', { defaultValue: 'Экзамен' })}
               icon="checkbox"
-              color="#1ABC9C"
+              gradient={['#10B981', '#047857']}
               onPress={() => router.push('/tests')}
               index={2}
-              animation="pulse"
               cardBg={colors.card}
               textColor={colors.text}
               subtitleColor={colors.textTertiary}
+              borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
             <MenuCard
-              title={t('home.formulas')}
-              subtitle={t('home.formulasSubtitle')}
+              title={t('home.formulas', { defaultValue: 'Формулы' })}
+              subtitle={t('home.formulasCount', { defaultValue: 'Все формулы' })}
+              badge={t('home.formulasBadge', { defaultValue: 'Шпаргалка' })}
               icon="flask"
-              color="#9B59B6"
+              gradient={['#8B5CF6', '#6D28D9']}
               onPress={() => router.push('/formulas')}
               index={3}
-              animation="bounce"
               cardBg={colors.card}
               textColor={colors.text}
               subtitleColor={colors.textTertiary}
+              borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
           </View>
+
+          {/* Row 3 */}
           <View style={styles.menuRow}>
             <MenuCard
-              title={t('home.connection')}
-              subtitle={t('home.connectionSubtitle')}
-              icon="link"
-              color="#6C63FF"
+              title={t('home.connection', { defaultValue: 'QR-Класс' })}
+              subtitle={t('home.connectionSubtitle', { defaultValue: 'Синхронизация' })}
+              badge={t('auth.teacher', { defaultValue: 'Учитель' })}
+              icon="qr-code-outline"
+              gradient={['#6366F1', '#4338CA']}
               onPress={() => router.push('/connect')}
               index={4}
-              animation="pulse"
               cardBg={colors.card}
               textColor={colors.text}
               subtitleColor={colors.textTertiary}
+              borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
             <MenuCard
-              title={t('home.games')}
-              subtitle={t('home.gamesSubtitle')}
+              title={t('home.games', { defaultValue: 'Игры' })}
+              subtitle={t('home.gamesSubtitle', { defaultValue: 'Обучающие игры' })}
+              badge={t('common.play', { defaultValue: 'Играть' })}
               icon="game-controller"
-              color="#F59E0B"
+              gradient={['#F59E0B', '#B45309']}
               onPress={() => router.push('/games')}
               index={5}
-              animation="pulse"
               cardBg={colors.card}
               textColor={colors.text}
               subtitleColor={colors.textTertiary}
+              borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
           </View>
         </View>
       </ScrollView>
 
-      {searchVisible ? <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} /> : null}
+      {/* Search Modal */}
+      <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} />
     </SafeAreaView>
   );
 }
@@ -540,7 +779,6 @@ function getDayWord(n: number, lang: string = 'ru'): string {
   if (lang === 'kk') {
     return 'күн';
   }
-  // Russian pluralization
   const abs = Math.abs(n) % 100;
   const last = abs % 10;
   if (abs >= 11 && abs <= 14) return 'дней';
@@ -553,232 +791,519 @@ function getDayWord(n: number, lang: string = 'ru'): string {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
   },
-  header: {
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingTop: 8,
-    paddingBottom: 12,
+    paddingBottom: 14,
   },
-  appTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#6C63FF',
+  profileHeaderBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
-  headerRight: {
+  avatarCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+  },
+  avatarText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  greetingLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+  },
+  topActionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  offlineBadge: {
-    backgroundColor: '#FEF3C7',
+  streakBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#FCD34D',
   },
-  offlineText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#92400E',
+  streakEmoji: {
+    fontSize: 15,
   },
-  searchButton: {
+  streakCount: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#D97706',
+  },
+  iconActionBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#EEF2FF',
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
-  bannerContainer: {
-    paddingHorizontal: 16,
+  offlineNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginHorizontal: 16,
     marginBottom: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    borderWidth: 1,
   },
-  banner: {
-    borderRadius: 20,
-    padding: 24,
-    minHeight: 160,
+  offlineNoticeText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  heroCardContainer: {
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  heroGradient: {
+    borderRadius: 24,
+    padding: 20,
+    overflow: 'hidden',
+    position: 'relative',
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 18,
+  },
+  heroAmbientCircle: {
+    position: 'absolute',
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    top: -60,
+    right: -60,
+  },
+  heroPlanetGlow: {
+    position: 'absolute',
+    right: -15,
+    bottom: -20,
+  },
+  heroTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    overflow: 'hidden',
-  },
-  bannerContent: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  bannerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 6,
-  },
-  bannerSubtitle: {
-    fontSize: 15,
-    color: 'rgba(255,255,255,0.9)',
-    lineHeight: 22,
-  },
-  bannerImageContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  streakRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
-  },
-  streakEmoji: {
-    fontSize: 16,
-    marginRight: 4,
-  },
-  streakText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  dailyChallengeContainer: {
-    paddingHorizontal: 16,
     marginBottom: 12,
   },
-  searchBar: {
+  levelPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 16,
+    gap: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  levelPillText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  heroXpRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(0, 0, 0, 0.18)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  heroXpText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  heroTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: -0.4,
+    marginBottom: 6,
+    lineHeight: 28,
+  },
+  heroSubtitle: {
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: 14,
+    lineHeight: 20,
     marginBottom: 16,
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    height: 46,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+  },
+  levelProgressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
+    marginBottom: 16,
   },
-  searchBarText: {
+  levelTrack: {
+    flex: 1,
+    height: 7,
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  levelFill: {
+    height: '100%',
+    backgroundColor: '#FBBF24',
+    borderRadius: 4,
+  },
+  levelRatioText: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  heroCtaBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
+    borderRadius: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+  },
+  heroCtaText: {
+    color: '#4F46E5',
     fontSize: 15,
-    color: '#9CA3AF',
+    fontWeight: '700',
   },
-  menuContainer: {
+  sectionWrap: {
     paddingHorizontal: 16,
+    marginBottom: 14,
+  },
+  aiCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    overflow: 'hidden',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+  },
+  aiCardGradient: {
+    padding: 16,
+  },
+  aiCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 12,
+  },
+  aiIconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    overflow: 'hidden',
+  },
+  aiIconGradient: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  aiHeaderTextContainer: {
+    flex: 1,
+  },
+  aiCardTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+  },
+  aiCardSubtitle: {
+    fontSize: 12,
+    marginTop: 1,
+  },
+  aiChipsScroll: {
+    gap: 8,
+  },
+  aiChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 14,
+    backgroundColor: 'rgba(99, 102, 241, 0.08)',
+    borderWidth: 1,
+  },
+  aiChipText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  quickSearchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+  },
+  quickSearchPlaceholder: {
+    flex: 1,
+    fontSize: 14,
+    marginLeft: 10,
+  },
+  searchKeyboardHint: {
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  searchKeyboardHintText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    paddingHorizontal: 18,
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+  },
+  sectionSubtitle: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  menuGrid: {
+    paddingHorizontal: 16,
+    gap: 12,
   },
   menuRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+    gap: 12,
   },
   cardWrapper: {
     flex: 1,
-    marginHorizontal: 6,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 16,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    minHeight: 140,
+    justifyContent: 'space-between',
   },
-  iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
+  cardTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  iconGradientContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  cardBadge: {
+    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  cardBadgeText: {
+    color: '#6366F1',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  cardTextContainer: {
+    marginTop: 10,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#1F2937',
-    marginBottom: 4,
+    letterSpacing: -0.2,
+    marginBottom: 2,
   },
   cardSubtitle: {
-    fontSize: 13,
-    color: '#6B7280',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  cardArrowRow: {
+    alignItems: 'flex-end',
+    marginTop: 6,
+  },
+});
+
+const dcStyles = StyleSheet.create({
+  container: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#F59E0B',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+  },
+  gradient: {
+    padding: 18,
+  },
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  tagRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  badge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  xpPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  xpText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  title: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  progressSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  progressBarTrack: {
+    flex: 1,
+    height: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+  },
+  progressCounter: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
   },
 });
 
 const searchStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-    gap: 10,
+    gap: 12,
   },
   searchRow: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 12,
     paddingHorizontal: 12,
-    height: 42,
+    paddingVertical: 8,
+    borderRadius: 12,
     gap: 8,
   },
   input: {
     flex: 1,
-    fontSize: 15,
-    color: '#1F2937',
+    fontSize: 16,
+    padding: 0,
   },
   cancelBtn: {
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingHorizontal: 4,
   },
   cancelText: {
-    fontSize: 15,
-    color: '#6C63FF',
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
   },
   loadingContainer: {
-    paddingVertical: 20,
+    padding: 24,
     alignItems: 'center',
   },
   emptyContainer: {
+    padding: 48,
     alignItems: 'center',
-    paddingVertical: 48,
+    gap: 12,
   },
   emptyText: {
     fontSize: 16,
-    color: '#6B7280',
-    marginTop: 12,
+    textAlign: 'center',
   },
   resultItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    gap: 12,
   },
   resultIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: '#EEF2FF',
+    width: 36,
+    height: 36,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
   },
   resultInfo: {
     flex: 1,
@@ -786,94 +1311,9 @@ const searchStyles = StyleSheet.create({
   resultTitle: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1F2937',
+    marginBottom: 2,
   },
   resultSubtitle: {
-    fontSize: 13,
-    color: '#6B7280',
-    marginTop: 2,
-  },
-});
-
-const dcStyles = StyleSheet.create({
-  container: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  gradient: {
-    padding: 16,
-    borderRadius: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  emoji: {
-    fontSize: 18,
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: 'rgba(255,255,255,0.85)',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  xpBadge: {
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 10,
-  },
-  xpText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  title: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 12,
-  },
-  progressRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  progressBarBg: {
-    flex: 1,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 4,
-    backgroundColor: '#FFFFFF',
-  },
-  progressText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  completedText: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
-    marginTop: 6,
-    textAlign: 'center',
+    fontSize: 12,
   },
 });

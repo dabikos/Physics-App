@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '../../src/context/ThemeContext';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
-import { useAdGate } from '../../src/hooks/useAdGate';
 import api from '../../src/services/api';
 
 type PracticeTaskListItem = {
@@ -28,7 +27,6 @@ export default function TasksSubsectionsScreen() {
   const { colors } = useTheme();
   const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
-  const { showContentAdIfNeeded } = useAdGate();
   const [remoteTasks, setRemoteTasks] = useState<PracticeTaskListItem[]>([]);
 
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
@@ -39,7 +37,7 @@ export default function TasksSubsectionsScreen() {
     const loadTasks = async () => {
       if (!section) return;
       try {
-        const response = await api.get('/practice/tasks', { params: { section, summary: true } });
+        const response = await api.get('/practice/tasks', { params: { section } });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setRemoteTasks(items);
       } catch (error) {
@@ -91,32 +89,24 @@ export default function TasksSubsectionsScreen() {
         {sectionData.subsections.map((subsection) => {
           const fallbackCount = subsection.topics.length * 5;
           const taskCount = countsBySubsection[subsection.id] ?? fallbackCount;
-          const isLocked = subsection.is_locked || subsection.requires_pro;
 
           return (
             <TouchableOpacity
               key={subsection.id}
-              style={[
-                styles.card,
-                { backgroundColor: colors.card, shadowColor: colors.shadowColor },
-                isLocked && styles.lockedCard,
-              ]}
-              onPress={async () => {
-                if (!isLocked) await showContentAdIfNeeded();
-                router.push(isLocked ? '/subscription' : `/tasks/${section}/${subsection.id}`);
-              }}
+              style={[styles.card, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
+              onPress={() => router.push(`/tasks/${section}/${subsection.id}`)}
               activeOpacity={0.82}
             >
               <View style={[styles.iconContainer, { backgroundColor: sectionData.color + '20' }]}>
-                <Ionicons name={isLocked ? 'lock-closed' : 'layers-outline'} size={26} color={isLocked ? colors.textMuted : sectionData.color} />
+                <Ionicons name="layers-outline" size={26} color={sectionData.color} />
               </View>
               <View style={styles.cardInfo}>
-                <Text style={[styles.cardTitle, { color: isLocked ? colors.textMuted : colors.text }]}>{subsection.name}</Text>
+                <Text style={[styles.cardTitle, { color: colors.text }]}>{subsection.name}</Text>
                 <Text style={[styles.cardSubtitle, { color: colors.textTertiary }]}>
                   {t('tasks.countSummary', { count: taskCount })}
                 </Text>
               </View>
-              <Ionicons name={isLocked ? 'lock-closed' : 'chevron-forward'} size={22} color={colors.textMuted} />
+              <Ionicons name="chevron-forward" size={22} color={colors.textMuted} />
             </TouchableOpacity>
           );
         })}
@@ -196,9 +186,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 2,
-  },
-  lockedCard: {
-    opacity: 0.58,
   },
   iconContainer: {
     width: 52,

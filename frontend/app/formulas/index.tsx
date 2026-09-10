@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   View,
@@ -8,16 +8,149 @@ import {
   SectionList,
   TouchableOpacity,
   TextInput,
+  Animated,
+  Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import type { Formula } from '../../src/types/physics';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
-import { useAdGate } from '../../src/hooks/useAdGate';
 import api from '../../src/services/api';
+
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  try {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(style);
+    }
+  } catch {}
+};
+
+const SECTION_GRADIENTS: Record<string, [string, string]> = {
+  mechanics: ['#3B82F6', '#1D4ED8'],
+  thermodynamics: ['#F97316', '#C2410C'],
+  electromagnetism: ['#8B5CF6', '#6D28D9'],
+  optics: ['#10B981', '#047857'],
+  atomic: ['#EC4899', '#BE185D'],
+  relativity: ['#6366F1', '#4338CA'],
+  astronomy: ['#F59E0B', '#D97706'],
+};
+
+interface FormulaCardProps {
+  formula: Formula;
+  isFav: boolean;
+  onToggleFav: () => void;
+  onPress: () => void;
+  cardBg: string;
+  borderColor: string;
+  textColor: string;
+  textSecondary: string;
+  shadowColor: string;
+}
+
+const FormulaCardItem: React.FC<FormulaCardProps> = ({
+  formula,
+  isFav,
+  onToggleFav,
+  onPress,
+  cardBg,
+  borderColor,
+  textColor,
+  textSecondary,
+  shadowColor,
+}) => {
+  const scale = useRef(new Animated.Value(1)).current;
+  const isLocked = formula.is_locked || formula.requires_pro;
+  const sectionGradient = SECTION_GRADIENTS[formula.section] || ['#6366F1', '#4F46E5'];
+
+  const handlePressIn = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+    Animated.spring(scale, { toValue: 0.97, friction: 6, tension: 100, useNativeDriver: true }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, { toValue: 1, friction: 6, tension: 100, useNativeDriver: true }).start();
+  };
+
+  return (
+    <Animated.View style={{ transform: [{ scale }] }}>
+      <TouchableOpacity
+        style={[
+          styles.formulaCard,
+          {
+            backgroundColor: cardBg,
+            borderColor,
+            shadowColor,
+          },
+          isLocked && styles.lockedCard,
+        ]}
+        onPress={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
+          onPress();
+        }}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={1}
+      >
+        <View style={styles.formulaCardTop}>
+          <View style={styles.formulaTitleArea}>
+            <Text style={[styles.formulaName, { color: textColor }]} numberOfLines={1}>
+              {formula.name}
+            </Text>
+            {!!formula.description && (
+              <Text style={[styles.formulaDescription, { color: textSecondary }]} numberOfLines={2}>
+                {formula.description}
+              </Text>
+            )}
+          </View>
+
+          {isLocked ? (
+            <LinearGradient
+              colors={['#F59E0B', '#D97706']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.proBadge}
+            >
+              <Ionicons name="lock-closed" size={11} color="#FFFFFF" />
+              <Text style={styles.proBadgeText}>PRO</Text>
+            </LinearGradient>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                onToggleFav();
+              }}
+              style={styles.favBtn}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons
+                name={isFav ? 'heart' : 'heart-outline'}
+                size={22}
+                color={isFav ? '#EF4444' : textSecondary}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Formula Math Box */}
+        {!isLocked && (
+          <View style={[styles.mathDisplayBox, { backgroundColor: sectionGradient[0] + '12', borderColor: sectionGradient[0] + '30' }]}>
+            <Text style={[styles.mathDisplayText, { color: sectionGradient[0] }]}>
+              {formula.formula}
+            </Text>
+            <View style={styles.mathArrowCircle}>
+              <Ionicons name="calculator-outline" size={16} color={sectionGradient[0]} />
+            </View>
+          </View>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 export default function FormulasScreen() {
   const insets = useSafeAreaInsets();
@@ -27,9 +160,8 @@ export default function FormulasScreen() {
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [remoteFormulas, setRemoteFormulas] = useState<Formula[] | null>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
-  const { showContentAdIfNeeded } = useAdGate();
   const formulasData = remoteFormulas ?? FORMULAS_DATA;
 
   useEffect(() => {
@@ -37,7 +169,9 @@ export default function FormulasScreen() {
 
     const loadFormulas = async () => {
       try {
-        const response = await api.get('/formulas', { params: { summary: true, section: selectedSection || undefined } });
+        const response = await api.get('/formulas', {
+          params: { summary: true, section: selectedSection || undefined },
+        });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setRemoteFormulas(items);
       } catch (error) {
@@ -52,175 +186,189 @@ export default function FormulasScreen() {
     };
   }, [selectedSection]);
 
-  const filteredFormulas = useMemo(() => formulasData.filter((formula) => {
-    const matchesSearch = formula.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      formula.formula.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSection = !selectedSection || formula.section === selectedSection;
-    return matchesSearch && matchesSection;
-  }), [formulasData, searchQuery, selectedSection]);
+  const filteredFormulas = useMemo(() => {
+    return formulasData.filter((formula) => {
+      const matchesSearch =
+        formula.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        formula.formula.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSection = !selectedSection || formula.section === selectedSection;
+      return matchesSearch && matchesSection;
+    });
+  }, [formulasData, searchQuery, selectedSection]);
 
-  const groupedFormulas = useMemo(() => filteredFormulas.reduce((acc, formula) => {
-    if (!acc[formula.section]) {
-      acc[formula.section] = [];
-    }
-    acc[formula.section].push(formula);
-    return acc;
-  }, {} as Record<string, Formula[]>), [filteredFormulas]);
+  const groupedFormulas = useMemo(() => {
+    return filteredFormulas.reduce((acc, formula) => {
+      if (!acc[formula.section]) {
+        acc[formula.section] = [];
+      }
+      acc[formula.section].push(formula);
+      return acc;
+    }, {} as Record<string, Formula[]>);
+  }, [filteredFormulas]);
 
-  const formulaSections = useMemo(() => (
-    Object.entries(groupedFormulas).map(([sectionKey, sectionFormulas]) => ({
+  const formulaSections = useMemo(() => {
+    return Object.entries(groupedFormulas).map(([sectionKey, sectionFormulas]) => ({
       title: PHYSICS_SECTIONS[sectionKey]?.name || sectionKey,
       sectionKey,
-      color: PHYSICS_SECTIONS[sectionKey]?.color || '#6C63FF',
+      color: PHYSICS_SECTIONS[sectionKey]?.color || '#6366F1',
       data: sectionFormulas,
-    }))
-  ), [PHYSICS_SECTIONS, groupedFormulas]);
-
-  const renderFormulaCard = ({ item: formula }: { item: Formula }) => {
-    const sectionColor = PHYSICS_SECTIONS[formula.section]?.color || '#4338CA';
-    const isLocked = formula.is_locked || formula.requires_pro;
-
-    return (
-      <TouchableOpacity
-        style={[
-          styles.formulaCard,
-          { backgroundColor: colors.card, borderColor: colors.border },
-          isLocked && styles.lockedCard,
-        ]}
-        onPress={async () => {
-          if (!isLocked) await showContentAdIfNeeded();
-          router.push(isLocked ? '/subscription' : `/formulas/${formula.id}`);
-        }}
-        activeOpacity={0.82}
-      >
-        <View style={styles.formulaCardHeader}>
-          <View style={styles.formulaTitleBlock}>
-            <Text style={[styles.formulaName, { color: colors.text }]} numberOfLines={1}>
-              {formula.name}
-            </Text>
-            {!!formula.description && (
-              <Text style={[styles.formulaDescription, { color: colors.textTertiary }]} numberOfLines={2}>
-                {formula.description}
-              </Text>
-            )}
-          </View>
-          {isLocked ? (
-            <View style={styles.lockBadge}>
-              <Ionicons name="lock-closed" size={14} color="#FFFFFF" />
-              <Text style={styles.lockBadgeText}>Pro</Text>
-            </View>
-          ) : (
-            <TouchableOpacity
-              onPress={() => toggleFavorite(formula.id, 'formula')}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            >
-              <Ionicons
-                name={isFavorite(formula.id, 'formula') ? 'heart' : 'heart-outline'}
-                size={20}
-                color={isFavorite(formula.id, 'formula') ? '#EF4444' : '#D1D5DB'}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {!isLocked && (
-          <View style={[styles.formulaPreviewBox, { backgroundColor: sectionColor + '12' }]}>
-            <Text style={[styles.formulaPreviewText, { color: sectionColor }]} numberOfLines={1}>
-              {formula.formula}
-            </Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    );
-  };
+    }));
+  }, [PHYSICS_SECTIONS, groupedFormulas]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
+      {/* ==================== Header ==================== */}
       <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
         <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
+          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            router.back();
+          }}
+          activeOpacity={0.8}
         >
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+          <Ionicons name="arrow-back" size={20} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('formulas.title')}</Text>
-        <View style={styles.headerPlaceholder} />
+
+        <View style={styles.headerTitleWrap}>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>
+            {t('formulas.title', { defaultValue: 'Справочник формул' })}
+          </Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
+            {filteredFormulas.length} формул доступно
+          </Text>
+        </View>
+
+        <View style={styles.navBtnPlaceholder} />
       </View>
 
-      <View style={[styles.searchContainer, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-        <Ionicons name="search" size={20} color={colors.textMuted} style={styles.searchIcon} />
+      {/* ==================== Search Bar ==================== */}
+      <View style={[styles.searchBar, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}>
+        <Ionicons name="search" size={18} color={colors.textMuted} />
         <TextInput
           style={[styles.searchInput, { color: colors.text }]}
-          placeholder={t('formulas.searchPlaceholder')}
+          placeholder={t('formulas.searchPlaceholder', { defaultValue: 'Поиск формулы или величины...' })}
           placeholderTextColor={colors.textMuted}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <Ionicons name="close-circle" size={20} color={colors.textMuted} />
+          <TouchableOpacity
+            onPress={() => {
+              triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+              setSearchQuery('');
+            }}
+          >
+            <Ionicons name="close-circle" size={18} color={colors.textMuted} />
           </TouchableOpacity>
         )}
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filtersContainer}
-        contentContainerStyle={styles.filtersContent}
-      >
-        <TouchableOpacity
-          style={[styles.filterChip, { backgroundColor: colors.chipBg, borderColor: colors.chipBorder }, !selectedSection && { backgroundColor: colors.chipActiveBg, borderColor: colors.chipActiveBg }]}
-          onPress={() => setSelectedSection(null)}
+      {/* ==================== Section Filters ==================== */}
+      <View style={styles.filtersWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filtersContent}
         >
-          <Text style={[styles.filterChipText, { color: colors.textTertiary }, !selectedSection && styles.filterChipTextActive]}>
-            {t('common.all')}
-          </Text>
-        </TouchableOpacity>
-        {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => (
           <TouchableOpacity
-            key={key}
             style={[
               styles.filterChip,
-              { backgroundColor: colors.chipBg, borderColor: colors.chipBorder },
-              selectedSection === key && styles.filterChipActive,
-              selectedSection === key && { backgroundColor: section.color },
+              {
+                backgroundColor: !selectedSection ? '#6366F1' : colors.card,
+                borderColor: !selectedSection ? '#6366F1' : colors.border,
+              },
             ]}
-            onPress={() => setSelectedSection(selectedSection === key ? null : key)}
+            onPress={() => {
+              triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+              setSelectedSection(null);
+            }}
           >
-            <Text style={[
-              styles.filterChipText,
-              { color: colors.textTertiary },
-              selectedSection === key && styles.filterChipTextActive,
-            ]}>
-              {section.name}
+            <Text style={[styles.filterChipText, { color: !selectedSection ? '#FFFFFF' : colors.text }]}>
+              {t('common.all', { defaultValue: 'Все разделы' })}
             </Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
 
+          {Object.entries(PHYSICS_SECTIONS).map(([key, section]) => {
+            const isSelected = selectedSection === key;
+            const gradient = SECTION_GRADIENTS[key] || ['#6366F1', '#4F46E5'];
+
+            return (
+              <TouchableOpacity
+                key={key}
+                style={[
+                  styles.filterChip,
+                  {
+                    backgroundColor: isSelected ? gradient[0] : colors.card,
+                    borderColor: isSelected ? gradient[0] : colors.border,
+                  },
+                ]}
+                onPress={() => {
+                  triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                  setSelectedSection(isSelected ? null : key);
+                }}
+              >
+                <Text
+                  style={[
+                    styles.filterChipText,
+                    { color: isSelected ? '#FFFFFF' : colors.text },
+                  ]}
+                >
+                  {section.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+
+      {/* ==================== Formulas SectionList ==================== */}
       <SectionList
         sections={formulaSections}
         keyExtractor={(item) => item.id}
-        renderItem={renderFormulaCard}
+        renderItem={({ item }) => (
+          <FormulaCardItem
+            formula={item}
+            isFav={isFavorite(item.id, 'formula')}
+            onToggleFav={() => toggleFavorite(item.id, 'formula')}
+            onPress={() =>
+              router.push(
+                (item.is_locked || item.requires_pro
+                  ? '/subscription'
+                  : `/formulas/${item.id}`) as any
+              )
+            }
+            cardBg={colors.card}
+            borderColor={colors.border}
+            textColor={colors.text}
+            textSecondary={colors.textTertiary}
+            shadowColor={colors.shadowColor}
+          />
+        )}
         renderSectionHeader={({ section }) => (
-          <View style={[styles.sectionHeader, { backgroundColor: colors.background }]}>
+          <View style={[styles.sectionHeaderRow, { backgroundColor: colors.background }]}>
             <View style={[styles.sectionDot, { backgroundColor: section.color }]} />
-            <Text style={[styles.sectionName, { color: colors.textTertiary }]}>{section.title}</Text>
-            <Text style={[styles.sectionCount, { color: colors.textMuted }]}>{section.data.length}</Text>
+            <Text style={[styles.sectionHeading, { color: colors.textSecondary }]}>
+              {section.title}
+            </Text>
+            <View style={[styles.sectionBadge, { backgroundColor: colors.inputBg }]}>
+              <Text style={[styles.sectionBadgeText, { color: colors.textTertiary }]}>
+                {section.data.length}
+              </Text>
+            </View>
           </View>
         )}
-        style={styles.content}
-        contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 20 }]}
+        style={styles.contentList}
+        contentContainerStyle={[styles.listContent, { paddingBottom: insets.bottom + 30 }]}
         showsVerticalScrollIndicator={false}
-        initialNumToRender={10}
-        maxToRenderPerBatch={8}
-        windowSize={7}
         stickySectionHeadersEnabled={false}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Ionicons name="search" size={48} color={colors.border} />
-            <Text style={[styles.emptyText, { color: colors.textTertiary }]}>{t('formulas.notFound')}</Text>
+            <Ionicons name="search" size={54} color={colors.border} />
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>Ничего не найдено</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
+              Попробуйте изменить поисковый запрос или фильтр раздела
+            </Text>
           </View>
         }
       />
@@ -231,7 +379,6 @@ export default function FormulasScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
   },
   header: {
     flexDirection: 'row',
@@ -239,91 +386,83 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
   },
-  backButton: {
-    width: 44,
-    height: 44,
+  navBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  navBtnPlaceholder: {
+    width: 40,
+  },
+  headerTitleWrap: {
+    alignItems: 'center',
+  },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: -0.2,
   },
-  headerPlaceholder: {
-    width: 44,
+  headerSubtitle: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 2,
   },
-  searchContainer: {
+  searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     marginHorizontal: 16,
-    marginTop: 16,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 48,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  searchIcon: {
-    marginRight: 8,
+    marginTop: 14,
+    marginBottom: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
-    color: '#1F2937',
+    fontSize: 14,
+    marginLeft: 10,
+    padding: 0,
   },
-  filtersContainer: {
-    maxHeight: 50,
-    marginTop: 12,
+  filtersWrapper: {
+    marginBottom: 8,
   },
   filtersContent: {
     paddingHorizontal: 16,
     gap: 8,
+    paddingVertical: 4,
   },
   filterChip: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginRight: 8,
-  },
-  filterChipActive: {
-    backgroundColor: '#6C63FF',
-    borderColor: '#6C63FF',
   },
   filterChipText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#6B7280',
+    fontSize: 13,
+    fontWeight: '600',
   },
-  filterChipTextActive: {
-    color: '#FFFFFF',
-  },
-  content: {
+  contentList: {
     flex: 1,
   },
   listContent: {
     paddingHorizontal: 16,
-    paddingTop: 8,
+    gap: 12,
   },
-  sectionGroup: {
-    marginBottom: 24,
-  },
-  sectionHeader: {
+  sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 14,
-    paddingBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    marginTop: 6,
     gap: 8,
   },
   sectionDot: {
@@ -331,94 +470,102 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
   },
-  sectionName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#6B7280',
+  sectionHeading: {
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: -0.2,
   },
-  sectionCount: {
-    fontSize: 13,
+  sectionBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  sectionBadgeText: {
+    fontSize: 11,
     fontWeight: '700',
   },
   formulaCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 13,
-    marginBottom: 9,
+    borderRadius: 20,
     borderWidth: 1,
+    padding: 16,
+    marginBottom: 10,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
   },
   lockedCard: {
-    opacity: 0.72,
+    opacity: 0.8,
   },
-  lockBadge: {
+  formulaCardTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  formulaTitleArea: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  formulaName: {
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+    marginBottom: 4,
+  },
+  formulaDescription: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  proBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 999,
-    backgroundColor: '#111827',
+    paddingVertical: 4,
+    borderRadius: 8,
   },
-  lockBadgeText: {
+  proBadgeText: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '800',
   },
-  formulaCardHeader: {
+  favBtn: {
+    padding: 2,
+  },
+  mathDisplayBox: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: 10,
-  },
-  formulaTitleBlock: {
-    flex: 1,
-  },
-  formulaName: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1F2937',
-  },
-  formulaPreviewBox: {
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginTop: 10,
-  },
-  formulaPreviewText: {
-    fontSize: 16,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  formulaBox: {
-    backgroundColor: '#F8FAFC',
-    borderRadius: 12,
-    padding: 14,
-    borderLeftWidth: 3,
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 14,
+    borderWidth: 1,
   },
-  formulaTextDisplay: {
-    fontSize: 20,
-    fontWeight: '600',
-    textAlign: 'center',
+  mathDisplayText: {
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
   },
-  formulaDescription: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
-    lineHeight: 17,
+  mathArrowCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyState: {
+    padding: 40,
     alignItems: 'center',
-    paddingVertical: 48,
+    gap: 12,
   },
-  emptyText: {
-    fontSize: 16,
-    color: '#6B7280',
-    marginTop: 12,
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
   },
-  bottomPadding: {
-    height: 40,
+  emptySubtitle: {
+    fontSize: 13,
+    textAlign: 'center',
+    lineHeight: 18,
   },
 });
-
-

@@ -9,7 +9,6 @@ const isExpoGo = Constants.appOwnership === 'expo';
 
 let adsInitialized = false;
 let googleMobileAdsModule: GoogleMobileAdsModule | null | undefined;
-let lastInterstitialShownAt = 0;
 
 async function getGoogleMobileAdsModule(): Promise<GoogleMobileAdsModule | null> {
   if (isExpoGo) {
@@ -49,9 +48,6 @@ export const LEARN_MORE_INTERSTITIAL_AD_UNIT_ID = __DEV__
       android: 'ca-app-pub-4380583516308857/1473208851',
       default: 'ca-app-pub-3940256099942544/1033173712',
     }) ?? 'ca-app-pub-3940256099942544/1033173712';
-
-export const CONTENT_INTERSTITIAL_AD_UNIT_ID = LEARN_MORE_INTERSTITIAL_AD_UNIT_ID;
-export const REWARDED_FEATURE_AD_UNIT_ID = CHAT_REWARDED_AD_UNIT_ID;
 
 export async function initializeMobileAds(): Promise<void> {
   if (adsInitialized) return;
@@ -114,10 +110,6 @@ export async function showRewardedChatAd(): Promise<boolean> {
   });
 }
 
-export async function showRewardedFeatureAd(): Promise<boolean> {
-  return showRewardedChatAd();
-}
-
 export async function showLearnMoreInterstitialAd(): Promise<boolean> {
   const ads = await getGoogleMobileAdsModule();
   if (!ads) {
@@ -160,15 +152,5 @@ export async function showLearnMoreInterstitialAd(): Promise<boolean> {
   });
 }
 
-export async function showContentInterstitialAd(): Promise<boolean> {
-  const now = Date.now();
-  if (now - lastInterstitialShownAt < 45_000) {
-    return false;
-  }
-
-  const shown = await showLearnMoreInterstitialAd();
-  if (shown) {
-    lastInterstitialShownAt = now;
-  }
-  return shown;
-}
+export const showContentInterstitialAd = showLearnMoreInterstitialAd;
+export const showRewardedFeatureAd = showRewardedChatAd;

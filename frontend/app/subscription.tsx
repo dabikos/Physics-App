@@ -1,406 +1,305 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef } from 'react';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Animated,
+  Platform,
+} from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 import { useTranslation } from 'react-i18next';
-import type { PurchasesPackage } from 'react-native-purchases';
 import { useTheme } from '../src/context/ThemeContext';
 import { useSubscription } from '../src/context/SubscriptionContext';
-import { REVENUECAT_PRODUCTS, type RevenueCatProductId } from '../src/config/revenueCat';
 
-type PayAction = RevenueCatProductId | 'restore' | 'manage' | null;
-
-const SCREEN_COPY = {
-  ru: {
-    active: 'Активна',
-    basic: 'Basic',
-    premium: 'Premium',
-    title: 'Выберите доступ',
-    subtitle: 'Basic открывает весь материал с рекламой. Premium убирает рекламу и дает больше AI-лимитов.',
-    expoTitle: 'Покупки недоступны в Expo Go',
-    expoText: 'Проверяйте подписки в сборке из Google Play или development build.',
-    loading: 'Загрузка подписки...',
-    currentPlan: 'Текущий план',
-    basicTitle: 'Physics AI Basic',
-    basicSubtitle: 'Полный доступ к материалам',
-    premiumTitle: 'Physics AI Premium',
-    premiumSubtitle: 'Максимум функций без рекламы',
-    buyBasic: 'Оформить Basic',
-    buyMonthly: 'Premium на месяц',
-    buyYearly: 'Premium на год',
-    unavailable: 'Не настроено в RevenueCat',
-    restore: 'Восстановить покупки',
-    manage: 'Управлять подпиской',
-    successTitle: 'Подписка активирована',
-    successText: 'Доступ обновлен. Если экран не изменился сразу, перезапустите приложение.',
-    restoreSuccessTitle: 'Покупки восстановлены',
-    restoreSuccessText: 'Активная подписка найдена.',
-    restoreEmptyTitle: 'Подписка не найдена',
-    restoreEmptyText: 'Для этого аккаунта активная подписка не найдена.',
-    manageFallbackTitle: 'Откройте Google Play',
-    manageFallbackText: 'Управление подпиской доступно в настройках Google Play.',
-    footer: 'Оплата и отмена подписки обрабатываются Google Play. Доступ привязан к аккаунту приложения.',
-    basicFeatures: [
-      'Все разделы, подразделы, уроки, тесты, задачи и формулы',
-      'Решения задач после просмотра награждаемой рекламы',
-      '5 генераций тестов и 5 “Изучить больше” в день',
-      '10 AI-запросов в день, дополнительные запросы за рекламу',
-      'Межстраничная реклама остается',
-    ],
-    premiumFeatures: [
-      'Все материалы без замков',
-      'Без межстраничной рекламы',
-      '15 генераций тестов и 15 “Изучить больше” в день',
-      '30 AI-запросов в день, дополнительные запросы за рекламу',
-      'Комфортный режим для регулярного обучения',
-    ],
-  },
-  en: {
-    active: 'Active',
-    basic: 'Basic',
-    premium: 'Premium',
-    title: 'Choose access',
-    subtitle: 'Basic unlocks all study content with ads. Premium removes ads and gives higher AI limits.',
-    expoTitle: 'Purchases are unavailable in Expo Go',
-    expoText: 'Test subscriptions in a Google Play build or a development build.',
-    loading: 'Loading subscription...',
-    currentPlan: 'Current plan',
-    basicTitle: 'Physics AI Basic',
-    basicSubtitle: 'Full content access',
-    premiumTitle: 'Physics AI Premium',
-    premiumSubtitle: 'Maximum features without ads',
-    buyBasic: 'Get Basic',
-    buyMonthly: 'Monthly Premium',
-    buyYearly: 'Yearly Premium',
-    unavailable: 'Not configured in RevenueCat',
-    restore: 'Restore purchases',
-    manage: 'Manage subscription',
-    successTitle: 'Subscription activated',
-    successText: 'Access has been updated. Restart the app if the screen does not refresh immediately.',
-    restoreSuccessTitle: 'Purchases restored',
-    restoreSuccessText: 'Active subscription found.',
-    restoreEmptyTitle: 'No subscription found',
-    restoreEmptyText: 'No active subscription was found for this account.',
-    manageFallbackTitle: 'Open Google Play',
-    manageFallbackText: 'Subscription management is available in Google Play settings.',
-    footer: 'Payment and cancellation are handled by Google Play. Access is linked to your app account.',
-    basicFeatures: [
-      'All sections, subsections, lessons, tests, problems, and formulas',
-      'Problem solutions after rewarded ads',
-      '5 test generations and 5 “Learn more” generations per day',
-      '10 AI chat requests per day, extra requests via ads',
-      'Interstitial ads remain enabled',
-    ],
-    premiumFeatures: [
-      'All content unlocked',
-      'No interstitial ads',
-      '15 test generations and 15 “Learn more” generations per day',
-      '30 AI chat requests per day, extra requests via ads',
-      'Comfort mode for regular studying',
-    ],
-  },
-  kk: {
-    active: 'Белсенді',
-    basic: 'Basic',
-    premium: 'Premium',
-    title: 'Қолжетімділікті таңдаңыз',
-    subtitle: 'Basic барлық оқу материалын жарнамамен ашады. Premium жарнаманы алып, AI лимитін көбейтеді.',
-    expoTitle: 'Expo Go ішінде сатып алу қолжетімсіз',
-    expoText: 'Жазылымдарды Google Play жинағында немесе development build ішінде тексеріңіз.',
-    loading: 'Жазылым жүктелуде...',
-    currentPlan: 'Ағымдағы жоспар',
-    basicTitle: 'Physics AI Basic',
-    basicSubtitle: 'Материалдарға толық қолжетімділік',
-    premiumTitle: 'Physics AI Premium',
-    premiumSubtitle: 'Жарнамасыз максималды мүмкіндіктер',
-    buyBasic: 'Basic алу',
-    buyMonthly: 'Айлық Premium',
-    buyYearly: 'Жылдық Premium',
-    unavailable: 'RevenueCat ішінде бапталмаған',
-    restore: 'Сатып алуды қалпына келтіру',
-    manage: 'Жазылымды басқару',
-    successTitle: 'Жазылым іске қосылды',
-    successText: 'Қолжетімділік жаңартылды. Экран бірден өзгермесе, қолданбаны қайта ашыңыз.',
-    restoreSuccessTitle: 'Сатып алулар қалпына келді',
-    restoreSuccessText: 'Белсенді жазылым табылды.',
-    restoreEmptyTitle: 'Жазылым табылмады',
-    restoreEmptyText: 'Бұл аккаунт үшін белсенді жазылым табылмады.',
-    manageFallbackTitle: 'Google Play ашыңыз',
-    manageFallbackText: 'Жазылымды Google Play баптауларында басқаруға болады.',
-    footer: 'Төлем мен жазылымнан бас тартуды Google Play өңдейді. Қолжетімділік қолданба аккаунтына байланады.',
-    basicFeatures: [
-      'Барлық бөлімдер, бөлімшелер, сабақтар, тесттер, есептер және формулалар',
-      'Есеп шешімдері марапаттық жарнамадан кейін',
-      'Күніне 5 тест генерациясы және 5 “Көбірек үйрену” генерациясы',
-      'Күніне 10 AI-сұраныс, қосымша сұраныстар жарнама арқылы',
-      'Өтпелі жарнама қалады',
-    ],
-    premiumFeatures: [
-      'Барлық материал толық ашық',
-      'Өтпелі жарнама жоқ',
-      'Күніне 15 тест генерациясы және 15 “Көбірек үйрену” генерациясы',
-      'Күніне 30 AI-сұраныс, қосымша сұраныстар жарнама арқылы',
-      'Тұрақты оқу үшін ыңғайлы режим',
-    ],
-  },
-} as const;
-
-function normalizeLanguage(language: string) {
-  if (language.startsWith('kk')) return 'kk';
-  if (language.startsWith('en')) return 'en';
-  return 'ru';
-}
-
-function findDisplayedPackage(packages: PurchasesPackage[], productId: RevenueCatProductId) {
-  const expected = REVENUECAT_PRODUCTS[productId].toLowerCase();
-  return (
-    packages.find((item) => item.product.identifier.toLowerCase() === expected) ||
-    packages.find((item) => item.product.identifier.toLowerCase().startsWith(`${expected}:`)) ||
-    packages.find((item) => item.product.identifier.toLowerCase().includes(expected)) ||
-    packages.find((item) => item.identifier.toLowerCase().includes(productId))
-  );
-}
+const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
+  try {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(style);
+    }
+  } catch {}
+};
 
 export default function SubscriptionScreen() {
   const router = useRouter();
-  const { colors } = useTheme();
-  const { i18n } = useTranslation();
-  const copy = SCREEN_COPY[normalizeLanguage(i18n.language)];
+  const { colors, isDark } = useTheme();
+  const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const isExpoGo = Constants.appOwnership === 'expo';
+  const ctaScale = useRef(new Animated.Value(1)).current;
+
   const {
     loading,
     error,
-    hasFullContent,
-    subscriptionTier,
+    isPro,
     packages,
-    purchaseProduct,
     restorePurchases,
-    presentCustomerCenter,
+    presentPaywall,
   } = useSubscription();
-  const [actionLoading, setActionLoading] = useState<PayAction>(null);
 
-  const basicPackage = useMemo(() => findDisplayedPackage(packages, 'basic'), [packages]);
-  const monthlyPackage = useMemo(() => findDisplayedPackage(packages, 'monthly'), [packages]);
-  const yearlyPackage = useMemo(() => findDisplayedPackage(packages, 'yearly'), [packages]);
+  const benefits = [
+    {
+      icon: 'sparkles' as const,
+      gradient: ['#8B5CF6', '#6D28D9'] as [string, string],
+      title: t('subscription.benefitAiTools', { defaultValue: 'Безлимитный AI-репетитор' }),
+      sub: 'Мгновенные ответы и решение сложных задач 24/7',
+    },
+    {
+      icon: 'library-outline' as const,
+      gradient: ['#3B82F6', '#1D4ED8'] as [string, string],
+      title: t('subscription.benefitFullAccess', { defaultValue: 'Полная база знаний' }),
+      sub: 'Доступ ко всем 142 темам, 61 формуле и 710 задачам',
+    },
+    {
+      icon: 'bulb-outline' as const,
+      gradient: ['#F59E0B', '#D97706'] as [string, string],
+      title: t('subscription.benefitSolutions', { defaultValue: 'Пошаговые разборы' }),
+      sub: 'Подробные ходы решения каждой физической задачи',
+    },
+    {
+      icon: 'ban-outline' as const,
+      gradient: ['#10B981', '#047857'] as [string, string],
+      title: t('subscription.benefitNoAds', { defaultValue: 'Никакой рекламы' }),
+      sub: 'Чистый фокус на обучении без отвлекающих пауз',
+    },
+  ];
 
-  const openStoreSubscriptionSettings = useCallback(async () => {
-    const url = Platform.OS === 'android'
-      ? 'https://play.google.com/store/account/subscriptions?package=com.physicsai.app'
-      : 'https://apps.apple.com/account/subscriptions';
-
-    try {
-      await Linking.openURL(url);
-    } catch {
-      Alert.alert(copy.manageFallbackTitle, copy.manageFallbackText);
-    }
-  }, [copy.manageFallbackText, copy.manageFallbackTitle]);
-
-  const handlePurchase = useCallback(async (productId: RevenueCatProductId) => {
-    if (actionLoading || isExpoGo) return;
-
-    setActionLoading(productId);
-    try {
-      const purchased = await purchaseProduct(productId);
-      if (purchased) {
-        Alert.alert(copy.successTitle, copy.successText);
-      }
-    } finally {
-      setActionLoading(null);
-    }
-  }, [actionLoading, copy.successText, copy.successTitle, isExpoGo, purchaseProduct]);
-
-  const handleRestore = useCallback(async () => {
-    if (actionLoading || isExpoGo) return;
-
-    setActionLoading('restore');
-    try {
-      const restored = await restorePurchases();
-      Alert.alert(
-        restored ? copy.restoreSuccessTitle : copy.restoreEmptyTitle,
-        restored ? copy.restoreSuccessText : copy.restoreEmptyText,
-      );
-    } finally {
-      setActionLoading(null);
-    }
-  }, [actionLoading, copy.restoreEmptyText, copy.restoreEmptyTitle, copy.restoreSuccessText, copy.restoreSuccessTitle, isExpoGo, restorePurchases]);
-
-  const handleManage = useCallback(async () => {
-    if (actionLoading || isExpoGo) return;
-
-    setActionLoading('manage');
-    try {
-      if (Platform.OS === 'android') {
-        await openStoreSubscriptionSettings();
-        return;
-      }
-
-      const opened = await presentCustomerCenter();
-      if (!opened) {
-        await openStoreSubscriptionSettings();
-      }
-    } finally {
-      setActionLoading(null);
-    }
-  }, [actionLoading, isExpoGo, openStoreSubscriptionSettings, presentCustomerCenter]);
-
-  const renderButton = (
-    label: string,
-    productId: RevenueCatProductId,
-    packageToBuy?: PurchasesPackage,
-    variant: 'basic' | 'premium' = 'basic',
-  ) => {
-    const disabled = isExpoGo || actionLoading !== null || !packageToBuy;
-    const loadingThis = actionLoading === productId;
-
-    return (
-      <TouchableOpacity
-        style={[styles.planButton, variant === 'premium' && styles.premiumButton, disabled && styles.disabledButton]}
-        onPress={() => handlePurchase(productId)}
-        disabled={disabled}
-        activeOpacity={0.9}
-      >
-        {loadingThis ? (
-          <ActivityIndicator color="#FFFFFF" />
-        ) : (
-          <>
-            <Text style={styles.planButtonText}>{packageToBuy ? label : copy.unavailable}</Text>
-            {packageToBuy ? <Text style={styles.planPrice}>{packageToBuy.product.priceString}</Text> : null}
-          </>
-        )}
-      </TouchableOpacity>
-    );
+  const handleCtaPress = () => {
+    triggerHaptic(Haptics.ImpactFeedbackStyle.Heavy);
+    presentPaywall();
   };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top']}>
       <Stack.Screen options={{ headerShown: false }} />
+
+      {/* ==================== Top Header ==================== */}
       <View style={[styles.header, { backgroundColor: colors.background }]}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={26} color={colors.text} />
+        <TouchableOpacity
+          style={[styles.closeBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            router.back();
+          }}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="close" size={22} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Physics AI</Text>
-        <View style={styles.backButton} />
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Physics AI Pro</Text>
+        <View style={styles.closeBtnPlaceholder} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <LinearGradient colors={['#0F172A', '#1D4ED8', '#14B8A6']} style={styles.hero}>
-          <View style={styles.heroGlow} />
-          <View style={styles.proBadge}>
-            <Ionicons name="sparkles" size={18} color="#FDE68A" />
-            <Text style={styles.proBadgeText}>
-              {hasFullContent ? `${copy.active}: ${subscriptionTier === 'basic' ? copy.basic : copy.premium}` : 'Physics AI'}
-            </Text>
+      <ScrollView
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 40 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ==================== Hero Card ==================== */}
+        <LinearGradient
+          colors={['#0F172A', '#1E1B4B', '#312E81']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.heroCard}
+        >
+          {/* Ambient Glow Graphic */}
+          <View style={styles.ambientGlow} />
+          <View style={styles.heroOrbitIcon}>
+            <Ionicons name="planet" size={120} color="rgba(255, 255, 255, 0.08)" />
           </View>
-          <Text style={styles.heroTitle}>{copy.title}</Text>
-          <Text style={styles.heroText}>{copy.subtitle}</Text>
+
+          {/* Pro Pill Badge */}
+          <View style={styles.proBadgeRow}>
+            <LinearGradient
+              colors={['#F59E0B', '#FBBF24']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.proBadge}
+            >
+              <Ionicons name="sparkles" size={14} color="#78350F" />
+              <Text style={styles.proBadgeText}>
+                {isPro ? t('subscription.activeBadge', { defaultValue: 'PRO АКТИВЕН' }) : 'PREMIUM'}
+              </Text>
+            </LinearGradient>
+          </View>
+
+          <Text style={styles.heroTitle}>
+            {t('subscription.heroTitle', { defaultValue: 'Прокачай физику на максимум' })}
+          </Text>
+
+          <Text style={styles.heroSub}>
+            {t('subscription.heroSubtitle', {
+              defaultValue: 'Безлимитный AI-помощник, все решения задач и персональные тесты без ограничений.',
+            })}
+          </Text>
         </LinearGradient>
 
-        {isExpoGo ? (
-          <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Ionicons name="phone-portrait" size={20} color={colors.accent} />
-            <View style={styles.infoTextBlock}>
-              <Text style={[styles.infoTitle, { color: colors.text }]}>{copy.expoTitle}</Text>
-              <Text style={[styles.mutedText, { color: colors.textSecondary }]}>{copy.expoText}</Text>
+        {/* Expo Go Notice if running in sandbox */}
+        {isExpoGo && (
+          <View style={[styles.expoNotice, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Ionicons name="phone-portrait-outline" size={20} color="#6366F1" />
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.expoNoticeTitle, { color: colors.text }]}>
+                {t('subscription.expoGoTitle', { defaultValue: 'Режим демонстрации (Expo Go)' })}
+              </Text>
+              <Text style={[styles.expoNoticeSub, { color: colors.textSecondary }]}>
+                {t('subscription.expoGoText', { defaultValue: 'Настоящие покупки активируются в релизном приложении из App Store / Google Play.' })}
+              </Text>
             </View>
           </View>
-        ) : null}
+        )}
 
-        {loading && !isExpoGo ? (
-          <View style={[styles.loadingCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <ActivityIndicator color={colors.accent} />
-            <Text style={[styles.mutedText, { color: colors.textSecondary }]}>{copy.loading}</Text>
+        {/* Loading / Error States */}
+        {loading && !isExpoGo && (
+          <View style={[styles.stateCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <ActivityIndicator color="#6366F1" size="small" />
+            <Text style={[styles.stateCardText, { color: colors.textSecondary }]}>
+              {t('subscription.loading', { defaultValue: 'Загрузка тарифов...' })}
+            </Text>
           </View>
-        ) : null}
+        )}
 
         {error ? (
           <View style={[styles.errorCard, { backgroundColor: colors.errorBg }]}>
-            <Ionicons name="warning" size={20} color={colors.error} />
-            <Text style={[styles.errorText, { color: colors.error }]}>{error}</Text>
+            <Ionicons name="warning" size={18} color={colors.error} />
+            <Text style={[styles.errorCardText, { color: colors.error }]}>{error}</Text>
           </View>
         ) : null}
 
-        <View style={styles.plans}>
-          <View style={[styles.planCard, styles.basicPlan, { backgroundColor: colors.card, borderColor: subscriptionTier === 'basic' ? '#14B8A6' : colors.border }]}>
-            {subscriptionTier === 'basic' ? <Text style={styles.activeBadge}>{copy.currentPlan}</Text> : null}
-            <View style={styles.planHeader}>
-              <View style={styles.basicIcon}>
-                <Ionicons name="library" size={22} color="#FFFFFF" />
-              </View>
-              <View style={styles.planTitleBlock}>
-                <Text style={[styles.planTitle, { color: colors.text }]}>{copy.basicTitle}</Text>
-                <Text style={[styles.planSubtitle, { color: colors.textTertiary }]}>{copy.basicSubtitle}</Text>
-              </View>
-            </View>
-            {copy.basicFeatures.map((feature) => (
-              <View key={feature} style={styles.featureRow}>
-                <Ionicons name="checkmark-circle" size={18} color="#14B8A6" />
-                <Text style={[styles.featureText, { color: colors.textSecondary }]}>{feature}</Text>
-              </View>
-            ))}
-            {subscriptionTier === 'basic' ? (
-              <TouchableOpacity style={[styles.secondaryButton, { borderColor: colors.border }]} onPress={handleManage} disabled={isExpoGo || actionLoading !== null}>
-                <Text style={[styles.secondaryButtonText, { color: colors.text }]}>{copy.manage}</Text>
-              </TouchableOpacity>
-            ) : (
-              renderButton(copy.buyBasic, 'basic', basicPackage, 'basic')
-            )}
-          </View>
+        {/* ==================== Benefits List ==================== */}
+        <View style={styles.benefitsSection}>
+          <Text style={[styles.sectionHeading, { color: colors.text }]}>
+            {t('subscription.includes', { defaultValue: 'Что входит в подписку Pro:' })}
+          </Text>
 
-          <View style={[styles.planCard, styles.premiumPlan, { backgroundColor: colors.card, borderColor: subscriptionTier === 'pro' ? '#6366F1' : colors.border }]}>
-            {subscriptionTier === 'pro' ? <Text style={styles.activeBadge}>{copy.currentPlan}</Text> : null}
-            <View style={styles.planHeader}>
-              <LinearGradient colors={['#6366F1', '#06B6D4']} style={styles.premiumIcon}>
-                <Ionicons name="diamond" size={22} color="#FFFFFF" />
-              </LinearGradient>
-              <View style={styles.planTitleBlock}>
-                <Text style={[styles.planTitle, { color: colors.text }]}>{copy.premiumTitle}</Text>
-                <Text style={[styles.planSubtitle, { color: colors.textTertiary }]}>{copy.premiumSubtitle}</Text>
-              </View>
-            </View>
-            {copy.premiumFeatures.map((feature) => (
-              <View key={feature} style={styles.featureRow}>
-                <Ionicons name="checkmark-circle" size={18} color="#6366F1" />
-                <Text style={[styles.featureText, { color: colors.textSecondary }]}>{feature}</Text>
+          <View style={styles.benefitsGrid}>
+            {benefits.map((item, idx) => (
+              <View
+                key={idx}
+                style={[
+                  styles.benefitCard,
+                  {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    shadowColor: colors.shadowColor,
+                  },
+                ]}
+              >
+                <LinearGradient
+                  colors={item.gradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.benefitIconBadge}
+                >
+                  <Ionicons name={item.icon} size={20} color="#FFFFFF" />
+                </LinearGradient>
+
+                <View style={styles.benefitTextWrap}>
+                  <Text style={[styles.benefitTitle, { color: colors.text }]}>{item.title}</Text>
+                  <Text style={[styles.benefitSub, { color: colors.textTertiary }]}>{item.sub}</Text>
+                </View>
               </View>
             ))}
-            <View style={styles.premiumActions}>
-              {subscriptionTier === 'pro' ? (
-                <TouchableOpacity style={[styles.secondaryButton, { borderColor: colors.border }]} onPress={handleManage} disabled={isExpoGo || actionLoading !== null}>
-                  <Text style={[styles.secondaryButtonText, { color: colors.text }]}>{copy.manage}</Text>
-                </TouchableOpacity>
-              ) : (
-                <>
-                  {renderButton(copy.buyMonthly, 'monthly', monthlyPackage, 'premium')}
-                  {renderButton(copy.buyYearly, 'yearly', yearlyPackage, 'premium')}
-                </>
-              )}
-            </View>
           </View>
         </View>
 
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.restoreButton} onPress={handleRestore} disabled={isExpoGo || actionLoading !== null}>
-            {actionLoading === 'restore' ? (
-              <ActivityIndicator color={colors.accent} />
-            ) : (
-              <Text style={[styles.restoreText, { color: colors.textSecondary }]}>{copy.restore}</Text>
-            )}
+        {/* ==================== Plans Grid ==================== */}
+        {packages.length > 0 && (
+          <View style={styles.plansSection}>
+            <Text style={[styles.sectionHeading, { color: colors.text }]}>Выберите тариф:</Text>
+            <View style={styles.plansRow}>
+              {packages.slice(0, 2).map((item) => {
+                const id = `${item.identifier} ${item.product.identifier}`.toLowerCase();
+                const isYearly = id.includes('annual') || id.includes('year');
+
+                return (
+                  <View
+                    key={item.identifier}
+                    style={[
+                      styles.planCard,
+                      {
+                        backgroundColor: colors.card,
+                        borderColor: isYearly ? '#6366F1' : colors.border,
+                        shadowColor: colors.shadowColor,
+                      },
+                    ]}
+                  >
+                    {isYearly && (
+                      <View style={styles.bestValueBadge}>
+                        <Text style={styles.bestValueText}>-45% ВЫГОДА</Text>
+                      </View>
+                    )}
+                    <Text style={[styles.planPeriod, { color: colors.text }]}>
+                      {isYearly
+                        ? t('subscription.yearly', { defaultValue: '1 Год' })
+                        : t('subscription.monthly', { defaultValue: '1 Месяц' })}
+                    </Text>
+                    <Text style={[styles.planPrice, { color: '#6366F1' }]}>
+                      {item.product.priceString}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+        )}
+
+        {/* ==================== CTA Button ==================== */}
+        <Animated.View style={{ transform: [{ scale: ctaScale }] }}>
+          <TouchableOpacity
+            style={[styles.ctaButton, isExpoGo && styles.ctaDisabled]}
+            onPress={handleCtaPress}
+            activeOpacity={0.88}
+          >
+            <LinearGradient
+              colors={['#4F46E5', '#7C3AED', '#A855F7']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.ctaGradient}
+            >
+              <Text style={styles.ctaText}>
+                {isPro
+                  ? t('subscription.activeBadge', { defaultValue: 'Подписка активна' })
+                  : t('subscription.upgradeCta', { defaultValue: 'Оформить Physics AI Pro' })}
+              </Text>
+              <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+            </LinearGradient>
           </TouchableOpacity>
-          {hasFullContent ? (
-            <TouchableOpacity style={styles.restoreButton} onPress={handleManage} disabled={isExpoGo || actionLoading !== null}>
-              {actionLoading === 'manage' ? (
-                <ActivityIndicator color={colors.accent} />
-              ) : (
-                <Text style={[styles.restoreText, { color: colors.textSecondary }]}>{copy.manage}</Text>
-              )}
-            </TouchableOpacity>
-          ) : null}
-        </View>
+        </Animated.View>
 
-        <Text style={[styles.footerText, { color: colors.textTertiary }]}>{copy.footer}</Text>
+        {/* Restore Purchases */}
+        <TouchableOpacity
+          style={styles.restoreBtn}
+          onPress={() => {
+            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+            restorePurchases();
+          }}
+        >
+          <Text style={[styles.restoreBtnText, { color: colors.textTertiary }]}>
+            {t('subscription.restore', { defaultValue: 'Восстановить покупки' })}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Trust Badges */}
+        <View style={styles.trustFooter}>
+          <View style={styles.trustItem}>
+            <Ionicons name="shield-checkmark-outline" size={14} color={colors.textTertiary} />
+            <Text style={[styles.trustText, { color: colors.textTertiary }]}>
+              Безопасная оплата
+            </Text>
+          </View>
+          <View style={styles.trustItem}>
+            <Ionicons name="refresh-outline" size={14} color={colors.textTertiary} />
+            <Text style={[styles.trustText, { color: colors.textTertiary }]}>
+              Отмена в любой момент
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -411,241 +310,260 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: 68,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    paddingVertical: 12,
   },
-  backButton: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
+  closeBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeBtnPlaceholder: {
+    width: 38,
   },
   headerTitle: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: -0.2,
   },
   content: {
-    padding: 20,
-    paddingBottom: 44,
-    gap: 16,
+    paddingHorizontal: 16,
+    paddingTop: 8,
   },
-  hero: {
-    borderRadius: 30,
-    padding: 24,
-    minHeight: 230,
-    justifyContent: 'space-between',
+  heroCard: {
+    borderRadius: 24,
+    padding: 22,
+    position: 'relative',
     overflow: 'hidden',
+    marginBottom: 20,
+    shadowColor: '#4F46E5',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
   },
-  heroGlow: {
+  ambientGlow: {
     position: 'absolute',
-    right: -46,
-    top: -28,
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: 'rgba(255,255,255,0.16)',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(99, 102, 241, 0.25)',
+    top: -50,
+    right: -50,
+  },
+  heroOrbitIcon: {
+    position: 'absolute',
+    right: -20,
+    bottom: -20,
+  },
+  proBadgeRow: {
+    marginBottom: 12,
   },
   proBadge: {
-    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'rgba(255,255,255,0.16)',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
   },
   proBadgeText: {
-    color: '#FFFFFF',
-    fontWeight: '900',
+    color: '#78350F',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.5,
   },
   heroTitle: {
     color: '#FFFFFF',
-    fontSize: 34,
-    fontWeight: '900',
-    lineHeight: 40,
-    marginTop: 26,
+    fontSize: 23,
+    fontWeight: '800',
+    letterSpacing: -0.4,
+    marginBottom: 8,
+    lineHeight: 29,
   },
-  heroText: {
-    color: 'rgba(255,255,255,0.86)',
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 10,
-  },
-  infoCard: {
-    borderWidth: 1,
-    borderRadius: 22,
-    padding: 16,
-    flexDirection: 'row',
-    gap: 12,
-  },
-  infoTextBlock: {
-    flex: 1,
-    gap: 6,
-  },
-  infoTitle: {
-    fontSize: 15,
-    fontWeight: '900',
-  },
-  mutedText: {
-    fontSize: 14,
-    lineHeight: 21,
-  },
-  loadingCard: {
-    borderWidth: 1,
-    borderRadius: 24,
-    padding: 18,
-    gap: 12,
-  },
-  errorCard: {
-    borderRadius: 20,
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  errorText: {
-    flex: 1,
-    fontWeight: '700',
-  },
-  plans: {
-    gap: 16,
-  },
-  planCard: {
-    borderWidth: 2,
-    borderRadius: 28,
-    padding: 18,
-    gap: 12,
-  },
-  basicPlan: {
-    shadowColor: '#14B8A6',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 18,
-    elevation: 3,
-  },
-  premiumPlan: {
-    shadowColor: '#6366F1',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.12,
-    shadowRadius: 22,
-    elevation: 4,
-  },
-  activeBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#DCFCE7',
-    color: '#047857',
-    fontSize: 11,
-    fontWeight: '900',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 999,
-  },
-  planHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  basicIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 16,
-    backgroundColor: '#14B8A6',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  premiumIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  planTitleBlock: {
-    flex: 1,
-  },
-  planTitle: {
-    fontSize: 19,
-    fontWeight: '900',
-  },
-  planSubtitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    marginTop: 3,
-  },
-  featureRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-  },
-  featureText: {
-    flex: 1,
+  heroSub: {
+    color: 'rgba(255, 255, 255, 0.85)',
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: '700',
   },
-  premiumActions: {
+  expoNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  expoNoticeTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  expoNoticeSub: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  stateCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    padding: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  stateCardText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  errorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  errorCardText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  benefitsSection: {
+    marginBottom: 24,
+  },
+  sectionHeading: {
+    fontSize: 16,
+    fontWeight: '800',
+    marginBottom: 12,
+    letterSpacing: -0.2,
+  },
+  benefitsGrid: {
     gap: 10,
   },
-  planButton: {
-    minHeight: 56,
-    borderRadius: 18,
-    backgroundColor: '#14B8A6',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+  benefitCard: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  premiumButton: {
-    backgroundColor: '#6366F1',
-  },
-  planButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  planPrice: {
-    color: 'rgba(255,255,255,0.86)',
-    fontSize: 13,
-    fontWeight: '800',
-    marginTop: 2,
-  },
-  secondaryButton: {
-    minHeight: 54,
+    padding: 14,
     borderRadius: 18,
     borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
   },
-  secondaryButtonText: {
+  benefitIconBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  benefitTextWrap: {
+    flex: 1,
+    marginLeft: 14,
+  },
+  benefitTitle: {
     fontSize: 15,
-    fontWeight: '900',
+    fontWeight: '700',
+    marginBottom: 2,
   },
-  disabledButton: {
-    opacity: 0.45,
+  benefitSub: {
+    fontSize: 12,
+    lineHeight: 16,
   },
-  actions: {
-    gap: 2,
+  plansSection: {
+    marginBottom: 24,
   },
-  restoreButton: {
-    minHeight: 44,
+  plansRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  planCard: {
+    flex: 1,
+    borderRadius: 18,
+    borderWidth: 2,
+    padding: 16,
+    position: 'relative',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+  },
+  bestValueBadge: {
+    position: 'absolute',
+    top: -10,
+    right: 12,
+    backgroundColor: '#6366F1',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  bestValueText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  planPeriod: {
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  planPrice: {
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  ctaButton: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#6366F1',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    marginBottom: 14,
+  },
+  ctaDisabled: {
+    opacity: 0.7,
+  },
+  ctaGradient: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 18,
   },
-  restoreText: {
-    fontSize: 14,
+  ctaText: {
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: '800',
-    textAlign: 'center',
+    letterSpacing: -0.2,
   },
-  footerText: {
-    textAlign: 'center',
-    fontSize: 12,
-    lineHeight: 18,
-    paddingHorizontal: 14,
+  restoreBtn: {
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+  restoreBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  trustFooter: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+  },
+  trustItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  trustText: {
+    fontSize: 11,
+    fontWeight: '500',
   },
 });

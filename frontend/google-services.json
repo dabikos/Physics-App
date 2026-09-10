@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "201868571438",
+    "project_id": "phus-a53ce",
+    "storage_bucket": "phus-a53ce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201868571438:android:acb1c655419231b70700bf",
+        "android_client_info": {
+          "package_name": "com.physicsai.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRT66ylCtCXTHD__X4Ag9bgpH-iwNdAm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

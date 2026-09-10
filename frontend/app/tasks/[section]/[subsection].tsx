@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '../../../src/context/ThemeContext';
 import { usePhysicsData } from '../../../src/hooks/usePhysicsData';
-import { useAdGate } from '../../../src/hooks/useAdGate';
 import api from '../../../src/services/api';
 
 type PracticeTask = {
@@ -37,7 +36,6 @@ export default function PracticeTasksListScreen() {
   const { colors } = useTheme();
   const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
-  const { showContentAdIfNeeded } = useAdGate();
   const [tasks, setTasks] = useState<PracticeTask[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,7 +50,7 @@ export default function PracticeTasksListScreen() {
       setLoading(true);
       try {
         const response = await api.get('/practice/tasks', {
-          params: { section, subsection, summary: true },
+          params: { section, subsection },
         });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         if (!cancelled) setTasks(items);
@@ -128,11 +126,7 @@ export default function PracticeTasksListScreen() {
                     { backgroundColor: colors.card, shadowColor: colors.shadowColor },
                     (task.is_locked || task.requires_pro) && styles.lockedCard,
                   ]}
-                  onPress={async () => {
-                    const isLocked = task.is_locked || task.requires_pro;
-                    if (!isLocked) await showContentAdIfNeeded();
-                    router.push(isLocked ? '/subscription' : `/tasks/${section}/${subsection}/${task.id}`);
-                  }}
+                  onPress={() => router.push((task.is_locked || task.requires_pro ? '/subscription' : `/tasks/${section}/${subsection}/${task.id}`) as any)}
                   activeOpacity={0.78}
                 >
                   <View style={[styles.taskNumber, { backgroundColor: sectionData.color + '18' }]}>
