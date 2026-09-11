@@ -193,6 +193,9 @@ class UserResponse(BaseModel):
     name: str
     role: Literal["student", "teacher"]
     class_id: Optional[str] = None
+    subject: Optional[str] = None
+    school: Optional[str] = None
+    classroom: Optional[str] = None
     progress: Dict[str, Any] = {}
     created_at: datetime
 

@@ -448,6 +448,71 @@ async def get_me(current_user: dict = Depends(get_current_user)):
         name=current_user["name"],
         role=current_user.get("role", "student"),
         class_id=current_user.get("class_id"),
+        subject=current_user.get("subject"),
+        school=current_user.get("school"),
+        classroom=current_user.get("classroom"),
         progress=current_user.get("progress", {}),
         created_at=current_user["created_at"]
     )
+
+from pydantic import BaseModel
+from typing import Optional
+
+class ProfileUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    subject: Optional[str] = None
+    school: Optional[str] = None
+    classroom: Optional[str] = None
+    class_id: Optional[str] = None
+
+class ChangePasswordLoggedInRequest(BaseModel):
+    old_password: str
+    new_password: str
+
+@router.patch("/auth/profile")
+async def update_profile(payload: ProfileUpdateRequest, current_user: dict = Depends(get_current_user)):
+    update_data = {}
+    if payload.name is not None:
+        update_data["name"] = payload.name.strip()
+    if payload.subject is not None:
+        update_data["subject"] = payload.subject.strip()
+    if payload.school is not None:
+        update_data["school"] = payload.school.strip()
+    if payload.classroom is not None:
+        update_data["classroom"] = payload.classroom.strip()
+    if payload.class_id is not None:
+        update_data["class_id"] = payload.class_id.strip()
+
+    if update_data:
+        await db.users.update_one({"id": current_user["id"]}, {"$set": update_data})
+
+    updated = await db.users.find_one({"id": current_user["id"]})
+    return {
+        "success": True,
+        "user": {
+            "id": updated["id"],
+            "email": updated["email"],
+            "name": updated.get("name"),
+            "role": updated.get("role"),
+            "class_id": updated.get("class_id"),
+            "subject": updated.get("subject"),
+            "school": updated.get("school"),
+            "classroom": updated.get("classroom"),
+        }
+    }
+
+@router.post("/auth/change-password")
+async def change_password_endpoint(payload: ChangePasswordLoggedInRequest, current_user: dict = Depends(get_current_user)):
+    user = await db.users.find_one({"id": current_user["id"]})
+    if not user or not user.get("password") or not verify_password(payload.old_password, user["password"]):
+        raise HTTPException(status_code=400, detail="Неверный текущий пароль")
+
+    if len(payload.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Новый пароль должен содержать не менее 6 символов")
+
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {"password": hash_password(payload.new_password)}}
+    )
+    return {"success": True, "message": "Пароль успешно изменён"}
+
