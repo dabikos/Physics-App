@@ -20,15 +20,15 @@ jobs:
         working-directory: frontend
 
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Select Xcode 26.3 (Swift 6.2)
+      - name: Select Xcode 16.4
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.3.app || sudo xcode-select -s /Applications/Xcode_26.2.app || sudo xcode-select -s /Applications/Xcode_26.app
+          sudo xcode-select -s /Applications/Xcode_16.4.app || sudo xcode-select -s /Applications/Xcode.app
           xcode-select -p
           xcodebuild -version
           swift --version
@@ -42,6 +42,31 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --include=dev --legacy-peer-deps
+
+      - name: Patch Expo Modules JSI for Xcode compatibility
+        run: |
+          node -e '
+            const fs = require("fs");
+            const filesToDowngrade = [
+              "node_modules/expo-modules-jsi/apple/Package.swift",
+              "node_modules/@expo/expo-modules-macros-plugin/apple/Package.swift"
+            ];
+            for (const f of filesToDowngrade) {
+              if (fs.existsSync(f)) {
+                let c = fs.readFileSync(f, "utf8");
+                c = c.replace("swift-tools-version: 6.2", "swift-tools-version: 6.0");
+                fs.writeFileSync(f, c);
+                console.log("Patched tools version in " + f);
+              }
+            }
+            const hdr = "node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI-Cxx/include/RuntimeScheduler.h";
+            if (fs.existsSync(hdr)) {
+              let c = fs.readFileSync(hdr, "utf8");
+              c = c.split("SWIFT_RETURNS_RETAINED RuntimeScheduler").join("RuntimeScheduler");
+              fs.writeFileSync(hdr, c);
+              console.log("Patched RuntimeScheduler.h constructor annotations");
+            }
+          '
 
       - name: Prebuild iOS project
         env:
