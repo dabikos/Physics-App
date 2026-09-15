@@ -1,12 +1,12 @@
 import os
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from server import get_current_user
+from server import db, get_current_user
 from postgres import (
     clear_postgres_content_cache,
     create_notification_campaign,
@@ -935,3 +935,353 @@ async def post_admin_notification_campaign(
 ):
     item = await create_notification_campaign(payload.model_dump(), created_by=current_user["id"])
     return {"item": item}
+
+
+# ==================== User Analytics & Statistics ====================
+
+@router.get("/admin/analytics/overview")
+async def get_admin_analytics_overview(_: dict = Depends(require_admin)):
+    now = datetime.utcnow()
+    seven_days_ago = now - timedelta(days=7)
+    thirty_days_ago = now - timedelta(days=30)
+
+    # 1. Total counts
+    total_users = await db.users.count_documents({})
+    students_count = await db.users.count_documents({"role": "student"})
+    teachers_count = await db.users.count_documents({"role": "teacher"})
+    new_users_7d = await db.users.count_documents({"created_at": {"$gte": seven_days_ago}})
+    new_users_30d = await db.users.count_documents({"created_at": {"$gte": thirty_days_ago}})
+
+    # 2. Test results stats
+    total_tests_completed = await db.test_results.count_documents({})
+    score_pipeline = [
+        {
+            "$group": {
+                "_id": None,
+                "avg_score": {"$avg": "$score"},
+                "avg_percentage": {
+                    "$avg": {
+                        "$cond": [
+                            {"$gt": ["$total_questions", 0]},
+                            {"$multiply": [{"$divide": ["$score", "$total_questions"]}, 100]},
+                            0,
+                        ]
+                    }
+                },
+            }
+        }
+    ]
+    score_res = await db.test_results.aggregate(score_pipeline).to_list(1)
+    avg_accuracy = round(float(score_res[0]["avg_percentage"]), 1) if score_res and score_res[0].get("avg_percentage") is not None else 0.0
+
+    # 3. Timeline (last 30 days)
+    timeline_days: dict[str, dict[str, Any]] = {}
+    for i in range(29, -1, -1):
+        day_date = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        timeline_days[day_date] = {"date": day_date, "users": 0, "tests": 0}
+
+    user_timeline_pipeline = [
+        {"$match": {"created_at": {"$gte": thirty_days_ago}}},
+        {"$project": {"day": {"$dateToString": {"format": "%Y-%m-%d", "date": "$created_at"}}}},
+        {"$group": {"_id": "$day", "count": {"$sum": 1}}},
+    ]
+    user_timeline_res = await db.users.aggregate(user_timeline_pipeline).to_list(100)
+    for item in user_timeline_res:
+        day = item["_id"]
+        if day in timeline_days:
+            timeline_days[day]["users"] = item["count"]
+
+    test_timeline_pipeline = [
+        {"$match": {"completed_at": {"$gte": thirty_days_ago}}},
+        {"$project": {"day": {"$dateToString": {"format": "%Y-%m-%d", "date": "$completed_at"}}}},
+        {"$group": {"_id": "$day", "count": {"$sum": 1}}},
+    ]
+    test_timeline_res = await db.test_results.aggregate(test_timeline_pipeline).to_list(100)
+    for item in test_timeline_res:
+        day = item["_id"]
+        if day in timeline_days:
+            timeline_days[day]["tests"] = item["count"]
+
+    timeline = list(timeline_days.values())
+
+    # 4. Class / Grade distribution
+    class_pipeline = [
+        {"$match": {"class_id": {"$ne": None, "$ne": ""}}},
+        {"$group": {"_id": "$class_id", "count": {"$sum": 1}}},
+        {"$sort": {"_id": 1}},
+    ]
+    class_res = await db.users.aggregate(class_pipeline).to_list(20)
+    class_distribution = [
+        {"name": f"{item['_id']} класс" if str(item['_id']).isdigit() else str(item['_id']), "value": item["count"], "grade": str(item["_id"]), "count": item["count"]}
+        for item in class_res
+    ]
+
+    # 5. Section performance
+    section_pipeline = [
+        {"$match": {"section": {"$ne": None, "$ne": ""}}},
+        {
+            "$group": {
+                "_id": "$section",
+                "tests_count": {"$sum": 1},
+                "avg_percentage": {
+                    "$avg": {
+                        "$cond": [
+                            {"$gt": ["$total_questions", 0]},
+                            {"$multiply": [{"$divide": ["$score", "$total_questions"]}, 100]},
+                            0,
+                        ]
+                    }
+                },
+            }
+        },
+        {"$sort": {"tests_count": -1}},
+    ]
+    section_res = await db.test_results.aggregate(section_pipeline).to_list(20)
+    section_stats = [
+        {
+            "section": str(item["_id"]),
+            "tests_count": item["tests_count"],
+            "avg_score": round(float(item["avg_percentage"]), 1) if item.get("avg_percentage") is not None else 0.0,
+        }
+        for item in section_res
+    ]
+
+    # 6. Score distribution brackets
+    score_brackets = [
+        {"name": "Отлично (>85%)", "bracket": "Отличный (>85%)", "value": 0, "count": 0, "color": "#10B981"},
+        {"name": "Хорошо (70-85%)", "bracket": "Хороший (70-85%)", "value": 0, "count": 0, "color": "#3B82F6"},
+        {"name": "Удовлетворительно (50-69%)", "bracket": "Базовый (50-69%)", "value": 0, "count": 0, "color": "#F59E0B"},
+        {"name": "Требует внимания (<50%)", "bracket": "Низкий (<50%)", "value": 0, "count": 0, "color": "#EF4444"},
+    ]
+    bracket_pipeline = [
+        {
+            "$project": {
+                "pct": {
+                    "$cond": [
+                        {"$gt": ["$total_questions", 0]},
+                        {"$multiply": [{"$divide": ["$score", "$total_questions"]}, 100]},
+                        0,
+                    ]
+                }
+            }
+        },
+        {"$bucket": {
+            "groupBy": "$pct",
+            "boundaries": [0, 50, 70, 86, 101],
+            "default": "other",
+            "output": {"count": {"$sum": 1}},
+        }},
+    ]
+    try:
+        bracket_res = await db.test_results.aggregate(bracket_pipeline).to_list(10)
+        bracket_map = {
+            0: "Низкий (<50%)",
+            50: "Базовый (50-69%)",
+            70: "Хороший (70-85%)",
+            86: "Отличный (>85%)",
+        }
+        bracket_name_map = {
+            0: "Требует внимания (<50%)",
+            50: "Удовлетворительно (50-69%)",
+            70: "Хорошо (70-85%)",
+            86: "Отлично (>85%)",
+        }
+        bracket_color_map = {
+            0: "#EF4444",
+            50: "#F59E0B",
+            70: "#3B82F6",
+            86: "#10B981",
+        }
+        mapped_counts = {item["_id"]: item["count"] for item in bracket_res if item["_id"] in bracket_map}
+        score_brackets = [
+            {
+                "name": bracket_name_map[k],
+                "bracket": bracket_map[k],
+                "value": mapped_counts.get(k, 0),
+                "count": mapped_counts.get(k, 0),
+                "color": bracket_color_map[k],
+            }
+            for k in [86, 70, 50, 0]
+        ]
+    except Exception:
+        pass
+
+    return {
+        "totals": {
+            "total_users": total_users,
+            "students_count": students_count,
+            "teachers_count": teachers_count,
+            "new_users_7d": new_users_7d,
+            "new_users_30d": new_users_30d,
+            "total_test_attempts": total_tests_completed,
+            "total_tests_completed": total_tests_completed,
+            "avg_platform_score": avg_accuracy,
+            "avg_accuracy": avg_accuracy,
+        },
+        "timeline": timeline,
+        "class_distribution": class_distribution,
+        "section_performance": section_stats,
+        "section_stats": section_stats,
+        "score_brackets": score_brackets,
+    }
+
+
+@router.get("/admin/analytics/users")
+async def get_admin_analytics_users(
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=20, ge=1, le=100),
+    search: Optional[str] = Query(default=None),
+    role: Optional[str] = Query(default=None),
+    class_id: Optional[str] = Query(default=None),
+    _: dict = Depends(require_admin),
+):
+    query: dict[str, Any] = {}
+    if role and role != "all":
+        query["role"] = role
+    if class_id and class_id != "all":
+        query["class_id"] = class_id
+    if search:
+        s = search.strip()
+        query["$or"] = [
+            {"name": {"$regex": s, "$options": "i"}},
+            {"email": {"$regex": s, "$options": "i"}},
+            {"school": {"$regex": s, "$options": "i"}},
+        ]
+
+    total = await db.users.count_documents(query)
+    skip = (page - 1) * limit
+    cursor = db.users.find(query).sort("created_at", -1).skip(skip).limit(limit)
+    users_raw = await cursor.to_list(limit)
+
+    users = []
+    for u in users_raw:
+        progress = u.get("progress", {}) or {}
+        completed_lessons = len(progress.get("completed_lessons", []) or [])
+        completed_tasks = len(progress.get("completed_tasks", []) or [])
+        completed_tests = len(progress.get("completed_tests", []) or [])
+
+        scores = progress.get("scores", {}) or {}
+        score_values = [float(v) for v in scores.values() if isinstance(v, (int, float))]
+        avg_score = round(sum(score_values) / len(score_values), 1) if score_values else 0.0
+
+        created_at = u.get("created_at")
+        if isinstance(created_at, datetime):
+            created_at_str = created_at.isoformat()
+        else:
+            created_at_str = str(created_at or "")
+
+        users.append({
+            "id": str(u.get("id", u.get("_id", ""))),
+            "email": str(u.get("email", "")),
+            "name": str(u.get("name") or "Пользователь"),
+            "role": str(u.get("role", "student")),
+            "class_id": u.get("class_id"),
+            "school": u.get("school"),
+            "classroom": u.get("classroom"),
+            "created_at": created_at_str,
+            "completed_lessons_count": completed_lessons,
+            "completed_tasks_count": completed_tasks,
+            "completed_tests_count": completed_tests,
+            "avg_score": avg_score,
+        })
+
+    return {
+        "users": users,
+        "items": users,
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "total_pages": (total + limit - 1) // limit if total > 0 else 1,
+    }
+
+
+@router.get("/admin/analytics/users/{user_id}")
+async def get_admin_analytics_user_detail(
+    user_id: str,
+    _: dict = Depends(require_admin),
+):
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    test_results_cursor = db.test_results.find({"user_id": user_id}).sort("completed_at", -1)
+    test_results_raw = await test_results_cursor.to_list(100)
+
+    test_results = []
+    for tr in test_results_raw:
+        completed_at = tr.get("completed_at")
+        if isinstance(completed_at, datetime):
+            completed_at_str = completed_at.isoformat()
+        else:
+            completed_at_str = str(completed_at or "")
+
+        score = tr.get("score", 0)
+        total_q = tr.get("total_questions", 0)
+        pct = round((score / total_q) * 100, 1) if total_q > 0 else 0.0
+
+        test_results.append({
+            "id": str(tr.get("id", tr.get("_id", ""))),
+            "test_id": str(tr.get("test_id", "")),
+            "test_title": str(tr.get("test_title") or tr.get("title") or tr.get("test_id", "")),
+            "section": tr.get("section"),
+            "score": score,
+            "total_questions": total_q,
+            "percentage": pct,
+            "time_spent": tr.get("time_spent", 0),
+            "completed_at": completed_at_str,
+        })
+
+    progress = user.get("progress", {}) or {}
+    created_at = user.get("created_at")
+    created_at_str = created_at.isoformat() if isinstance(created_at, datetime) else str(created_at or "")
+
+    scores = progress.get("scores", {}) or {}
+    score_values = [float(v) for v in scores.values() if isinstance(v, (int, float))]
+    avg_score = round(sum(score_values) / len(score_values), 1) if score_values else 0.0
+
+    section_breakdown_dict = {}
+    for tr in test_results:
+        sec = tr.get("section") or "Общий"
+        if sec not in section_breakdown_dict:
+            section_breakdown_dict[sec] = {"scores": [], "count": 0}
+        section_breakdown_dict[sec]["scores"].append(tr["percentage"])
+        section_breakdown_dict[sec]["count"] += 1
+
+    section_breakdown = [
+        {
+            "section": sec,
+            "avg_score": round(sum(d["scores"]) / len(d["scores"]), 1) if d["scores"] else 0.0,
+            "tests_taken": d["count"],
+        }
+        for sec, d in section_breakdown_dict.items()
+    ]
+
+    return {
+        "user": {
+            "id": str(user.get("id", user.get("_id", ""))),
+            "email": str(user.get("email", "")),
+            "name": str(user.get("name") or "Пользователь"),
+            "role": str(user.get("role", "student")),
+            "class_id": user.get("class_id"),
+            "school": user.get("school"),
+            "classroom": user.get("classroom"),
+            "created_at": created_at_str,
+            "stats": {
+                "completed_lessons_count": len(progress.get("completed_lessons", []) or []),
+                "completed_tasks_count": len(progress.get("completed_tasks", []) or []),
+                "completed_tests_count": len(progress.get("completed_tests", []) or []),
+                "avg_score": avg_score,
+            },
+            "completed_lessons_count": len(progress.get("completed_lessons", []) or []),
+            "completed_tasks_count": len(progress.get("completed_tasks", []) or []),
+            "completed_tests_count": len(progress.get("completed_tests", []) or []),
+            "avg_score": avg_score,
+            "completed_lessons": progress.get("completed_lessons", []) or [],
+            "completed_tasks": progress.get("completed_tasks", []) or [],
+            "completed_tests": progress.get("completed_tests", []) or [],
+            "scores": scores,
+        },
+        "recent_tests": test_results,
+        "test_results": test_results,
+        "section_breakdown": section_breakdown,
+    }
