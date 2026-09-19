@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -29,11 +29,11 @@ const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedba
 
 export default function SubscriptionScreen() {
   const router = useRouter();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const isExpoGo = Constants.appOwnership === 'expo';
-  const ctaScale = useRef(new Animated.Value(1)).current;
+  const [ctaScale] = useState(() => new Animated.Value(1));
 
   const {
     loading,
@@ -154,23 +154,6 @@ export default function SubscriptionScreen() {
           </View>
         )}
 
-        {/* Loading / Error States */}
-        {loading && !isExpoGo && (
-          <View style={[styles.stateCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <ActivityIndicator color="#6366F1" size="small" />
-            <Text style={[styles.stateCardText, { color: colors.textSecondary }]}>
-              {t('subscription.loading', { defaultValue: 'Загрузка тарифов...' })}
-            </Text>
-          </View>
-        )}
-
-        {error ? (
-          <View style={[styles.errorCard, { backgroundColor: colors.errorBg }]}>
-            <Ionicons name="warning" size={18} color={colors.error} />
-            <Text style={[styles.errorCardText, { color: colors.error }]}>{error}</Text>
-          </View>
-        ) : null}
-
         {/* ==================== Benefits List ==================== */}
         <View style={styles.benefitsSection}>
           <Text style={[styles.sectionHeading, { color: colors.text }]}>
@@ -209,10 +192,23 @@ export default function SubscriptionScreen() {
         </View>
 
         {/* ==================== Plans Grid ==================== */}
-        {packages.length > 0 && (
-          <View style={styles.plansSection}>
+        {!isExpoGo && (
+          <View style={[styles.plansSection, styles.plansSlot]}>
             <Text style={[styles.sectionHeading, { color: colors.text }]}>Выберите тариф:</Text>
-            <View style={styles.plansRow}>
+            {loading ? (
+              <View style={[styles.stateCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+                <ActivityIndicator color="#6366F1" size="small" />
+                <Text style={[styles.stateCardText, { color: colors.textSecondary }]}>
+                  {t('subscription.loading', { defaultValue: 'Загрузка тарифов...' })}
+                </Text>
+              </View>
+            ) : error ? (
+              <View style={[styles.errorCard, { backgroundColor: colors.errorBg }]}>
+                <Ionicons name="warning" size={18} color={colors.error} />
+                <Text style={[styles.errorCardText, { color: colors.error }]}>{error}</Text>
+              </View>
+            ) : (
+              <View style={styles.plansRow}>
               {packages.slice(0, 2).map((item) => {
                 const id = `${item.identifier} ${item.product.identifier}`.toLowerCase();
                 const isYearly = id.includes('annual') || id.includes('year');
@@ -245,7 +241,8 @@ export default function SubscriptionScreen() {
                   </View>
                 );
               })}
-            </View>
+              </View>
+            )}
           </View>
         )}
 
@@ -480,6 +477,9 @@ const styles = StyleSheet.create({
   },
   plansSection: {
     marginBottom: 24,
+  },
+  plansSlot: {
+    minHeight: 132,
   },
   plansRow: {
     flexDirection: 'row',

@@ -50,6 +50,10 @@ const SubscriptionContext = createContext<SubscriptionContextValue | undefined>(
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
+  const userId = user?.id ?? null;
+  const userEmail = user?.email ?? null;
+  const userName = user?.name ?? null;
+  const userRole = user?.role ?? null;
   const [configured, setConfigured] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,11 +64,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
   const syncSubscriptionToBackend = useCallback(
     async (info: CustomerInfo | null) => {
-      if (!user) return;
+      if (!userId) return;
 
       const activeEntitlements = Object.keys(info?.entitlements?.active || {});
       const pro = isProCustomer(info);
-      const signature = `${user.id}:${pro}:${activeEntitlements.sort().join(',')}`;
+      const signature = `${userId}:${pro}:${activeEntitlements.sort().join(',')}`;
       if (lastSyncedSignatureRef.current === signature) return;
 
       try {
@@ -78,7 +82,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         console.log('Subscription sync error:', getRevenueCatErrorMessage(err));
       }
     },
-    [user],
+    [userId],
   );
 
   const refreshCustomerInfo = useCallback(async () => {
@@ -120,13 +124,12 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setError(null);
 
       try {
-        const isConfigured = await configureRevenueCat(user?.id);
+        const isConfigured = await configureRevenueCat(userId || undefined);
         if (!mounted) return;
 
         setConfigured(isConfigured);
 
         if (isConfigured) {
-          await setRevenueCatUserAttributes(user || undefined);
           await Promise.all([refreshCustomerInfo(), refreshOfferings()]);
         } else {
           setCustomerInfo(null);
@@ -149,7 +152,18 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
     };
-  }, [authLoading, refreshCustomerInfo, refreshOfferings, user]);
+  }, [authLoading, refreshCustomerInfo, refreshOfferings, userId]);
+
+  useEffect(() => {
+    if (!configured) return;
+    setRevenueCatUserAttributes({
+      email: userEmail,
+      name: userName,
+      role: userRole,
+    }).catch((err) => {
+      console.warn('RevenueCat attributes update failed:', getRevenueCatErrorMessage(err));
+    });
+  }, [configured, userEmail, userName, userRole]);
 
   useEffect(() => {
     if (!configured) return;

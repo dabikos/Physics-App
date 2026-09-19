@@ -9,7 +9,6 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -26,7 +25,6 @@ import { useTheme } from '../../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../src/context/AuthContext';
 import api from '../../../src/services/api';
-import { initializeMobileAds, showLearnMoreInterstitialAd } from '../../../src/services/adService';
 import type { TopicContent } from '../../../src/types/physics';
 
 // Компонент для отображения LaTeX формулы с красивым оформлением
@@ -161,10 +159,6 @@ export default function TopicScreen() {
   const [openingLearnMore, setOpeningLearnMore] = useState(false);
 
   useEffect(() => {
-    initializeMobileAds().catch(() => {});
-  }, []);
-
-  useEffect(() => {
     let cancelled = false;
 
     const loadTopic = async () => {
@@ -248,21 +242,11 @@ export default function TopicScreen() {
     if (id) saveNote(id, text);
   };
 
-  const handleLearnMorePress = async () => {
+  const handleLearnMorePress = () => {
     if (!id || openingLearnMore) return;
     setOpeningLearnMore(true);
-    try {
-      const adShown = await showLearnMoreInterstitialAd();
-      if (!adShown) {
-        Alert.alert(t('common.error'), t('lessons.loadErrorMessage'));
-        return;
-      }
-      router.push(`/lessons/topic/expanded/${id}`);
-    } catch {
-      Alert.alert(t('common.error'), t('lessons.loadErrorMessage'));
-    } finally {
-      setOpeningLearnMore(false);
-    }
+    router.push(`/lessons/topic/expanded/${id}`);
+    setOpeningLearnMore(false);
   };
 
   if (!topic && (physicsDataLoading || topicLoading)) {

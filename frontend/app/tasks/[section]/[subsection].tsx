@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../src/context/ThemeContext';
 import { usePhysicsData } from '../../../src/hooks/usePhysicsData';
 import api from '../../../src/services/api';
+import { useAdGate } from '../../../src/hooks/useAdGate';
 
 type PracticeTask = {
   id: string;
@@ -38,6 +39,7 @@ export default function PracticeTasksListScreen() {
   const { PHYSICS_SECTIONS } = usePhysicsData();
   const [tasks, setTasks] = useState<PracticeTask[]>([]);
   const [loading, setLoading] = useState(true);
+  const { requireAdForAction } = useAdGate();
 
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
   const subsectionData = sectionData?.subsections.find((item) => item.id === subsection);
@@ -126,7 +128,15 @@ export default function PracticeTasksListScreen() {
                     { backgroundColor: colors.card, shadowColor: colors.shadowColor },
                     (task.is_locked || task.requires_pro) && styles.lockedCard,
                   ]}
-                  onPress={() => router.push((task.is_locked || task.requires_pro ? '/subscription' : `/tasks/${section}/${subsection}/${task.id}`) as any)}
+                  onPress={async () => {
+                    if (task.is_locked || task.requires_pro) {
+                      router.push('/subscription' as any);
+                      return;
+                    }
+                    if (await requireAdForAction('task')) {
+                      router.push(`/tasks/${section}/${subsection}/${task.id}` as any);
+                    }
+                  }}
                   activeOpacity={0.78}
                 >
                   <View style={[styles.taskNumber, { backgroundColor: sectionData.color + '18' }]}>

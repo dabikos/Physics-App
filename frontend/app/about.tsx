@@ -106,7 +106,6 @@ export default function AboutScreen() {
             { icon: 'calculator', color: '#10B981', text: t('about.featureFormulas') },
             { icon: 'clipboard', color: '#F59E0B', text: t('about.featureTests') },
             { icon: 'chatbubble-ellipses', color: '#3B82F6', text: t('about.featureAI') },
-            { icon: 'game-controller', color: '#EF4444', text: t('about.featureGames') },
             { icon: 'people', color: '#8B5CF6', text: t('about.featureTeacher') },
           ].map((item, i) => (
             <View key={i} style={styles.featureRow}>

@@ -747,20 +747,6 @@ export default function HomeScreen() {
               borderColor={colors.border}
               shadowColor={colors.shadowColor}
             />
-            <MenuCard
-              title={t('home.games', { defaultValue: 'Игры' })}
-              subtitle={t('home.gamesSubtitle', { defaultValue: 'Обучающие игры' })}
-              badge={t('common.play', { defaultValue: 'Играть' })}
-              icon="game-controller"
-              gradient={['#F59E0B', '#B45309']}
-              onPress={() => router.push('/games')}
-              index={5}
-              cardBg={colors.card}
-              textColor={colors.text}
-              subtitleColor={colors.textTertiary}
-              borderColor={colors.border}
-              shadowColor={colors.shadowColor}
-            />
           </View>
         </View>
       </ScrollView>

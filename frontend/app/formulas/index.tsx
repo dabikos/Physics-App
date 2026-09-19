@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   View,
@@ -21,6 +21,7 @@ import type { Formula } from '../../src/types/physics';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
 import api from '../../src/services/api';
+import { useAdGate } from '../../src/hooks/useAdGate';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
   try {
@@ -63,7 +64,7 @@ const FormulaCardItem: React.FC<FormulaCardProps> = ({
   textSecondary,
   shadowColor,
 }) => {
-  const scale = useRef(new Animated.Value(1)).current;
+  const [scale] = useState(() => new Animated.Value(1));
   const isLocked = formula.is_locked || formula.requires_pro;
   const sectionGradient = SECTION_GRADIENTS[formula.section] || ['#6366F1', '#4F46E5'];
 
@@ -160,7 +161,8 @@ export default function FormulasScreen() {
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [remoteFormulas, setRemoteFormulas] = useState<Formula[] | null>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
+  const { requireAdForAction } = useAdGate();
   const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
   const formulasData = remoteFormulas ?? FORMULAS_DATA;
 
@@ -331,13 +333,15 @@ export default function FormulasScreen() {
             formula={item}
             isFav={isFavorite(item.id, 'formula')}
             onToggleFav={() => toggleFavorite(item.id, 'formula')}
-            onPress={() =>
-              router.push(
-                (item.is_locked || item.requires_pro
-                  ? '/subscription'
-                  : `/formulas/${item.id}`) as any
-              )
-            }
+            onPress={async () => {
+              if (item.is_locked || item.requires_pro) {
+                router.push('/subscription' as any);
+                return;
+              }
+              if (await requireAdForAction('formula')) {
+                router.push(`/formulas/${item.id}` as any);
+              }
+            }}
             cardBg={colors.card}
             borderColor={colors.border}
             textColor={colors.text}

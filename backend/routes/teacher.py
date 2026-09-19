@@ -24,12 +24,30 @@ from server import (
 
 router = APIRouter()
 
+
+async def get_connected_student_or_404(teacher_id: str, student_id: str):
+    student = await db.users.find_one({
+        "id": student_id,
+        "role": "student",
+        "teacher_ids": teacher_id,
+    })
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return student
+
 # ==================== Teacher / Pairing Routes ====================
 
 @router.get("/teacher/classes")
 async def get_teacher_classes(current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
-    classes = await db.users.distinct("class_id", {"role": "student", "class_id": {"$ne": None}})
+    classes = await db.users.distinct(
+        "class_id",
+        {
+            "role": "student",
+            "class_id": {"$ne": None},
+            "teacher_ids": current_user["id"],
+        },
+    )
     return {"classes": sorted([c for c in classes if c])}
 
 @router.get("/teacher/students")
@@ -72,14 +90,16 @@ async def get_teacher_students(class_id: Optional[str] = None, current_user: dic
 @router.get("/teacher/students/{student_id}/results")
 async def get_student_results(student_id: str, current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
+    await get_connected_student_or_404(current_user["id"], student_id)
     results = await db.test_results.find({"user_id": student_id}).sort("created_at", -1).limit(200).to_list(200)
     return results
 
 @router.patch("/teacher/students/{student_id}/adjustment")
 async def update_student_adjustment(student_id: str, payload: TeacherScoreAdjustment, current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
+    await get_connected_student_or_404(current_user["id"], student_id)
     await db.users.update_one(
-        {"id": student_id},
+        {"id": student_id, "teacher_ids": current_user["id"]},
         {"$set": {"manual_adjustment": payload.manual_adjustment}}
     )
     return {"success": True}
@@ -87,8 +107,12 @@ async def update_student_adjustment(student_id: str, payload: TeacherScoreAdjust
 @router.patch("/teacher/test-results/{result_id}/override")
 async def override_test_score(result_id: str, payload: TestScoreOverride, current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
+    result = await db.test_results.find_one({"id": result_id})
+    if not result:
+        raise HTTPException(status_code=404, detail="Test result not found")
+    await get_connected_student_or_404(current_user["id"], result["user_id"])
     await db.test_results.update_one(
-        {"id": result_id},
+        {"id": result_id, "user_id": result["user_id"]},
         {"$set": {"score_override": payload.score_override, "score_final": payload.score_override}}
     )
     return {"success": True}
@@ -96,6 +120,13 @@ async def override_test_score(result_id: str, payload: TestScoreOverride, curren
 @router.post("/teacher/tests")
 async def create_assigned_test(payload: AssignedTestCreate, current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
+    connected_student = await db.users.find_one({
+        "role": "student",
+        "class_id": payload.class_id,
+        "teacher_ids": current_user["id"],
+    })
+    if not connected_student:
+        raise HTTPException(status_code=404, detail="Class not found")
     test_id = f"assigned-test-{uuid.uuid4().hex[:12]}"
     doc = {
         "id": test_id,
@@ -118,6 +149,7 @@ async def create_assigned_test(payload: AssignedTestCreate, current_user: dict =
         body=f"Назначен тест: {payload.title}",
         data={"type": "assigned_test", "test_id": test_id},
         exclude_user_id=current_user["id"],
+        teacher_id=current_user["id"],
     )
 
     return doc
@@ -125,7 +157,7 @@ async def create_assigned_test(payload: AssignedTestCreate, current_user: dict =
 @router.get("/teacher/tests")
 async def list_assigned_tests(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
     require_teacher(current_user)
-    query: Dict[str, Any] = {}
+    query: Dict[str, Any] = {"created_by": current_user["id"]}
     if class_id:
         query["class_id"] = class_id
     tests = await db.assigned_tests.find(query).sort("created_at", -1).to_list(200)
@@ -417,10 +449,15 @@ async def get_demo_results(session_id: str, current_user: dict = Depends(get_cur
 @router.get("/assigned-tests")
 async def get_assigned_tests(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
     query: Dict[str, Any] = {}
-    if class_id:
-        query["class_id"] = class_id
+    if current_user.get("role") == "teacher":
+        query["created_by"] = current_user["id"]
+        if class_id:
+            query["class_id"] = class_id
     elif current_user.get("role") == "student":
         query["class_id"] = current_user.get("class_id")
+        query["created_by"] = {"$in": current_user.get("teacher_ids", [])}
+    elif class_id:
+        query["class_id"] = class_id
 
     tests = await db.assigned_tests.find(query).sort("created_at", -1).to_list(200)
     return tests

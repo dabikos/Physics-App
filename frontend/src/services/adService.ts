@@ -6,6 +6,7 @@ type GoogleMobileAdsModule = typeof import('react-native-google-mobile-ads');
 const ADS_TEST_MODE = String(process.env.EXPO_PUBLIC_ADS_TEST_MODE || '').toLowerCase() === 'true';
 const TEST_DEVICE_IDENTIFIERS = ['73501659-c885-4f9d-b3a4-bb2fbe0f9e60'];
 const isExpoGo = Constants.appOwnership === 'expo';
+const AD_LOAD_TIMEOUT_MS = 20_000;
 
 let adsInitialized = false;
 let googleMobileAdsModule: GoogleMobileAdsModule | null | undefined;
@@ -60,7 +61,10 @@ export async function initializeMobileAds(): Promise<void> {
   await ads.default().setRequestConfiguration({
     testDeviceIdentifiers: TEST_DEVICE_IDENTIFIERS,
   });
-  await ads.default().initialize();
+  const adapterStatuses = await ads.default().initialize();
+  if (__DEV__) {
+    console.info('[AdMob] initialized', adapterStatuses);
+  }
   adsInitialized = true;
 }
 
@@ -83,6 +87,7 @@ export async function showRewardedChatAd(): Promise<boolean> {
     const finish = (value: boolean) => {
       if (finished) return;
       finished = true;
+      clearTimeout(timeoutId);
       unsubLoaded();
       unsubClosed();
       unsubError();
@@ -91,20 +96,29 @@ export async function showRewardedChatAd(): Promise<boolean> {
     };
 
     const unsubLoaded = ad.addAdEventListener(ads.RewardedAdEventType.LOADED, () => {
-      ad.show().catch(() => finish(false));
+      ad.show().catch((error) => {
+        console.warn('[AdMob] rewarded ad failed to show', error);
+        finish(false);
+      });
     });
 
     const unsubClosed = ad.addAdEventListener(ads.AdEventType.CLOSED, () => {
       finish(earnedReward);
     });
 
-    const unsubError = ad.addAdEventListener(ads.AdEventType.ERROR, () => {
+    const unsubError = ad.addAdEventListener(ads.AdEventType.ERROR, (error) => {
+      console.warn('[AdMob] rewarded ad failed to load', error);
       finish(false);
     });
 
     const unsubEarned = ad.addAdEventListener(ads.RewardedAdEventType.EARNED_REWARD, () => {
       earnedReward = true;
     });
+
+    const timeoutId = setTimeout(() => {
+      console.warn('[AdMob] rewarded ad load timed out');
+      finish(false);
+    }, AD_LOAD_TIMEOUT_MS);
 
     ad.load();
   });
@@ -130,6 +144,7 @@ export async function showLearnMoreInterstitialAd(): Promise<boolean> {
     const finish = (shown: boolean) => {
       if (finished) return;
       finished = true;
+      clearTimeout(timeoutId);
       unsubLoaded();
       unsubClosed();
       unsubError();
@@ -137,16 +152,25 @@ export async function showLearnMoreInterstitialAd(): Promise<boolean> {
     };
 
     const unsubLoaded = ad.addAdEventListener(ads.AdEventType.LOADED, () => {
-      ad.show().catch(() => finish(false));
+      ad.show().catch((error) => {
+        console.warn('[AdMob] interstitial failed to show', error);
+        finish(false);
+      });
     });
 
     const unsubClosed = ad.addAdEventListener(ads.AdEventType.CLOSED, () => {
       finish(true);
     });
 
-    const unsubError = ad.addAdEventListener(ads.AdEventType.ERROR, () => {
+    const unsubError = ad.addAdEventListener(ads.AdEventType.ERROR, (error) => {
+      console.warn('[AdMob] interstitial failed to load', error);
       finish(false);
     });
+
+    const timeoutId = setTimeout(() => {
+      console.warn('[AdMob] interstitial load timed out');
+      finish(false);
+    }, AD_LOAD_TIMEOUT_MS);
 
     ad.load();
   });

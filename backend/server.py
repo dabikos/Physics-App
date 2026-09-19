@@ -3540,11 +3540,20 @@ async def send_push_notification(user_id: str, title: str, body: str, data: dict
         logging.error(f"Push notification error: {e}")
 
 
-async def send_push_to_class(class_id: str, title: str, body: str, data: dict = None, exclude_user_id: str = None):
-    """Send push notification to all students in a class."""
+async def send_push_to_class(
+    class_id: str,
+    title: str,
+    body: str,
+    data: dict = None,
+    exclude_user_id: str = None,
+    teacher_id: str = None,
+):
+    """Send push notification to connected students in a teacher's class."""
     query: Dict[str, Any] = {"role": "student"}
     if class_id:
         query["class_id"] = class_id
+    if teacher_id:
+        query["teacher_ids"] = teacher_id
     students = await db.users.find(query, {"id": 1}).to_list(500)
     for student in students:
         sid = student.get("id")

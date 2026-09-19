@@ -9,6 +9,7 @@ import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { LanguageProvider } from '../src/context/LanguageContext';
 import { SubscriptionProvider } from '../src/context/SubscriptionContext';
 import { usePushNotifications } from '../src/hooks/usePushNotifications';
+import { initializeMobileAds } from '../src/services/adService';
 import '../src/config/i18n';
 
 const APP_LOGO = require('../assets/images/splash-logo.png');
@@ -38,6 +39,12 @@ function RootLayoutNav() {
 
   const pushEnabled = !!user;
   usePushNotifications(pushEnabled);
+
+  useEffect(() => {
+    initializeMobileAds().catch((error) => {
+      console.warn('[AdMob] initialization failed', error);
+    });
+  }, []);
 
   useEffect(() => {
     if (loading) return;
@@ -81,7 +88,6 @@ function RootLayoutNav() {
         <Stack.Screen name="tasks" options={{ headerShown: false }} />
         <Stack.Screen name="tests" options={{ headerShown: false }} />
         <Stack.Screen name="formulas" options={{ headerShown: false }} />
-        <Stack.Screen name="games" options={{ headerShown: false }} />
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
         <Stack.Screen name="about" options={{ headerShown: false }} />
         <Stack.Screen name="subscription" options={{ headerShown: false }} />

@@ -27,6 +27,7 @@ import { SuccessModal } from '../../../src/components/SuccessModal';
 import { MathContent } from '../../../src/components/MathContent';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../src/context/ThemeContext';
+import { useAdGate } from '../../../src/hooks/useAdGate';
 
 const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => string) => {
   switch (difficulty) {
@@ -150,6 +151,7 @@ export default function TestsSectionScreen() {
   const [results, setResults] = useState<any>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { requireAdForAction } = useAdGate();
 
   useEffect(() => {
     return () => {
@@ -224,11 +226,13 @@ export default function TestsSectionScreen() {
     };
   }, [section, subsection, i18n.language]);
 
-  const startTest = (test: Test) => {
+  const startTest = async (test: Test) => {
     if (test.is_locked || test.requires_pro) {
       router.push('/subscription' as any);
       return;
     }
+
+    if (!(await requireAdForAction('test'))) return;
 
     setSelectedTest(test);
     setCurrentQuestionIndex(0);
