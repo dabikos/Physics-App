@@ -79,10 +79,24 @@ SMTP_TIMEOUT = float(os.environ.get('SMTP_TIMEOUT', '20'))
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
-# OpenAI API settings (берутся только из ENV переменных)
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
-OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
-openai_client = AsyncOpenAI(api_key=OPENAI_API_KEY, timeout=60.0)
+# OpenRouter uses the OpenAI-compatible API, but the credential stays only on
+# the backend. Never expose this value through an EXPO_PUBLIC_ variable.
+OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '').strip()
+OPENROUTER_MODEL = os.environ.get('OPENROUTER_MODEL', 'openai/gpt-4o-mini').strip()
+OPENROUTER_API_URL = os.environ.get('OPENROUTER_API_URL', 'https://openrouter.ai/api/v1').rstrip('/')
+OPENROUTER_SITE_URL = os.environ.get('OPENROUTER_SITE_URL', 'https://physicsai.app').strip()
+OPENROUTER_APP_NAME = os.environ.get('OPENROUTER_APP_NAME', 'Physics AI').strip()
+if IS_PRODUCTION and not OPENROUTER_API_KEY:
+    raise RuntimeError("OPENROUTER_API_KEY must be set when APP_ENV=production")
+openrouter_client = AsyncOpenAI(
+    api_key=OPENROUTER_API_KEY or 'not-configured',
+    base_url=OPENROUTER_API_URL,
+    default_headers={
+        'HTTP-Referer': OPENROUTER_SITE_URL,
+        'X-OpenRouter-Title': OPENROUTER_APP_NAME,
+    },
+    timeout=60.0,
+)
 FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '3'))
 BASIC_CHAT_DAILY_LIMIT = int(os.environ.get('BASIC_CHAT_DAILY_LIMIT', '10'))
 PRO_CHAT_DAILY_LIMIT = int(os.environ.get('PRO_CHAT_DAILY_LIMIT', '30'))
@@ -93,9 +107,9 @@ REVENUECAT_PRO_ENTITLEMENT_ID = os.environ.get('REVENUECAT_PRO_ENTITLEMENT_ID', 
 REVENUECAT_BASIC_ENTITLEMENT_ID = os.environ.get('REVENUECAT_BASIC_ENTITLEMENT_ID', 'Physics AI Basic')
 
 async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096, temperature: float = 0.7) -> str:
-    """OpenAI chat completion (gpt-5-nano by default)."""
-    if not OPENAI_API_KEY:
-        raise Exception("OPENAI_API_KEY is not configured")
+    """Generate an AI response through the server-side OpenRouter client."""
+    if not OPENROUTER_API_KEY:
+        raise Exception("OPENROUTER_API_KEY is not configured")
 
     messages = []
     if system_message:
@@ -103,17 +117,18 @@ async def call_ai(prompt: str, system_message: str = '', max_tokens: int = 4096,
     messages.append({"role": "user", "content": prompt})
 
     try:
-        completion = await openai_client.chat.completions.create(
-            model=OPENAI_MODEL,
+        completion = await openrouter_client.chat.completions.create(
+            model=OPENROUTER_MODEL,
             messages=messages,
-            max_completion_tokens=max_tokens,
+            max_tokens=max_tokens,
+            temperature=temperature,
         )
         content = completion.choices[0].message.content
         if not content:
-            raise Exception("OpenAI returned empty content")
+            raise Exception("OpenRouter returned empty content")
         return content.strip()
     except Exception as e:
-        raise Exception(f"OpenAI request failed: {e}") from e
+        raise Exception(f"OpenRouter request failed: {e}") from e
 
 # Create the main app
 app = FastAPI(title="Physics AI App")

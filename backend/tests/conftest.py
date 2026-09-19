@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 os.environ.setdefault("APP_ENV", "development")
-os.environ.setdefault("OPENAI_API_KEY", "test-key")
+os.environ.setdefault("OPENROUTER_API_KEY", "test-key")
 os.environ.setdefault("MONGO_URL", "mongodb://localhost:27017")
 os.environ.setdefault("DB_NAME", "physics_ai_test")
 
