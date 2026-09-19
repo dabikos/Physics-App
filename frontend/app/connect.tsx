@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0F0C29',
   },
   gradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   safeArea: {
     flex: 1,

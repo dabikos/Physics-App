@@ -6,9 +6,11 @@
     "icon": "./assets/images/icon.png",
     "scheme": "physics-ai",
     "userInterfaceStyle": "automatic",
+    "orientation": "portrait",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.physicsai.app",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "NSCameraUsageDescription": "Нужно для сканирования QR-кода подключения.",
         "ITSAppUsesNonExemptEncryption": false
@@ -19,11 +21,12 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#6C63FF"
       },
-      "softwareKeyboardLayoutMode": "pan",
+      "softwareKeyboardLayoutMode": "resize",
       "permissions": [
         "CAMERA"
       ],
-      "package": "com.physicsai.app"
+      "package": "com.physicsai.app",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -63,7 +66,9 @@
         }
       ],
       "expo-image",
-      "expo-localization"
+      "expo-localization",
+      "expo-status-bar",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true

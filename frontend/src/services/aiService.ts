@@ -30,7 +30,6 @@ export interface AIResponse {
 
 export interface ChatQuota {
   day: string;
-  tier?: 'free' | 'basic' | 'pro';
   free_limit: number;
   free_used: number;
   free_remaining: number;
@@ -332,33 +331,6 @@ export async function generateTest(
   questionCount: number,
   language: string = 'русский'
 ): Promise<{ success: boolean; test?: GeneratedTest; error?: string }> {
-  try {
-    const response = await api.post('/tests/generate', {
-      section: sectionKey,
-      difficulty,
-      num_questions: questionCount,
-      language,
-    });
-    const item = response.data;
-    return {
-      success: true,
-      test: {
-        id: item.id,
-        title: item.title || `Test: ${sectionName}`,
-        section: item.section || sectionKey,
-        difficulty: item.difficulty || difficulty,
-        source: item.source || 'ai',
-        questions: item.questions || [],
-      },
-    };
-  } catch (error: any) {
-    const detail = error?.response?.data?.detail;
-    const message = typeof detail === 'string'
-      ? detail
-      : detail?.message || error?.message || 'AI test generation failed';
-    return { success: false, error: message };
-  }
-
   const difficultyDescriptions = {
     basic: 'базовый уровень — простые вопросы на понимание основ',
     standard: 'стандартный уровень — вопросы средней сложности с расчётами',
@@ -435,9 +407,8 @@ export async function generateTest(
     
     // Убираем markdown блоки если есть
     const jsonMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
-    const matchedJson = jsonMatch?.[1] ?? '';
-    if (matchedJson) {
-      jsonStr = matchedJson;
+    if (jsonMatch) {
+      jsonStr = jsonMatch[1];
     }
     
     // Пробуем найти JSON объект

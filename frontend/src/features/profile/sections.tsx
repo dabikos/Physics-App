@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ActivityIndicator, Animated, Switch } from 'react-native'
+import { View, Text, TouchableOpacity, ActivityIndicator, Animated, Switch, Linking } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -589,6 +589,28 @@ export function ProfileSettingsSection({
           <Text style={[styles.settingText, { color: colors.textSecondary }]}>{t('profile.notifications')}</Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.settingItem, { backgroundColor: colors.card }]}
+        onPress={() => Linking.openURL('https://t.me/+4nopjpXt51w0YjMy').catch(() => {})}
+        activeOpacity={0.8}
+      >
+        <View style={styles.settingLeft}>
+          <View style={[styles.settingIcon, { backgroundColor: 'rgba(34, 158, 217, 0.12)' }]}>
+            <Ionicons name="paper-plane" size={20} color="#229ED9" />
+          </View>
+          <View>
+            <Text style={[styles.settingText, { color: colors.textSecondary }]}>{t('profile.telegram', { defaultValue: 'Чат в Telegram' })}</Text>
+            <Text style={{ fontSize: 11, color: colors.textTertiary, marginTop: 1 }}>{t('profile.telegramSub', { defaultValue: 'Сообщество и поддержка' })}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <View style={{ backgroundColor: 'rgba(34, 158, 217, 0.12)', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 }}>
+            <Text style={{ fontSize: 11, fontWeight: '700', color: '#0284C7' }}>t.me</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+        </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.settingItem, { backgroundColor: colors.card }]} onPress={onAbout}>

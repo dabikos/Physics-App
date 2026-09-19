@@ -1,4 +1,4 @@
-﻿from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, Query, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
@@ -193,6 +193,9 @@ class UserResponse(BaseModel):
     name: str
     role: Literal["student", "teacher"]
     class_id: Optional[str] = None
+    subject: Optional[str] = None
+    school: Optional[str] = None
+    classroom: Optional[str] = None
     progress: Dict[str, Any] = {}
     created_at: datetime
 
@@ -3691,6 +3694,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_credentials=False if "*" in cors_origins else True,
     allow_origins=cors_origins,
+    allow_origin_regex=r"https://.*(\.railway\.app|\.physicsai\.me)|https://physicsai\.me",
     allow_methods=["*"],
     allow_headers=["*"],
 )

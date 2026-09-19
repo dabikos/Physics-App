@@ -26,8 +26,7 @@ import { useTheme } from '../../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../src/context/AuthContext';
 import api from '../../../src/services/api';
-import { initializeMobileAds } from '../../../src/services/adService';
-import { useAdGate } from '../../../src/hooks/useAdGate';
+import { initializeMobileAds, showLearnMoreInterstitialAd } from '../../../src/services/adService';
 import type { TopicContent } from '../../../src/types/physics';
 
 // Компонент для отображения LaTeX формулы с красивым оформлением
@@ -155,7 +154,6 @@ export default function TopicScreen() {
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { requireRewardedAdForFeature } = useAdGate();
   const [noteText, setNoteText] = useState('');
   const [noteExpanded, setNoteExpanded] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
@@ -177,7 +175,7 @@ export default function TopicScreen() {
         if (!cancelled) setRemoteTopic(response.data || null);
       } catch (error: any) {
         if (error?.response?.status === 403 && error?.response?.data?.detail?.code === 'PRO_REQUIRED') {
-          router.replace('/subscription');
+          router.replace('/subscription' as any);
           return;
         }
         console.log('Topic detail load error:', error);
@@ -254,8 +252,8 @@ export default function TopicScreen() {
     if (!id || openingLearnMore) return;
     setOpeningLearnMore(true);
     try {
-      const allowed = await requireRewardedAdForFeature();
-      if (!allowed) {
+      const adShown = await showLearnMoreInterstitialAd();
+      if (!adShown) {
         Alert.alert(t('common.error'), t('lessons.loadErrorMessage'));
         return;
       }

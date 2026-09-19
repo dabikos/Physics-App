@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   gradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   safeArea: {
     flex: 1,
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
     fontFamily: 'monospace',
   },
   startScreen: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   gameOverScreen: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',

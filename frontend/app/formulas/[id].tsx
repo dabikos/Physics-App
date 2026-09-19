@@ -170,7 +170,7 @@ export default function FormulaDetailScreen() {
         if (!cancelled) setRemoteFormula(item);
       } catch (error: any) {
         if (error?.response?.status === 403 && error?.response?.data?.detail?.code === 'PRO_REQUIRED') {
-          router.replace('/subscription');
+          router.replace('/subscription' as any);
           return;
         }
         console.log('Formula detail load error:', error);

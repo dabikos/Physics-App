@@ -12,6 +12,7 @@ interface UserData {
   avatar?: string;
   grade?: string;
   progress?: Record<string, any>;
+  xp?: number;
   created_at?: string;
 }
 

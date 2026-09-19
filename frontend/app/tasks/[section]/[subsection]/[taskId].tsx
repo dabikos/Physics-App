@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 
 import { MathContent } from '../../../../src/components/MathContent';
 import { useTheme } from '../../../../src/context/ThemeContext';
-import { useAdGate } from '../../../../src/hooks/useAdGate';
 import api from '../../../../src/services/api';
 
 type PracticeTask = {
@@ -35,7 +34,6 @@ export default function PracticeTaskDetailScreen() {
   const { taskId } = useLocalSearchParams<{ taskId: string }>();
   const { colors } = useTheme();
   const { t, i18n } = useTranslation();
-  const { requireRewardedAdForFeature } = useAdGate();
   const [task, setTask] = useState<PracticeTask | null>(null);
   const [loading, setLoading] = useState(true);
   const [showHint, setShowHint] = useState(false);
@@ -44,7 +42,6 @@ export default function PracticeTaskDetailScreen() {
   const [answerChecked, setAnswerChecked] = useState(false);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
   const [checkingAnswer, setCheckingAnswer] = useState(false);
-  const [openingSolution, setOpeningSolution] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,7 +53,6 @@ export default function PracticeTaskDetailScreen() {
       setAnswerChecked(false);
       setIsAnswerCorrect(false);
       setCheckingAnswer(false);
-      setOpeningSolution(false);
       setShowHint(false);
       setShowSolution(false);
       try {
@@ -65,7 +61,7 @@ export default function PracticeTaskDetailScreen() {
         if (!cancelled) setTask(item);
       } catch (error: any) {
         if (error?.response?.status === 403 && error?.response?.data?.detail?.code === 'PRO_REQUIRED') {
-          router.replace('/subscription');
+          router.replace('/subscription' as any);
           return;
         }
         console.log('Practice task detail load error:', error);
@@ -125,21 +121,6 @@ export default function PracticeTaskDetailScreen() {
     } finally {
       setAnswerChecked(true);
       setCheckingAnswer(false);
-    }
-  };
-
-  const handleToggleSolution = async () => {
-    if (showSolution) {
-      setShowSolution(false);
-      return;
-    }
-    if (openingSolution) return;
-    setOpeningSolution(true);
-    try {
-      const allowed = await requireRewardedAdForFeature();
-      if (allowed) setShowSolution(true);
-    } finally {
-      setOpeningSolution(false);
     }
   };
 
@@ -261,11 +242,10 @@ export default function PracticeTaskDetailScreen() {
 
             <TouchableOpacity
               style={[styles.primaryButton, { backgroundColor: colors.accent }]}
-              onPress={handleToggleSolution}
-              disabled={openingSolution}
+              onPress={() => setShowSolution((value) => !value)}
             >
               <Text style={styles.primaryButtonText}>
-                {openingSolution ? t('common.loading') : showSolution ? t('tasks.hideSolution') : t('tasks.showSolution')}
+                {showSolution ? t('tasks.hideSolution') : t('tasks.showSolution')}
               </Text>
               <Ionicons name={showSolution ? 'chevron-up' : 'chevron-down'} size={18} color="#FFFFFF" />
             </TouchableOpacity>

@@ -27,7 +27,6 @@ import { SuccessModal } from '../../../src/components/SuccessModal';
 import { MathContent } from '../../../src/components/MathContent';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../src/context/ThemeContext';
-import { useAdGate } from '../../../src/hooks/useAdGate';
 
 const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => string) => {
   switch (difficulty) {
@@ -132,14 +131,12 @@ export default function TestsSectionScreen() {
   const { colors } = useTheme();
   const { t, i18n } = useTranslation();
   const { PHYSICS_SECTIONS, getTestsBySection } = usePhysicsData();
-  const { showContentAdIfNeeded } = useAdGate();
   
   const sectionData = section ? PHYSICS_SECTIONS[section] : null;
   const subsectionData = sectionData?.subsections.find((item) => item.id === subsection);
   const localTests = section ? getTestsBySection(section) : [];
   const [remoteTests, setRemoteTests] = useState<Test[]>([]);
   const tests = remoteTests.length > 0 ? remoteTests : localTests;
-  const [testLoading, setTestLoading] = useState(false);
 
   const { user } = useAuth();
   const [assignedTests, setAssignedTests] = useState<Test[]>([]);
@@ -194,7 +191,7 @@ export default function TestsSectionScreen() {
 
       try {
         const response = await api.get('/practice/tests', {
-          params: { section, subsection, summary: true },
+          params: { section, subsection },
         });
         const items = Array.isArray(response.data?.items) ? response.data.items : [];
         const mapped: Test[] = items.map((item: any) => ({
@@ -207,7 +204,7 @@ export default function TestsSectionScreen() {
           time_limit: item.time_limit || 300,
           is_locked: item.is_locked,
           requires_pro: item.requires_pro,
-        })).filter((item: Test) => (item.question_count || item.questions.length) > 0 || item.is_locked || item.requires_pro);
+        })).filter((item: Test) => item.questions.length > 0 || item.is_locked || item.requires_pro);
 
         if (!cancelled) {
           setRemoteTests(mapped);
@@ -227,42 +224,16 @@ export default function TestsSectionScreen() {
     };
   }, [section, subsection, i18n.language]);
 
-  const startTest = async (test: Test) => {
+  const startTest = (test: Test) => {
     if (test.is_locked || test.requires_pro) {
-      router.push('/subscription');
+      router.push('/subscription' as any);
       return;
     }
 
-    await showContentAdIfNeeded();
-
-    let playableTest = test;
-    if (playableTest.questions.length === 0) {
-      setTestLoading(true);
-      try {
-        const response = await api.get(`/practice/tests/${test.id}`);
-        const item = response.data?.item;
-        playableTest = {
-          ...test,
-          title: item?.title || test.title,
-          difficulty: (item?.difficulty || test.difficulty || 'basic') as TestDifficulty,
-          questions: Array.isArray(item?.questions) ? item.questions : [],
-          time_limit: item?.time_limit || test.time_limit || 300,
-        };
-      } catch (error) {
-        console.log('Practice test detail load error:', error);
-        Alert.alert(t('common.error'), t('tests.loading'));
-        return;
-      } finally {
-        setTestLoading(false);
-      }
-    }
-
-    if (playableTest.questions.length === 0) return;
-
-    setSelectedTest(playableTest);
+    setSelectedTest(test);
     setCurrentQuestionIndex(0);
-    setAnswers(new Array(playableTest.questions.length).fill(-1));
-    setTimeLeft(playableTest.time_limit);
+    setAnswers(new Array(test.questions.length).fill(-1));
+    setTimeLeft(test.time_limit);
     setTestStarted(true);
     setTestFinished(false);
     setResults(null);

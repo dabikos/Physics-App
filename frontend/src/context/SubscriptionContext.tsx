@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import Purchases, {
+import type {
   CustomerInfo,
   CustomerInfoUpdateListener,
   PurchasesOffering,
@@ -9,6 +9,7 @@ import { useAuth } from './AuthContext';
 import { RevenueCatProductId } from '../config/revenueCat';
 import api from '../services/api';
 import {
+  addRevenueCatCustomerInfoUpdateListener,
   configureRevenueCat,
   findPackageByProductId,
   getPackagesFromOffering,
@@ -16,14 +17,12 @@ import {
   getRevenueCatCustomerInfo,
   getRevenueCatErrorMessage,
   getRevenueCatOfferings,
-  getSubscriptionTier,
-  hasFullContentCustomer,
-  isBasicCustomer,
   isProCustomer,
   logOutRevenueCat,
   presentRevenueCatCustomerCenter,
   presentRevenueCatPaywall,
   purchaseRevenueCatPackage,
+  removeRevenueCatCustomerInfoUpdateListener,
   restoreRevenueCatPurchases,
   setRevenueCatUserAttributes,
 } from '../services/revenueCatService';
@@ -33,9 +32,6 @@ interface SubscriptionContextValue {
   loading: boolean;
   error: string | null;
   isPro: boolean;
-  isBasic: boolean;
-  subscriptionTier: 'free' | 'basic' | 'pro';
-  hasFullContent: boolean;
   hasAds: boolean;
   customerInfo: CustomerInfo | null;
   currentOffering: PurchasesOffering | null;
@@ -46,9 +42,8 @@ interface SubscriptionContextValue {
   purchaseProduct: (productId: RevenueCatProductId) => Promise<boolean>;
   restorePurchases: () => Promise<boolean>;
   presentPaywall: () => Promise<boolean>;
-  presentCustomerCenter: () => Promise<boolean>;
+  presentCustomerCenter: () => Promise<void>;
   requirePro: () => Promise<boolean>;
-  requireFullContent: () => Promise<boolean>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextValue | undefined>(undefined);
@@ -62,29 +57,19 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [currentOffering, setCurrentOffering] = useState<PurchasesOffering | null>(null);
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const lastSyncedSignatureRef = useRef<string | null>(null);
-  const hasInitializedRef = useRef(false);
-  const userId = user?.id || null;
-  const userProfile = useMemo(
-    () => (user ? { email: user.email, name: user.name, role: user.role } : undefined),
-    [user?.email, user?.name, user?.role],
-  );
 
   const syncSubscriptionToBackend = useCallback(
     async (info: CustomerInfo | null) => {
-      if (!userId) return;
+      if (!user) return;
 
       const activeEntitlements = Object.keys(info?.entitlements?.active || {});
       const pro = isProCustomer(info);
-      const basic = isBasicCustomer(info);
-      const tier = getSubscriptionTier(info);
-      const signature = `${userId}:${tier}:${activeEntitlements.sort().join(',')}`;
+      const signature = `${user.id}:${pro}:${activeEntitlements.sort().join(',')}`;
       if (lastSyncedSignatureRef.current === signature) return;
 
       try {
         await api.post('/subscription/sync', {
           is_pro: pro,
-          is_basic: basic,
-          subscription_tier: tier,
           active_entitlements: activeEntitlements,
           source: 'revenuecat',
         });
@@ -93,15 +78,15 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         console.log('Subscription sync error:', getRevenueCatErrorMessage(err));
       }
     },
-    [userId],
+    [user],
   );
 
   const refreshCustomerInfo = useCallback(async () => {
     try {
       setError(null);
       const info = await getRevenueCatCustomerInfo();
-      await syncSubscriptionToBackend(info);
       setCustomerInfo(info);
+      await syncSubscriptionToBackend(info);
       return info;
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
@@ -131,19 +116,17 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     const init = async () => {
       if (authLoading) return;
 
-      if (!hasInitializedRef.current) {
-        setLoading(true);
-      }
+      setLoading(true);
       setError(null);
 
       try {
-        const isConfigured = await configureRevenueCat(userId);
+        const isConfigured = await configureRevenueCat(user?.id);
         if (!mounted) return;
 
         setConfigured(isConfigured);
 
         if (isConfigured) {
-          await setRevenueCatUserAttributes(userProfile);
+          await setRevenueCatUserAttributes(user || undefined);
           await Promise.all([refreshCustomerInfo(), refreshOfferings()]);
         } else {
           setCustomerInfo(null);
@@ -156,7 +139,6 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         }
       } finally {
         if (mounted) {
-          hasInitializedRef.current = true;
           setLoading(false);
         }
       }
@@ -167,40 +149,39 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
     };
-  }, [authLoading, refreshCustomerInfo, refreshOfferings, userId, userProfile]);
+  }, [authLoading, refreshCustomerInfo, refreshOfferings, user]);
 
   useEffect(() => {
     if (!configured) return;
 
     const listener: CustomerInfoUpdateListener = (info) => {
-      syncSubscriptionToBackend(info).finally(() => {
-        setCustomerInfo(info);
-      });
+      setCustomerInfo(info);
+      syncSubscriptionToBackend(info);
     };
 
-    Purchases.addCustomerInfoUpdateListener(listener);
+    addRevenueCatCustomerInfoUpdateListener(listener);
 
     return () => {
-      Purchases.removeCustomerInfoUpdateListener(listener);
+      removeRevenueCatCustomerInfoUpdateListener(listener);
     };
   }, [configured, syncSubscriptionToBackend]);
 
   useEffect(() => {
-    if (authLoading || userId || !configured) return;
+    if (authLoading || user || !configured) return;
 
     logOutRevenueCat().then((info) => {
       setCustomerInfo(info);
     });
-  }, [authLoading, configured, userId]);
+  }, [authLoading, configured, user]);
 
   const purchasePackage = useCallback(
     async (packageToPurchase: PurchasesPackage) => {
       try {
         setError(null);
         const result = await purchaseRevenueCatPackage(packageToPurchase);
-        await syncSubscriptionToBackend(result.customerInfo);
         setCustomerInfo(result.customerInfo);
-        return hasFullContentCustomer(result.customerInfo);
+        await syncSubscriptionToBackend(result.customerInfo);
+        return isProCustomer(result.customerInfo);
       } catch (err: any) {
         if (!err?.userCancelled) {
           setError(getRevenueCatErrorMessage(err));
@@ -229,9 +210,9 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       const info = await restoreRevenueCatPurchases();
-      await syncSubscriptionToBackend(info);
       setCustomerInfo(info);
-      return hasFullContentCustomer(info);
+      await syncSubscriptionToBackend(info);
+      return isProCustomer(info);
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
       return false;
@@ -243,7 +224,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setError(null);
       const purchased = await presentRevenueCatPaywall(currentOffering);
       const info = await refreshCustomerInfo();
-      return purchased || hasFullContentCustomer(info);
+      return purchased || isProCustomer(info);
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
       return false;
@@ -255,20 +236,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setError(null);
       await presentRevenueCatCustomerCenter();
       await refreshCustomerInfo();
-      return true;
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
-      return false;
     }
   }, [refreshCustomerInfo]);
 
   const requirePro = useCallback(async () => {
     if (isProCustomer(customerInfo)) return true;
-    return presentPaywall();
-  }, [customerInfo, presentPaywall]);
-
-  const requireFullContent = useCallback(async () => {
-    if (hasFullContentCustomer(customerInfo)) return true;
     return presentPaywall();
   }, [customerInfo, presentPaywall]);
 
@@ -278,9 +252,6 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       loading,
       error,
       isPro: isProCustomer(customerInfo),
-      isBasic: isBasicCustomer(customerInfo),
-      subscriptionTier: getSubscriptionTier(customerInfo),
-      hasFullContent: hasFullContentCustomer(customerInfo),
       hasAds: !isProCustomer(customerInfo),
       customerInfo,
       currentOffering,
@@ -293,7 +264,6 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       presentPaywall,
       presentCustomerCenter,
       requirePro,
-      requireFullContent,
     }),
     [
       configured,
@@ -308,7 +278,6 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       purchaseProduct,
       refreshCustomerInfo,
       refreshOfferings,
-      requireFullContent,
       requirePro,
       restorePurchases,
     ],

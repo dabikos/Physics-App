@@ -3,8 +3,8 @@ import i18n from '../config/i18n';
 
 const API_PROFILES: Record<string, string> = {
   development: 'http://10.0.2.2:8000',
-  preview: 'https://physics-app-hgw72.ondigitalocean.app',
-  production: 'https://physics-app-hgw72.ondigitalocean.app',
+  preview: 'https://physics-app-production-2585.up.railway.app',
+  production: 'https://physics-app-production-2585.up.railway.app',
 };
 
 const apiProfile = String(process.env.EXPO_PUBLIC_API_PROFILE || 'production').trim().toLowerCase();
@@ -38,9 +38,15 @@ api.interceptors.response.use(
     const detail = error.response?.data?.detail;
     const errorCode = typeof detail === 'object' ? detail?.code : undefined;
     const isExpectedChatLimit = errorCode === 'CHAT_LIMIT_REACHED';
+    const isUnauthenticated = error.response?.status === 401;
 
     if (isExpectedChatLimit) {
       console.warn('API Chat Limit:', error.response?.data);
+    } else if (isUnauthenticated) {
+      // Normal when guest or token expired
+      if (__DEV__) {
+        console.log('[API] Unauthenticated request (401)');
+      }
     } else {
       console.error('API Error:', error.response?.data || error.message);
     }
