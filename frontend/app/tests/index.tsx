@@ -21,6 +21,8 @@ import { useTheme } from '../../src/context/ThemeContext';
 import { useLanguage } from '../../src/context/LanguageContext';
 import api from '../../src/services/api';
 import { useAdGate } from '../../src/hooks/useAdGate';
+import { formatQuotaError } from '../../src/utils/quotaMessage';
+import { LearningHubHeader } from '../../src/components/LearningHubHeader';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
   try {
@@ -122,7 +124,7 @@ export default function TestsScreen() {
         params: { testData: JSON.stringify(result.test) },
       });
     } else {
-      setError(result.error || t('common.error', { defaultValue: 'Ошибка генерации' }));
+      setError(formatQuotaError(result.errorDetail, t, result.error || t('common.error', { defaultValue: 'Ошибка генерации' })));
     }
   };
 
@@ -175,7 +177,9 @@ export default function TestsScreen() {
         params: { testData: JSON.stringify(test) },
       });
     } catch (err: any) {
-      setRandomError(err.response?.data?.detail || t('tests.randomLoadError', { defaultValue: 'Не удалось загрузить тест' }));
+      const detail = err.response?.data?.detail;
+      const fallback = (typeof detail === 'string' ? detail : detail?.message) || t('tests.randomLoadError', { defaultValue: 'Не удалось загрузить тест' });
+      setRandomError(formatQuotaError(typeof detail === 'object' ? detail : undefined, t, fallback));
     } finally {
       setIsRandomizing(false);
     }
@@ -183,30 +187,15 @@ export default function TestsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
-      {/* ==================== Header ==================== */}
-      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
-          onPress={() => {
-            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-            router.back();
-          }}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="arrow-back" size={20} color={colors.text} />
-        </TouchableOpacity>
-
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>
-            {t('tests.title', { defaultValue: 'Тесты и Проверка' })}
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
-            142 теста • AI Генератор
-          </Text>
-        </View>
-
-        <View style={styles.navBtnPlaceholder} />
-      </View>
+      <LearningHubHeader
+        title={t('tests.title')}
+        subtitle={t('tests.hubSubtitle')}
+        colors={colors}
+        onBack={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+          router.back();
+        }}
+      />
 
       {/* ==================== Content ==================== */}
       <ScrollView
@@ -232,7 +221,7 @@ export default function TestsScreen() {
                   <Ionicons name="sparkles" size={24} color="#FFFFFF" />
                 </View>
                 <View style={styles.heroPillBadge}>
-                  <Text style={styles.heroPillText}>GPT-4o</Text>
+                  <Text style={styles.heroPillText}>{t('tests.aiBadge')}</Text>
                 </View>
               </View>
 
@@ -244,7 +233,7 @@ export default function TestsScreen() {
               </Text>
 
               <View style={styles.heroCtaRow}>
-                <Text style={styles.heroCtaLabel}>Сгенерировать</Text>
+                <Text style={styles.heroCtaLabel}>{t('tests.generateCta')}</Text>
                 <Ionicons name="arrow-forward-circle" size={22} color="#FFFFFF" />
               </View>
             </LinearGradient>
@@ -267,7 +256,7 @@ export default function TestsScreen() {
                   <Ionicons name="shuffle" size={24} color="#FFFFFF" />
                 </View>
                 <View style={styles.heroPillBadge}>
-                  <Text style={styles.heroPillText}>Блиц</Text>
+                  <Text style={styles.heroPillText}>{t('tests.blitzBadge')}</Text>
                 </View>
               </View>
 
@@ -279,7 +268,7 @@ export default function TestsScreen() {
               </Text>
 
               <View style={styles.heroCtaRow}>
-                <Text style={styles.heroCtaLabel}>Начать блиц</Text>
+                <Text style={styles.heroCtaLabel}>{t('tests.blitzCta')}</Text>
                 <Ionicons name="play-circle" size={22} color="#FFFFFF" />
               </View>
             </LinearGradient>
@@ -291,7 +280,7 @@ export default function TestsScreen() {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             {t('tests.readyTests', { defaultValue: 'Готовые тесты по разделам' })}
           </Text>
-          <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>7 разделов</Text>
+          <Text style={[styles.sectionSubtitle, { color: colors.textTertiary }]}>{t('common.sectionCount', { count: Object.keys(PHYSICS_SECTIONS).length })}</Text>
         </View>
 
         {/* Ready Tests List */}
@@ -329,7 +318,7 @@ export default function TestsScreen() {
                 <View style={styles.testCardInfo}>
                   <Text style={[styles.testCardTitle, { color: colors.text }]}>{section.name}</Text>
                   <Text style={[styles.testCardSub, { color: colors.textTertiary }]}>
-                    {section.subsections?.length || 0} тем с тестами
+                    {t('tests.testTopics', { count: section.subsections?.length || 0 })}
                   </Text>
                 </View>
 
@@ -352,7 +341,7 @@ export default function TestsScreen() {
                   {t('tests.settingsTitle', { defaultValue: 'AI Генератор тестов' })}
                 </Text>
                 <Text style={[styles.modalSubtitle, { color: colors.textTertiary }]}>
-                  Настройте параметры квиза
+                  {t('tests.generatorHint')}
                 </Text>
               </View>
               <TouchableOpacity
@@ -526,7 +515,7 @@ export default function TestsScreen() {
                   {t('tests.randomSettingsTitle', { defaultValue: 'Случайный блиц-квиз' })}
                 </Text>
                 <Text style={[styles.modalSubtitle, { color: colors.textTertiary }]}>
-                  Выберите разделы для смешивания
+                  {t('tests.randomHint')}
                 </Text>
               </View>
               <TouchableOpacity

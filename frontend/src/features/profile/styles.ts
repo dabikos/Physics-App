@@ -636,6 +636,25 @@ export const profileStyles = StyleSheet.create({
   avatarOptionText: {
     fontSize: 26,
   },
+  avatarPickerHint: {
+    fontSize: 12,
+    lineHeight: 17,
+    marginBottom: 12,
+  },
+  avatarRefreshButton: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    marginTop: 12,
+  },
+  avatarRefreshText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
   modalInput: {
     backgroundColor: '#F3F4F6',
     borderRadius: 12,

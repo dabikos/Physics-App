@@ -11,7 +11,6 @@ import {
   FlatList,
   ActivityIndicator,
   Platform,
-  Linking,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -25,6 +24,7 @@ import { useOfflineCache } from '../../src/hooks/useOfflineCache';
 import api from '../../src/services/api';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
+import { ProfileAvatar } from '../../src/components/ProfileAvatar';
 
 // Safe haptic feedback wrapper
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
@@ -48,6 +48,7 @@ interface DailyChallenge {
 }
 
 interface ProfileBannerData {
+  user?: { avatar?: string | null };
   streak: { current: number };
   stats: { lessons_completed: number; tests_completed: number; tasks_solved?: number };
   section_progress: { section: string; name: string; percentage: number }[];
@@ -454,14 +455,12 @@ export default function HomeScreen() {
             }}
             activeOpacity={0.8}
           >
-            <LinearGradient
-              colors={['#6366F1', '#8B5CF6']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
+            <ProfileAvatar
+              value={bannerData?.user?.avatar || user?.avatar}
+              fallback={firstName.charAt(0).toUpperCase()}
+              size={44}
               style={styles.avatarCircle}
-            >
-              <Text style={styles.avatarText}>{firstName.charAt(0).toUpperCase()}</Text>
-            </LinearGradient>
+            />
             <View>
               <Text style={[styles.greetingLabel, { color: colors.textTertiary }]}>
                 {t('home.greeting', { defaultValue: 'Привет 👋' })}
@@ -484,25 +483,6 @@ export default function HomeScreen() {
               <Text style={styles.streakCount}>{streak}</Text>
             </TouchableOpacity>
 
-            {/* Telegram Community */}
-            <TouchableOpacity
-              style={[
-                styles.iconActionBtn,
-                {
-                  backgroundColor: isDark ? 'rgba(34, 158, 217, 0.15)' : '#E0F2FE',
-                  borderColor: isDark ? 'rgba(34, 158, 217, 0.35)' : '#BAE6FD',
-                  shadowColor: colors.shadowColor,
-                },
-              ]}
-              onPress={() => {
-                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-                Linking.openURL('https://t.me/+4nopjpXt51w0YjMy').catch(() => {});
-              }}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="paper-plane" size={17} color="#0284C7" />
-            </TouchableOpacity>
-
             {/* Notifications */}
             <TouchableOpacity
               style={[styles.iconActionBtn, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
@@ -515,17 +495,6 @@ export default function HomeScreen() {
               <Ionicons name="notifications-outline" size={20} color={colors.text} />
             </TouchableOpacity>
 
-            {/* Search */}
-            <TouchableOpacity
-              style={[styles.iconActionBtn, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
-              onPress={() => {
-                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-                setSearchVisible(true);
-              }}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="search" size={20} color={colors.text} />
-            </TouchableOpacity>
           </View>
         </View>
 

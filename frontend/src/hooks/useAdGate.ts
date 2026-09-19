@@ -4,9 +4,11 @@ import Constants from 'expo-constants';
 import { useSubscription } from '../context/SubscriptionContext';
 import { getAdRequirement, MonetizedAction } from '../services/adPolicy';
 import { showContentInterstitialAd, showRewardedFeatureAd } from '../services/adService';
+import { useTranslation } from 'react-i18next';
 
 export function useAdGate() {
-  const { isPro, hasAds } = useSubscription();
+  const { hasAds } = useSubscription();
+  const { t } = useTranslation();
   const gateInProgressRef = useRef(false);
 
   const showContentAdIfNeeded = useCallback(async () => {
@@ -16,9 +18,9 @@ export function useAdGate() {
   }, [hasAds]);
 
   const requireRewardedAdForFeature = useCallback(async () => {
-    if (isPro) return true;
+    if (!hasAds) return true;
     return showRewardedFeatureAd();
-  }, [isPro]);
+  }, [hasAds]);
 
   const requireAdForAction = useCallback(async (action: MonetizedAction) => {
     if (gateInProgressRef.current) return false;
@@ -27,7 +29,7 @@ export function useAdGate() {
     // real ads are exercised in a development build or the Google Play build.
     if (Constants.appOwnership === 'expo') return true;
 
-    const requirement = getAdRequirement(action, isPro);
+    const requirement = getAdRequirement(action, !hasAds);
     if (requirement === 'none') return true;
 
     gateInProgressRef.current = true;
@@ -38,22 +40,22 @@ export function useAdGate() {
 
       if (!allowed) {
         Alert.alert(
-          'Реклама недоступна',
+          t('ads.unavailableTitle'),
           requirement === 'rewarded'
-            ? 'Не удалось загрузить видео. Проверьте интернет и попробуйте ещё раз.'
-            : 'Не удалось загрузить рекламу. Попробуйте ещё раз.',
+            ? t('ads.rewardedUnavailable')
+            : t('ads.interstitialUnavailable'),
         );
       }
 
       return allowed;
     } catch (error) {
       console.warn(`[AdMob] ${action} gate failed`, error);
-      Alert.alert('Реклама недоступна', 'Не удалось запустить рекламу. Попробуйте ещё раз.');
+      Alert.alert(t('ads.unavailableTitle'), t('ads.startError'));
       return false;
     } finally {
       gateInProgressRef.current = false;
     }
-  }, [isPro]);
+  }, [hasAds, t]);
 
   return {
     showContentAdIfNeeded,

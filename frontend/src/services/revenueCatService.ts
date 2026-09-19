@@ -11,6 +11,7 @@ import Purchases, {
 import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
 import {
   REVENUECAT_ENTITLEMENT_ID,
+  REVENUECAT_BASIC_ENTITLEMENT_ID,
   REVENUECAT_OFFERING_ID,
   REVENUECAT_PRODUCTS,
   RevenueCatProductId,
@@ -28,6 +29,14 @@ export function isRevenueCatExpoGoPreview() {
 
 export function isProCustomer(customerInfo: CustomerInfo | null | undefined) {
   return Boolean(customerInfo?.entitlements.active[REVENUECAT_ENTITLEMENT_ID]);
+}
+
+export function isBasicCustomer(customerInfo: CustomerInfo | null | undefined) {
+  return Boolean(customerInfo?.entitlements.active[REVENUECAT_BASIC_ENTITLEMENT_ID]);
+}
+
+export function isPaidCustomer(customerInfo: CustomerInfo | null | undefined) {
+  return isProCustomer(customerInfo) || isBasicCustomer(customerInfo);
 }
 
 export function getRevenueCatErrorMessage(error: unknown) {

@@ -1,6 +1,23 @@
 from datetime import datetime, timedelta
 
-from server import compute_streak, compute_xp, env_bool, generate_test_variant, get_level, get_variant_index, parse_accept_language
+from server import (
+    BASIC_AI_GENERATION_DAILY_LIMIT,
+    BASIC_CHAT_DAILY_LIMIT,
+    FREE_AI_GENERATION_DAILY_LIMIT,
+    FREE_CHAT_DAILY_LIMIT,
+    PRO_AI_GENERATION_DAILY_LIMIT,
+    PRO_CHAT_DAILY_LIMIT,
+    compute_streak,
+    compute_xp,
+    env_bool,
+    generate_test_variant,
+    get_ai_generation_daily_limit,
+    get_chat_daily_limit,
+    get_level,
+    get_subscription_tier,
+    get_variant_index,
+    parse_accept_language,
+)
 
 
 def test_env_bool_respects_default_and_truthy_values(monkeypatch):
@@ -87,3 +104,32 @@ def test_get_variant_index_is_deterministic():
 
     assert first == second
     assert 0 <= first < 4
+
+
+def test_subscription_tiers_have_expected_daily_ai_limits():
+    users = {
+        "free": {},
+        "basic": {"subscription": {"tier": "basic"}},
+        "pro": {"subscription": {"tier": "pro"}},
+    }
+
+    assert [get_subscription_tier(user) for user in users.values()] == ["free", "basic", "pro"]
+    assert [get_chat_daily_limit(user) for user in users.values()] == [
+        FREE_CHAT_DAILY_LIMIT,
+        BASIC_CHAT_DAILY_LIMIT,
+        PRO_CHAT_DAILY_LIMIT,
+    ]
+    assert [get_ai_generation_daily_limit(user) for user in users.values()] == [
+        FREE_AI_GENERATION_DAILY_LIMIT,
+        BASIC_AI_GENERATION_DAILY_LIMIT,
+        PRO_AI_GENERATION_DAILY_LIMIT,
+    ]
+
+
+def test_default_daily_ai_limits_match_the_mobile_plan_table():
+    assert (FREE_CHAT_DAILY_LIMIT, BASIC_CHAT_DAILY_LIMIT, PRO_CHAT_DAILY_LIMIT) == (5, 20, 60)
+    assert (
+        FREE_AI_GENERATION_DAILY_LIMIT,
+        BASIC_AI_GENERATION_DAILY_LIMIT,
+        PRO_AI_GENERATION_DAILY_LIMIT,
+    ) == (1, 5, 15)

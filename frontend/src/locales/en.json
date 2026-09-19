@@ -35,7 +35,9 @@
     "startGame": "Start game",
     "gameOver": "Game over!",
     "yourScore": "Your score: {{score}}",
-    "open": "Open"
+    "open": "Open",
+    "ok": "Got it",
+    "sectionCount": "{{count}} sections"
   },
   "difficulty": {
     "basic": "Basic",
@@ -193,7 +195,7 @@
   },
   "aiChat": {
     "title": "AI Assistant",
-    "engine": "Physics Engine GPT-4o",
+    "engine": "Physics AI",
     "remaining": "left",
     "placeholder": "Ask a physics question...",
     "sending": "AI is generating an answer...",
@@ -224,16 +226,37 @@
     "freeToday": "Free today",
     "forAd": "For ads",
     "limitTitle": "AI chat limit",
-    "limitMessage": "Your 3 free messages for today are over. Watch an ad and send this message?",
+    "limitMessage": "The Free plan includes {{count}} messages per day. Your limit is reached. Watch an ad and send a message? Ad attempts left: {{ads}}.",
     "watchAd": "Watch ad",
     "adNotFinishedTitle": "Ad not finished",
     "adNotFinishedMessage": "To send the message, you need to watch the ad to the end.",
-    "rewardClaimError": "Failed to grant an ad-based attempt."
+    "rewardClaimError": "Failed to grant an ad-based attempt.",
+    "rewardedDailyLimit": "All 5 extra ad-supported messages have been used today. The limit resets tomorrow."
+  },
+  "quota": {
+    "plans": { "free": "Free", "basic": "Basic", "pro": "Pro" },
+    "features": {
+      "learnMore": "Learn more",
+      "taskGeneration": "task generation",
+      "testGeneration": "test generation",
+      "randomTest": "random test",
+      "generation": "AI generation"
+    },
+    "generationLimitReached": "Daily limit reached. The {{plan}} plan includes {{limit}} uses per day for {{feature}}. The limit resets at {{time}}.",
+    "nextDay": "the next day"
+  },
+  "ads": {
+    "unavailableTitle": "Ad unavailable",
+    "rewardedUnavailable": "The video has not loaded yet. Try again in a few seconds.",
+    "interstitialUnavailable": "The ad has not loaded yet. Please try again.",
+    "startError": "Could not start the ad. Please try again."
   },
   "profile": {
     "title": "Profile",
     "editProfile": "Edit profile",
     "avatar": "Avatar",
+    "avatarPickerHint": "Choose an avatar. New options are generated directly on your device.",
+    "moreAvatars": "More options",
     "nameLabel": "Name",
     "namePlaceholder": "Your name",
     "gradeLabel": "Grade",
@@ -340,6 +363,13 @@
   },
   "lessons": {
     "title": "Lessons",
+    "hubSubtitle": "7 sections • 142 topics",
+    "cached": "Cached",
+    "offline": "Offline",
+    "heroTitle": "Complete school course",
+    "heroSubtitle": "Interactive theory, explained formulas, and physics simulations.",
+    "subsectionsShort": "Subsections: {{count}}",
+    "topicsShort": "Topics: {{count}}",
     "selectSection": "Select a section",
     "subsectionsCount": "{{subsections}} subsections • {{topics}} topics",
     "subsections": "Subsections",
@@ -371,6 +401,14 @@
   },
   "tests": {
     "title": "Tests",
+    "hubSubtitle": "Ready-made and personalized tests",
+    "aiBadge": "AI",
+    "generateCta": "Generate",
+    "blitzBadge": "Blitz",
+    "blitzCta": "Start blitz",
+    "testTopics": "Test topics: {{count}}",
+    "generatorHint": "Configure the test settings",
+    "randomHint": "Choose sections to mix",
     "selectSection": "Select a physics section",
     "generateError": "Failed to generate test",
     "generateButton": "Generate test",
@@ -444,6 +482,12 @@
   },
   "tasks": {
     "title": "Tasks",
+    "hubSubtitle": "710 practice problems",
+    "heroTag": "PRACTICE AND CALCULATIONS",
+    "heroTitle": "Learn to solve problems like a pro",
+    "heroSubtitle": "Every problem includes the correct answer, solution steps, and formulas.",
+    "topicGroupsShort": "Problem topics: {{count}}",
+    "solutionReview": "Solution walkthroughs",
     "interactiveTasks": "Interactive tasks",
     "interactiveSubtitle": "Step-by-step solutions with hints",
     "tasksCount": "tasks",
@@ -498,6 +542,9 @@
   },
   "formulas": {
     "title": "Formulas",
+    "hubSubtitle": "{{count}} formulas available",
+    "emptyTitle": "Nothing found",
+    "emptySubtitle": "Change the search query or section filter",
     "searchPlaceholder": "Search formula...",
     "notFound": "No formulas found",
     "formula": "Formula",
@@ -651,6 +698,7 @@
     "support": "Support",
     "privacy": "Privacy Policy",
     "madeWith": "Made with ❤️ for students and teachers",
+    "multiavatarCredit": "Avatars by Multiavatar",
     "telegram": "Telegram"
   },
   "subscription": {
@@ -660,9 +708,33 @@
     "heroSubtitle": "Learn without ads, unlock all content, and use advanced AI tools for physics.",
     "includes": "Included",
     "benefitNoAds": "No ads while studying",
+    "benefitNoAdsSub": "Learn without ad interruptions",
     "benefitFullAccess": "All lessons, tests, problems and formulas",
+    "benefitFullAccessSub": "Full access to all learning materials",
     "benefitAiTools": "Test generation and extended learning",
+    "benefitAiToolsSub": "Higher daily AI limits",
     "benefitSolutions": "Full problem solutions with explanations",
+    "benefitSolutionsSub": "A detailed explanation of every step",
+    "premiumBadge": "PREMIUM",
+    "currentPlanBadge": "CURRENT PLAN: {{plan}}",
+    "compareTitle": "Compare plans",
+    "compareHint": "Daily AI limits reset automatically.",
+    "feature": "Feature",
+    "limited": "Limited",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "comparison": {
+      "chat": "AI chat per day",
+      "generation": "Each AI generator",
+      "content": "Learning materials",
+      "ads": "Ads"
+    },
+    "choosePlan": "Choose a plan",
+    "yearlyValue": "BEST VALUE",
+    "securePayment": "Secure payment",
+    "cancelAnytime": "Cancel anytime",
+    "upgradeCta": "Choose plan",
     "monthly": "Monthly",
     "yearly": "Yearly",
     "bestValue": "BEST VALUE",

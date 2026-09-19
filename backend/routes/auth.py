@@ -451,6 +451,8 @@ async def get_me(current_user: dict = Depends(get_current_user)):
         subject=current_user.get("subject"),
         school=current_user.get("school"),
         classroom=current_user.get("classroom"),
+        avatar=current_user.get("avatar"),
+        grade=current_user.get("grade"),
         progress=current_user.get("progress", {}),
         created_at=current_user["created_at"]
     )

@@ -1,6 +1,6 @@
 # AI limits follow-up
 
-Deferred product and implementation work agreed on 2026-09-19.
+Implemented on 2026-09-19. This file records the production limits and expected client behavior.
 
 ## Recommended daily limits
 
@@ -17,7 +17,7 @@ Deferred product and implementation work agreed on 2026-09-19.
 
 ## User-facing quota errors
 
-The backend should return a structured quota error containing:
+The backend returns a structured quota error containing:
 
 - error code;
 - feature (`learn_more`, `task_generation`, or `test_generation`);
@@ -26,7 +26,7 @@ The backend should return a structured quota error containing:
 - used and remaining counts;
 - next reset time.
 
-The mobile app must display localized messages instead of raw backend text. Example:
+The mobile app displays localized messages instead of raw backend text. Example:
 
 > Дневной лимит исчерпан. На тарифе Free доступна 1 генерация раздела «Изучить больше» в день. Лимит обновится завтра в 05:00.
 
@@ -36,4 +36,3 @@ Use the corresponding feature name and actual plan allowance for generated tasks
 
 - Backend quota changes require a Railway redeploy.
 - Localized UI handling and rewarded-ad UX require a new Android APK/AAB build.
-

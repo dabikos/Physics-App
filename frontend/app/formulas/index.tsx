@@ -22,6 +22,7 @@ import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
 import api from '../../src/services/api';
 import { useAdGate } from '../../src/hooks/useAdGate';
+import { LearningHubHeader } from '../../src/components/LearningHubHeader';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
   try {
@@ -219,30 +220,15 @@ export default function FormulasScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
-      {/* ==================== Header ==================== */}
-      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
-          onPress={() => {
-            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-            router.back();
-          }}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="arrow-back" size={20} color={colors.text} />
-        </TouchableOpacity>
-
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>
-            {t('formulas.title', { defaultValue: 'Справочник формул' })}
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
-            {filteredFormulas.length} формул доступно
-          </Text>
-        </View>
-
-        <View style={styles.navBtnPlaceholder} />
-      </View>
+      <LearningHubHeader
+        title={t('formulas.title')}
+        subtitle={t('formulas.hubSubtitle', { count: filteredFormulas.length })}
+        colors={colors}
+        onBack={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+          router.back();
+        }}
+      />
 
       {/* ==================== Search Bar ==================== */}
       <View style={[styles.searchBar, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}>
@@ -369,9 +355,9 @@ export default function FormulasScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Ionicons name="search" size={54} color={colors.border} />
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>Ничего не найдено</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('formulas.emptyTitle')}</Text>
             <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>
-              Попробуйте изменить поисковый запрос или фильтр раздела
+              {t('formulas.emptySubtitle')}
             </Text>
           </View>
         }

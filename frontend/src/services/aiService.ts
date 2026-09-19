@@ -21,6 +21,7 @@ export interface AIResponse {
   error?: string;
   errorCode?: string;
   quota?: ChatQuota;
+  errorDetail?: QuotaErrorDetail;
   tokens?: {
     prompt: number;
     completion: number;
@@ -30,10 +31,28 @@ export interface AIResponse {
 
 export interface ChatQuota {
   day: string;
+  tier: 'free' | 'basic' | 'pro';
   free_limit: number;
   free_used: number;
   free_remaining: number;
   rewarded_credits: number;
+  rewarded_claimed: number;
+  rewarded_limit: number;
+  rewarded_remaining: number;
+  reset_at: string;
+}
+
+export interface QuotaErrorDetail {
+  code?: string;
+  resource?: 'learn_more' | 'task_generation' | 'test_generation' | 'random_test';
+  message?: string;
+  quota?: {
+    tier: 'free' | 'basic' | 'pro';
+    limit: number;
+    used: number;
+    remaining: number;
+    reset_at?: string;
+  };
 }
 
 /**
@@ -86,6 +105,7 @@ export async function sendAIRequest(
       error: errorMessage,
       errorCode: typeof detail === 'object' ? detail?.code : undefined,
       quota: typeof detail === 'object' ? detail?.quota : undefined,
+      errorDetail: typeof detail === 'object' ? detail : undefined,
     };
   }
 }
@@ -117,6 +137,8 @@ export async function generateExpandedContent(
         success: false,
         content: '',
         error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Failed to load content',
+        errorCode: typeof detail === 'object' ? detail?.code : undefined,
+        errorDetail: typeof detail === 'object' ? detail : undefined,
       };
     }
   }
@@ -278,7 +300,7 @@ export async function getChatQuota(): Promise<{ success: boolean; quota?: ChatQu
 
 export async function claimRewardedChatCredit(
   adUnit: string
-): Promise<{ success: boolean; quota?: ChatQuota; error?: string }> {
+): Promise<{ success: boolean; quota?: ChatQuota; error?: string; errorCode?: string }> {
   try {
     const response = await api.post('/chat/rewarded/claim', {
       ad_unit: adUnit,
@@ -290,6 +312,8 @@ export async function claimRewardedChatCredit(
     return {
       success: false,
       error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Не удалось начислить рекламный кредит',
+      errorCode: typeof detail === 'object' ? detail?.code : undefined,
+      quota: typeof detail === 'object' ? detail?.quota : undefined,
     };
   }
 }
@@ -330,75 +354,30 @@ export async function generateTest(
   difficulty: 'basic' | 'standard' | 'advanced' | 'olympiad',
   questionCount: number,
   language: string = 'русский'
-): Promise<{ success: boolean; test?: GeneratedTest; error?: string }> {
-  const difficultyDescriptions = {
-    basic: 'базовый уровень — простые вопросы на понимание основ',
-    standard: 'стандартный уровень — вопросы средней сложности с расчётами',
-    advanced: 'продвинутый уровень — сложные вопросы с комплексными задачами',
-    olympiad: 'олимпиадный уровень — очень сложные нестандартные задачи',
-  };
+): Promise<{ success: boolean; test?: GeneratedTest; error?: string; errorDetail?: QuotaErrorDetail }> {
+  const difficultyMap = {
+    basic: 'easy',
+    standard: 'medium',
+    advanced: 'hard',
+    olympiad: 'hard',
+  } as const;
 
-  const systemPrompt = `Ты — эксперт по составлению тестов по физике. Создаёшь качественные тестовые вопросы с вариантами ответов.
-
-ВАЖНО: Формулы записывай в Unicode символах для лучшего отображения:
-- Используй: ², ³, ⁴ для степеней
-- Используй: ₀, ₁, ₂ для индексов  
-- Используй: α, β, γ, δ, θ, λ, μ, π, ω для греческих букв
-- Используй: ·, ×, ÷, √, ∞, →, ≈, ≠, ≤, ≥ для операторов
-
-Примеры правильного написания:
-- "F = ma" вместо "F = m*a"
-- "E = mc²" вместо "E = mc^2"
-- "v₀" вместо "v_0"
-- "sinα" вместо "sin(alpha)"
-
-Правила:
-- Пиши на языке: ${language}
-- Каждый вопрос должен иметь 4 варианта ответа
-- Только ОДИН ответ правильный
-- Вопросы должны быть разнообразными
-- Включай как теоретические, так и расчётные вопросы
-- Для расчётных задач указывай все необходимые данные`;
-
-  const userPrompt = `Создай тест по физике:
-- Раздел: ${sectionName}
-- Сложность: ${difficultyDescriptions[difficulty]}
-- Количество вопросов: ${questionCount}
-
-КРИТИЧЕСКИ ВАЖНО:
-1. Для расчётных задач СНАЧАЛА вычисли правильный ответ
-2. В объяснении укажи РЕАЛЬНЫЙ расчёт с финальным ответом (например: "s = v·t = 36·10 = 360 м")
-3. Правильный ответ (correct) ДОЛЖЕН точно совпадать с финальным ответом в объяснении
-4. Если в объяснении написано "= 360 м", то правильный ответ должен быть вариантом "360 м"
-
-Верни ответ СТРОГО в JSON формате:
-{
-  "title": "Название теста",
-  "questions": [
-    {
-      "question": "Текст вопроса",
-      "options": ["Вариант A", "Вариант B", "Вариант C", "Вариант D"],
-      "correct": 0,
-      "explanation": "Краткое пояснение с расчётом и финальным ответом (например: 's = v·t = 36·10 = 360 м')"
-    }
-  ]
-}
-
-Где "correct" — индекс правильного ответа (0-3), который ТОЧНО совпадает с финальным ответом в explanation.
-Формулы пиши в Unicode (², α, ·, √ и т.д.), НЕ в LaTeX.
-Верни ТОЛЬКО JSON, без дополнительного текста.`;
-
-  const result = await sendAIRequest([
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt },
-  ], {
-    model: AI_MODELS.GPT5_NANO,
-    maxTokens: 4096,
-    temperature: 0.7,
-  });
-
-  if (!result.success) {
-    return { success: false, error: result.error };
+  let result: AIResponse;
+  try {
+    const response = await api.post('/tests/generate', {
+      section: sectionKey,
+      difficulty: difficultyMap[difficulty],
+      num_questions: questionCount,
+      language,
+    });
+    result = { success: true, content: JSON.stringify(response.data) };
+  } catch (error: any) {
+    const detail = error.response?.data?.detail;
+    return {
+      success: false,
+      error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Failed to generate test',
+      errorDetail: typeof detail === 'object' ? detail : undefined,
+    };
   }
 
   try {

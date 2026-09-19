@@ -15,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useTheme } from '../../src/context/ThemeContext';
+import { LearningHubHeader } from '../../src/components/LearningHubHeader';
 import { useTranslation } from 'react-i18next';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
@@ -59,6 +60,7 @@ const TaskCardItem: React.FC<TaskCardProps> = ({
   textSecondary,
   shadowColor,
 }) => {
+  const { t } = useTranslation();
   const scale = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -103,11 +105,11 @@ const TaskCardItem: React.FC<TaskCardProps> = ({
           <View style={styles.badgeRow}>
             <View style={[styles.pillBadge, { backgroundColor: gradient[0] + '18' }]}>
               <Text style={[styles.pillBadgeText, { color: gradient[0] }]}>
-                {section.subsections?.length || 4} темы задач
+                {t('tasks.topicGroupsShort', { count: section.subsections?.length || 4 })}
               </Text>
             </View>
             <Text style={[styles.cardSubtext, { color: textSecondary }]}>
-              Разбор решений
+              {t('tasks.solutionReview')}
             </Text>
           </View>
         </View>
@@ -123,7 +125,7 @@ const TaskCardItem: React.FC<TaskCardProps> = ({
 export default function TasksScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
 
@@ -142,30 +144,15 @@ export default function TasksScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
-      {/* ==================== Header ==================== */}
-      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
-          onPress={() => {
-            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-            router.back();
-          }}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="arrow-back" size={20} color={colors.text} />
-        </TouchableOpacity>
-
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>
-            {t('tasks.title', { defaultValue: 'Задачник по физике' })}
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
-            710 практических задач
-          </Text>
-        </View>
-
-        <View style={styles.navBtnPlaceholder} />
-      </View>
+      <LearningHubHeader
+        title={t('tasks.title')}
+        subtitle={t('tasks.hubSubtitle')}
+        colors={colors}
+        onBack={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+          router.back();
+        }}
+      />
 
       {/* ==================== Content ==================== */}
       <ScrollView
@@ -182,11 +169,11 @@ export default function TasksScreen() {
           <View style={styles.heroBannerContent}>
             <View style={styles.heroTopTag}>
               <Ionicons name="calculator" size={13} color="#FFFFFF" />
-              <Text style={styles.heroTopTagText}>ПРАКТИКА И РАСЧЕТЫ</Text>
+              <Text style={styles.heroTopTagText}>{t('tasks.heroTag')}</Text>
             </View>
-            <Text style={styles.heroBannerTitle}>Научись решать задачи как профи</Text>
+            <Text style={styles.heroBannerTitle}>{t('tasks.heroTitle')}</Text>
             <Text style={styles.heroBannerSub}>
-              Каждая задача содержит правильный ответ, ход решения и формулы.
+              {t('tasks.heroSubtitle')}
             </Text>
           </View>
           <View style={styles.heroIconBadge}>
@@ -199,7 +186,7 @@ export default function TasksScreen() {
             {t('tasks.quickTasks', { defaultValue: 'Выберите раздел задач' })}
           </Text>
           <Text style={[styles.sectionCountBadge, { color: colors.textTertiary }]}>
-            7 разделов
+            {t('common.sectionCount', { count: Object.keys(PHYSICS_SECTIONS).length })}
           </Text>
         </View>
 

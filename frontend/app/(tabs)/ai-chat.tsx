@@ -235,8 +235,14 @@ export default function AIChatScreen() {
 
       Alert.alert(
         t('aiChat.limitTitle', { defaultValue: 'Лимит AI-чата' }),
-        t('aiChat.limitMessage', { defaultValue: '3 бесплатных сообщения на сегодня закончились. Посмотреть короткую рекламу и отправить сообщение?' }),
-        [
+        (result.quota?.rewarded_remaining ?? 1) > 0
+          ? t('aiChat.limitMessage', {
+              count: result.quota?.free_limit ?? 5,
+              ads: result.quota?.rewarded_remaining ?? 0,
+              defaultValue: 'Дневной лимит исчерпан. Посмотреть короткую рекламу и отправить сообщение?',
+            })
+          : t('aiChat.rewardedDailyLimit', { defaultValue: 'Все дополнительные попытки за рекламу на сегодня использованы.' }),
+        (result.quota?.rewarded_remaining ?? 1) > 0 ? [
           { text: t('common.cancel', { defaultValue: 'Отмена' }), style: 'cancel' },
           {
             text: t('aiChat.watchAd', { defaultValue: 'Смотреть рекламу' }),
@@ -252,7 +258,12 @@ export default function AIChatScreen() {
               const claim = await claimRewardedChatCredit(CHAT_REWARDED_AD_UNIT_ID);
               if (!claim.success) {
                 setIsLoading(false);
-                Alert.alert(t('common.error', { defaultValue: 'Ошибка' }), claim.error || t('aiChat.rewardClaimError', { defaultValue: 'Не удалось начислить попытку.' }));
+                Alert.alert(
+                  t('aiChat.limitTitle', { defaultValue: 'Лимит AI-чата' }),
+                  claim.errorCode === 'CHAT_REWARDED_LIMIT_REACHED'
+                    ? t('aiChat.rewardedDailyLimit')
+                    : claim.error || t('aiChat.rewardClaimError', { defaultValue: 'Не удалось начислить попытку.' }),
+                );
                 return;
               }
 
@@ -260,7 +271,7 @@ export default function AIChatScreen() {
               await sendPreparedMessage(userMessage.content);
             },
           },
-        ]
+        ] : [{ text: t('common.ok', { defaultValue: 'OK' }) }]
       );
       return;
     }
@@ -375,7 +386,7 @@ export default function AIChatScreen() {
             <View style={styles.statusIndicatorRow}>
               <View style={styles.onlineDot} />
               <Text style={[styles.statusText, { color: colors.textTertiary }]}>
-                {t('aiChat.engine', { defaultValue: 'Физический движок GPT-4o' })}
+                {t('aiChat.engine', { defaultValue: 'Physics AI' })}
               </Text>
             </View>
           </View>

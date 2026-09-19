@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import type { SupportedLanguage } from '../../config/i18n'
 import { profileStyles as styles } from './styles'
 import { AchievementBadge, AnimatedProgressBar, SectionProgressCard, StreakFire } from './components'
+import { ProfileAvatar } from '../../components/ProfileAvatar'
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string
 
@@ -140,9 +141,7 @@ export function StudentProfileSection({
       <View style={styles.userCardRow}>
         <View style={[styles.userCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
           <TouchableOpacity onPress={onOpenEdit}>
-            <LinearGradient colors={['#667EEA', '#764BA2']} style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>{avatar}</Text>
-            </LinearGradient>
+            <ProfileAvatar value={avatar} size={64} style={styles.avatarCircle} />
           </TouchableOpacity>
           <View style={styles.userInfo}>
             <Text style={[styles.userName, { color: colors.text }]}>{user.name || t('profile.user')}</Text>
@@ -461,9 +460,7 @@ export function TeacherProfileOverview({
       <View style={styles.userCardRow}>
         <View style={[styles.userCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
           <TouchableOpacity onPress={onOpenEdit}>
-            <LinearGradient colors={['#667EEA', '#764BA2']} style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>{profileData?.user?.avatar || user?.avatar || 'рџ§‘вЂЌрџЋ“'}</Text>
-            </LinearGradient>
+            <ProfileAvatar value={profileData?.user?.avatar || user?.avatar} size={64} style={styles.avatarCircle} />
           </TouchableOpacity>
           <View style={styles.userInfo}>
             <Text style={[styles.userName, { color: colors.text }]}>{user.name || t('profile.user')}</Text>

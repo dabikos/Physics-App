@@ -20,6 +20,7 @@ import { useTheme } from '../../../../src/context/ThemeContext';
 import { useLanguage } from '../../../../src/context/LanguageContext';
 import api from '../../../../src/services/api';
 import type { TopicContent } from '../../../../src/types/physics';
+import { formatQuotaError } from '../../../../src/utils/quotaMessage';
 
 const CACHE_PREFIX = 'expanded_topic_';
 const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 дней
@@ -114,7 +115,7 @@ export default function ExpandedTopicScreen() {
           // Ошибка кэширования не критична
         }
       } else {
-        setError(result.error || t('lessons.loadErrorMessage'));
+        setError(formatQuotaError(result.errorDetail, t, result.error || t('lessons.loadErrorMessage')));
       }
     } catch (error: any) {
       const detail = error?.response?.data?.detail;

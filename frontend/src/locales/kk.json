@@ -35,7 +35,9 @@
     "startGame": "Ойынды бастау",
     "gameOver": "Ойын аяқталды!",
     "yourScore": "Сіздің ұпайыңыз: {{score}}",
-    "open": "Ашу"
+    "open": "Ашу",
+    "ok": "Түсінікті",
+    "sectionCount": "{{count}} бөлім"
   },
   "difficulty": {
     "basic": "Базалық",
@@ -193,7 +195,7 @@
   },
   "aiChat": {
     "title": "AI Көмекші",
-    "engine": "GPT-4o физикалық қозғалтқышы",
+    "engine": "Physics AI",
     "remaining": "қалды",
     "placeholder": "Физика бойынша сұрақ қойыңыз...",
     "sending": "AI жауап дайындауда...",
@@ -224,16 +226,37 @@
     "freeToday": "Бүгін тегін",
     "forAd": "Жарнама үшін",
     "limitTitle": "AI чат лимиті",
-    "limitMessage": "Бүгінгі 3 тегін хабарлама аяқталды. Жарнаманы қарап, осы хабарды жібересіз бе?",
+    "limitMessage": "Free тарифінде күніне {{count}} хабарлама қолжетімді. Лимит аяқталды. Жарнаманы көріп, хабарлама жібересіз бе? Жарнамалық әрекет қалды: {{ads}}.",
     "watchAd": "Жарнаманы көру",
     "adNotFinishedTitle": "Жарнама аяқталмады",
     "adNotFinishedMessage": "Хабарламаны жіберу үшін жарнаманы соңына дейін көру керек.",
-    "rewardClaimError": "Жарнама үшін қосымша әрекет беру мүмкін болмады."
+    "rewardClaimError": "Жарнама үшін қосымша әрекет беру мүмкін болмады.",
+    "rewardedDailyLimit": "Бүгін жарнама үшін берілетін 5 қосымша хабарламаның бәрі пайдаланылды. Лимит ертең жаңартылады."
+  },
+  "quota": {
+    "plans": { "free": "Free", "basic": "Basic", "pro": "Pro" },
+    "features": {
+      "learnMore": "«Көбірек білу»",
+      "taskGeneration": "есеп құру",
+      "testGeneration": "тест құру",
+      "randomTest": "кездейсоқ тест",
+      "generation": "AI генерациясы"
+    },
+    "generationLimitReached": "Күнделікті лимит аяқталды. {{plan}} тарифінде {{feature}} функциясына күніне {{limit}} рет қолжетімді. Лимит {{time}} жаңартылады.",
+    "nextDay": "келесі күні"
+  },
+  "ads": {
+    "unavailableTitle": "Жарнама қолжетімсіз",
+    "rewardedUnavailable": "Видео әлі жүктелмеді. Бірнеше секундтан кейін қайталап көріңіз.",
+    "interstitialUnavailable": "Жарнама әлі жүктелмеді. Қайталап көріңіз.",
+    "startError": "Жарнаманы іске қосу мүмкін болмады. Қайталап көріңіз."
   },
   "profile": {
     "title": "Профиль",
     "editProfile": "Профильді өңдеу",
     "avatar": "Аватар",
+    "avatarPickerHint": "Аватарды таңдаңыз. Жаңа нұсқалар тікелей құрылғыда жасалады.",
+    "moreAvatars": "Басқа нұсқалар",
     "nameLabel": "Аты",
     "namePlaceholder": "Сіздің атыңыз",
     "gradeLabel": "Сынып",
@@ -340,6 +363,13 @@
   },
   "lessons": {
     "title": "Сабақтар",
+    "hubSubtitle": "7 бөлім • 142 тақырып",
+    "cached": "Кэште",
+    "offline": "Офлайн",
+    "heroTitle": "Толық мектеп курсы",
+    "heroSubtitle": "Интерактивті теория, түсіндірілген формулалар және физикалық үдерістер симуляциясы.",
+    "subsectionsShort": "Бөлімшелер: {{count}}",
+    "topicsShort": "Тақырыптар: {{count}}",
     "selectSection": "Бөлімді таңдаңыз",
     "subsectionsCount": "{{subsections}} бөлімше • {{topics}} тақырып",
     "subsections": "Бөлімшелер",
@@ -371,6 +401,14 @@
   },
   "tests": {
     "title": "Тесттер",
+    "hubSubtitle": "Дайын және жеке тесттер",
+    "aiBadge": "AI",
+    "generateCta": "Құру",
+    "blitzBadge": "Блиц",
+    "blitzCta": "Блицті бастау",
+    "testTopics": "Тест тақырыптары: {{count}}",
+    "generatorHint": "Тест параметрлерін баптаңыз",
+    "randomHint": "Араластыру үшін бөлімдерді таңдаңыз",
     "selectSection": "Физика бөлімін таңдаңыз",
     "generateError": "Тест жасау мүмкін болмады",
     "generateButton": "Тест жасау",
@@ -444,6 +482,12 @@
   },
   "tasks": {
     "title": "Есептер",
+    "hubSubtitle": "710 практикалық есеп",
+    "heroTag": "ТӘЖІРИБЕ ЖӘНЕ ЕСЕПТЕУ",
+    "heroTitle": "Есептерді кәсіби деңгейде шешуді үйрен",
+    "heroSubtitle": "Әр есепте дұрыс жауап, шешу жолы және формулалар бар.",
+    "topicGroupsShort": "Есеп тақырыптары: {{count}}",
+    "solutionReview": "Шешімді талдау",
     "interactiveTasks": "Интерактивті есептер",
     "interactiveSubtitle": "Кезең-кезеңмен шешім және кеңестер",
     "tasksCount": "есеп",
@@ -498,6 +542,9 @@
   },
   "formulas": {
     "title": "Формулалар",
+    "hubSubtitle": "{{count}} формула қолжетімді",
+    "emptyTitle": "Ештеңе табылмады",
+    "emptySubtitle": "Іздеу сұрауын немесе бөлім сүзгісін өзгертіңіз",
     "searchPlaceholder": "Формула іздеу...",
     "notFound": "Формулалар табылмады",
     "formula": "Формула",
@@ -651,6 +698,7 @@
     "support": "Қолдау",
     "privacy": "Құпиялылық саясаты",
     "madeWith": "Оқушылар мен мұғалімдер үшін ❤️ жасалды",
+    "multiavatarCredit": "Avatars by Multiavatar",
     "telegram": "Telegram"
   },
   "subscription": {
@@ -660,9 +708,33 @@
     "heroSubtitle": "Жарнамасыз оқыңыз, барлық материалды ашыңыз және физикаға арналған кеңейтілген AI құралдарын пайдаланыңыз.",
     "includes": "Не кіреді",
     "benefitNoAds": "Оқу кезінде жарнама жоқ",
+    "benefitNoAdsSub": "Жарнамалық үзілістерсіз оқыңыз",
     "benefitFullAccess": "Барлық сабақтар, тесттер, есептер және формулалар",
+    "benefitFullAccessSub": "Барлық оқу материалдарына толық қолжетімділік",
     "benefitAiTools": "Тест құру және кеңейтілген оқу",
+    "benefitAiToolsSub": "Кеңейтілген күнделікті AI лимиттері",
     "benefitSolutions": "Түсіндірмесі бар толық есеп шешімдері",
+    "benefitSolutionsSub": "Әр қадамның толық түсіндірмесі",
+    "premiumBadge": "PREMIUM",
+    "currentPlanBadge": "АҒЫМДАҒЫ ТАРИФ: {{plan}}",
+    "compareTitle": "Тарифтерді салыстыру",
+    "compareHint": "Күнделікті AI лимиттері автоматты түрде жаңартылады.",
+    "feature": "Мүмкіндік",
+    "limited": "Шектеулі",
+    "all": "Барлығы",
+    "yes": "Бар",
+    "no": "Жоқ",
+    "comparison": {
+      "chat": "Күніне AI чат",
+      "generation": "Әр AI генераторы",
+      "content": "Оқу материалдары",
+      "ads": "Жарнама"
+    },
+    "choosePlan": "Тарифті таңдаңыз",
+    "yearlyValue": "ТИІМДІ",
+    "securePayment": "Қауіпсіз төлем",
+    "cancelAnytime": "Кез келген уақытта бас тарту",
+    "upgradeCta": "Тарифті таңдау",
     "monthly": "Айлық",
     "yearly": "Жылдық",
     "bestValue": "ТИІМДІ",

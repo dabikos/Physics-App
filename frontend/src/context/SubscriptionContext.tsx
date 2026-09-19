@@ -18,6 +18,8 @@ import {
   getRevenueCatErrorMessage,
   getRevenueCatOfferings,
   isProCustomer,
+  isBasicCustomer,
+  isPaidCustomer,
   logOutRevenueCat,
   presentRevenueCatCustomerCenter,
   presentRevenueCatPaywall,
@@ -32,6 +34,8 @@ interface SubscriptionContextValue {
   loading: boolean;
   error: string | null;
   isPro: boolean;
+  isBasic: boolean;
+  subscriptionTier: 'free' | 'basic' | 'pro';
   hasAds: boolean;
   customerInfo: CustomerInfo | null;
   currentOffering: PurchasesOffering | null;
@@ -68,12 +72,16 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
       const activeEntitlements = Object.keys(info?.entitlements?.active || {});
       const pro = isProCustomer(info);
-      const signature = `${userId}:${pro}:${activeEntitlements.sort().join(',')}`;
+      const basic = isBasicCustomer(info);
+      const tier = pro ? 'pro' : basic ? 'basic' : 'free';
+      const signature = `${userId}:${tier}:${activeEntitlements.sort().join(',')}`;
       if (lastSyncedSignatureRef.current === signature) return;
 
       try {
         await api.post('/subscription/sync', {
           is_pro: pro,
+          is_basic: basic,
+          subscription_tier: tier,
           active_entitlements: activeEntitlements,
           source: 'revenuecat',
         });
@@ -195,7 +203,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         const result = await purchaseRevenueCatPackage(packageToPurchase);
         setCustomerInfo(result.customerInfo);
         await syncSubscriptionToBackend(result.customerInfo);
-        return isProCustomer(result.customerInfo);
+        return isPaidCustomer(result.customerInfo);
       } catch (err: any) {
         if (!err?.userCancelled) {
           setError(getRevenueCatErrorMessage(err));
@@ -226,7 +234,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       const info = await restoreRevenueCatPurchases();
       setCustomerInfo(info);
       await syncSubscriptionToBackend(info);
-      return isProCustomer(info);
+      return isPaidCustomer(info);
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
       return false;
@@ -238,7 +246,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setError(null);
       const purchased = await presentRevenueCatPaywall(currentOffering);
       const info = await refreshCustomerInfo();
-      return purchased || isProCustomer(info);
+      return purchased || isPaidCustomer(info);
     } catch (err) {
       setError(getRevenueCatErrorMessage(err));
       return false;
@@ -266,7 +274,9 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       loading,
       error,
       isPro: isProCustomer(customerInfo),
-      hasAds: !isProCustomer(customerInfo),
+      isBasic: isBasicCustomer(customerInfo),
+      subscriptionTier: isProCustomer(customerInfo) ? 'pro' : isBasicCustomer(customerInfo) ? 'basic' : 'free',
+      hasAds: !isProCustomer(customerInfo) && !isBasicCustomer(customerInfo),
       customerInfo,
       currentOffering,
       packages,

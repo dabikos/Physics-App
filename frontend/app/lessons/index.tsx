@@ -16,6 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { usePhysicsData } from '../../src/hooks/usePhysicsData';
 import { useOfflineCache } from '../../src/hooks/useOfflineCache';
+import { LearningHubHeader } from '../../src/components/LearningHubHeader';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
@@ -64,6 +65,7 @@ const SectionCardItem: React.FC<SectionCardProps> = ({
   textSecondary,
   shadowColor,
 }) => {
+  const { t } = useTranslation();
   const scale = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -108,11 +110,11 @@ const SectionCardItem: React.FC<SectionCardProps> = ({
           <View style={styles.tagsRow}>
             <View style={[styles.subCountPill, { backgroundColor: gradient[0] + '18' }]}>
               <Text style={[styles.subCountText, { color: gradient[0] }]}>
-                {section.subsections.length} подраздела
+                {t('lessons.subsectionsShort', { count: section.subsections.length })}
               </Text>
             </View>
             <Text style={[styles.topicCountLabel, { color: textSecondary }]}>
-              • {topicCount} тем
+              • {t('lessons.topicsShort', { count: topicCount })}
             </Text>
           </View>
         </View>
@@ -164,56 +166,33 @@ export default function LessonsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
-      {/* ==================== Top Header ==================== */}
-      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          style={[styles.navBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
-          onPress={() => {
-            triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
-            router.back();
-          }}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="arrow-back" size={20} color={colors.text} />
-        </TouchableOpacity>
-
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>
-            {t('lessons.title', { defaultValue: 'Уроки физики' })}
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: colors.textTertiary }]}>
-            7 разделов • 142 темы
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={[
-            styles.cachePillBtn,
-            {
-              backgroundColor: isCached
-                ? isDark ? 'rgba(16, 185, 129, 0.15)' : '#D1FAE5'
-                : colors.accentLight,
-              borderColor: isCached ? '#10B981' : colors.border,
-            },
-          ]}
-          onPress={handleCacheOffline}
-          activeOpacity={0.8}
-        >
-          <Ionicons
-            name={isCached ? 'checkmark-circle' : 'cloud-download-outline'}
-            size={16}
-            color={isCached ? '#10B981' : colors.accent}
-          />
-          <Text
+      <LearningHubHeader
+        title={t('lessons.title')}
+        subtitle={t('lessons.hubSubtitle')}
+        colors={colors}
+        onBack={() => {
+          triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+          router.back();
+        }}
+        rightAction={(
+          <TouchableOpacity
             style={[
-              styles.cachePillText,
-              { color: isCached ? '#10B981' : colors.accent },
+              styles.cachePillBtn,
+              {
+                backgroundColor: isCached ? (isDark ? 'rgba(16, 185, 129, 0.15)' : '#D1FAE5') : colors.accentLight,
+                borderColor: isCached ? '#10B981' : colors.border,
+              },
             ]}
+            onPress={handleCacheOffline}
+            activeOpacity={0.8}
           >
-            {isCached ? 'В кэше' : 'Оффлайн'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Ionicons name={isCached ? 'checkmark-circle' : 'cloud-download-outline'} size={16} color={isCached ? '#10B981' : colors.accent} />
+            <Text style={[styles.cachePillText, { color: isCached ? '#10B981' : colors.accent }]}>
+              {isCached ? t('lessons.cached') : t('lessons.offline')}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
 
       {/* ==================== Content ==================== */}
       <ScrollView
@@ -244,9 +223,9 @@ export default function LessonsScreen() {
           style={styles.heroSummaryCard}
         >
           <View style={styles.heroContent}>
-            <Text style={styles.heroSummaryTitle}>Полный школьный курс</Text>
+            <Text style={styles.heroSummaryTitle}>{t('lessons.heroTitle')}</Text>
             <Text style={styles.heroSummarySubtitle}>
-              Интерактивная теория, формулы с разбором величин и симуляции физических процессов.
+              {t('lessons.heroSubtitle')}
             </Text>
           </View>
           <View style={styles.heroIconWrap}>

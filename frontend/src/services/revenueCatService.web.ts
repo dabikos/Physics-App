@@ -1,5 +1,6 @@
 ﻿import {
   REVENUECAT_ENTITLEMENT_ID,
+  REVENUECAT_BASIC_ENTITLEMENT_ID,
   REVENUECAT_OFFERING_ID,
   REVENUECAT_PRODUCTS,
   RevenueCatProductId,
@@ -11,6 +12,14 @@ export function isRevenueCatExpoGoPreview() {
 
 export function isProCustomer(customerInfo: any) {
   return Boolean(customerInfo?.entitlements?.active?.[REVENUECAT_ENTITLEMENT_ID]);
+}
+
+export function isBasicCustomer(customerInfo: any) {
+  return Boolean(customerInfo?.entitlements?.active?.[REVENUECAT_BASIC_ENTITLEMENT_ID]);
+}
+
+export function isPaidCustomer(customerInfo: any) {
+  return isProCustomer(customerInfo) || isBasicCustomer(customerInfo);
 }
 
 export function getRevenueCatErrorMessage(error: unknown) {

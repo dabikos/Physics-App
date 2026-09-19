@@ -3,6 +3,7 @@ from datetime import datetime
 from pymongo import ReturnDocument
 
 from server import (
+    CHAT_REWARDED_DAILY_LIMIT,
     db,
     logger,
     ChatRewardClaimRequest,
@@ -32,17 +33,46 @@ async def claim_chat_rewarded_credit(
 ):
     now = datetime.utcnow()
     day_key = _utc_day_key()
-    await db.chat_usage.find_one_and_update(
+    await db.chat_usage.update_one(
         {"user_id": current_user["id"], "day": day_key},
+        {
+            "$setOnInsert": {
+                "created_at": now,
+                "free_used": 0,
+                "rewarded_credits": 0,
+                "rewarded_claimed": 0,
+            },
+            "$set": {"updated_at": now},
+        },
+        upsert=True,
+    )
+    rewarded_doc = await db.chat_usage.find_one_and_update(
+        {
+            "user_id": current_user["id"],
+            "day": day_key,
+            "$or": [
+                {"rewarded_claimed": {"$exists": False}},
+                {"rewarded_claimed": {"$lt": CHAT_REWARDED_DAILY_LIMIT}},
+            ],
+        },
         {
             "$setOnInsert": {"created_at": now, "free_used": 0},
             "$set": {"updated_at": now},
-            "$inc": {"rewarded_credits": 1},
+            "$inc": {"rewarded_credits": 1, "rewarded_claimed": 1},
         },
-        upsert=True,
+        upsert=False,
         return_document=ReturnDocument.AFTER,
     )
     quota = await _get_chat_quota(current_user["id"], current_user)
+    if not rewarded_doc:
+        raise HTTPException(
+            status_code=429,
+            detail={
+                "code": "CHAT_REWARDED_LIMIT_REACHED",
+                "message": "Daily rewarded-message limit reached.",
+                "quota": quota,
+            },
+        )
     return {"success": True, "quota": quota}
 
 @router.post("/chat")
@@ -89,7 +119,7 @@ Answer quality rules:
         response = await call_ai(
             request.message,
             system_message=system_msg,
-            max_tokens=max_tokens or 4096,
+            max_tokens=min(max_tokens or 2000, 2000),
             temperature=temperature if temperature is not None else 0.7,
         )
         

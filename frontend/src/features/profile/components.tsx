@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '../../context/ThemeContext'
 import { profileStyles as styles } from './styles'
+import { createAvatarSeed, ProfileAvatar } from '../../components/ProfileAvatar'
 
 export const AnimatedProgressBar: React.FC<{
   progress: number
@@ -175,13 +176,17 @@ export const EditProfileModal: React.FC<{
   const [name, setName] = useState(user?.name || '')
   const [grade, setGrade] = useState(user?.grade || '')
   const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar || '🧑‍🎓')
+  const [avatarOptions, setAvatarOptions] = useState<string[]>([])
 
-  const avatars = ['🧑‍🎓', '👨‍🔬', '👩‍🔬', '🧑‍💻', '🦸', '🧙', '🧑‍🚀', '🤖', '🦊', '🐱', '🐸', '🦉']
+  const refreshAvatarOptions = () => {
+    setAvatarOptions(Array.from({ length: 12 }, () => createAvatarSeed()))
+  }
 
   useEffect(() => {
     setName(user?.name || '')
     setGrade(user?.grade || '')
     setSelectedAvatar(user?.avatar || '🧑‍🎓')
+    if (visible) refreshAvatarOptions()
   }, [user, visible])
 
   const handleSave = () => {
@@ -206,8 +211,9 @@ export const EditProfileModal: React.FC<{
             </View>
 
             <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>{t('profile.avatar')}</Text>
+            <Text style={[styles.avatarPickerHint, { color: colors.textTertiary }]}>{t('profile.avatarPickerHint')}</Text>
             <View style={styles.avatarGrid}>
-              {avatars.map((avatar) => (
+              {avatarOptions.map((avatar) => (
                 <TouchableOpacity
                   key={avatar}
                   style={[
@@ -217,10 +223,17 @@ export const EditProfileModal: React.FC<{
                   ]}
                   onPress={() => setSelectedAvatar(avatar)}
                 >
-                  <Text style={styles.avatarOptionText}>{avatar}</Text>
+                  <ProfileAvatar value={avatar} size={44} />
                 </TouchableOpacity>
               ))}
             </View>
+            <TouchableOpacity
+              style={[styles.avatarRefreshButton, { backgroundColor: colors.inputBg }]}
+              onPress={refreshAvatarOptions}
+            >
+              <Ionicons name="refresh" size={16} color={colors.accent} />
+              <Text style={[styles.avatarRefreshText, { color: colors.accent }]}>{t('profile.moreAvatars')}</Text>
+            </TouchableOpacity>
 
             <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>{t('profile.nameLabel')}</Text>
             <TextInput

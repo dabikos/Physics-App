@@ -35,7 +35,9 @@
     "startGame": "Начать игру",
     "gameOver": "Игра окончена!",
     "yourScore": "Ваш счёт: {{score}}",
-    "open": "Открыть"
+    "open": "Открыть",
+    "ok": "Понятно",
+    "sectionCount": "{{count}} разделов"
   },
   "difficulty": {
     "basic": "Базовый",
@@ -193,7 +195,7 @@
   },
   "aiChat": {
     "title": "AI Помощник",
-    "engine": "Физический движок GPT-4o",
+    "engine": "Physics AI",
     "remaining": "ост.",
     "placeholder": "Задайте вопрос по физике...",
     "sending": "AI генерирует ответ...",
@@ -224,16 +226,37 @@
     "freeToday": "Бесплатно сегодня",
     "forAd": "За рекламу",
     "limitTitle": "Лимит AI-чата",
-    "limitMessage": "3 бесплатных сообщения на сегодня закончились. Посмотреть рекламу и отправить это сообщение?",
+    "limitMessage": "На тарифе Free доступно {{count}} сообщений в день. Лимит исчерпан. Посмотреть рекламу и отправить сообщение? Осталось рекламных попыток: {{ads}}.",
     "watchAd": "Смотреть рекламу",
     "adNotFinishedTitle": "Реклама не досмотрена",
     "adNotFinishedMessage": "Чтобы отправить сообщение, нужно досмотреть рекламу до конца.",
-    "rewardClaimError": "Не удалось выдать попытку за рекламу."
+    "rewardClaimError": "Не удалось выдать попытку за рекламу.",
+    "rewardedDailyLimit": "Все 5 дополнительных сообщений за рекламу на сегодня использованы. Лимит обновится завтра."
+  },
+  "quota": {
+    "plans": { "free": "Free", "basic": "Basic", "pro": "Pro" },
+    "features": {
+      "learnMore": "«Изучить больше»",
+      "taskGeneration": "генерация задач",
+      "testGeneration": "генерация тестов",
+      "randomTest": "случайный тест",
+      "generation": "AI-генерация"
+    },
+    "generationLimitReached": "Дневной лимит исчерпан. На тарифе {{plan}} для функции {{feature}} доступно {{limit}} в день. Лимит обновится в {{time}}.",
+    "nextDay": "следующий день"
+  },
+  "ads": {
+    "unavailableTitle": "Реклама недоступна",
+    "rewardedUnavailable": "Видео пока не загрузилось. Попробуйте ещё раз через несколько секунд.",
+    "interstitialUnavailable": "Реклама пока не загрузилась. Попробуйте ещё раз.",
+    "startError": "Не удалось запустить рекламу. Попробуйте ещё раз."
   },
   "profile": {
     "title": "Профиль",
     "editProfile": "Редактировать профиль",
     "avatar": "Аватар",
+    "avatarPickerHint": "Выберите аватар. Новые варианты создаются прямо на устройстве.",
+    "moreAvatars": "Другие варианты",
     "nameLabel": "Имя",
     "namePlaceholder": "Ваше имя",
     "gradeLabel": "Класс",
@@ -340,6 +363,13 @@
   },
   "lessons": {
     "title": "Уроки",
+    "hubSubtitle": "7 разделов • 142 темы",
+    "cached": "В кэше",
+    "offline": "Оффлайн",
+    "heroTitle": "Полный школьный курс",
+    "heroSubtitle": "Интерактивная теория, формулы с разбором величин и симуляции физических процессов.",
+    "subsectionsShort": "Подразделы: {{count}}",
+    "topicsShort": "Темы: {{count}}",
     "selectSection": "Выберите раздел",
     "subsectionsCount": "{{subsections}} подразделов • {{topics}} тем",
     "subsections": "Подразделы",
@@ -371,6 +401,14 @@
   },
   "tests": {
     "title": "Тесты",
+    "hubSubtitle": "Готовые и персональные тесты",
+    "aiBadge": "AI",
+    "generateCta": "Сгенерировать",
+    "blitzBadge": "Блиц",
+    "blitzCta": "Начать блиц",
+    "testTopics": "Тем с тестами: {{count}}",
+    "generatorHint": "Настройте параметры теста",
+    "randomHint": "Выберите разделы для смешивания",
     "selectSection": "Выберите раздел физики",
     "generateError": "Не удалось сгенерировать тест",
     "generateButton": "Сгенерировать тест",
@@ -444,6 +482,12 @@
   },
   "tasks": {
     "title": "Задачи",
+    "hubSubtitle": "710 практических задач",
+    "heroTag": "ПРАКТИКА И РАСЧЁТЫ",
+    "heroTitle": "Научись решать задачи как профи",
+    "heroSubtitle": "Каждая задача содержит правильный ответ, ход решения и формулы.",
+    "topicGroupsShort": "Темы задач: {{count}}",
+    "solutionReview": "Разбор решений",
     "interactiveTasks": "Интерактивные задачи",
     "interactiveSubtitle": "Пошаговое решение с подсказками",
     "tasksCount": "задач",
@@ -498,6 +542,9 @@
   },
   "formulas": {
     "title": "Формулы",
+    "hubSubtitle": "Доступно формул: {{count}}",
+    "emptyTitle": "Ничего не найдено",
+    "emptySubtitle": "Измените поисковый запрос или фильтр раздела",
     "searchPlaceholder": "Поиск формулы...",
     "notFound": "Формулы не найдены",
     "formula": "Формула",
@@ -651,6 +698,7 @@
     "support": "Поддержка",
     "privacy": "Политика конфиденциальности",
     "madeWith": "Сделано с ❤️ для учеников и учителей",
+    "multiavatarCredit": "Avatars by Multiavatar",
     "telegram": "Telegram"
   },
   "subscription": {
@@ -660,9 +708,33 @@
     "heroSubtitle": "Учись без рекламы, открой весь материал и используй расширенные AI-инструменты для физики.",
     "includes": "Что входит",
     "benefitNoAds": "Без рекламы во время обучения",
+    "benefitNoAdsSub": "Учитесь без рекламных пауз",
     "benefitFullAccess": "Все уроки, тесты, задачи и формулы",
+    "benefitFullAccessSub": "Полный доступ ко всем учебным материалам",
     "benefitAiTools": "Генерация тестов и расширенное изучение",
+    "benefitAiToolsSub": "Увеличенные дневные лимиты AI",
     "benefitSolutions": "Полные решения задач с объяснениями",
+    "benefitSolutionsSub": "Подробный разбор каждого шага",
+    "premiumBadge": "PREMIUM",
+    "currentPlanBadge": "ТЕКУЩИЙ ТАРИФ: {{plan}}",
+    "compareTitle": "Сравнение тарифов",
+    "compareHint": "Дневные AI-лимиты обновляются автоматически.",
+    "feature": "Возможность",
+    "limited": "Частично",
+    "all": "Все",
+    "yes": "Есть",
+    "no": "Нет",
+    "comparison": {
+      "chat": "AI-чат в день",
+      "generation": "Каждая AI-генерация",
+      "content": "Учебные материалы",
+      "ads": "Реклама"
+    },
+    "choosePlan": "Выберите тариф",
+    "yearlyValue": "ВЫГОДНО",
+    "securePayment": "Безопасная оплата",
+    "cancelAnytime": "Отмена в любой момент",
+    "upgradeCta": "Выбрать тариф",
     "monthly": "Месяц",
     "yearly": "Год",
     "bestValue": "ВЫГОДНО",

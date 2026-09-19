@@ -39,6 +39,7 @@ export default function SubscriptionScreen() {
     loading,
     error,
     isPro,
+    subscriptionTier,
     packages,
     restorePurchases,
     presentPaywall,
@@ -49,25 +50,25 @@ export default function SubscriptionScreen() {
       icon: 'sparkles' as const,
       gradient: ['#8B5CF6', '#6D28D9'] as [string, string],
       title: t('subscription.benefitAiTools', { defaultValue: 'Безлимитный AI-репетитор' }),
-      sub: 'Мгновенные ответы и решение сложных задач 24/7',
+      sub: t('subscription.benefitAiToolsSub'),
     },
     {
       icon: 'library-outline' as const,
       gradient: ['#3B82F6', '#1D4ED8'] as [string, string],
       title: t('subscription.benefitFullAccess', { defaultValue: 'Полная база знаний' }),
-      sub: 'Доступ ко всем 142 темам, 61 формуле и 710 задачам',
+      sub: t('subscription.benefitFullAccessSub'),
     },
     {
       icon: 'bulb-outline' as const,
       gradient: ['#F59E0B', '#D97706'] as [string, string],
       title: t('subscription.benefitSolutions', { defaultValue: 'Пошаговые разборы' }),
-      sub: 'Подробные ходы решения каждой физической задачи',
+      sub: t('subscription.benefitSolutionsSub'),
     },
     {
       icon: 'ban-outline' as const,
       gradient: ['#10B981', '#047857'] as [string, string],
       title: t('subscription.benefitNoAds', { defaultValue: 'Никакой рекламы' }),
-      sub: 'Чистый фокус на обучении без отвлекающих пауз',
+      sub: t('subscription.benefitNoAdsSub'),
     },
   ];
 
@@ -123,7 +124,9 @@ export default function SubscriptionScreen() {
             >
               <Ionicons name="sparkles" size={14} color="#78350F" />
               <Text style={styles.proBadgeText}>
-                {isPro ? t('subscription.activeBadge', { defaultValue: 'PRO АКТИВЕН' }) : 'PREMIUM'}
+                {subscriptionTier === 'free'
+                  ? t('subscription.premiumBadge')
+                  : t('subscription.currentPlanBadge', { plan: subscriptionTier.toUpperCase() })}
               </Text>
             </LinearGradient>
           </View>
@@ -134,7 +137,7 @@ export default function SubscriptionScreen() {
 
           <Text style={styles.heroSub}>
             {t('subscription.heroSubtitle', {
-              defaultValue: 'Безлимитный AI-помощник, все решения задач и персональные тесты без ограничений.',
+              defaultValue: 'Больше AI-возможностей, полный доступ к материалам и обучение без рекламы.',
             })}
           </Text>
         </LinearGradient>
@@ -191,10 +194,47 @@ export default function SubscriptionScreen() {
           </View>
         </View>
 
+        <View style={styles.comparisonSection}>
+          <Text style={[styles.sectionHeading, { color: colors.text }]}>{t('subscription.compareTitle')}</Text>
+          <Text style={[styles.comparisonHint, { color: colors.textTertiary }]}>{t('subscription.compareHint')}</Text>
+
+          <View style={[styles.comparisonCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <View style={[styles.comparisonRow, styles.comparisonHeader, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.featureCell, { color: colors.textSecondary }]}>{t('subscription.feature')}</Text>
+              {(['free', 'basic', 'pro'] as const).map((plan) => (
+                <View key={plan} style={[styles.planCell, subscriptionTier === plan && styles.currentPlanCell]}>
+                  <Text style={[styles.planCellText, { color: subscriptionTier === plan ? '#4F46E5' : colors.text }]}>
+                    {t(`quota.plans.${plan}`)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            {[
+              { key: 'chat', values: ['5', '20', '60'] },
+              { key: 'generation', values: ['1', '5', '15'] },
+              { key: 'content', values: [t('subscription.limited'), t('subscription.all'), t('subscription.all')] },
+              { key: 'ads', values: [t('subscription.yes'), t('subscription.no'), t('subscription.no')] },
+            ].map((row, rowIndex) => (
+              <View
+                key={row.key}
+                style={[styles.comparisonRow, rowIndex < 3 && { borderBottomColor: colors.border, borderBottomWidth: 1 }]}
+              >
+                <Text style={[styles.featureCell, { color: colors.textSecondary }]}>{t(`subscription.comparison.${row.key}`)}</Text>
+                {row.values.map((value, index) => (
+                  <View key={`${row.key}-${index}`} style={[styles.planCell, subscriptionTier === (['free', 'basic', 'pro'] as const)[index] && styles.currentPlanCell]}>
+                    <Text style={[styles.valueCellText, { color: colors.text }]}>{value}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+          </View>
+        </View>
+
         {/* ==================== Plans Grid ==================== */}
         {!isExpoGo && (
           <View style={[styles.plansSection, styles.plansSlot]}>
-            <Text style={[styles.sectionHeading, { color: colors.text }]}>Выберите тариф:</Text>
+            <Text style={[styles.sectionHeading, { color: colors.text }]}>{t('subscription.choosePlan')}</Text>
             {loading ? (
               <View style={[styles.stateCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
                 <ActivityIndicator color="#6366F1" size="small" />
@@ -227,7 +267,7 @@ export default function SubscriptionScreen() {
                   >
                     {isYearly && (
                       <View style={styles.bestValueBadge}>
-                        <Text style={styles.bestValueText}>-45% ВЫГОДА</Text>
+                        <Text style={styles.bestValueText}>{t('subscription.yearlyValue')}</Text>
                       </View>
                     )}
                     <Text style={[styles.planPeriod, { color: colors.text }]}>
@@ -287,13 +327,13 @@ export default function SubscriptionScreen() {
           <View style={styles.trustItem}>
             <Ionicons name="shield-checkmark-outline" size={14} color={colors.textTertiary} />
             <Text style={[styles.trustText, { color: colors.textTertiary }]}>
-              Безопасная оплата
+              {t('subscription.securePayment')}
             </Text>
           </View>
           <View style={styles.trustItem}>
             <Ionicons name="refresh-outline" size={14} color={colors.textTertiary} />
             <Text style={[styles.trustText, { color: colors.textTertiary }]}>
-              Отмена в любой момент
+              {t('subscription.cancelAnytime')}
             </Text>
           </View>
         </View>
@@ -474,6 +514,54 @@ const styles = StyleSheet.create({
   benefitSub: {
     fontSize: 12,
     lineHeight: 16,
+  },
+  comparisonSection: {
+    marginBottom: 24,
+  },
+  comparisonHint: {
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: -6,
+    marginBottom: 12,
+  },
+  comparisonCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    overflow: 'hidden',
+  },
+  comparisonRow: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    minHeight: 48,
+  },
+  comparisonHeader: {
+    borderBottomWidth: 1,
+  },
+  featureCell: {
+    flex: 1.35,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    fontSize: 11,
+    fontWeight: '600',
+    alignSelf: 'center',
+  },
+  planCell: {
+    flex: 0.75,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  currentPlanCell: {
+    backgroundColor: 'rgba(99, 102, 241, 0.09)',
+  },
+  planCellText: {
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  valueCellText: {
+    fontSize: 11,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   plansSection: {
     marginBottom: 24,

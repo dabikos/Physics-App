@@ -147,6 +147,9 @@ export default function AboutScreen() {
             {t('about.madeWith')}
           </Text>
           <Text style={[styles.creditsText, { color: colors.textMuted }]}>
+            {t('about.multiavatarCredit')}
+          </Text>
+          <Text style={[styles.creditsText, { color: colors.textMuted }]}>
             © 2026 Физика AI
           </Text>
         </View>

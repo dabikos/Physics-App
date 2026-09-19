@@ -97,12 +97,13 @@ openrouter_client = AsyncOpenAI(
     },
     timeout=60.0,
 )
-FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '3'))
-BASIC_CHAT_DAILY_LIMIT = int(os.environ.get('BASIC_CHAT_DAILY_LIMIT', '10'))
-PRO_CHAT_DAILY_LIMIT = int(os.environ.get('PRO_CHAT_DAILY_LIMIT', '30'))
+FREE_CHAT_DAILY_LIMIT = int(os.environ.get('FREE_CHAT_DAILY_LIMIT', '5'))
+BASIC_CHAT_DAILY_LIMIT = int(os.environ.get('BASIC_CHAT_DAILY_LIMIT', '20'))
+PRO_CHAT_DAILY_LIMIT = int(os.environ.get('PRO_CHAT_DAILY_LIMIT', '60'))
 FREE_AI_GENERATION_DAILY_LIMIT = int(os.environ.get('FREE_AI_GENERATION_DAILY_LIMIT', '1'))
 BASIC_AI_GENERATION_DAILY_LIMIT = int(os.environ.get('BASIC_AI_GENERATION_DAILY_LIMIT', '5'))
 PRO_AI_GENERATION_DAILY_LIMIT = int(os.environ.get('PRO_AI_GENERATION_DAILY_LIMIT', '15'))
+CHAT_REWARDED_DAILY_LIMIT = int(os.environ.get('CHAT_REWARDED_DAILY_LIMIT', '5'))
 REVENUECAT_PRO_ENTITLEMENT_ID = os.environ.get('REVENUECAT_PRO_ENTITLEMENT_ID', 'Physics AI Pro')
 REVENUECAT_BASIC_ENTITLEMENT_ID = os.environ.get('REVENUECAT_BASIC_ENTITLEMENT_ID', 'Physics AI Basic')
 
@@ -211,6 +212,8 @@ class UserResponse(BaseModel):
     subject: Optional[str] = None
     school: Optional[str] = None
     classroom: Optional[str] = None
+    avatar: Optional[str] = None
+    grade: Optional[str] = None
     progress: Dict[str, Any] = {}
     created_at: datetime
 
@@ -324,7 +327,7 @@ class DemoStateUpdate(BaseModel):
 
 class ProfileUpdate(BaseModel):
     name: Optional[str] = None
-    avatar: Optional[str] = None  # emoji or identifier
+    avatar: Optional[str] = Field(default=None, max_length=160)  # emoji or multiavatar seed
     grade: Optional[str] = None  # class/grade
 
 class SubscriptionSyncRequest(BaseModel):
@@ -2282,6 +2285,11 @@ async def get_formula(
 def _utc_day_key() -> str:
     return datetime.utcnow().strftime("%Y-%m-%d")
 
+
+def _next_quota_reset_at() -> str:
+    tomorrow = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+    return f"{tomorrow.isoformat()}Z"
+
 async def _normalize_chat_usage_day(user_id: str, day_key: str) -> Dict[str, Any]:
     docs = await db.chat_usage.find({"user_id": user_id, "day": day_key}).sort("updated_at", -1).to_list(20)
     if not docs:
@@ -2292,6 +2300,7 @@ async def _normalize_chat_usage_day(user_id: str, day_key: str) -> Dict[str, Any
     # Merge duplicates left from older buggy upserts.
     merged_free = sum(max(int(d.get("free_used", 0)), 0) for d in docs)
     merged_rewarded = sum(max(int(d.get("rewarded_credits", 0)), 0) for d in docs)
+    merged_rewarded_claimed = sum(max(int(d.get("rewarded_claimed", 0)), 0) for d in docs)
     primary = docs[0]
     now = datetime.utcnow()
 
@@ -2301,6 +2310,7 @@ async def _normalize_chat_usage_day(user_id: str, day_key: str) -> Dict[str, Any
             "$set": {
                 "free_used": merged_free,
                 "rewarded_credits": merged_rewarded,
+                "rewarded_claimed": merged_rewarded_claimed,
                 "updated_at": now,
             }
         },
@@ -2317,6 +2327,7 @@ async def _get_chat_quota(user_id: str, user: Optional[dict] = None) -> Dict[str
     daily_limit = get_chat_daily_limit(user)
     free_used = int(usage.get("free_used", 0))
     rewarded_credits = int(usage.get("rewarded_credits", 0))
+    rewarded_claimed = int(usage.get("rewarded_claimed", 0))
     return {
         "day": day_key,
         "tier": get_subscription_tier(user),
@@ -2324,6 +2335,10 @@ async def _get_chat_quota(user_id: str, user: Optional[dict] = None) -> Dict[str
         "free_used": free_used,
         "free_remaining": max(daily_limit - free_used, 0),
         "rewarded_credits": max(rewarded_credits, 0),
+        "rewarded_claimed": max(rewarded_claimed, 0),
+        "rewarded_limit": CHAT_REWARDED_DAILY_LIMIT,
+        "rewarded_remaining": max(CHAT_REWARDED_DAILY_LIMIT - rewarded_claimed, 0),
+        "reset_at": _next_quota_reset_at(),
     }
 
 async def _consume_chat_credit(user_id: str, user: Optional[dict] = None) -> Dict[str, Any]:
@@ -2341,6 +2356,7 @@ async def _consume_chat_credit(user_id: str, user: Optional[dict] = None) -> Dic
                 "created_at": now,
                 "free_used": 0,
                 "rewarded_credits": 0,
+                "rewarded_claimed": 0,
             },
             "$set": {"updated_at": now},
         },
@@ -2420,6 +2436,7 @@ async def get_ai_generation_quota(user: dict, feature: str) -> Dict[str, Any]:
         "limit": daily_limit,
         "used": used,
         "remaining": max(daily_limit - used, 0),
+        "reset_at": _next_quota_reset_at(),
     }
 
 
