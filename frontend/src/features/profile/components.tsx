@@ -176,7 +176,9 @@ export const EditProfileModal: React.FC<{
   const [name, setName] = useState(user?.name || '')
   const [grade, setGrade] = useState(user?.grade || '')
   const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar || '🧑‍🎓')
-  const [avatarOptions, setAvatarOptions] = useState<string[]>([])
+  const [avatarOptions, setAvatarOptions] = useState<string[]>(() =>
+    Array.from({ length: 12 }, () => createAvatarSeed()),
+  )
 
   const refreshAvatarOptions = () => {
     setAvatarOptions(Array.from({ length: 12 }, () => createAvatarSeed()))
@@ -186,8 +188,7 @@ export const EditProfileModal: React.FC<{
     setName(user?.name || '')
     setGrade(user?.grade || '')
     setSelectedAvatar(user?.avatar || '🧑‍🎓')
-    if (visible) refreshAvatarOptions()
-  }, [user, visible])
+  }, [user?.avatar, user?.grade, user?.name, visible])
 
   const handleSave = () => {
     onSave({

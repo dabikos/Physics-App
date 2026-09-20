@@ -7,6 +7,7 @@ import type {
 } from 'react-native-purchases';
 import { useAuth } from './AuthContext';
 import { RevenueCatProductId } from '../config/revenueCat';
+import { useLanguage } from './LanguageContext';
 import api from '../services/api';
 import {
   addRevenueCatCustomerInfoUpdateListener,
@@ -27,6 +28,7 @@ import {
   removeRevenueCatCustomerInfoUpdateListener,
   restoreRevenueCatPurchases,
   setRevenueCatUserAttributes,
+  setRevenueCatPreferredLocale,
 } from '../services/revenueCatService';
 
 interface SubscriptionContextValue {
@@ -54,6 +56,7 @@ const SubscriptionContext = createContext<SubscriptionContextValue | undefined>(
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
+  const { currentLanguage } = useLanguage();
   const userId = user?.id ?? null;
   const userEmail = user?.email ?? null;
   const userName = user?.name ?? null;
@@ -161,6 +164,15 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       mounted = false;
     };
   }, [authLoading, refreshCustomerInfo, refreshOfferings, userId]);
+
+  useEffect(() => {
+    if (!configured) return;
+    // RevenueCat paywalls do not currently provide Kazakh, so use English as its fallback.
+    const locale = currentLanguage === 'ru' ? 'ru-RU' : 'en-US';
+    setRevenueCatPreferredLocale(locale).catch((err) => {
+      console.warn('RevenueCat locale update failed:', getRevenueCatErrorMessage(err));
+    });
+  }, [configured, currentLanguage]);
 
   useEffect(() => {
     if (!configured) return;

@@ -93,7 +93,7 @@ export default function SubscriptionScreen() {
         >
           <Ionicons name="close" size={22} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Physics AI Pro</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('subscription.headerTitle')}</Text>
         <View style={styles.closeBtnPlaceholder} />
       </View>
 

@@ -484,7 +484,7 @@ export function TeacherProfileOverview({
             <View>
               <Text style={[styles.settingText, { color: colors.text }]}>{t('teacher.myClasses')}</Text>
               <Text style={{ fontSize: 12, color: colors.textTertiary, marginTop: 2 }}>
-                Ученики, классы и результаты тестов
+                {t('teacher.classesDescription')}
               </Text>
             </View>
           </View>

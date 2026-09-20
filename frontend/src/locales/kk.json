@@ -170,6 +170,7 @@
     "heroContinue": "Жалғастыру: {{name}}",
     "heroDefaultSub": "Интерактивті сабақтарды оқы, формулаларды меңгер және AI-мен жаттық.",
     "heroContinueSub": "Тақырыптың {{percent}}% өтілді. Жалғастыру үшін бас.",
+    "streakSummary": "🔥 {{count}} күн қатарынан!",
     "startLearning": "Оқуды бастау",
     "continueLesson": "Сабақты жалғастыру",
     "sectionsTitle": "Оқу бөлімдері",
@@ -643,7 +644,8 @@
     "testHistory": "Тесттер тарихы",
     "test": "Тест",
     "webPanel": "Сайт арқылы басқару",
-    "webPanelDesc": "Сеанстар құру және экранды трансляциялау веб-панельде қолжетімді"
+    "webPanelDesc": "Сеанстар құру және экранды трансляциялау веб-панельде қолжетімді",
+    "classesDescription": "Оқушылар, сыныптар және тест нәтижелері"
   },
   "search": {
     "cancel": "Болдырмау"
@@ -702,6 +704,7 @@
     "telegram": "Telegram"
   },
   "subscription": {
+    "headerTitle": "Physics AI Pro",
     "proBadge": "PRO қолжетімділік",
     "activeBadge": "Pro белсенді",
     "heroTitle": "Physics AI толық нұсқасын ашыңыз",

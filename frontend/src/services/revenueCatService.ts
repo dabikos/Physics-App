@@ -137,6 +137,12 @@ export async function setRevenueCatUserAttributes(user?: {
   return attributesPromise;
 }
 
+export async function setRevenueCatPreferredLocale(locale: string) {
+  if (isRevenueCatExpoGoPreview()) return;
+  await configureRevenueCat();
+  await Purchases.overridePreferredLocale(locale);
+}
+
 export async function getRevenueCatCustomerInfo() {
   if (isRevenueCatExpoGoPreview()) {
     return null;

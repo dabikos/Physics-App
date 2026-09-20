@@ -10,6 +10,7 @@ import {
   Modal,
   FlatList,
   ActivityIndicator,
+  Linking,
   Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -25,6 +26,8 @@ import api from '../../src/services/api';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
 import { ProfileAvatar } from '../../src/components/ProfileAvatar';
+
+const TELEGRAM_URL = 'https://t.me/+4nopjpXt51w0YjMy';
 
 // Safe haptic feedback wrapper
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
@@ -483,6 +486,18 @@ export default function HomeScreen() {
               <Text style={styles.streakCount}>{streak}</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={[styles.iconActionBtn, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
+              onPress={() => {
+                triggerHaptic(Haptics.ImpactFeedbackStyle.Light);
+                Linking.openURL(TELEGRAM_URL).catch(() => {});
+              }}
+              activeOpacity={0.8}
+              accessibilityLabel="Telegram"
+            >
+              <Ionicons name="paper-plane" size={19} color="#229ED9" />
+            </TouchableOpacity>
+
             {/* Notifications */}
             <TouchableOpacity
               style={[styles.iconActionBtn, { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadowColor }]}
@@ -544,7 +559,10 @@ export default function HomeScreen() {
             {/* Headline */}
             <Text style={styles.heroTitle}>
               {streak >= 3
-                ? `🔥 ${streak} ${getDayWord(streak, currentLanguage)} подряд!`
+                ? t('home.streakSummary', {
+                    count: streak,
+                    day: getDayWord(streak, currentLanguage),
+                  })
                 : inProgressSection
                 ? t('home.heroContinue', { name: inProgressSection.name, defaultValue: `Продолжим: ${inProgressSection.name}` })
                 : t('home.heroReady', { defaultValue: 'Готов покорять физику?' })}

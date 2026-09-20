@@ -170,6 +170,7 @@
     "heroContinue": "Продолжим: {{name}}",
     "heroDefaultSub": "Изучай интерактивные уроки, решай формулы и тренируйся с AI.",
     "heroContinueSub": "Пройдено {{percent}}% темы. Нажми, чтобы продолжить.",
+    "streakSummary": "🔥 {{count}} {{day}} подряд!",
     "startLearning": "Начать обучение",
     "continueLesson": "Продолжить урок",
     "sectionsTitle": "Разделы обучения",
@@ -643,7 +644,8 @@
     "testHistory": "История тестов",
     "test": "Тест",
     "webPanel": "Управление через сайт",
-    "webPanelDesc": "Создание сессий и трансляция экрана доступны на веб-панели"
+    "webPanelDesc": "Создание сессий и трансляция экрана доступны на веб-панели",
+    "classesDescription": "Ученики, классы и результаты тестов"
   },
   "search": {
     "cancel": "Отмена"
@@ -702,6 +704,7 @@
     "telegram": "Telegram"
   },
   "subscription": {
+    "headerTitle": "Physics AI Pro",
     "proBadge": "PRO-доступ",
     "activeBadge": "Pro активен",
     "heroTitle": "Открой полный Physics AI",

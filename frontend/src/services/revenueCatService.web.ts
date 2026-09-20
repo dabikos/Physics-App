@@ -37,6 +37,10 @@ export async function setRevenueCatUserAttributes(user?: any) {
   return;
 }
 
+export async function setRevenueCatPreferredLocale(locale: string) {
+  return;
+}
+
 export async function getRevenueCatCustomerInfo() {
   return null;
 }
