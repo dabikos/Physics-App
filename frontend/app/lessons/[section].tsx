@@ -16,7 +16,6 @@ import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../src/context/AuthContext';
 import api from '../../src/services/api';
-import { useAdGate } from '../../src/hooks/useAdGate';
 export default function SectionScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -28,7 +27,6 @@ export default function SectionScreen() {
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS, getTopicsBySubsection } = usePhysicsData();
   const { user } = useAuth();
-  const { requireAdForAction } = useAdGate();
 
   // Load completed lessons on every focus (from server + local storage)
   useFocusEffect(
@@ -153,14 +151,12 @@ export default function SectionScreen() {
                         isCompleted && { opacity: 0.65 },
                         isLocked && { opacity: 0.72 },
                       ]}
-                      onPress={async () => {
+                      onPress={() => {
                         if (isLocked) {
                           router.push('/subscription' as any);
                           return;
                         }
-                        if (await requireAdForAction('lesson_topic')) {
-                          router.push(`/lessons/topic/${topic.id}` as any);
-                        }
+                        router.push(`/lessons/topic/${topic.id}` as any);
                       }}
                       activeOpacity={0.8}
                     >

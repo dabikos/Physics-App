@@ -18,12 +18,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { claimRewardedChatCredit, ChatQuota, getChatQuota, sendChatMessage } from '../../src/services/aiService';
+import { ChatQuota, getChatQuota, sendChatMessage } from '../../src/services/aiService';
 import { MathText } from '../../src/components/MathText';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/context/LanguageContext';
-import { CHAT_REWARDED_AD_UNIT_ID, initializeMobileAds, showRewardedChatAd } from '../../src/services/adService';
 import { logAIChatSent } from '../../src/services/analyticsService';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
@@ -121,7 +120,6 @@ export default function AIChatScreen() {
   }, [params.prompt]);
 
   useEffect(() => {
-    initializeMobileAds().catch(() => {});
     getChatQuota().then((result) => {
       if (result.success && result.quota) {
         setChatQuota(result.quota);
@@ -235,43 +233,12 @@ export default function AIChatScreen() {
 
       Alert.alert(
         t('aiChat.limitTitle', { defaultValue: 'Лимит AI-чата' }),
-        (result.quota?.rewarded_remaining ?? 1) > 0
-          ? t('aiChat.limitMessage', {
-              count: result.quota?.free_limit ?? 5,
-              ads: result.quota?.rewarded_remaining ?? 0,
-              defaultValue: 'Дневной лимит исчерпан. Посмотреть короткую рекламу и отправить сообщение?',
-            })
-          : t('aiChat.rewardedDailyLimit', { defaultValue: 'Все дополнительные попытки за рекламу на сегодня использованы.' }),
-        (result.quota?.rewarded_remaining ?? 1) > 0 ? [
-          { text: t('common.cancel', { defaultValue: 'Отмена' }), style: 'cancel' },
-          {
-            text: t('aiChat.watchAd', { defaultValue: 'Смотреть рекламу' }),
-            onPress: async () => {
-              setIsLoading(true);
-              const watched = await showRewardedChatAd();
-              if (!watched) {
-                setIsLoading(false);
-                Alert.alert(t('aiChat.adNotFinishedTitle', { defaultValue: 'Реклама не досмотрена' }), t('aiChat.adNotFinishedMessage', { defaultValue: 'Чтобы отправить сообщение, нужно досмотреть рекламу.' }));
-                return;
-              }
-
-              const claim = await claimRewardedChatCredit(CHAT_REWARDED_AD_UNIT_ID);
-              if (!claim.success) {
-                setIsLoading(false);
-                Alert.alert(
-                  t('aiChat.limitTitle', { defaultValue: 'Лимит AI-чата' }),
-                  claim.errorCode === 'CHAT_REWARDED_LIMIT_REACHED'
-                    ? t('aiChat.rewardedDailyLimit')
-                    : claim.error || t('aiChat.rewardClaimError', { defaultValue: 'Не удалось начислить попытку.' }),
-                );
-                return;
-              }
-
-              if (claim.quota) setChatQuota(claim.quota);
-              await sendPreparedMessage(userMessage.content);
-            },
-          },
-        ] : [{ text: t('common.ok', { defaultValue: 'OK' }) }]
+        t('aiChat.limitMessage', {
+          plan: t(`quota.plans.${result.quota?.tier ?? 'free'}`),
+          count: result.quota?.free_limit ?? 5,
+          defaultValue: 'На тарифе {{plan}} доступно {{count}} сообщений в день. Лимит обновится завтра.',
+        }),
+        [{ text: t('common.ok', { defaultValue: 'OK' }) }]
       );
       return;
     }
@@ -396,9 +363,7 @@ export default function AIChatScreen() {
           <View style={[styles.quotaPill, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
             <Ionicons name="flash" size={12} color="#F59E0B" />
             <Text style={[styles.quotaPillText, { color: colors.textSecondary }]}>
-              {chatQuota.free_remaining > 0
-                ? `${chatQuota.free_remaining} ${t('aiChat.remaining', { defaultValue: 'ост.' })}`
-                : `+${chatQuota.rewarded_credits}`}
+              {`${chatQuota.free_remaining + chatQuota.rewarded_credits} ${t('aiChat.remaining', { defaultValue: 'ост.' })}`}
             </Text>
           </View>
         )}

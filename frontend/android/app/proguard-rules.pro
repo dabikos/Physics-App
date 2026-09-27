@@ -36,11 +36,6 @@
 # React Native SVG
 -keep class com.horcrux.svg.** { *; }
 
-# Google Mobile Ads
--keep class com.google.android.gms.ads.** { *; }
--keep class io.invertase.googlemobileads.** { *; }
--dontwarn com.google.android.gms.ads.**
-
 # Purchases / RevenueCat
 -keep class com.revenuecat.purchases.** { *; }
 -dontwarn com.revenuecat.purchases.**

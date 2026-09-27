@@ -9,7 +9,6 @@ import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
 import { LanguageProvider } from '../src/context/LanguageContext';
 import { SubscriptionProvider } from '../src/context/SubscriptionContext';
 import { usePushNotifications } from '../src/hooks/usePushNotifications';
-import { initializeMobileAds } from '../src/services/adService';
 import '../src/config/i18n';
 
 const APP_LOGO = require('../assets/images/splash-logo.png');
@@ -39,12 +38,6 @@ function RootLayoutNav() {
 
   const pushEnabled = !!user;
   usePushNotifications(pushEnabled);
-
-  useEffect(() => {
-    initializeMobileAds().catch((error) => {
-      console.warn('[AdMob] initialization failed', error);
-    });
-  }, []);
 
   useEffect(() => {
     if (loading) return;

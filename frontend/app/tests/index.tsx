@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useLanguage } from '../../src/context/LanguageContext';
 import api from '../../src/services/api';
-import { useAdGate } from '../../src/hooks/useAdGate';
 import { formatQuotaError } from '../../src/utils/quotaMessage';
 import { LearningHubHeader } from '../../src/components/LearningHubHeader';
 
@@ -61,7 +60,6 @@ export default function TestsScreen() {
   const { getAILanguageName } = useLanguage();
   const { t } = useTranslation();
   const { PHYSICS_SECTIONS } = usePhysicsData();
-  const { requireAdForAction } = useAdGate();
 
   const DIFFICULTIES = DIFFICULTY_DATA.map((d) => ({
     ...d,
@@ -99,8 +97,6 @@ export default function TestsScreen() {
       setError(t('tests.selectSection', { defaultValue: 'Выберите раздел' }));
       return;
     }
-
-    if (!(await requireAdForAction('generated_test'))) return;
 
     triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     setError(null);
@@ -159,8 +155,6 @@ export default function TestsScreen() {
       setRandomError(t('tests.selectRandomSection', { defaultValue: 'Выберите хотя бы один раздел' }));
       return;
     }
-
-    if (!(await requireAdForAction('random_test'))) return;
 
     triggerHaptic(Haptics.ImpactFeedbackStyle.Medium);
     setRandomError(null);

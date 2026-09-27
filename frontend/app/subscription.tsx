@@ -64,12 +64,6 @@ export default function SubscriptionScreen() {
       title: t('subscription.benefitSolutions', { defaultValue: 'Пошаговые разборы' }),
       sub: t('subscription.benefitSolutionsSub'),
     },
-    {
-      icon: 'ban-outline' as const,
-      gradient: ['#10B981', '#047857'] as [string, string],
-      title: t('subscription.benefitNoAds', { defaultValue: 'Никакой рекламы' }),
-      sub: t('subscription.benefitNoAdsSub'),
-    },
   ];
 
   const handleCtaPress = () => {
@@ -137,7 +131,7 @@ export default function SubscriptionScreen() {
 
           <Text style={styles.heroSub}>
             {t('subscription.heroSubtitle', {
-              defaultValue: 'Больше AI-возможностей, полный доступ к материалам и обучение без рекламы.',
+              defaultValue: 'Больше AI-возможностей и полный доступ к материалам.',
             })}
           </Text>
         </LinearGradient>
@@ -214,11 +208,10 @@ export default function SubscriptionScreen() {
               { key: 'chat', values: ['5', '20', '60'] },
               { key: 'generation', values: ['1', '5', '15'] },
               { key: 'content', values: [t('subscription.limited'), t('subscription.all'), t('subscription.all')] },
-              { key: 'ads', values: [t('subscription.yes'), t('subscription.no'), t('subscription.no')] },
             ].map((row, rowIndex) => (
               <View
                 key={row.key}
-                style={[styles.comparisonRow, rowIndex < 3 && { borderBottomColor: colors.border, borderBottomWidth: 1 }]}
+                style={[styles.comparisonRow, rowIndex < 2 && { borderBottomColor: colors.border, borderBottomWidth: 1 }]}
               >
                 <Text style={[styles.featureCell, { color: colors.textSecondary }]}>{t(`subscription.comparison.${row.key}`)}</Text>
                 {row.values.map((value, index) => (

@@ -21,7 +21,6 @@ import type { Formula } from '../../src/types/physics';
 import { useFavorites } from '../../src/hooks/useFavorites';
 import { useTheme } from '../../src/context/ThemeContext';
 import api from '../../src/services/api';
-import { useAdGate } from '../../src/hooks/useAdGate';
 import { LearningHubHeader } from '../../src/components/LearningHubHeader';
 
 const triggerHaptic = (style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) => {
@@ -163,7 +162,6 @@ export default function FormulasScreen() {
   const [remoteFormulas, setRemoteFormulas] = useState<Formula[] | null>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { colors } = useTheme();
-  const { requireAdForAction } = useAdGate();
   const { PHYSICS_SECTIONS, FORMULAS_DATA } = usePhysicsData();
   const formulasData = remoteFormulas ?? FORMULAS_DATA;
 
@@ -319,14 +317,12 @@ export default function FormulasScreen() {
             formula={item}
             isFav={isFavorite(item.id, 'formula')}
             onToggleFav={() => toggleFavorite(item.id, 'formula')}
-            onPress={async () => {
+            onPress={() => {
               if (item.is_locked || item.requires_pro) {
                 router.push('/subscription' as any);
                 return;
               }
-              if (await requireAdForAction('formula')) {
-                router.push(`/formulas/${item.id}` as any);
-              }
+              router.push(`/formulas/${item.id}` as any);
             }}
             cardBg={colors.card}
             borderColor={colors.border}

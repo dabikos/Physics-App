@@ -225,14 +225,8 @@
     "badge": "LaTeX",
     "errorConnection": "Connection error",
     "freeToday": "Free today",
-    "forAd": "For ads",
     "limitTitle": "AI chat limit",
-    "limitMessage": "The Free plan includes {{count}} messages per day. Your limit is reached. Watch an ad and send a message? Ad attempts left: {{ads}}.",
-    "watchAd": "Watch ad",
-    "adNotFinishedTitle": "Ad not finished",
-    "adNotFinishedMessage": "To send the message, you need to watch the ad to the end.",
-    "rewardClaimError": "Failed to grant an ad-based attempt.",
-    "rewardedDailyLimit": "All 5 extra ad-supported messages have been used today. The limit resets tomorrow."
+    "limitMessage": "The {{plan}} plan includes {{count}} messages per day. Your limit is reached and resets tomorrow."
   },
   "quota": {
     "plans": { "free": "Free", "basic": "Basic", "pro": "Pro" },
@@ -245,12 +239,6 @@
     },
     "generationLimitReached": "Daily limit reached. The {{plan}} plan includes {{limit}} uses per day for {{feature}}. The limit resets at {{time}}.",
     "nextDay": "the next day"
-  },
-  "ads": {
-    "unavailableTitle": "Ad unavailable",
-    "rewardedUnavailable": "The video has not loaded yet. Try again in a few seconds.",
-    "interstitialUnavailable": "The ad has not loaded yet. Please try again.",
-    "startError": "Could not start the ad. Please try again."
   },
   "profile": {
     "title": "Profile",
@@ -708,30 +696,25 @@
     "proBadge": "PRO access",
     "activeBadge": "Pro active",
     "heroTitle": "Unlock full Physics AI",
-    "heroSubtitle": "Learn without ads, unlock all content, and use advanced AI tools for physics.",
+    "heroSubtitle": "Unlock all content and use advanced AI tools for physics.",
     "includes": "Included",
-    "benefitNoAds": "No ads while studying",
-    "benefitNoAdsSub": "Learn without ad interruptions",
     "benefitFullAccess": "All lessons, tests, problems and formulas",
     "benefitFullAccessSub": "Full access to all learning materials",
     "benefitAiTools": "Test generation and extended learning",
     "benefitAiToolsSub": "Higher daily AI limits",
     "benefitSolutions": "Full problem solutions with explanations",
     "benefitSolutionsSub": "A detailed explanation of every step",
-    "premiumBadge": "PREMIUM",
+    "premiumBadge": "PAID SUBSCRIPTION",
     "currentPlanBadge": "CURRENT PLAN: {{plan}}",
     "compareTitle": "Compare plans",
     "compareHint": "Daily AI limits reset automatically.",
     "feature": "Feature",
     "limited": "Limited",
     "all": "All",
-    "yes": "Yes",
-    "no": "No",
     "comparison": {
       "chat": "AI chat per day",
       "generation": "Each AI generator",
-      "content": "Learning materials",
-      "ads": "Ads"
+      "content": "Learning materials"
     },
     "choosePlan": "Choose a plan",
     "yearlyValue": "BEST VALUE",

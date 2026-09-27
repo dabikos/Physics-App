@@ -298,26 +298,6 @@ export async function getChatQuota(): Promise<{ success: boolean; quota?: ChatQu
   }
 }
 
-export async function claimRewardedChatCredit(
-  adUnit: string
-): Promise<{ success: boolean; quota?: ChatQuota; error?: string; errorCode?: string }> {
-  try {
-    const response = await api.post('/chat/rewarded/claim', {
-      ad_unit: adUnit,
-      platform: 'android',
-    });
-    return { success: true, quota: response.data?.quota };
-  } catch (error: any) {
-    const detail = error.response?.data?.detail;
-    return {
-      success: false,
-      error: (typeof detail === 'string' ? detail : detail?.message) || error.message || 'Не удалось начислить рекламный кредит',
-      errorCode: typeof detail === 'object' ? detail?.code : undefined,
-      quota: typeof detail === 'object' ? detail?.quota : undefined,
-    };
-  }
-}
-
 export function getAPILimits() {
   return {
     openai: {

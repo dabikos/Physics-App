@@ -6,11 +6,11 @@ on:
       version_code:
         description: "Android versionCode for the APK."
         required: true
-        default: "1"
+        default: "27"
       version_name:
         description: "Android versionName shown in app settings."
         required: true
-        default: "1.0.0"
+        default: "1.1.5"
 
 jobs:
   build:

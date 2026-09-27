@@ -38,7 +38,6 @@ interface SubscriptionContextValue {
   isPro: boolean;
   isBasic: boolean;
   subscriptionTier: 'free' | 'basic' | 'pro';
-  hasAds: boolean;
   customerInfo: CustomerInfo | null;
   currentOffering: PurchasesOffering | null;
   packages: PurchasesPackage[];
@@ -288,7 +287,6 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       isPro: isProCustomer(customerInfo),
       isBasic: isBasicCustomer(customerInfo),
       subscriptionTier: isProCustomer(customerInfo) ? 'pro' : isBasicCustomer(customerInfo) ? 'basic' : 'free',
-      hasAds: !isProCustomer(customerInfo) && !isBasicCustomer(customerInfo),
       customerInfo,
       currentOffering,
       packages,
