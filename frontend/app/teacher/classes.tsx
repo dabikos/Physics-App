@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../src/context/AuthContext'
@@ -12,6 +12,8 @@ import { profileStyles as styles } from '../../src/features/profile/styles'
 
 export default function TeacherClassesScreen() {
   const router = useRouter()
+  const { studentId, resultId } = useLocalSearchParams<{ studentId?: string; resultId?: string }>()
+  const openedPushStudent = useRef<string | null>(null)
   const { user } = useAuth()
   const { colors } = useTheme()
   const { t } = useTranslation()
@@ -68,13 +70,22 @@ export default function TeacherClassesScreen() {
     }
   }, [])
 
+  const fetchStudentResults = useCallback(async (student: any) => {
+    const response = await api.get(`/teacher/students/${student.id}/results`)
+    const results = Array.isArray(response.data) ? response.data : []
+    // A result selected from a push goes first in the student's history.
+    return [
+      ...results.filter((result: any) => result.id === resultId),
+      ...results.filter((result: any) => result.id !== resultId),
+    ]
+  }, [resultId])
+
   const loadStudentResults = async (student: any) => {
     setSelectedStudent(student)
     setLoadingStudentResults(true)
 
     try {
-      const response = await api.get(`/teacher/students/${student.id}/results`)
-      setStudentResults(Array.isArray(response.data) ? response.data : [])
+      setStudentResults(await fetchStudentResults(student))
     } catch {
       setStudentResults([])
     } finally {
@@ -85,6 +96,22 @@ export default function TeacherClassesScreen() {
   useEffect(() => {
     fetchTeacherData()
   }, [fetchTeacherData])
+
+  useEffect(() => {
+    if (!studentId || !teacherData || user?.role !== 'teacher') return
+    const notificationKey = `${studentId}:${resultId || ''}`
+    if (openedPushStudent.current === notificationKey) return
+    const student = teacherData.students.find((item: any) => item.id === studentId)
+    if (!student) return
+    let active = true
+    void fetchStudentResults(student).then(results => {
+      if (!active) return
+      openedPushStudent.current = notificationKey
+      setSelectedStudent(student)
+      setStudentResults(results)
+    }).catch(() => {})
+    return () => { active = false }
+  }, [studentId, resultId, teacherData, user?.role, fetchStudentResults])
 
   const onRefresh = () => {
     setRefreshing(true)

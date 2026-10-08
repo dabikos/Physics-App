@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field, EmailStr
 from typing import Callable, List, Optional, Dict, Any, Literal
 import uuid
 import hashlib
+import hmac
 import random
 import smtplib
 from email.mime.text import MIMEText
@@ -24,6 +25,9 @@ import json as json_module
 import httpx
 from openai import AsyncOpenAI
 from postgres import get_ai_prompt, render_prompt_template
+from push_notifications import build_push_presentation, is_expo_push_token, normalize_push_language
+from daily_push import dispatch_daily_push
+from ozp_exams import FREE_OZP_SESSION_ID, load_ozp_exams, ozp_access_allowed
 
 ROOT_DIR = Path(__file__).parent
 env_path = ROOT_DIR / '.env'
@@ -2061,6 +2065,12 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
         if not assigned_test and request.assigned_test_id:
             assigned_test = await db.assigned_tests.find_one({"id": request.assigned_test_id})
         if assigned_test:
+            if (
+                current_user.get("role") != "student"
+                or assigned_test.get("class_id") != current_user.get("class_id")
+                or assigned_test.get("created_by") not in current_user.get("teacher_ids", [])
+            ):
+                raise HTTPException(status_code=404, detail="Test not found")
             test = assigned_test
 
     # Also check generated_tests collection
@@ -2175,7 +2185,11 @@ async def submit_test(test_id: str, request: TestSubmitRequest, current_user: di
             teacher_id,
             f"{emoji} {student_name} сдал тест",
             f"Результат: {score}% ({correct_count}/{len(questions)})",
-            {"type": "test_result", "result_id": result_id},
+            {
+                "type": "test_result", "result_id": result_id,
+                "student_id": current_user["id"], "student_name": student_name,
+                "score": score, "correct_count": correct_count, "total": len(questions),
+            },
         )
 
     return {
@@ -3529,22 +3543,25 @@ async def initialize_data():
 
 async def send_push_notification(user_id: str, title: str, body: str, data: dict = None):
     """Send push notification to a user via Expo Push API."""
-    tokens_docs = await db.push_tokens.find({"user_id": user_id}).to_list(10)
-    tokens = [d["token"] for d in tokens_docs if d.get("token")]
+    tokens_docs = await db.push_tokens.find({"user_id": user_id, "enabled": {"$ne": False}}).to_list(10)
+    tokens_docs = [d for d in tokens_docs if is_expo_push_token(d.get("token"))]
+    tokens = [d["token"] for d in tokens_docs]
     if not tokens:
-        return
+        return 0
 
     messages = []
-    for token in tokens:
+    for token_doc in tokens_docs:
+        payload = {**(data or {}), "recipient_user_id": user_id}
         message = {
-            "to": token,
+            "to": token_doc["token"],
             "sound": "default",
-            "title": title,
-            "body": body,
-            "channelId": "default",
+            **build_push_presentation(token_doc.get("language"), payload, title, body),
+            "data": payload,
         }
-        if data:
-            message["data"] = data
+        # Earlier app builds only know the original default channel.
+        if token_doc.get("notification_version") != 2:
+            message["channelId"] = "default"
+            message.pop("categoryId", None)
         messages.append(message)
 
     try:
@@ -3558,18 +3575,26 @@ async def send_push_notification(user_id: str, title: str, body: str, data: dict
                 },
                 timeout=10,
             )
+            resp.raise_for_status()
             result = resp.json()
+            accepted = 0
             # Удаляем невалидные токены
             if "data" in result:
                 items = result["data"] if isinstance(result["data"], list) else [result["data"]]
                 for i, item in enumerate(items):
-                    if item.get("status") == "error" and item.get("details", {}).get("error") in (
-                        "DeviceNotRegistered", "InvalidCredentials"
-                    ):
+                    if item.get("status") == "ok":
+                        accepted += 1
+                    elif item.get("status") == "error":
+                        error_code = item.get("details", {}).get("error", "UnknownError")
+                        logging.warning("Expo push rejected: %s", error_code)
+                    if item.get("details", {}).get("error") == "DeviceNotRegistered":
                         if i < len(tokens):
                             await db.push_tokens.delete_one({"token": tokens[i]})
+            logging.info("Push dispatch: type=%s accepted=%s requested=%s", (data or {}).get("type", "other"), accepted, len(messages))
+            return accepted
     except Exception as e:
-        logging.error(f"Push notification error: {e}")
+        logging.error("Push notification error: %s", type(e).__name__)
+        return 0
 
 
 async def send_push_to_class(
@@ -3594,49 +3619,27 @@ async def send_push_to_class(
 
 
 @api_router.post("/cron/daily-push")
-async def cron_daily_push(request: Request):
-    """Cron endpoint: send daily reminders to inactive users.
+async def cron_daily_push(request: Request, dry_run: bool = False):
+    """Send noon reminders to all registered users, once per Kazakhstan day.
     Call via external cron with header X-Cron-Secret.
     """
     secret = request.headers.get("X-Cron-Secret", "")
     expected = CRON_SECRET
     if not expected:
         raise HTTPException(status_code=503, detail="CRON_SECRET is not configured")
-    if secret != expected:
+    if not hmac.compare_digest(secret, expected):
         raise HTTPException(403, "Forbidden")
+    return await dispatch_daily_push(db, send_push_notification, dry_run=dry_run)
 
-    now = datetime.utcnow()
-    today = now.strftime("%Y-%m-%d")
-    yesterday = (now - timedelta(days=1)).strftime("%Y-%m-%d")
 
-    # Находим пользователей с push-токенами
-    all_tokens = await db.push_tokens.find({}).to_list(5000)
-    user_ids = list(set(t["user_id"] for t in all_tokens))
-
-    sent = 0
-    for uid in user_ids:
-        user = await db.users.find_one({"id": uid})
-        if not user:
-            continue
-        activity = user.get("activity_dates", [])
-        dates = sorted(set(d if isinstance(d, str) else d.strftime("%Y-%m-%d") for d in activity))
-        last = dates[-1] if dates else None
-
-        # Если не заходил сегодня
-        if not last or last < today:
-            streak = compute_streak(user)
-            current = streak.get("current", 0)
-            if current > 0:
-                title = f"🔥 Не потеряй стрик {current} дней!"
-                body = "Зайди сегодня, чтобы сохранить свою серию"
-            else:
-                title = "💡 Время учиться!"
-                body = "Физика ждёт тебя. Зайди и проверь новые задания"
-
-            await send_push_notification(uid, title, body, {"type": "daily_reminder"})
-            sent += 1
-
-    return {"sent": sent, "total_users": len(user_ids)}
+@api_router.get("/exams/ozp/{session_id}")
+async def get_ozp_exam(session_id: str, current_user: dict = Depends(get_current_user)):
+    exam = load_ozp_exams().get(session_id)
+    if not exam:
+        raise HTTPException(404, detail="Exam not found")
+    if not ozp_access_allowed(session_id, get_subscription_tier(current_user)):
+        raise HTTPException(403, detail={"code": "OZP_PREMIUM_REQUIRED", "free_session_id": FREE_OZP_SESSION_ID})
+    return exam
 
 
 @api_router.post("/push-token")
@@ -3645,8 +3648,9 @@ async def save_push_token(request: Request, current_user: dict = Depends(get_cur
     body = await request.json()
     token = body.get("token")
     platform = body.get("platform", "unknown")
-    if not token:
-        raise HTTPException(400, "Token is required")
+    if not is_expo_push_token(token):
+        raise HTTPException(400, "A valid Expo push token is required")
+    language = normalize_push_language(body.get("language") or request.headers.get("Accept-Language"))
 
     # Upsert: один токен -> один пользователь
     await db.push_tokens.update_one(
@@ -3655,6 +3659,8 @@ async def save_push_token(request: Request, current_user: dict = Depends(get_cur
             "user_id": current_user["id"],
             "token": token,
             "platform": platform,
+            "language": language,
+            "notification_version": 2 if body.get("notification_version") == 2 else 1,
             "updated_at": datetime.utcnow(),
         }},
         upsert=True,

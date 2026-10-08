@@ -323,6 +323,7 @@ export interface GeneratedTest {
   difficulty: string;
   source?: string;
   questions: GeneratedTestQuestion[];
+  time_limit?: number;
 }
 
 /**
@@ -486,6 +487,7 @@ export async function generateTest(
       section: sectionKey,
       difficulty,
       questions: validatedQuestions,
+      time_limit: Math.max(300, validatedQuestions.length * 60),
     };
 
     return { success: true, test };

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, Text, Animated, Modal, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, Animated, Keyboard, KeyboardAvoidingView, Modal, Platform, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -179,6 +179,23 @@ export const EditProfileModal: React.FC<{
   const [avatarOptions, setAvatarOptions] = useState<string[]>(() =>
     Array.from({ length: 12 }, () => createAvatarSeed()),
   )
+  const scrollRef = useRef<ScrollView>(null)
+  const gradeInputRef = useRef<TextInput>(null)
+  const focusedField = useRef<'name' | 'grade' | null>(null)
+  const fieldOffsets = useRef({ name: 0, grade: 0 })
+
+  const revealFocusedField = () => {
+    const field = focusedField.current
+    if (field) {
+      scrollRef.current?.scrollTo({ y: Math.max(0, fieldOffsets.current[field] - 12), animated: true })
+    }
+  }
+
+  const handleClose = () => {
+    focusedField.current = null
+    Keyboard.dismiss()
+    onClose()
+  }
 
   const refreshAvatarOptions = () => {
     setAvatarOptions(Array.from({ length: 12 }, () => createAvatarSeed()))
@@ -196,17 +213,28 @@ export const EditProfileModal: React.FC<{
       avatar: selectedAvatar,
       grade: grade.trim() || undefined,
     })
-    onClose()
+    handleClose()
   }
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
-      <View style={styles.modalOverlay}>
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={handleClose}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={[styles.modalOverlay, { paddingTop: insets.top + 12 }]}
+      >
         <View style={[styles.modalContent, { backgroundColor: colors.card, paddingBottom: 24 + insets.bottom }]}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.modalScrollContent}>
+          <ScrollView
+            ref={scrollRef}
+            style={styles.modalScrollView}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.modalScrollContent}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            onLayout={revealFocusedField}
+          >
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>{t('profile.editProfile')}</Text>
-              <TouchableOpacity onPress={onClose}>
+              <TouchableOpacity onPress={handleClose}>
                 <Ionicons name="close-circle" size={28} color={colors.textMuted} />
               </TouchableOpacity>
             </View>
@@ -236,23 +264,37 @@ export const EditProfileModal: React.FC<{
               <Text style={[styles.avatarRefreshText, { color: colors.accent }]}>{t('profile.moreAvatars')}</Text>
             </TouchableOpacity>
 
-            <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>{t('profile.nameLabel')}</Text>
-            <TextInput
-              style={[styles.modalInput, { backgroundColor: colors.inputBg, color: colors.text }]}
-              value={name}
-              onChangeText={setName}
-              placeholder={t('profile.namePlaceholder')}
-              placeholderTextColor={colors.textMuted}
-            />
+            <View onLayout={(event) => { fieldOffsets.current.name = event.nativeEvent.layout.y }}>
+              <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>{t('profile.nameLabel')}</Text>
+              <TextInput
+                style={[styles.modalInput, { backgroundColor: colors.inputBg, color: colors.text }]}
+                value={name}
+                onChangeText={setName}
+                placeholder={t('profile.namePlaceholder')}
+                placeholderTextColor={colors.textMuted}
+                onFocus={() => { focusedField.current = 'name'; revealFocusedField() }}
+                onBlur={() => { focusedField.current = null }}
+                returnKeyType="next"
+                submitBehavior="submit"
+                onSubmitEditing={() => gradeInputRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>{t('profile.gradeLabel')}</Text>
-            <TextInput
-              style={[styles.modalInput, { backgroundColor: colors.inputBg, color: colors.text }]}
-              value={grade}
-              onChangeText={setGrade}
-              placeholder={t('profile.gradePlaceholder')}
-              placeholderTextColor={colors.textMuted}
-            />
+            <View onLayout={(event) => { fieldOffsets.current.grade = event.nativeEvent.layout.y }}>
+              <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>{t('profile.gradeLabel')}</Text>
+              <TextInput
+                ref={gradeInputRef}
+                style={[styles.modalInput, { backgroundColor: colors.inputBg, color: colors.text }]}
+                value={grade}
+                onChangeText={setGrade}
+                placeholder={t('profile.gradePlaceholder')}
+                placeholderTextColor={colors.textMuted}
+                onFocus={() => { focusedField.current = 'grade'; revealFocusedField() }}
+                onBlur={() => { focusedField.current = null }}
+                returnKeyType="done"
+                onSubmitEditing={Keyboard.dismiss}
+              />
+            </View>
 
             <TouchableOpacity style={styles.modalSaveButton} onPress={handleSave} activeOpacity={0.9}>
               <LinearGradient colors={['#667EEA', '#764BA2']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.modalSaveGradient}>
@@ -261,7 +303,7 @@ export const EditProfileModal: React.FC<{
             </TouchableOpacity>
           </ScrollView>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   )
 }

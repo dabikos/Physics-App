@@ -600,6 +600,9 @@ export const profileStyles = StyleSheet.create({
   modalScrollContent: {
     paddingBottom: 4,
   },
+  modalScrollView: {
+    flexShrink: 1,
+  },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',

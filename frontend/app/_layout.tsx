@@ -36,8 +36,8 @@ function RootLayoutNav() {
   const router = useRouter();
   const [initialRouteDone, setInitialRouteDone] = useState(false);
 
-  const pushEnabled = !!user;
-  usePushNotifications(pushEnabled);
+  const pushEnabled = !!user && !loading && initialRouteDone;
+  usePushNotifications(pushEnabled, user?.id, user?.role);
 
   useEffect(() => {
     if (loading) return;

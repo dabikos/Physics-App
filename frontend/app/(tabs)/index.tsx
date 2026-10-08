@@ -659,7 +659,6 @@ export default function HomeScreen() {
             <MenuCard
               title={t('home.lessons', { defaultValue: 'Уроки' })}
               subtitle={t('home.lessonsCount', { defaultValue: '142 темы' })}
-              badge={t('home.lessonsBadge', { defaultValue: 'База' })}
               icon="book"
               gradient={['#3B82F6', '#1D4ED8']}
               onPress={() => router.push('/lessons')}
@@ -673,7 +672,6 @@ export default function HomeScreen() {
             <MenuCard
               title={t('home.tasks', { defaultValue: 'Задачи' })}
               subtitle={t('home.tasksCount', { defaultValue: '710 заданий' })}
-              badge={t('home.tasksBadge', { defaultValue: 'Практика' })}
               icon="calculator"
               gradient={['#EF4444', '#B91C1C']}
               onPress={() => router.push('/tasks')}
@@ -691,7 +689,6 @@ export default function HomeScreen() {
             <MenuCard
               title={t('home.tests', { defaultValue: 'Тесты' })}
               subtitle={t('home.testsCount', { defaultValue: 'Проверка знаний' })}
-              badge={t('home.testsBadge', { defaultValue: 'Экзамен' })}
               icon="checkbox"
               gradient={['#10B981', '#047857']}
               onPress={() => router.push('/tests')}
@@ -705,7 +702,6 @@ export default function HomeScreen() {
             <MenuCard
               title={t('home.formulas', { defaultValue: 'Формулы' })}
               subtitle={t('home.formulasCount', { defaultValue: 'Все формулы' })}
-              badge={t('home.formulasBadge', { defaultValue: 'Шпаргалка' })}
               icon="flask"
               gradient={['#8B5CF6', '#6D28D9']}
               onPress={() => router.push('/formulas')}
@@ -719,22 +715,34 @@ export default function HomeScreen() {
           </View>
 
           {/* Row 3 */}
-          <View style={styles.menuRow}>
-            <MenuCard
-              title={t('home.connection', { defaultValue: 'QR-Класс' })}
-              subtitle={t('home.connectionSubtitle', { defaultValue: 'Синхронизация' })}
-              badge={t('auth.teacher', { defaultValue: 'Учитель' })}
-              icon="qr-code-outline"
-              gradient={['#6366F1', '#4338CA']}
-              onPress={() => router.push('/connect')}
-              index={4}
-              cardBg={colors.card}
-              textColor={colors.text}
-              subtitleColor={colors.textTertiary}
-              borderColor={colors.border}
-              shadowColor={colors.shadowColor}
-            />
-          </View>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => { triggerHaptic(Haptics.ImpactFeedbackStyle.Medium); router.push('/exams' as any); }}
+            style={[styles.examHomeCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          >
+            <LinearGradient colors={['#4F63D8', '#273EA8']} style={styles.examHomeIcon}>
+              <Ionicons name="school-outline" size={25} color="#FFFFFF" />
+            </LinearGradient>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.examHomeTitle, { color: colors.text }]}>{t('home.exams')}</Text>
+              <Text style={[styles.examHomeSubtitle, { color: colors.textTertiary }]}>{t('home.examsSubtitle')}</Text>
+            </View>
+            <Ionicons name="arrow-forward" size={20} color={colors.accentText} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => { triggerHaptic(Haptics.ImpactFeedbackStyle.Medium); router.push('/connect'); }}
+            style={[styles.examHomeCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          >
+            <LinearGradient colors={['#6366F1', '#4338CA']} style={styles.examHomeIcon}>
+              <Ionicons name="qr-code-outline" size={25} color="#FFFFFF" />
+            </LinearGradient>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.examHomeTitle, { color: colors.text }]}>{t('home.connection')}</Text>
+              <Text style={[styles.examHomeSubtitle, { color: colors.textTertiary }]}>{t('home.connectionSubtitle')}</Text>
+            </View>
+            <Ionicons name="arrow-forward" size={20} color={colors.accentText} />
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
@@ -1079,6 +1087,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
+  examHomeCard: {
+    minHeight: 86,
+    borderWidth: 1,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    padding: 14,
+  },
+  examHomeIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  examHomeTitle: { fontSize: 18, fontWeight: '800' },
+  examHomeSubtitle: { fontSize: 12, marginTop: 4 },
   cardWrapper: {
     flex: 1,
   },

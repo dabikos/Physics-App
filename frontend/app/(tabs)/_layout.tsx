@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurTargetView, BlurView } from 'expo-blur';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const blurTarget = useRef<View | null>(null);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
+    const hide = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
 
   const tabBarBottomOffset = insets.bottom;
   const tabBarHeight = 64;
 
   return (
+    <View style={styles.container}>
+    <BlurTargetView ref={blurTarget} style={styles.container}>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -75,6 +87,22 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </BlurTargetView>
+    {insets.bottom > 0 && !keyboardVisible && <BlurView
+      blurTarget={blurTarget}
+      blurMethod="dimezisBlurView"
+      blurReductionFactor={2}
+      intensity={55}
+      tint={isDark ? 'dark' : 'light'}
+      pointerEvents="none"
+      style={[styles.bottomBlur, { height: insets.bottom }]}
+    />}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  bottomBlur: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+});
 

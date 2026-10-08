@@ -1,21 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
-import Animated, {
-  Easing,
-  FadeInUp,
-  ZoomIn,
-  useAnimatedProps,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,8 +13,8 @@ import type { Test, TestDifficulty } from '../../../src/types/physics';
 import { usePhysicsData } from '../../../src/hooks/usePhysicsData';
 import api from '../../../src/services/api';
 import { useAuth } from '../../../src/context/AuthContext';
-import { SuccessModal } from '../../../src/components/SuccessModal';
-import { MathContent } from '../../../src/components/MathContent';
+import { TestSession } from '../../../src/features/tests/TestSession';
+import { practiceDurationSeconds } from '../../../src/features/tests/practiceDuration';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../../src/context/ThemeContext';
 
@@ -41,87 +31,6 @@ const getDifficultyInfo = (difficulty: TestDifficulty, t: (key: string) => strin
     default:
       return { label: t('difficulty.basic'), color: '#10B981', emoji: '🟢' };
   }
-};
-
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-
-const AnimatedScoreRing = ({
-  score,
-  color,
-  trackColor,
-  backgroundColor,
-}: {
-  score: number;
-  color: string;
-  trackColor: string;
-  backgroundColor: string;
-}) => {
-  const [displayScore, setDisplayScore] = useState(0);
-  const progress = useSharedValue(0);
-  const size = 132;
-  const strokeWidth = 10;
-  const radius = (size - strokeWidth) / 2;
-  const center = size / 2;
-  const circumference = 2 * Math.PI * radius;
-
-  useEffect(() => {
-    progress.value = 0;
-    progress.value = withTiming(score / 100, {
-      duration: 1100,
-      easing: Easing.out(Easing.cubic),
-    });
-
-    const duration = 900;
-    const startedAt = Date.now();
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startedAt;
-      const nextValue = Math.min(score, Math.round((elapsed / duration) * score));
-      setDisplayScore(nextValue);
-      if (elapsed >= duration) {
-        setDisplayScore(score);
-        clearInterval(timer);
-      }
-    }, 16);
-
-    return () => clearInterval(timer);
-  }, [progress, score]);
-
-  const animatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: circumference * (1 - progress.value),
-  }));
-
-  return (
-    <View style={[styles.scoreRingContainer, { backgroundColor }]}>
-      <Svg width={size} height={size} style={styles.scoreRingSvg}>
-        <Circle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke={trackColor}
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          opacity={0.45}
-        />
-        <AnimatedCircle
-          cx={center}
-          cy={center}
-          r={radius}
-          stroke={color}
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          strokeLinecap="round"
-          strokeDasharray={`${circumference} ${circumference}`}
-          animatedProps={animatedProps}
-          originX={center}
-          originY={center}
-          rotation="-90"
-        />
-      </Svg>
-      <View style={styles.scoreRingCenter}>
-        <Text style={[styles.scoreText, { color }]}>{displayScore}%</Text>
-      </View>
-    </View>
-  );
 };
 
 export default function TestsSectionScreen() {
@@ -142,21 +51,7 @@ export default function TestsSectionScreen() {
   const [assignedTests, setAssignedTests] = useState<Test[]>([]);
   
   const [selectedTest, setSelectedTest] = useState<Test | null>(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
-  const [timeLeft, setTimeLeft] = useState(0);
   const [testStarted, setTestStarted] = useState(false);
-  const [testFinished, setTestFinished] = useState(false);
-  const [results, setResults] = useState<any>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
-
   useEffect(() => {
     const loadAssignedTests = async () => {
       if (!user || user.role !== 'student') return;
@@ -229,113 +124,14 @@ export default function TestsSectionScreen() {
       router.push('/subscription' as any);
       return;
     }
-
     setSelectedTest(test);
-    setCurrentQuestionIndex(0);
-    setAnswers(new Array(test.questions.length).fill(-1));
-    setTimeLeft(test.time_limit);
     setTestStarted(true);
-    setTestFinished(false);
-    setResults(null);
-  };
-
-  const selectAnswer = (answerIndex: number) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestionIndex] = answerIndex;
-    setAnswers(newAnswers);
-  };
-
-  const nextQuestion = () => {
-    if (selectedTest && currentQuestionIndex < selectedTest.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const prevQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const submitTestResult = useCallback(async () => {
-    if (!selectedTest) return;
-    try {
-      await api.post(`/tests/${selectedTest.id}/submit`, {
-        answers,
-        source: 'mobile',
-      });
-    } catch (error) {
-      console.log('Test submit error:', error);
-    }
-  }, [answers, selectedTest]);
-
-  const calculateLocalResults = useCallback(() => {
-    if (!selectedTest) return;
-    let correctCount = 0;
-    const resultDetails = selectedTest.questions.map((q, i) => {
-      const isCorrect = answers[i] === q.correct;
-      if (isCorrect) correctCount++;
-      return {
-        question: q.question,
-        correct: isCorrect,
-        correct_answer: q.correct,
-        user_answer: answers[i],
-      };
-    });
-    setResults({
-      score: Math.round((correctCount / selectedTest.questions.length) * 100),
-      correct_count: correctCount,
-      total: selectedTest.questions.length,
-      results: resultDetails,
-    });
-  }, [answers, selectedTest]);
-
-  const finishTest = useCallback(async () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setTestStarted(false);
-    setTestFinished(true);
-    calculateLocalResults();
-    await submitTestResult();
-    setShowSuccessModal(true);
-  }, [calculateLocalResults, submitTestResult]);
-
-  useEffect(() => {
-    if (testStarted && timeLeft > 0) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            finishTest();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [finishTest, testStarted, timeLeft]);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const resetTest = () => {
     setSelectedTest(null);
     setTestStarted(false);
-    setTestFinished(false);
-    setResults(null);
-    setAnswers([]);
-    setCurrentQuestionIndex(0);
-    setShowSuccessModal(false);
   };
-
-  const handleCloseSuccessModal = () => {
-    setShowSuccessModal(false);
-  };
-
   if (!sectionData) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
@@ -353,207 +149,26 @@ export default function TestsSectionScreen() {
     );
   }
 
-  // Test results screen
-  if (testFinished && results) {
-    const difficultyInfo = selectedTest ? getDifficultyInfo(selectedTest.difficulty, t) : null;
-    const resultColor = results.score >= 70 ? colors.success : results.score >= 50 ? colors.warning : colors.error;
-    const resultBg = results.score >= 70 ? colors.successBg : results.score >= 50 ? colors.warningBg : colors.errorBg;
-    
-    return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
-        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
-          <TouchableOpacity style={styles.backButton} onPress={resetTest}>
-            <Ionicons name="close" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('tests.results')}</Text>
-          <View style={styles.headerPlaceholder} />
-        </View>
-
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
-          <Animated.View
-            entering={ZoomIn.duration(420).springify().damping(14)}
-            style={[styles.resultsCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}
-          >
-            <AnimatedScoreRing
-              score={results.score}
-              color={resultColor}
-              trackColor={colors.border}
-              backgroundColor={resultBg}
-            />
-            <Text style={[styles.scoreLabel, { color: colors.textTertiary }]}>
-              {t('tests.correctAnswers')}: {results.correct_count} {t('tests.of')} {results.total}
-            </Text>
-            {difficultyInfo && (
-              <View style={[styles.difficultyBadgeLarge, { backgroundColor: difficultyInfo.color + '20' }]}>
-                <Text style={styles.difficultyEmoji}>{difficultyInfo.emoji}</Text>
-                <Text style={[styles.difficultyLabelLarge, { color: difficultyInfo.color }]}>
-                  {difficultyInfo.label}
-                </Text>
-              </View>
-            )}
-            <Text style={[styles.scoreMessage, { color: colors.text }]}>
-              {results.score >= 70 ? t('tests.passed') : t('tests.failed')}
-            </Text>
-          </Animated.View>
-
-          <Animated.Text
-            entering={FadeInUp.delay(220).duration(360)}
-            style={[styles.detailsTitle, { color: colors.text }]}
-          >
-            {t('tests.results')}
-          </Animated.Text>
-          {results.results?.map((r: any, i: number) => (
-            <Animated.View
-              key={i}
-              entering={FadeInUp.delay(280 + Math.min(i, 8) * 45).duration(340)}
-              style={[
-              styles.resultItem,
-              { backgroundColor: colors.card, borderLeftColor: r.correct ? colors.success : colors.error }
-            ]}>
-              <View style={styles.resultHeader}>
-                <Ionicons
-                  name={r.correct ? 'checkmark-circle' : 'close-circle'}
-                  size={20}
-                  color={r.correct ? colors.success : colors.error}
-                />
-                <Text style={[styles.resultQuestion, { color: colors.textSecondary }]} numberOfLines={2}>
-                  {r.question}
-                </Text>
-              </View>
-            </Animated.View>
-          ))}
-
-          <TouchableOpacity style={[styles.retryButton, { backgroundColor: colors.accent }]} onPress={resetTest}>
-            <Text style={styles.retryButtonText}>{t('tests.backToTests')}</Text>
-          </TouchableOpacity>
-
-          <View style={styles.bottomPadding} />
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-
-  // Active test screen
   if (testStarted && selectedTest) {
-    const currentQuestion = selectedTest.questions[currentQuestionIndex];
-    const difficultyInfo = getDifficultyInfo(selectedTest.difficulty, t);
-
-    return (
-      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]} edges={['top', 'bottom']}>
-        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => {
-              Alert.alert(t('tests.exitTest'), t('tests.progressLost'), [
-                { text: t('common.cancel'), style: 'cancel' },
-                { text: t('tests.exitButton'), style: 'destructive', onPress: resetTest },
-              ]);
-            }}
-          >
-            <Ionicons name="close" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <View style={[styles.timerContainer, { backgroundColor: colors.inputBg }]}>
-            <Ionicons name="time" size={18} color={timeLeft < 60 ? colors.error : colors.textTertiary} />
-            <Text style={[styles.timerText, { color: colors.textTertiary }, timeLeft < 60 && styles.timerTextWarning]}>
-              {formatTime(timeLeft)}
-            </Text>
-          </View>
-          <Text style={[styles.questionCounter, { color: colors.accentText }]}>
-            {currentQuestionIndex + 1}/{selectedTest.questions.length}
-          </Text>
-        </View>
-
-        <View style={[styles.progressBar, { backgroundColor: colors.border }]}>
-          <View
-            style={[
-              styles.progressFill,
-              { 
-                width: `${((currentQuestionIndex + 1) / selectedTest.questions.length) * 100}%`,
-                backgroundColor: difficultyInfo.color
-              },
-            ]}
-          />
-        </View>
-
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
-          <View style={[styles.questionCard, { backgroundColor: colors.card, shadowColor: colors.shadowColor }]}>
-            <View style={styles.questionContainer}>
-              <MathContent content={currentQuestion.question} fontSize={18} textColor={colors.text} />
-            </View>
-
-            <View style={styles.optionsContainer}>
-              {currentQuestion.options.map((option, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.optionButton,
-                    { backgroundColor: colors.optionBg, borderColor: colors.optionBorder },
-                    answers[currentQuestionIndex] === index && [styles.optionSelected, { borderColor: colors.accent, backgroundColor: colors.optionSelectedBg }],
-                  ]}
-                  onPress={() => selectAnswer(index)}
-                >
-                  <View style={[
-                    styles.optionCircle,
-                    { backgroundColor: colors.optionCircleBg },
-                    answers[currentQuestionIndex] === index && [styles.optionCircleSelected, { backgroundColor: colors.accent }],
-                  ]}>
-                    <Text style={[
-                      styles.optionLetter,
-                      { color: colors.textTertiary },
-                      answers[currentQuestionIndex] === index && styles.optionLetterSelected,
-                    ]}>
-                      {String.fromCharCode(65 + index)}
-                    </Text>
-                  </View>
-                  <View style={styles.optionTextContainer}>
-                    <MathContent content={option} fontSize={15} textColor={colors.text} />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.navigationButtons}>
-            <TouchableOpacity
-              style={[styles.navButton, currentQuestionIndex === 0 && styles.navButtonDisabled]}
-              onPress={prevQuestion}
-              disabled={currentQuestionIndex === 0}
-            >
-              <Ionicons name="arrow-back" size={20} color={currentQuestionIndex === 0 ? colors.textMuted : colors.accent} />
-              <Text style={[styles.navButtonText, { color: colors.accent }, currentQuestionIndex === 0 && { color: colors.textMuted }]}>
-                {t('common.back')}
-              </Text>
-            </TouchableOpacity>
-
-            {currentQuestionIndex === selectedTest.questions.length - 1 ? (
-              <TouchableOpacity style={styles.finishButton} onPress={finishTest}>
-                <Text style={styles.finishButtonText}>{t('common.finish')}</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity style={[styles.nextButton, { backgroundColor: colors.accent }]} onPress={nextQuestion}>
-                <Text style={styles.nextButtonText}>{t('common.next')}</Text>
-                <Ionicons name="arrow-forward" size={20} color="#FFFFFF" />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <View style={styles.bottomPadding} />
-        </ScrollView>
-
-        <SuccessModal
-          visible={showSuccessModal}
-          onClose={handleCloseSuccessModal}
-          title={t('tests.completed')}
-          subtitle={selectedTest?.title}
-          score={results?.score}
-          type="test"
-        />
-      </SafeAreaView>
-    );
+    return <TestSession
+      title={selectedTest.title}
+      questions={selectedTest.questions.map((question, i) => ({
+        id: String(i + 1),
+        text: question.question,
+        options: question.options,
+        correct: question.correct,
+      }))}
+      durationSeconds={practiceDurationSeconds(selectedTest.time_limit, selectedTest.questions.length)}
+      onClose={resetTest}
+      onSubmit={async (submittedAnswers) => {
+        try {
+          await api.post(`/tests/${selectedTest.id}/submit`, { answers: submittedAnswers, source: 'mobile' });
+        } catch (error) {
+          console.log('Test submit error:', error);
+        }
+      }}
+    />;
   }
-
   const assignedForSection = assignedTests.filter(t => !t.section || t.section === section);
   const testsByDifficulty = {
     basic: tests.filter(t => t.difficulty === 'basic'),

@@ -1,136 +1,139 @@
 import { useEffect, useRef, useState } from 'react';
-import { Platform } from 'react-native';
+import { AppState, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import type * as ExpoNotifications from 'expo-notifications';
 import api from '../services/api';
-
-type PermissionStatusLike = {
-  status?: string;
-  granted?: boolean;
-};
+import { PUSH_LANGUAGES, pushCategories, pushChannelNames, pushDestination, pushLanguage } from '../features/notifications/pushPresentation';
 
 const isExpoGo = Constants.appOwnership === 'expo';
 
-const getPermissionStatus = (permission: PermissionStatusLike) => {
-  if (permission.status) {
-    return permission.status;
-  }
-
-  return permission.granted ? 'granted' : 'undetermined';
-};
-
-async function getNotificationsModule() {
-  if (isExpoGo) {
-    return null;
-  }
-
-  try {
-    return await import('expo-notifications');
-  } catch {
-    return null;
-  }
-}
-
-async function registerForPushNotificationsAsync(): Promise<string | null> {
-  const Notifications = await getNotificationsModule();
-  if (!Notifications) {
-    return null;
-  }
-
-  if (!Device.isDevice) {
-    console.log('Push notifications require a physical device');
-    return null;
-  }
-
-  const existingPermission = await Notifications.getPermissionsAsync();
-  const existingStatus = getPermissionStatus(existingPermission as PermissionStatusLike);
-  let finalStatus = existingStatus;
-
-  if (existingStatus !== 'granted') {
-    const requestedPermission = await Notifications.requestPermissionsAsync();
-    finalStatus = getPermissionStatus(requestedPermission as PermissionStatusLike);
-  }
-
-  if (finalStatus !== 'granted') {
-    console.log('Push notification permission not granted');
-    return null;
-  }
-
-  try {
-    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-    const tokenData = await Notifications.getExpoPushTokenAsync({ projectId });
-    return tokenData.data;
-  } catch (error) {
-    console.log('Error getting push token:', error);
-    return null;
-  }
-}
-
-export function usePushNotifications(enabled: boolean = true) {
+export function usePushNotifications(enabled = true, userId?: string, role?: string) {
+  const router = useRouter();
+  const { i18n } = useTranslation();
+  const language = pushLanguage(i18n.resolvedLanguage || i18n.language);
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [notification, setNotification] = useState<ExpoNotifications.Notification | null>(null);
-  const notificationListener = useRef<ExpoNotifications.EventSubscription | null>(null);
-  const responseListener = useRef<ExpoNotifications.EventSubscription | null>(null);
+  const handledResponses = useRef(new Set<string>());
 
   useEffect(() => {
-    if (!enabled || isExpoGo) {
-      return;
-    }
+    if (!enabled || !userId || isExpoGo || Platform.OS === 'web' || !Device.isDevice) return;
 
-    let isMounted = true;
+    let mounted = true;
+    let syncing = false;
+    let receivedListener: ExpoNotifications.EventSubscription | undefined;
+    let responseListener: ExpoNotifications.EventSubscription | undefined;
+    let appStateListener: ReturnType<typeof AppState.addEventListener> | undefined;
+    let tokenListener: ExpoNotifications.EventSubscription | undefined;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let retryCount = 0;
 
-    registerForPushNotificationsAsync().then(async (token) => {
-      if (token && isMounted) {
-        setExpoPushToken(token);
-        try {
-          await api.post('/push-token', { token, platform: Platform.OS });
-        } catch (error) {
-          console.log('Failed to save push token:', error);
-        }
-      }
-    });
-
-    getNotificationsModule().then((Notifications) => {
-      if (!Notifications || !isMounted) {
-        return;
-      }
+    const initialize = async () => {
+      const Notifications = await import('expo-notifications');
+      if (!mounted) return;
 
       Notifications.setNotificationHandler({
         handleNotification: async () => ({
           shouldShowBanner: true,
           shouldShowList: true,
           shouldPlaySound: true,
-          shouldSetBadge: true,
+          shouldSetBadge: false,
         }),
       });
 
-      notificationListener.current = Notifications.addNotificationReceivedListener((nextNotification) => {
-        setNotification(nextNotification);
-      });
+      const handleResponse = (response: ExpoNotifications.NotificationResponse | null) => {
+        if (!mounted || !response) return;
+        const request = response.notification.request;
+        const data = request.content.data || {};
+        // Ignore old notifications addressed to another account on this phone.
+        if (data.recipient_user_id && data.recipient_user_id !== userId) return;
+        const key = `${userId}:${request.identifier}:${response.actionIdentifier}`;
+        if (handledResponses.current.has(key)) return;
+        handledResponses.current.add(key);
+        router.push(pushDestination(data, role));
+        Notifications.clearLastNotificationResponse();
+      };
 
-      responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-        const data = response.notification.request.content.data;
-        console.log('Notification tapped:', data);
-      });
+      receivedListener = Notifications.addNotificationReceivedListener(setNotification);
+      responseListener = Notifications.addNotificationResponseReceivedListener(handleResponse);
 
+      // Android 13+ needs a channel before the permission prompt/token request.
       if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'Основные',
-          importance: Notifications.AndroidImportance.HIGH,
-          vibrationPattern: [0, 250, 250, 250],
+        const names = pushChannelNames(language);
+        await Promise.all(Object.entries(names).map(([id, name]) => Notifications.setNotificationChannelAsync(id, {
+          name,
+          importance: id === 'learning' || id === 'default'
+            ? Notifications.AndroidImportance.HIGH : Notifications.AndroidImportance.DEFAULT,
           lightColor: '#6C63FF',
           sound: 'default',
-        });
+          vibrationPattern: [0, 200],
+          showBadge: true,
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
+        })));
       }
+      if (!mounted) return;
+      await Promise.all(PUSH_LANGUAGES.flatMap(lang => pushCategories(lang).map(category =>
+        Notifications.setNotificationCategoryAsync(category.identifier, [{
+          identifier: category.action,
+          buttonTitle: category.title,
+          options: { opensAppToForeground: true },
+        }]),
+      )));
+      if (!mounted) return;
+
+      const synchronizeToken = async (allowPrompt = false) => {
+        if (!mounted || syncing) return;
+        syncing = true;
+        try {
+          let permission = await Notifications.getPermissionsAsync();
+          if (allowPrompt && permission.status === 'undetermined' && permission.canAskAgain) {
+            permission = await Notifications.requestPermissionsAsync();
+          }
+          if (!mounted || !permission.granted) return;
+          const projectId = Constants.easConfig?.projectId || Constants.expoConfig?.extra?.eas?.projectId;
+          const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+          if (!mounted) return;
+          await api.post('/push-token', { token, platform: Platform.OS, language, notification_version: 2 });
+          if (!mounted) return;
+          setExpoPushToken(token);
+          retryCount = 0;
+          if (retryTimer) clearTimeout(retryTimer);
+        } catch (error) {
+          console.log('Push token registration failed:', error instanceof Error ? error.name : 'UnknownError');
+          const delays = [3000, 10000, 30000];
+          if (mounted && retryCount < delays.length) {
+            if (retryTimer) clearTimeout(retryTimer);
+            retryTimer = setTimeout(() => { void synchronizeToken(); }, delays[retryCount++]);
+          }
+        } finally {
+          syncing = false;
+        }
+      };
+
+      // Recheck after returning from settings, reconnecting, or rotating a native token.
+      appStateListener = AppState.addEventListener('change', state => {
+        if (state === 'active') void synchronizeToken();
+      });
+      tokenListener = Notifications.addPushTokenListener(() => { void synchronizeToken(); });
+      handleResponse(Notifications.getLastNotificationResponse());
+      await synchronizeToken(true);
+    };
+
+    void initialize().catch(error => {
+      console.log('Push setup failed:', error instanceof Error ? error.name : 'UnknownError');
     });
 
     return () => {
-      isMounted = false;
-      notificationListener.current?.remove();
-      responseListener.current?.remove();
+      mounted = false;
+      if (retryTimer) clearTimeout(retryTimer);
+      receivedListener?.remove();
+      responseListener?.remove();
+      appStateListener?.remove();
+      tokenListener?.remove();
     };
-  }, [enabled]);
+  }, [enabled, userId, role, language, router]);
 
   return { expoPushToken, notification };
 }

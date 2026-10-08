@@ -147,12 +147,28 @@ async def create_assigned_test(payload: AssignedTestCreate, current_user: dict =
         class_id=payload.class_id,
         title="📋 Новый тест от учителя",
         body=f"Назначен тест: {payload.title}",
-        data={"type": "assigned_test", "test_id": test_id},
+        data={
+            "type": "assigned_test", "test_id": test_id,
+            "test_title": payload.title, "question_count": len(payload.questions),
+            "time_limit": payload.time_limit,
+        },
         exclude_user_id=current_user["id"],
         teacher_id=current_user["id"],
     )
 
     return doc
+
+@router.get("/student/tests/{test_id}")
+async def get_assigned_student_test(test_id: str, current_user: dict = Depends(get_current_user)):
+    test = await db.assigned_tests.find_one({"id": test_id})
+    if (
+        not test
+        or current_user.get("role") != "student"
+        or test.get("class_id") != current_user.get("class_id")
+        or test.get("created_by") not in current_user.get("teacher_ids", [])
+    ):
+        raise HTTPException(status_code=404, detail="Test not found")
+    return {key: value for key, value in test.items() if key != "_id"}
 
 @router.get("/teacher/tests")
 async def list_assigned_tests(class_id: Optional[str] = None, current_user: dict = Depends(get_current_user)):
